@@ -306,3 +306,198 @@ static func striker(visual: Node3D) -> Dictionary:
 	j.core_mat = cm
 	j.cube = hull
 	return j
+
+
+## 중력 크롤러: 황토색 장갑 구체 + 짙은 금속 뚜껑·허리띠 + 정면 삼안(파란 발광) + 접이식 다리 4개.
+## Body(높이) → Squash(찌그러짐) → Shell(굴러가며 회전하는 구체). 다리와 약점 코어는 Squash 에 붙어
+## 구르지 않고, 구체 안에 접혀 있다가 펼쳐진다. 정면은 -Z.
+const CR_R := 0.6
+const CR_L1 := 0.5
+const CR_L2 := 0.86
+
+static func crawler(visual: Node3D) -> Dictionary:
+	var j := {}
+	var R := CR_R
+	var body := pivot(visual, Vector3(0, R, 0), "Body")
+	var squash := pivot(body, Vector3.ZERO, "Squash")
+	var shell := pivot(squash, Vector3.ZERO, "Shell")
+	j.body = body
+	j.squash = squash
+	j.shell = shell
+	# 장갑 구체
+	var sph := SphereMesh.new()
+	sph.radius = R
+	sph.height = R * 2.0
+	sph.radial_segments = 24
+	sph.rings = 12
+	_keep(shell, sph, Pal.lit(Pal.CR_YELLOW), Vector3.ZERO)
+	# 윗뚜껑: 납작한 금속 돔 (가장자리가 턱처럼 살짝 튀어나온다). 뒤쪽 경첩(Cap)으로 열려 약점 코어를 드러낸다.
+	var hinge := pivot(shell, Vector3(0, R * 0.3, R * 0.92), "Cap")
+	j.cap = hinge
+	var cap := SphereMesh.new()
+	cap.radius = R * 1.03
+	cap.height = R * 1.03
+	cap.is_hemisphere = true
+	cap.radial_segments = 24
+	cap.rings = 6
+	var cap_mi := _keep(hinge, cap, Pal.lit(Pal.CR_METAL), Vector3(0, 0, -R * 0.92))
+	cap_mi.scale = Vector3(1, 0.72, 1)
+	box(hinge, Vector3(0.22, 0.05, 0.1), Vector3(0, R * 0.73, 0.1 - R * 0.92), Pal.CR_METAL_DARK)
+	box(hinge, Vector3(0.08, 0.04, 0.06), Vector3(0, R * 0.68, -0.3 - R * 0.92), Pal.CR_METAL_DARK)
+	box(hinge, Vector3(0.3, 0.07, 0.08), Vector3(0, 0.02, 0), Pal.CR_METAL_DARK)
+	# 뚜껑 이음새에서 새어 나오는 붉은 빛 (뚜껑이 들리기 시작할 때만 보인다)
+	var seam_m := TorusMesh.new()
+	seam_m.inner_radius = R * 0.9
+	seam_m.outer_radius = R * 1.0
+	seam_m.rings = 28
+	seam_m.ring_segments = 4
+	var seam_glow := Pal.flat_mesh(seam_m, Pal.E_RED, 0.0)
+	seam_glow.position = Vector3(0, R * 0.32, 0)
+	seam_glow.scale = Vector3(1, 0.4, 1)
+	shell.add_child(seam_glow)
+	j.seam = seam_glow
+	# 허리띠 (정면 삼안 아래를 두른다)
+	var band := CylinderMesh.new()
+	band.top_radius = R * 1.02
+	band.bottom_radius = R * 1.0
+	band.height = 0.13
+	band.radial_segments = 24
+	_keep(shell, band, Pal.lit(Pal.CR_METAL_DARK), Vector3(0, -R * 0.24, 0))
+	# 장갑 이음새
+	for a in [0.55, -0.55, 2.3, -2.3]:
+		var n := Vector3(sin(a), 0.1, -cos(a)).normalized()
+		var seam := box(shell, Vector3(0.025, 0.36, 0.03), n * R * 0.985 + Vector3(0, 0.06, 0), Pal.CR_YELLOW_DARK)
+		seam.basis = Basis.looking_at(n, Vector3.UP)
+	# 옆 포트
+	var port := CylinderMesh.new()
+	port.top_radius = 0.12
+	port.bottom_radius = 0.13
+	port.height = 0.08
+	port.radial_segments = 14
+	var port_in := CylinderMesh.new()
+	port_in.top_radius = 0.065
+	port_in.bottom_radius = 0.065
+	port_in.height = 0.1
+	port_in.radial_segments = 12
+	for side in [-1, 1]:
+		var n := Vector3(side, 0.05, 0).normalized()
+		var q := Basis(Quaternion(Vector3.UP, n))
+		var pm := _keep(shell, port, Pal.lit(Pal.CR_METAL_DARK), n * R * 0.99)
+		pm.basis = q
+		var pi := _keep(shell, port_in, Pal.lit(Pal.CR_METAL), n * R * 1.01)
+		pi.basis = q
+	# 정면 삼안: 어두운 하우징 + 소켓 + 파란 발광 눈 + 흰 하이라이트
+	var eye_mat := StandardMaterial3D.new()
+	eye_mat.albedo_color = Pal.CR_EYE
+	eye_mat.emission_enabled = true
+	eye_mat.emission = Pal.CR_EYE
+	eye_mat.emission_energy_multiplier = 1.5
+	eye_mat.roughness = 0.25
+	j.eye_mat = eye_mat
+	var hous := SphereMesh.new()
+	hous.radius = 0.15
+	hous.height = 0.3
+	hous.radial_segments = 14
+	hous.rings = 7
+	var sock := CylinderMesh.new()
+	sock.top_radius = 0.1
+	sock.bottom_radius = 0.115
+	sock.height = 0.1
+	sock.radial_segments = 16
+	var eye := SphereMesh.new()
+	eye.radius = 0.078
+	eye.height = 0.156
+	eye.radial_segments = 14
+	eye.rings = 7
+	var glint := SphereMesh.new()
+	glint.radius = 0.024
+	glint.height = 0.048
+	glint.radial_segments = 8
+	glint.rings = 4
+	var eyes: Array = []
+	for o in [Vector2(0, 0.21), Vector2(-0.18, -0.07), Vector2(0.18, -0.07)]:
+		var n := Vector3(o.x, 0.12 + o.y, -1.0).normalized()
+		var q := Basis(Quaternion(Vector3.UP, n))
+		_keep(shell, hous, Pal.lit(Pal.CR_METAL_DARK), n * R * 0.93)
+		var sm := _keep(shell, sock, Pal.lit(Pal.CR_METAL), n * R * 1.02)
+		sm.basis = q
+		var em := MeshInstance3D.new()
+		em.mesh = eye
+		em.material_override = eye_mat
+		em.position = n * (R + 0.055)
+		shell.add_child(em)
+		eyes.append(em)
+		var g := Pal.flat_mesh(glint, Color(0.85, 0.95, 1.0), 2.2)
+		g.position = n * (R + 0.11) + Vector3(-0.025, 0.03, 0)
+		shell.add_child(g)
+	j.eyes = eyes
+	# 약점 코어: 뚜껑 밑에 숨어 있다가 다리를 펴고 뚜껑이 열리면 드러난다 (구체일 때는 크기 0)
+	var csm := SphereMesh.new()
+	csm.radius = 0.22
+	csm.height = 0.44
+	var core := MeshInstance3D.new()
+	core.mesh = csm
+	var cm := StandardMaterial3D.new()
+	cm.albedo_color = Pal.E_RED
+	cm.emission_enabled = true
+	cm.emission = Pal.E_RED
+	cm.emission_energy_multiplier = 0.8
+	cm.roughness = 0.35
+	core.material_override = cm
+	core.position = Vector3(0, R * 0.84, 0)
+	shell.add_child(core)
+	j.core = core
+	j.core_mat = cm
+	var ring := TorusMesh.new()
+	ring.inner_radius = 0.2
+	ring.outer_radius = 0.28
+	ring.rings = 16
+	ring.ring_segments = 6
+	var cr := _keep(core, ring, Pal.lit(Pal.CR_METAL_DARK), Vector3(0, -0.06, 0))
+	cr.scale = Vector3(1, 0.6, 1)
+	# 다리 4개: 대각선 방향. Hip(바깥 = 로컬 +X) → Thigh(회전 z) → Knee(회전 z) → 노란 정강이 판 + 바퀴 발
+	var jm := CylinderMesh.new()
+	jm.top_radius = 0.085
+	jm.bottom_radius = 0.085
+	jm.height = 0.2
+	jm.radial_segments = 12
+	var wheel := CylinderMesh.new()
+	wheel.top_radius = 0.085
+	wheel.bottom_radius = 0.085
+	wheel.height = 0.2
+	wheel.radial_segments = 12
+	var legs: Array = []
+	for i in 4:
+		var a := PI * 0.25 + PI * 0.5 * i
+		var out := Vector3(cos(a), 0, -sin(a))
+		var hip := pivot(squash, out * 0.42 + Vector3(0, -0.2, 0), "Hip")
+		hip.rotation.y = a
+		var hj := _keep(hip, jm, Pal.lit(Pal.CR_METAL_DARK), Vector3.ZERO)
+		hj.rotation_degrees.x = 90.0
+		var thigh := pivot(hip, Vector3.ZERO, "Thigh")
+		box(thigh, Vector3(CR_L1, 0.1, 0.12), Vector3(CR_L1 * 0.5, 0, 0), Pal.CR_METAL)
+		box(thigh, Vector3(CR_L1 * 0.7, 0.04, 0.05), Vector3(CR_L1 * 0.5, 0.08, 0), Pal.CR_METAL_DARK)
+		var knee := pivot(thigh, Vector3(CR_L1, 0, 0), "Knee")
+		var kj := _keep(knee, jm, Pal.lit(Pal.CR_METAL_DARK), Vector3.ZERO)
+		kj.rotation_degrees.x = 90.0
+		kj.scale = Vector3(1.15, 1.2, 1.15)
+		box(knee, Vector3(CR_L2 * 0.82, 0.07, 0.26), Vector3(CR_L2 * 0.46, -0.02, 0), Pal.CR_METAL_DARK)
+		box(knee, Vector3(CR_L2 * 0.78, 0.2, 0.2), Vector3(CR_L2 * 0.5, 0.05, 0), Pal.CR_YELLOW)
+		box(knee, Vector3(CR_L2 * 0.3, 0.06, 0.21), Vector3(CR_L2 * 0.62, 0.16, 0), Pal.CR_YELLOW_DARK)
+		var wm := _keep(knee, wheel, Pal.lit(Pal.CR_METAL_DARK), Vector3(CR_L2, 0, 0))
+		wm.rotation_degrees.x = 90.0
+		legs.append({"hip": hip, "thigh": thigh, "knee": knee, "out": out, "a": a})
+	j.legs = legs
+	j.cube = shell
+	return j
+
+
+## 파편이 되어도 원래 색을 유지하는 메시 (Debris 는 기본적으로 박스가 아닌 메시를 꺼진 코어 색으로 칠한다)
+static func _keep(parent: Node3D, mesh: Mesh, mat: Material, pos: Vector3) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	mi.mesh = mesh
+	mi.material_override = mat
+	mi.position = pos
+	mi.set_meta("keep_mat", true)
+	parent.add_child(mi)
+	return mi

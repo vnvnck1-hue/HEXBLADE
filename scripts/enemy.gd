@@ -43,9 +43,21 @@ var kill_source := ""
 ## 광선검 절단 조각의 크기(폭, 높이, 깊이)와 색. 몸체가 다른 기체는 덮어쓴다.
 var slice_size := Vector3(0.78, 0.74, 0.78)
 var slice_color := Pal.E_WHITE
+## 패링: 경직 남은 시간 · 금빛 예고 발광 · 다음 공격이 패링 탄인가
+var stagger_t := 0.0
+var stagger_total := 1.0
+var stun_halo: Node3D
+var warn_glow := false
+var orb_next := false
+var orb_cd := 0.0
+## 패링 탄을 쏠 확률 (기본 드론만 쓴다). 확인 모드에서는 1.
+var orb_chance := 0.45
+## 확인 모드: 패링 탄만 쏜다
+var orb_only := false
 
 const DROP_TIME := 0.45
 const TELEGRAPH := 0.5
+const ORB_CD := 3.2
 
 
 func _ready() -> void:
@@ -75,7 +87,10 @@ func _physics_process(dt: float) -> void:
 	if not landed:
 		_update_entry(dt)
 		return
-	_ai(dt)
+	if stagger_t > 0.0:
+		_update_stagger(dt)
+	else:
+		_ai(dt)
 	# 피격 반응
 	punch = move_toward(punch, 0.0, dt * 6.0)
 	body.scale = Vector3(1.0 + punch * 0.22, 1.0 - punch * 0.16, 1.0 + punch * 0.22)
@@ -150,16 +165,30 @@ func _ai(dt: float) -> void:
 	# 발사 예고: 코어 팽창·밝아짐
 	var core: MeshInstance3D = j.core
 	var cm: StandardMaterial3D = j.core_mat
+	orb_cd -= dt
 	if player.alive and Main.inst.state == Main.State.PLAY:
+		var was := fire_timer
 		fire_timer -= dt
+		# 예고가 시작되는 순간 다음 공격을 정한다: 패링 탄이면 금빛으로 번쩍이며 알린다
+		if was > TELEGRAPH and fire_timer <= TELEGRAPH:
+			orb_next = orb_cd <= 0.0 and randf() < orb_chance and get_tree().get_nodes_in_group("parry_orbs").size() < 2 or orb_only
+			if orb_next:
+				_warn(core.global_position)
 	var tele: float = clamp(1.0 - fire_timer / TELEGRAPH, 0.0, 1.0)
 	core.scale = Vector3.ONE * (1.0 + tele * 0.6 + sin(t * 40.0) * 0.06 * tele)
 	# 예고 중에는 뒤로 젖혀 힘을 모은다
 	body.rotation.x = wob.x + tele * 0.22
 	body.rotation.z = sin(t * 1.7) * 0.06 + wob.y + sin(t * 45.0) * 0.03 * tele
 	cm.emission_energy_multiplier = 0.6 + tele * 3.0
+	if orb_next and tele > 0.0:
+		cm.albedo_color = Pal.E_RED.lerp(ParryFX.GOLD, tele)
+		cm.emission = Pal.E_RED.lerp(ParryFX.GOLD, tele)
+		core.scale *= 1.0 + tele * 0.35
 	if fire_timer <= 0.0:
-		_begin_attack()
+		if orb_next:
+			_shoot_orb()
+		else:
+			_begin_attack()
 	if burst_left > 0:
 		burst_timer -= dt
 		if burst_timer <= 0.0:
@@ -200,9 +229,105 @@ func _shoot(angles: Array, speed: float, big := false) -> void:
 	punch = 0.5
 
 
+## 패링 탄 발사: 금빛 에너지 구체를 플레이어에게 쏜다
+func _shoot_orb() -> void:
+	orb_next = false
+	orb_cd = ORB_CD
+	fire_timer = randf_range(2.2, 3.0)
+	_end_warn()
+	var core: MeshInstance3D = j.core
+	var cm: StandardMaterial3D = j.core_mat
+	cm.albedo_color = Pal.E_RED
+	cm.emission = Pal.E_RED
+	var origin := core.global_position
+	origin.y = 0.95
+	var to := Main.inst.player.global_position - global_position
+	to.y = 0
+	var d := to.normalized() if to.length() > 0.01 else -global_basis.z
+	Main.inst.bullets.add_child(ParryOrb.make(origin + d * 0.4, d, self))
+	FX.flash(origin, ParryFX.HOT, 0.9, 0.08)
+	ParryFX.glint(origin, 1.8, ParryFX.GOLD, 0.18)
+	wob_v.x -= 10.0
+	punch = 0.8
+	Sfx.play("eshot", 0.04, 0.0)
+
+
+## 패링 공격 예고: 몸체에 금빛을 덮고 별 섬광을 터뜨린다
+func _warn(at: Vector3, kind := "ranged") -> void:
+	warn_glow = true
+	_set_flash(flash_t > 0.0)
+	ParryFX.warn(at, kind)
+
+
+func _end_warn() -> void:
+	if warn_glow:
+		warn_glow = false
+		_set_flash(flash_t > 0.0)
+
+
+## 근접 패링을 당해 경직: 크게 튕겨 나가 비틀거리고, 그동안 행동하지 못하며 받는 피해가 두 배다
+func stagger(dir: Vector3, dur: float) -> void:
+	if not alive:
+		return
+	stagger_t = dur
+	stagger_total = dur
+	burst_left = 0
+	orb_next = false
+	_end_warn()
+	_on_stagger()
+	var d := Vector3(dir.x, 0, dir.z).normalized()
+	knock = d * 16.0
+	var l := global_basis.inverse() * d
+	wob_v += Vector2(l.z, -l.x) * 30.0
+	punch = 1.0
+	flash_t = 0.1
+	_set_flash(true)
+	if not is_instance_valid(stun_halo):
+		stun_halo = ParryFX.stun_halo(visual)
+		stun_halo.position = Vector3(0, 1.85, 0)
+	FX.sparks((j.body as Node3D).global_position, 26, [Color.WHITE, ParryFX.HOT, ParryFX.GOLD], 9.0, 0.45, -12.0, 0.08)
+	Sfx.play("clank", 0.05, 2.0)
+
+
+## 하위 기체가 경직될 때 진행 중이던 공격을 정리한다
+func _on_stagger() -> void:
+	pass
+
+
+func _update_stagger(dt: float) -> void:
+	stagger_t -= dt
+	var body: Node3D = j.body
+	var k := clampf(stagger_t / stagger_total, 0.0, 1.0)
+	global_position += knock * dt
+	knock = knock.move_toward(Vector3.ZERO, 26.0 * dt)
+	global_position = Main.inst.push_out(global_position, radius)
+	wob_v += (-wob * 120.0 - wob_v * 6.0) * dt
+	wob += wob_v * dt
+	# 뒤로 젖혀진 채 어지럽게 흔들린다
+	body.position.y = 1.0 - 0.18 * k + sin(t * 7.0) * 0.05
+	body.rotation.x = -0.45 * k + wob.x * 0.4
+	body.rotation.z = sin(t * 9.0) * 0.35 * k + wob.y * 0.4
+	if is_instance_valid(stun_halo):
+		stun_halo.rotation.y += dt * 9.0
+		stun_halo.scale = Vector3.ONE * (0.6 + 0.4 * minf(1.0, k * 4.0))
+	fx_t -= dt
+	if fx_t <= 0.0:
+		fx_t = randf_range(0.08, 0.16)
+		FX.sparks(body.global_position + Vector3(randf_range(-0.3, 0.3), 0.2, randf_range(-0.3, 0.3)), 3, [Color.WHITE, ParryFX.GOLD], 4.0, 0.25, -10.0, 0.05)
+	if stagger_t <= 0.0:
+		stagger_t = 0.0
+		if is_instance_valid(stun_halo):
+			stun_halo.queue_free()
+		stun_halo = null
+		body.rotation = Vector3.ZERO
+		body.position.y = 1.0
+
+
 func take_hit(dmg: int, dir: Vector3, _pos: Vector3, source := "bullet") -> void:
 	if not alive:
 		return
+	if stagger_t > 0.0:
+		dmg *= 2
 	hp -= dmg
 	knock += Vector3(dir.x, 0, dir.z) * (3.0 + dmg)
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
@@ -228,6 +353,9 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 	death_dir = death_dir.normalized()
 	kill_source = source
 	locked = false
+	warn_glow = false
+	if is_instance_valid(stun_halo):
+		stun_halo.queue_free()
 	death = _pick_death(source) if (forced_death < 0 or source == "slash" or source == "phantom") else forced_death
 	_set_flash(false)
 	Main.inst.on_enemy_killed(self)
@@ -262,6 +390,8 @@ func _pick_death(source: String) -> int:
 			return Death.OVERLOAD if r < 0.55 else (Death.BURST if r < 0.8 else Death.SHUTDOWN)
 		"slash", "phantom":
 			return Death.SLICED
+		"parry":
+			return Death.OVERLOAD if r < 0.5 else Death.BURST
 	return [Death.BURST, Death.OVERLOAD, Death.SPINOUT, Death.SHUTDOWN][randi() % 4]
 
 
@@ -463,7 +593,7 @@ func _explode(scale_k: float, power: float, lift: float, push: Vector3) -> void:
 
 
 func _set_flash(on: bool) -> void:
-	var rest: Material = Pal.lock_hatch() if locked else null
+	var rest: Material = Pal.lock_hatch() if locked else (Pal.parry_glow() if warn_glow else null)
 	for mi in (j.body as Node3D).find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).material_overlay = Pal.flash() if on else rest
 

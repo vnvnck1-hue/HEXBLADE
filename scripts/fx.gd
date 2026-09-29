@@ -448,7 +448,7 @@ static func afterimage(visual: Node3D, tint := GHOST, life := 0.0) -> void:
 	mat.albedo_color = tint
 	for mi in visual.find_children("*", "MeshInstance3D", true, false):
 		var m := mi as MeshInstance3D
-		if not m.visible or m.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+		if not m.is_visible_in_tree() or m.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
 			continue
 		var g := MeshInstance3D.new()
 		g.mesh = m.mesh

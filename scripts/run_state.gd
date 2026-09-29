@@ -270,9 +270,17 @@ func _run_failed() -> void:
 # ── 입력: 지도 · 재시작 ─────────────────────────────────
 
 func _input(event: InputEvent) -> void:
-	if not active or not (event is InputEventKey) or not event.is_pressed() or event.is_echo():
+	if not (event is InputEventKey) or not event.is_pressed() or event.is_echo():
 		return
 	var key := (event as InputEventKey).physical_keycode
+	if key == KEY_F11:
+		# 전체 화면 ↔ 창 모드 (런 여부와 상관없이 모든 씬에서)
+		var full := DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]
+		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED if full else DisplayServer.WINDOW_MODE_FULLSCREEN)
+		get_viewport().set_input_as_handled()
+		return
+	if not active:
+		return
 	if key == KEY_TAB:
 		map_view.want = not map_view.want
 		get_viewport().set_input_as_handled()

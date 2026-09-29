@@ -181,6 +181,13 @@ func bot_input(p: Player) -> Dictionary:
 		return out
 	var bp := boss.global_position
 	out.aim = bp + Vector3(0, 0.95, 0)
+	if OS.get_cmdline_user_args().has("--hug"):
+		# 근접 견제 검증: 보스에 붙어서 검만 휘두른다 (회피 없음)
+		var hug := Vector3(bp.x, 0, bp.z + MIN_GAP + 0.5) - p.global_position
+		hug.y = 0
+		out.move = hug.limit_length(1.0)
+		out.slash = boss.landed and boss.alive
+		return out
 	out.fire = boss.landed and boss.alive
 	var cyc := fmod(time, 7.0)
 	if cyc > 5.6 and boss.alive:

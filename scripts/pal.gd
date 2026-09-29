@@ -27,6 +27,13 @@ const T_CRATE := Color("8c4a2c")
 const T_CRATE_LIGHT := Color("a8603a")
 const T_SHELL := Color("f2c22e")
 
+## 중력 크롤러: 황토색 장갑 · 짙은 금속 뚜껑과 관절 · 파란 삼안 · 약점 코어(붉은 발광)
+const CR_YELLOW := Color("d99a26")
+const CR_YELLOW_DARK := Color("a8701a")
+const CR_METAL := Color("4c4e58")
+const CR_METAL_DARK := Color("2a2b32")
+const CR_EYE := Color("3d8cff")
+
 const E_BULLETS:Array[Color] = [Color("ff2a1c"), Color("ff6a12"), Color("ffae10"), Color("ffe83a")]
 const P_BULLET := Color("d8fbff")
 ## 소총 예광탄: 흰 노랑 심 · 주황 광채
@@ -44,6 +51,10 @@ static var _flat_shader: Shader
 static var _flat_mat: ShaderMaterial
 static var _flash_mat: StandardMaterial3D
 static var _lock_mat: ShaderMaterial
+static var _parry_mat: ShaderMaterial
+## 카툰 렌더링(셀 음영 + 외곽선) 켜짐 여부. O 키로 전환, 실행 인자 --notoon 으로 끈 채 시작
+static var toon_on := not OS.get_cmdline_user_args().has("--notoon")
+static var _toon_mats: Array[StandardMaterial3D] = []
 
 
 ## 조명을 받는 저폴리곤 파츠용 머티리얼. 카툰 렌더링: 명암을 두 단으로 끊고 하이라이트도 뚝 끊는다.
@@ -64,11 +75,34 @@ static func lit(c: Color, emission := 0.0) -> StandardMaterial3D:
 
 
 ## 툰 음영 설정. 거칠기가 명암 경계의 부드러움을 정하므로 낮게 둔다.
-static func toon(m: StandardMaterial3D) -> void:
-	m.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
-	m.specular_mode = BaseMaterial3D.SPECULAR_TOON
-	m.roughness = 0.22
-	m.metallic_specular = 0.12
+## plain_* 는 카툰을 껐을 때 돌아갈 일반 음영 값이다.
+static func toon(m: StandardMaterial3D, plain_rough := 0.95, plain_spec := 0.2, cel_spec := 0.12) -> void:
+	m.set_meta("toon", [plain_rough, plain_spec, cel_spec])
+	_toon_mats.append(m)
+	_apply_toon(m)
+
+
+static func _apply_toon(m: StandardMaterial3D) -> void:
+	var v: Array = m.get_meta("toon")
+	if toon_on:
+		m.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
+		m.specular_mode = BaseMaterial3D.SPECULAR_TOON
+		m.roughness = 0.22
+		m.metallic_specular = v[2]
+	else:
+		m.diffuse_mode = BaseMaterial3D.DIFFUSE_BURLEY
+		m.specular_mode = BaseMaterial3D.SPECULAR_SCHLICK_GGX
+		m.roughness = v[0]
+		m.metallic_specular = v[1]
+
+
+## 카툰 렌더링 전체(셀 음영 + 외곽선)를 켜고 끈다
+static func set_toon(on: bool) -> void:
+	toon_on = on
+	for m in _toon_mats:
+		_apply_toon(m)
+	if is_instance_valid(ToonOutline.inst):
+		ToonOutline.inst.visible = on
 
 
 ## 조명 무시 단색. 색은 인스턴스 파라미터 tint / energy 로 지정한다.
@@ -127,3 +161,22 @@ void fragment() {
 		_lock_mat = ShaderMaterial.new()
 		_lock_mat.shader = sh
 	return _lock_mat
+
+
+## 패링 공격 예고 중인 적 위에 덮는 금빛 발광 (가장자리가 강하고 빠르게 맥동한다)
+static func parry_glow() -> ShaderMaterial:
+	if _parry_mat == null:
+		var sh := Shader.new()
+		sh.code = """
+shader_type spatial;
+render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
+void fragment() {
+	float rim = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 1.6);
+	float pulse = 0.5 + 0.5 * sin(TIME * 42.0);
+	ALBEDO = mix(vec3(1.0, 0.7, 0.12), vec3(1.0, 0.97, 0.85), rim) * 2.2;
+	ALPHA = clamp(0.28 + pulse * 0.22 + rim * 0.9, 0.0, 1.0);
+}
+"""
+		_parry_mat = ShaderMaterial.new()
+		_parry_mat.shader = sh
+	return _parry_mat

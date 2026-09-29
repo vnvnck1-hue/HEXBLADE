@@ -96,7 +96,7 @@ func _ready() -> void:
 	left.add_child(boost_label)
 	boost_bar = _bar(Color("ffb040"))
 	left.add_child(boost_bar)
-	left.add_child(_label("LASER  [우클릭 유지]", 13, Color(0.7, 0.68, 0.95)))
+	left.add_child(_label("LASER  [좌+우클릭 유지]", 13, Color(0.7, 0.68, 0.95)))
 	laser_bar = _bar(Color.WHITE)
 	left.add_child(laser_bar)
 	ult_label = _label("MISSILE  [R]", 13, Color(0.7, 0.68, 0.95))
@@ -204,7 +204,7 @@ void fragment() {
 	sub.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.18))
 	root.add_child(sub)
 
-	hint = _label("WASD 이동   좌클릭 사격   우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   E 검   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
+	hint = _label("WASD 이동   좌클릭 검   우클릭 사격   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
 	hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -458,6 +458,7 @@ func combo_pop(pts: int, source: String) -> void:
 	match source:
 		"slash": tag = "  검 x2"
 		"phantom": tag = "  일격 x3"
+		"parry": tag = "  패링 x3"
 	gain_label.text = "+%d%s" % [pts, tag]
 	gain_label.modulate.a = 1.0
 	var tw := gain_label.create_tween().set_ignore_time_scale(true)

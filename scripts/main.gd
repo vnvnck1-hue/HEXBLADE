@@ -13,6 +13,9 @@ const STRIKER_RATIO := 0.2
 ## 고정 포탑(Turret) 비율. 요격기와 같은 방식으로 이월해 전체 적의 15%를 맞춘다.
 const TURRET := -2
 const TURRET_RATIO := 0.15
+## 중력 크롤러(Crawler) 비율. 같은 방식으로 이월해 전체 적의 12%를 맞춘다.
+const CRAWLER := -3
+const CRAWLER_RATIO := 0.12
 ## 연속 처치 콤보: 이 시간 안에 다음 적을 처치하면 이어진다
 const COMBO_TIME := 3.0
 
@@ -37,6 +40,7 @@ var spawn_timer := 0.0
 var pending_spawns := 0
 var striker_carry := 0.0
 var turret_carry := 0.0
+var crawler_carry := 0.0
 ## 이번 방에서 포탑 해치를 쓴 자리 (겹치지 않게)
 var turret_spots: Array = []
 var combo := 0
@@ -66,6 +70,12 @@ var bot_dash_cd := 0.0
 var showcase := false
 ## 포탑 확인용: 플레이어 옆에 포탑 둘을 세우고 피격 무시 상태로 관찰한 뒤 한 기는 베고 한 기는 쏜다
 var turret_show := false
+## 패링 확인용: 시작 방에 패링 탄 드론과 돌진 요격기를 세우고 자동으로 패링한다
+var parry_show := false
+## 크롤러 확인용: 시작 방에 크롤러를 떨어뜨리고 피격 무시 상태로 쏘며 구르기·반사·도탄·변신·공격·처치를 본다
+var crawler_show := false
+var _show_crawler: Crawler
+var _show_room := -1
 var _show_step := 0
 var _show_aim := Vector3(2.2, 0.95, 0.4)
 
@@ -100,6 +110,8 @@ func _ready() -> void:
 	debris = Debris.new()
 	world.add_child(debris)
 	world.add_child(GunFX.new())
+	world.add_child(Parry.new())
+	add_child(ParryFX.new())
 
 	hud = Hud.new()
 	add_child(hud)
@@ -134,6 +146,12 @@ func _parse_args() -> void:
 		elif a == "--turretshow":
 			showcase = true
 			turret_show = true
+		elif a == "--parryshow":
+			showcase = true
+			parry_show = true
+		elif a == "--crawlershow":
+			showcase = true
+			crawler_show = true
 
 
 func _setup_input() -> void:
@@ -141,7 +159,7 @@ func _setup_input() -> void:
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
 		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_E, KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "camera": [KEY_C], "cam_preset": [KEY_V],
-		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I],
+		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I], "toon": [KEY_O],
 	}
 	for action in keys:
 		if not InputMap.has_action(action):
@@ -150,6 +168,14 @@ func _setup_input() -> void:
 			var ev := InputEventKey.new()
 			ev.physical_keycode = k
 			InputMap.action_add_event(action, ev)
+	# 마우스: 좌클릭 검 · 우클릭 사격 · 좌우 동시 유지 충전 (동시 판정은 Player 가 한다)
+	var mouse := {"slash_mouse": MOUSE_BUTTON_LEFT, "fire_mouse": MOUSE_BUTTON_RIGHT}
+	for action in mouse:
+		if not InputMap.has_action(action):
+			InputMap.add_action(action)
+		var mb := InputEventMouseButton.new()
+		mb.button_index = mouse[action]
+		InputMap.action_add_event(action, mb)
 
 
 # ── 월드 구성 ───────────────────────────────────────────
@@ -248,12 +274,17 @@ func _activate_room(id: int) -> void:
 	turret_carry += room_total * TURRET_RATIO
 	var turrets := mini(int(turret_carry + 0.001), room_total - strikers)
 	turret_carry -= turrets
+	crawler_carry += room_total * CRAWLER_RATIO
+	var crawlers := mini(int(crawler_carry + 0.001), room_total - strikers - turrets)
+	crawler_carry -= crawlers
 	turret_spots.clear()
 	for i in room_total:
 		if i < strikers:
 			spawn_queue.append(STRIKER)
 		elif i < strikers + turrets:
 			spawn_queue.append(TURRET)
+		elif i < strikers + turrets + crawlers:
+			spawn_queue.append(CRAWLER)
 		else:
 			spawn_queue.append(pool[randi() % pool.size()])
 	spawn_queue.shuffle()
@@ -312,9 +343,63 @@ func _run_turret_show() -> void:
 	_spawn_turret(map.start_room, 2.5)
 
 
+func _run_crawler_show() -> void:
+	if _show_step == 0 and time >= 0.2:
+		_show_step = 1
+		player.invuln = 999.0
+		# 가장 가까운 전투방으로 옮기고 출입구를 닫는다 (실제 전투처럼 구체가 통로로 빠져나가지 않게)
+		_show_room = map.start_room
+		var bd := 1e9
+		for r in map.rooms:
+			var d: float = map.room_center_world(r.id).distance_to(player.global_position)
+			if r.combat and d < bd:
+				bd = d
+				_show_room = r.id
+		map.rooms[_show_room].state = "active"
+		map.close_gates(_show_room)
+		player.global_position = map.room_center_world(_show_room)
+		camera.snap(player.global_position)
+		var e := Crawler.new()
+		world.add_child(e)
+		e.global_position = map.random_spot(_show_room, player.global_position, 5.0)
+		e.hp = 9999
+		_show_crawler = e
+	elif _show_step == 1 and time >= 13.0 and is_instance_valid(_show_crawler):
+		# 충분히 본 뒤에는 약점 상태에서 처치되도록 체력을 낮춘다
+		_show_step = 2
+		_show_crawler.hp = 6
+		print("CRAWLER %.3f HP_LOW" % time)
+
+
+func _run_parry_show() -> void:
+	if _show_step == 0 and time >= 0.2:
+		_show_step = 1
+		player.invuln = 0.0
+		player.hp = 999
+		var p := player.global_position
+		var e := _spawn_show(p, Vector3(1.5, 0, -6.5), 999)
+		e.orb_only = true
+		e.orb_cd = 0.0
+		e.desired = 6.5
+	elif _show_step == 1 and time >= 5.5:
+		_show_step = 2
+		var s := Striker.new()
+		s.lunge_only = true
+		s.lunge_cd = 1.2
+		world.add_child(s)
+		s.global_position = map.push_out(player.global_position + Vector3(-4.5, 0, -2.5), 1.0)
+		s.hp = 999
+
+
 func _run_showcase() -> void:
+	if parry_show:
+		_run_parry_show()
+		return
 	if turret_show:
 		_run_turret_show()
+		return
+	if crawler_show:
+		_run_crawler_show()
 		return
 	var p := player.global_position
 	var steps := [0.2, 3.6, 4.2, 5.2]
@@ -386,6 +471,7 @@ func _spawn(pattern: int) -> void:
 		var e: Enemy
 		match pattern:
 			STRIKER: e = Striker.new()
+			CRAWLER: e = Crawler.new()
 			_: e = Enemy.new()
 		if pattern >= 0:
 			e.pattern = pattern
@@ -412,7 +498,7 @@ func on_enemy_killed(_e: Enemy) -> void:
 	combo += 1
 	combo_t = COMBO_TIME
 	best_combo = maxi(best_combo, combo)
-	var mult := {"slash": 2, "phantom": 3}.get(_e.kill_source, 1) as int
+	var mult := {"slash": 2, "phantom": 3, "parry": 3}.get(_e.kill_source, 1) as int
 	var pts := 100 * combo * mult
 	score += pts
 	hud.combo_pop(pts, _e.kill_source)
@@ -441,6 +527,8 @@ func on_player_died() -> void:
 	hud.message("DESTROYED", "R 키로 다시 시작", Color("ff4a8a"))
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		b.queue_free()
+	for b in get_tree().get_nodes_in_group("parry_orbs"):
+		b.queue_free()
 
 
 func _win() -> void:
@@ -448,6 +536,8 @@ func _win() -> void:
 	print("WIN t=%.1f" % time)
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		FX.flash(b.position, Pal.E_BULLETS[2], 0.4, 0.1)
+		b.queue_free()
+	for b in get_tree().get_nodes_in_group("parry_orbs"):
 		b.queue_free()
 	FX.victory(player.global_position)
 	player.celebrate()
@@ -477,6 +567,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("impact"):
 		ImpactFrame.inst.enabled = not ImpactFrame.inst.enabled
 		hud.banner("IMPACT FRAME  %s" % ("ON" if ImpactFrame.inst.enabled else "OFF"), Color(1, 1, 1), "강한 레이저 발사 순간의 흑백 프레임")
+	elif event.is_action_pressed("toon"):
+		Pal.set_toon(not Pal.toon_on)
+		hud.banner("CARTOON  %s" % ("ON" if Pal.toon_on else "OFF"), Color(1, 1, 1), "셀 음영 + 외곽선")
 
 
 # ── 카메라 · 타격감 ─────────────────────────────────────
@@ -507,7 +600,7 @@ func dramatic(on: bool) -> void:
 
 
 func hitstop(sec: float) -> void:
-	Engine.time_scale = minf(0.06, slowmo)
+	Engine.time_scale = minf(0.06, slowmo * 0.5)
 	hitstop_until = max(hitstop_until, Time.get_ticks_msec() + int(sec * 1000.0))
 
 
@@ -548,6 +641,9 @@ func _capture() -> void:
 	if OS.get_cmdline_user_args().has("--camlog"):
 		print("CAM %.4f %.4f %.4f %.3f" % [camera.global_position.x, camera.global_position.y, camera.global_position.z, Engine.time_scale])
 	if capture_dir != "" and capture_frame % capture_every == 0 and time > 0.3:
+		if crawler_show and is_instance_valid(_show_crawler):
+			var sp := camera.unproject_position(_show_crawler.global_position + Vector3(0, 0.8, 0))
+			print("CPOS %d %.0f %.0f %.3f" % [capture_frame / capture_every, sp.x, sp.y, time])
 		var img := get_viewport().get_texture().get_image()
 		img.save_png("%s/f_%04d.png" % [capture_dir, capture_frame / capture_every])
 	if time > capture_seconds:
@@ -565,6 +661,27 @@ func bot_input(p: Player) -> Dictionary:
 			out.aim = (e as Node3D).global_position + Vector3(0, 0.95, 0)
 			break
 		out.fire = time > 6.6
+		return out
+	if parry_show:
+		# 제자리에서 가까운 적을 조준하고, 패링 창이 열리면 대시를 누른다
+		var bd2 := 1e9
+		for e in get_tree().get_nodes_in_group("enemies"):
+			var dd := (e as Node3D).global_position.distance_to(p.global_position)
+			if dd < bd2:
+				bd2 = dd
+				out.aim = (e as Node3D).global_position + Vector3(0, 0.95, 0)
+		var th := Parry.inst.best_threat()
+		out.dash = th != null and th.parry_eta() < Parry.EARLY * 0.5
+		return out
+	if crawler_show:
+		# 크롤러와 6m 안팎을 유지하며 옆으로 돌고 계속 쏜다: 구체일 때는 도탄, 거미일 때는 약점 피격
+		if is_instance_valid(_show_crawler) and _show_crawler.alive:
+			# 방 가운데를 지키며 조준만 따라간다 (벽에 막히지 않게)
+			var home := map.room_center_world(_show_room) - p.global_position
+			home.y = 0
+			out.move = (home * 0.5).limit_length(1.0) if home.length() > 0.4 else Vector3.ZERO
+			out.aim = _show_crawler.global_position + Vector3(0, 0.95, 0)
+			out.fire = _show_crawler.landed
 		return out
 	if showcase:
 		# 연출 확인 순서: 충전하며 대시 → 최대 레이저로 빠르게 쓸기 → 돌진 베기 ×2 → 미사일 궁극기
@@ -614,6 +731,11 @@ func bot_input(p: Player) -> Dictionary:
 		# 관통 일격이 준비되면 먼 적에게도 바로 벤다
 		if p.phantom_ready and bd < Player.PHANTOM_RANGE - 1.0:
 			out.slash = true
+	# 패링: 창이 열리면 대시를 눌러 받아친다
+	if Parry.inst and Parry.inst.best_threat() != null:
+		out.dash = true
+		out.move = move.limit_length(1.0)
+		return out
 	# 탄 회피
 	bot_dash_cd -= get_physics_process_delta_time()
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):

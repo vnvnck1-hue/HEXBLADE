@@ -27,9 +27,8 @@ static func mat(c: Color) -> StandardMaterial3D:
 	var key := c.to_html()
 	if not _mats.has(key):
 		var m := StandardMaterial3D.new()
-		Pal.toon(m)
+		Pal.toon(m, 0.7, 0.35, 0.3)
 		m.albedo_color = c
-		m.metallic_specular = 0.3
 		m.rim_enabled = true
 		m.rim = 0.25
 		m.rim_tint = 0.3
