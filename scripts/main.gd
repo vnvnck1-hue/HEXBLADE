@@ -462,11 +462,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		Engine.time_scale = 1.0
 		get_tree().reload_current_scene()
 	elif event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_B:
-		# B: 추격 보스전 ↔ 방 탐색 전환
+		# B: 방 탐색 → 추격 보스전 → 용광로 보스전 → 방 탐색 순환
 		Engine.time_scale = 1.0
 		Engine.physics_ticks_per_second = 60
-		var boss_scene := "res://scenes/boss.tscn"
-		get_tree().change_scene_to_file("res://scenes/main.tscn" if scene_file_path == boss_scene else boss_scene)
+		var scenes := ["res://scenes/main.tscn", "res://scenes/boss.tscn", "res://scenes/forge.tscn"]
+		get_tree().change_scene_to_file(scenes[(scenes.find(scene_file_path) + 1) % scenes.size()])
 	elif event.is_action_pressed("camera"):
 		camera.projection = Camera3D.PROJECTION_ORTHOGONAL if camera.projection == Camera3D.PROJECTION_PERSPECTIVE else Camera3D.PROJECTION_PERSPECTIVE
 	elif event.is_action_pressed("cam_preset"):
