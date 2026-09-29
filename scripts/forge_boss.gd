@@ -889,10 +889,11 @@ func _p_eruption(dt: float, player: Player) -> bool:
 	if int(ps.get("r", -1)) != cur and cur < ROUNDS:
 		ps.r = cur
 		ps.fired = false
-		var prev: int = ps.get("safe", -10)
+		# 안전 조각은 직전 자리와 붙지 않게 (팔각 둘레로 2칸 이상 떨어진 곳). 첫 라운드(prev < 0)는 아무 데나.
+		var prev: int = ps.get("safe", -1)
 		var s := randi() % 8
-		while absi(s - prev) <= 1 or absi(s - prev) >= 7:
-			s = randi() % 8
+		if prev >= 0:
+			s = (prev + 2 + randi() % 5) % 8
 		ps.safe = s
 		var hit: Array = []
 		for k in 8:

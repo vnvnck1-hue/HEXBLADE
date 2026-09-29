@@ -5,7 +5,7 @@ extends MeshInstance3D
 ## - 선 두께는 화면 높이 800px 기준 픽셀이며 해상도에 맞춰 늘어난다
 ## - 러프니스 0 으로 그린 파츠(Pal.flat 발광 단색: 예광탄·속도선 등)는 선을 긋지 않는다
 ## - 투명 패스에서 가장 먼저 그려서(render_priority -128) 빔·폭발 같은 반투명 이펙트는 선 위에 덮인다
-## O 키로 켜고 끈다. 판정과 무관.
+## Pal.set_toon() 으로 셀 음영과 함께 켜고 끈다(O 키). 판정과 무관.
 
 static var inst: ToonOutline
 
@@ -95,8 +95,5 @@ func _ready() -> void:
 	# 화면 전체를 덮으므로 절두체 컬링에 걸리지 않게 한다
 	extra_cull_margin = 16384.0
 	position = Vector3(0, 0, -1)
+	visible = Pal.toon_on
 
-
-func _unhandled_input(e: InputEvent) -> void:
-	if e is InputEventKey and e.pressed and not e.echo and e.keycode == KEY_O:
-		visible = not visible

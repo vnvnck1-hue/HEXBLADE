@@ -46,6 +46,16 @@ func _ready() -> void:
 	streams.overload = _synth(0.5, func(t, k): return (_sq(lerp(300.0, 1400.0, k), t) * 0.25 + sin(TAU * lerp(600.0, 2400.0, k) * t) * 0.2) * (0.4 + 0.6 * k) * (0.6 + 0.4 * sin(TAU * 30.0 * t)))
 	streams.powerdown = _synth(0.55, func(t, k): return (sin(TAU * lerp(700.0, 60.0, pow(k, 0.5)) * t) * 0.35 + _saw(lerp(350.0, 30.0, k), t) * 0.12) * (1.0 - k))
 	streams.beam = _looped(func(t, k): return (randf() * 2.0 - 1.0) * 0.25 + _saw(55.0, t) * 0.35 + sin(TAU * 220.0 * t) * 0.15 * sin(TAU * 6.0 * t))
+	# 중력 크롤러: 금속 충돌음 · 도탄 휘파람 · 회전 가속 · 발진 · 변신 철컥
+	streams.clank = _synth_filtered(0.24, 0.6, func(t, k): return (randf() * 2.0 - 1.0) * 0.55 * pow(1.0 - k, 6.0) + (sin(TAU * 820.0 * t) * 0.34 + sin(TAU * 1310.0 * t) * 0.26 + sin(TAU * 2170.0 * t) * 0.16) * pow(1.0 - k, 2.5))
+	streams.ricochet = _synth(0.24, func(t, k): return sin(TAU * lerp(3600.0, 1700.0, k) * t + sin(TAU * 34.0 * t) * 1.5) * 0.2 * pow(1.0 - k, 1.3) * minf(1.0, k * 40.0))
+	streams.rev = _synth(0.66, func(t, k): return (_saw(lerp(70.0, 420.0, k * k), t) * 0.2 + sin(TAU * lerp(140.0, 900.0, k * k) * t) * 0.14) * minf(1.0, k * 4.0) * (0.75 + 0.25 * sin(TAU * lerp(10.0, 45.0, k) * t)))
+	streams.launch = _synth_filtered(0.32, 0.25, func(t, k): return (randf() * 2.0 - 1.0) * 0.8 * pow(1.0 - k, 3.0) + sin(TAU * lerp(160.0, 45.0, k) * t) * 0.9 * pow(1.0 - k, 1.5))
+	streams.unfold = _synth(0.34, func(t, k): return (randf() * 2.0 - 1.0) * (exp(-t * 90.0) * 0.7 + (exp(-(t - 0.07) * 90.0) * 0.6 if t > 0.07 else 0.0)) + _sq(lerp(520.0, 260.0, k), t) * 0.1 * (1.0 - k))
+	# 패링: 예고 섬광음(쨍) · 판정 창 신호(핑) · 성공 금속 충돌음(깡 + 저음 충격)
+	streams.pwarn = _synth(0.42, func(t, k): return (sin(TAU * lerp(2300.0, 3150.0, sqrt(k)) * t) * 0.26 + sin(TAU * 4700.0 * t) * 0.12 * pow(1.0 - k, 2.0)) * pow(1.0 - k, 1.4) * minf(1.0, k * 80.0) + (randf() * 2.0 - 1.0) * 0.3 * pow(1.0 - k, 14.0))
+	streams.pcue = _synth(0.12, func(t, k): return (sin(TAU * 3520.0 * t) * 0.22 + sin(TAU * 5280.0 * t) * 0.1) * pow(1.0 - k, 2.0))
+	streams.parry = _synth_filtered(1.1, 0.75, func(t, k): return (randf() * 2.0 - 1.0) * 0.9 * pow(1.0 - k, 16.0) + (sin(TAU * 1180.0 * t) * 0.3 + sin(TAU * 1763.0 * t) * 0.24 + sin(TAU * 2541.0 * t) * 0.18 + sin(TAU * 3917.0 * t) * 0.1) * pow(1.0 - k, 2.4) + sin(TAU * lerp(150.0, 42.0, k) * t) * 0.75 * pow(1.0 - k, 3.5))
 	streams.win = _notes([523.0, 659.0, 784.0, 1047.0], 0.12)
 	streams.lose = _notes([392.0, 311.0, 233.0, 175.0], 0.16)
 

@@ -98,6 +98,11 @@ func mega(origin: Vector3, dir: Vector3) -> void:
 	_play(origin, dir, [[34, 0.0, 1.0], [34, 1.0, 1.5]])
 
 
+## 패링: 흰 원판 2프레임 → 반전·굵은 선 3프레임
+func parry(origin: Vector3, dir: Vector3) -> void:
+	_play(origin, dir, [[34, 0.0, 1.3], [50, 1.0, 1.8]])
+
+
 ## 재생 길이(초). 호출 쪽이 히트스탑 길이를 맞출 때 쓴다
 func duration(kind: String) -> float:
 	return 0.034 if kind == "laser" else 0.068

@@ -53,6 +53,18 @@ var ult_look := Vector3.ZERO
 var ult_prev_ptr := Vector2.ZERO
 var noise := FastNoiseLite.new()
 var t := 0.0
+# 패링 시네마틱: 플레이어 등 뒤 어깨 너머로 파고들어 플레이어와 적을 한 화면에 담는다 (실제 시간으로 진행)
+const CINE_IN := 0.12
+const CINE_HOLD := 0.8
+const CINE_END := 1.25
+var cine_start := -1
+var cine_player: Player
+var cine_foe: Node3D
+var cine_foe_pos := Vector3.ZERO
+var cine_side := 1.0
+var cine_back := 2.6
+var cine_prev_proj := -1
+var cine_w := 0.0
 
 
 func _ready() -> void:
@@ -112,6 +124,29 @@ func set_ult_view(on: bool) -> void:
 		kick_v += -ult_look * 1.5
 
 
+## 패링 성공: 등 뒤 극적 구도로 전환
+func parry_cine(player: Player, foe: Node3D, foe_pos: Vector3) -> void:
+	cine_start = Parry.now_ms()
+	cine_player = player
+	cine_foe = foe
+	cine_foe_pos = foe_pos
+	# 지금 카메라가 있는 쪽 어깨로 돌아 들어가 휘감는 움직임이 짧고 자연스럽게
+	var d := foe_pos - player.global_position
+	d.y = 0
+	d = d.normalized() if d.length() > 0.01 else player.aim_dir
+	var side := Vector3(-d.z, 0, d.x)
+	var cam_rel := global_position - player.global_position
+	cine_side = 1.0 if cam_rel.dot(side) >= 0.0 else -1.0
+	if projection == PROJECTION_ORTHOGONAL:
+		cine_prev_proj = PROJECTION_ORTHOGONAL
+		projection = PROJECTION_PERSPECTIVE
+	trauma = minf(trauma, 0.3)
+
+
+func cine_active() -> bool:
+	return cine_start >= 0
+
+
 func set_beam(on: bool, dir := Vector3.ZERO) -> void:
 	beam_on = on
 	if on:
@@ -142,20 +177,19 @@ func update(dt: float, player: Player) -> void:
 		pull_t -= dt
 	var pull_k := clampf(pull_t / 0.35, 0.0, 1.0)
 	target += pull * pull_k * pull_k
-	# 락온 중: 화면 중심에서 포인터가 벗어난 만큼 시야를 그쪽으로 옮기고, 휘두르는 방향으로 살짝 기운다
+	# 락온 중: 줌아웃만 하고 시야는 거의 고정한다 (포인터를 따라 화면이 움직이면 조준이 어렵다).
+	# 조준 방향 시야 이동도 걷어 내고, 포인터 쪽으로는 아주 살짝만 기운다.
 	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (5.0 if ult_on else 3.0))
 	var look_target := Vector3.ZERO
 	var roll_add := 0.0
 	if ult_on:
 		var vs := get_viewport().get_visible_rect().size
 		var m := (player.ult_ptr - vs * 0.5) / (vs * 0.5)
-		m = m.limit_length(1.2)
-		look_target = Vector3(m.x, 0, m.y * 1.3) * 4.2
-		var mv := (player.ult_ptr - ult_prev_ptr) / maxf(vs.x, 1.0)
-		roll_add = clampf(-mv.x * 1.6, -0.05, 0.05)
-		kick_v += Vector3(mv.x, 0, mv.y) * 9.0
+		m = m.limit_length(1.0)
+		look_target = Vector3(m.x, 0, m.y * 1.3) * 0.35
 	ult_prev_ptr = player.ult_ptr
-	ult_look = ult_look.lerp(look_target, 1.0 - exp(-7.0 * dt))
+	ult_look = ult_look.lerp(look_target, 1.0 - exp(-3.0 * dt))
+	target = target.lerp(player.global_position + lead, ult_k)
 	target += ult_look
 	focus = focus.lerp(target, 1.0 - exp(-float(p.follow) * dt))
 
@@ -199,3 +233,69 @@ func _apply(shake_off: Vector3) -> void:
 	global_position += global_basis.x * shake_off.x + global_basis.y * shake_off.y
 	global_position.z += shake_off.z
 	rotate_object_local(Vector3.FORWARD, roll)
+	_apply_cine(shake_off, base)
+
+
+func _apply_cine(shake_off: Vector3, base_look: Vector3) -> void:
+	if cine_start < 0:
+		return
+	var e := (Parry.now_ms() - cine_start) * 0.001
+	if e >= CINE_END or not is_instance_valid(cine_player):
+		cine_start = -1
+		cine_w = 0.0
+		if cine_prev_proj >= 0:
+			projection = cine_prev_proj as ProjectionType
+			cine_prev_proj = -1
+		return
+	# 들어갈 때는 급격히(지수 감속), 나올 때는 부드럽게
+	if e < CINE_IN:
+		cine_w = 1.0 - pow(1.0 - e / CINE_IN, 3.0)
+	elif e < CINE_HOLD:
+		cine_w = 1.0
+	else:
+		cine_w = 1.0 - smoothstep(CINE_HOLD, CINE_END, e)
+	var pp := cine_player.global_position
+	if is_instance_valid(cine_foe):
+		cine_foe_pos = cine_foe_pos.lerp(cine_foe.global_position, 0.25)
+	var d := cine_foe_pos - pp
+	d.y = 0
+	var dist := d.length()
+	d = d / dist if dist > 0.01 else cine_player.aim_dir
+	var side := Vector3(-d.z, 0, d.x) * cine_side
+	# 천천히 밀고 들어가며(돌리) 어깨 쪽으로 살짝 돈다
+	var push := smoothstep(0.0, CINE_HOLD, e)
+	var back := lerpf(3.1, 2.2, push)
+	# 근접처럼 적이 가까우면 플레이어 몸에 가리지 않도록 옆으로 더 빼고 조금 더 물러선다
+	var near := clampf((4.5 - dist) / 3.0, 0.0, 1.0)
+	back = lerpf(back, lerpf(1.9, 1.5, push), near)
+	var lat := lerpf(lerpf(1.55, 1.2, push), lerpf(2.9, 2.5, push), near)
+	var h := lerpf(1.8, 1.5, push)
+	var off := -d * back + side * lat
+	var cam := pp + off * _cine_clear(pp, off) + Vector3(0, h, 0)
+	# 시선: 플레이어 너머 적 쪽. 적이 멀면 중간쯤을 봐서 둘 다 화면에 들어오게 한다
+	# 시선을 적 쪽 어깨 반대편으로 살짝 비켜 플레이어가 화면 한쪽, 적이 반대쪽에 서게 한다
+	var look := pp + d * lerpf(clampf(dist * 0.6, 1.5, 5.0), dist * 0.55 + 0.4, near) - side * 0.35 * (1.0 - near) + Vector3(0, lerpf(1.05, 0.95, push), 0)
+	# 눈 위치와 시선점을 따로 보간해 전환 중에도 플레이어가 화면을 벗어나지 않게 한다
+	var w := cine_w
+	var eye := global_position.lerp(cam, w)
+	var tgt := base_look.lerp(look, w)
+	var b := Basis.looking_at(tgt - eye, Vector3.UP)
+	# 더치 앵글: 어깨 쪽으로 기울인다
+	b = b * Basis(Vector3.FORWARD, deg_to_rad(7.0) * cine_side * (0.6 + 0.4 * push) * w + roll * (1.0 - w))
+	var sh := (b.x * shake_off.x + b.y * shake_off.y) * 0.5 * w
+	global_transform = Transform3D(b, eye + sh)
+	fov = lerpf(fov, lerpf(62.0, 50.0, push), cine_w)
+
+
+## 플레이어 뒤쪽이 벽에 막히면 카메라를 벽 앞까지 당긴다 (오프셋에 곱할 비율)
+func _cine_clear(pp: Vector3, off: Vector3) -> float:
+	var main := Main.inst
+	if main == null:
+		return 1.0
+	var n := 12
+	var l := maxf(off.length(), 0.01)
+	for i in range(1, n + 1):
+		var k := float(i) / n
+		if main.is_blocked(pp + off * k):
+			return clampf(k - 0.35 / l, 0.3, 1.0)
+	return 1.0

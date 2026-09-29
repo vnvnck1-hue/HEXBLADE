@@ -43,6 +43,8 @@ static func burst(body: Node3D, center: Vector3, power: float, lift: float, push
 			var half := 0.15
 			if box:
 				half = box.size.length() * 0.3
+			elif m.has_meta("keep_mat"):
+				half = m.get_aabb().size.length() * 0.3
 			else:
 				# 코어 같은 발광 파츠는 꺼진 색으로
 				mat = Pal.lit(Color("5a1428"))

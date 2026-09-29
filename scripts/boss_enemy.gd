@@ -18,6 +18,15 @@ const BASE_Z := -10.5
 const ENTER_TIME := 3.2
 const PLANE_Y := 1.0              # 탄이 날아가는 높이 (판정은 수평 거리)
 
+## 근접 견제: 붙어서 검만 휘두르는 플레이 방지
+const NEAR_R := 7.5               # 보스 중심에서 이 거리 안이면 '붙어 있다' (검 사거리 2.9 + 보스 반경 3.3 포함)
+const SHOCK_R := 9.0              # 밀쳐내기 충격파 반경
+const SHOCK_TELE := 0.55          # 충격파 예고 시간
+const SHOCK_CHANCE := 0.35        # 0.6초마다 굴리는 기본 확률 (붙어 있을수록 +최대 0.3)
+const SHOCK_CD := 3.2
+const SHOCK_PUSH := 26.0
+const STUN_TIME := 0.7            # 푸른 경직탄에 맞았을 때 경직 시간
+
 const PATTERNS_1 := ["volley", "gatling", "missiles", "gapring"]
 const PATTERNS_2 := ["spiral", "lanes", "mega"]
 const NAMES := {
@@ -28,6 +37,8 @@ const NAMES := {
 var stage: Stage
 ## 강력 레이저가 관통하지 못하고 표면에서 막힌다 (beam_impact.gd 가 읽음)
 var blocks_beam := true
+## 검으로 맞혀도 플레이어 검 쿨다운이 초기화되지 않는다 (player.gd _slash_hit 가 읽음)
+var no_slash_reset := true
 var bar: Bar
 var st := St.ENTER
 var st_t := 0.0
@@ -59,6 +70,12 @@ var z_off := 0.0
 var threats: Array = []           # 자동 플레이 회피용: 원·차선·빔
 var warnings: Array = []          # 바닥 경고 노드
 var _marker_mat: ShaderMaterial
+var near_t := 0.0                 # 플레이어가 붙어 있은 시간
+var shock_roll := 0.0
+var shock_cd := 1.5
+var shock_t := -1.0               # 0 이상이면 충격파 예고 중
+var shock_ring: MeshInstance3D
+var guard_cd := 0.0
 
 
 func _ready() -> void:
@@ -140,6 +157,7 @@ func _update_fight(dt: float, player: Player) -> void:
 			bar.weak = false
 	if not player.alive or Main.inst.state != Main.State.PLAY:
 		return
+	_update_close(dt, player)
 	if pat == "":
 		rest -= dt
 		if rest <= 0.0:
@@ -233,7 +251,7 @@ func _update_body(dt: float, player: Player) -> void:
 		core.set_instance_shader_parameter("tint", Color("ffe060") if fmod(t, 0.16) < 0.08 else Color("ff8a20"))
 		core.set_instance_shader_parameter("energy", 3.0)
 		core.scale = Vector3.ONE * (1.35 + sin(t * 30.0) * 0.08)
-	elif pat != "mega":
+	elif pat != "mega" and shock_t < 0.0:
 		core.set_instance_shader_parameter("tint", Pal.E_RED)
 		core.set_instance_shader_parameter("energy", 1.6 + sin(t * (4.0 if phase == 1 else 9.0)) * 0.5)
 		core.scale = core.scale.lerp(Vector3.ONE, 1.0 - exp(-6.0 * dt))
@@ -244,6 +262,12 @@ func _update_body(dt: float, player: Player) -> void:
 func _shot(from: Vector3, dir: Vector3, speed: float, big := false) -> void:
 	var d := Vector3(dir.x, 0, dir.z).normalized()
 	Main.inst.add_bullet(Bullet.make_enemy(Vector3(from.x, PLANE_Y, from.z), d, speed, big))
+
+
+## 푸른 경직탄: 검으로 지울 수 없고, 맞으면 체력 1칸 + 0.7초 경직
+func _blue(from: Vector3, dir: Vector3, speed: float, life := 5.0) -> void:
+	var d := Vector3(dir.x, 0, dir.z).normalized()
+	Main.inst.add_bullet(Bullet.make_blue(Vector3(from.x, PLANE_Y, from.z), d, speed, STUN_TIME, life))
 
 
 func _aim_from(from: Vector3, target: Vector3) -> Vector3:
@@ -378,7 +402,11 @@ func _p_gapring(_dt: float, player: Player) -> bool:
 				var a := TAU * i / total
 				if absf(angle_difference(a, gap)) < gap_w:
 					continue
-				_shot(c, _dir_from_angle(a), 6.2, i % 2 == 0)
+				# 파동마다 몇 발은 검으로 못 지우는 푸른 탄 → 베면서 뚫고 들어가면 맞는다
+				if i % 6 == (n * 2) % 6:
+					_blue(c, _dir_from_angle(a), 5.4)
+				else:
+					_shot(c, _dir_from_angle(a), 6.2, i % 2 == 0)
 			FX.flash(c, Color("ff6a80"), 1.6, 0.1)
 			FX.shockwave(Vector3(c.x, 0.3, c.z), Pal.E_RED, 3.0, 0.3)
 			Sfx.play("eshot", 0.05, 0.0)
@@ -407,7 +435,10 @@ func _p_spiral(dt: float, player: Player) -> bool:
 			for arm in 4:
 				var a := rot2 + TAU * arm / 4.0
 				if absf(angle_difference(a, 0.0)) < 1.9:
-					_shot(c, _dir_from_angle(a), 4.4, true)
+					if k % 4 == 0:
+						_blue(c, _dir_from_angle(a), 4.2)
+					else:
+						_shot(c, _dir_from_angle(a), 4.4, true)
 		if k % 3 == 0:
 			Sfx.play("eshot", 0.1, -7.0)
 	ps.cd = cd
@@ -538,7 +569,10 @@ func _p_mega(dt: float, player: Player) -> bool:
 			var c := _core_pos()
 			var off2 := randf() * TAU
 			for i in 14:
-				_shot(c, _dir_from_angle(off2 + TAU * i / 14.0), 3.8, true)
+				if i % 3 == 0:
+					_blue(c, _dir_from_angle(off2 + TAU * i / 14.0), 3.6)
+				else:
+					_shot(c, _dir_from_angle(off2 + TAU * i / 14.0), 3.8, true)
 		ps.rc = rc
 		Main.inst.shake(0.02 + k * 0.05)
 		return false
@@ -611,31 +645,7 @@ func _clear_warnings() -> void:
 ## 바닥 원형 경고 → 미사일 낙하 폭발
 func _marker(p: Vector3, r: float, fuse: float) -> void:
 	p.x = clampf(p.x, -Stage.HALF_W + 0.5, Stage.HALF_W - 0.5)
-	if _marker_mat == null:
-		var sh := Shader.new()
-		sh.code = """
-shader_type spatial;
-render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never, blend_add;
-instance uniform float progress = 0.0;
-void fragment() {
-	float r = length(UV - 0.5) * 2.0;
-	float ring = smoothstep(0.9, 0.95, r) * (1.0 - smoothstep(0.98, 1.0, r));
-	float fill = step(r, progress) * 0.35 * (1.0 - step(1.0, r));
-	float cross = (step(abs(UV.x - 0.5), 0.012) + step(abs(UV.y - 0.5), 0.012)) * step(r, 0.35);
-	float blink = mix(1.0, step(0.5, fract(TIME * 14.0)), step(0.75, progress));
-	float i = (ring * 1.6 + fill + cross * 0.8 + 0.08 * (1.0 - step(1.0, r))) * blink;
-	ALBEDO = vec3(1.0, 0.12, 0.1) * i;
-}
-"""
-		_marker_mat = ShaderMaterial.new()
-		_marker_mat.shader = sh
-	var q := QuadMesh.new()
-	q.orientation = PlaneMesh.FACE_Y
-	q.size = Vector2(r * 2.0, r * 2.0)
-	var mi := MeshInstance3D.new()
-	mi.mesh = q
-	mi.material_override = _marker_mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var mi := _ring_mesh(r)
 	stage.add_child(mi)
 	mi.global_position = Vector3(p.x, 0.05, p.z)
 	var info := {"type": "circle", "pos": mi.global_position, "r": r}
@@ -657,6 +667,147 @@ void fragment() {
 	dtw.tween_callback(func(): drop.visible = true)
 	dtw.tween_property(drop, "global_position:y", 0.6, 0.18).set_ease(Tween.EASE_IN)
 	dtw.tween_callback(drop.queue_free)
+
+
+## 바닥 원형 경고 메시 (반지름 r). progress 로 안쪽이 차오르고, 3/4 이후 깜빡인다
+func _ring_mesh(r: float, col := Color(1.0, 0.12, 0.1)) -> MeshInstance3D:
+	if _marker_mat == null:
+		var sh := Shader.new()
+		sh.code = """
+shader_type spatial;
+render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never, blend_add;
+instance uniform float progress = 0.0;
+instance uniform vec4 col : source_color = vec4(1.0, 0.12, 0.1, 1.0);
+void fragment() {
+	float r = length(UV - 0.5) * 2.0;
+	float ring = smoothstep(0.9, 0.95, r) * (1.0 - smoothstep(0.98, 1.0, r));
+	float fill = step(r, progress) * 0.35 * (1.0 - step(1.0, r));
+	float cross = (step(abs(UV.x - 0.5), 0.012) + step(abs(UV.y - 0.5), 0.012)) * step(r, 0.35);
+	float blink = mix(1.0, step(0.5, fract(TIME * 14.0)), step(0.75, progress));
+	float i = (ring * 1.6 + fill + cross * 0.8 + 0.08 * (1.0 - step(1.0, r))) * blink;
+	ALBEDO = col.rgb * i;
+}
+"""
+		_marker_mat = ShaderMaterial.new()
+		_marker_mat.shader = sh
+	var q := QuadMesh.new()
+	q.orientation = PlaneMesh.FACE_Y
+	q.size = Vector2(r * 2.0, r * 2.0)
+	var mi := MeshInstance3D.new()
+	mi.mesh = q
+	mi.material_override = _marker_mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.set_instance_shader_parameter("col", col)
+	return mi
+
+
+# ── 근접 견제 ───────────────────────────────────────────
+# 붙어서 검만 휘두르면: ① 몸체에서 푸른 경직탄이 흩뿌려지고 ② 확률적으로 충격파가 밀어낸다.
+# 패턴과 별개로 돌며, 거수포 충전 중에는 충격파를 쓰지 않는다.
+
+func _update_close(dt: float, player: Player) -> void:
+	var rel := player.global_position - global_position
+	rel.y = 0
+	var near := rel.length() < NEAR_R
+	near_t = near_t + dt if near else maxf(0.0, near_t - dt * 2.0)
+	shock_cd -= dt
+	if shock_t >= 0.0:
+		_update_shock(dt, player)
+	elif near_t > 0.5 and shock_cd <= 0.0 and pat != "mega":
+		shock_roll -= dt
+		if shock_roll <= 0.0:
+			shock_roll = 0.6
+			# 오래 붙어 있을수록 확률이 오른다
+			if randf() < SHOCK_CHANCE + minf((near_t - 0.5) * 0.15, 0.3):
+				_begin_shock()
+	guard_cd -= dt
+	if near and near_t > 0.25 and guard_cd <= 0.0:
+		guard_cd = 1.2 if phase == 1 else 0.85
+		_guard_burst(player)
+
+
+## 장갑 틈에서 푸른 경직탄이 흩뿌려진다: 0.25초 예고(푸른 섬광) 뒤 플레이어 쪽 부채꼴로 느리게 퍼진다
+func _guard_burst(player: Player) -> void:
+	var to := _aim_from(global_position, player.global_position)
+	var side := Vector3(-to.z, 0, to.x)
+	var count := 5 if phase == 1 else 7
+	var spots: Array = []
+	for i in count:
+		var u := (i - (count - 1) * 0.5) / maxf(count - 1, 1) * 2.0       # -1 ~ 1
+		var p := global_position + to * 2.9 + side * u * 2.6
+		p.y = PLANE_Y
+		spots.append(p)
+		FX.flash(p, Color("8ad8ff"), 0.7, 0.25)
+	Sfx.play("echarge", 0.1, -10.0)
+	get_tree().create_timer(0.25, false).timeout.connect(func():
+		if not is_instance_valid(self) or st != St.FIGHT:
+			return
+		for i in spots.size():
+			var p: Vector3 = spots[i]
+			var d := to.rotated(Vector3.UP, randf_range(-0.55, 0.55) + (i - (spots.size() - 1) * 0.5) * 0.12)
+			_blue(p, d, randf_range(4.6, 6.0), 1.9)
+			FX.sparks(p, 3, [Color.WHITE, Color("3aa8ff")], 4.0, 0.2, -4.0, 0.05)
+		Sfx.play("eshot", 0.1, -6.0))
+
+
+func _begin_shock() -> void:
+	shock_t = 0.0
+	shock_ring = _ring_mesh(SHOCK_R, Color(0.35, 0.75, 1.0))
+	stage.add_child(shock_ring)
+	shock_ring.global_position = Vector3(global_position.x, 0.06, global_position.z)
+	Main.inst.hud.popup("!", Color("8ad8ff"), _core_pos() + Vector3(0, 2.5, 0))
+	Sfx.play("echarge", 0.0, -2.0)
+	print("BOSS_SHOCK near=%.1f" % near_t)
+
+
+func _update_shock(dt: float, player: Player) -> void:
+	shock_t += dt
+	var k := clampf(shock_t / SHOCK_TELE, 0.0, 1.0)
+	if is_instance_valid(shock_ring):
+		shock_ring.global_position = Vector3(global_position.x, 0.06, global_position.z)
+		shock_ring.set_instance_shader_parameter("progress", k)
+	# 몸을 웅크리며 코어가 푸르게 달아오른다
+	var core := tank.core as MeshInstance3D
+	core.set_instance_shader_parameter("tint", Color("3aa8ff").lerp(Color.WHITE, k))
+	core.set_instance_shader_parameter("energy", 2.0 + k * 3.0)
+	punch = maxf(punch, k * 0.6)
+	threats.append({"type": "circle", "pos": global_position, "r": SHOCK_R})
+	if shock_t >= SHOCK_TELE:
+		_fire_shock(player)
+
+
+## 충격파: 반경 안의 플레이어를 앞(+Z)으로 크게 밀어내고, 앞쪽 반원으로 푸른 경직탄 고리를 퍼뜨린다
+func _fire_shock(player: Player) -> void:
+	_cancel_shock()
+	shock_cd = SHOCK_CD
+	near_t = 0.0
+	var c := global_position
+	FX.shockwave(Vector3(c.x, 0.3, c.z), Color("8ad8ff"), SHOCK_R * 2.0, 0.35, 0.14)
+	FX.shockwave(Vector3(c.x, 0.5, c.z), Color.WHITE, SHOCK_R * 1.3, 0.25, 0.08)
+	FX.flash(_core_pos(), Color("bfe8ff"), 2.6, 0.12)
+	Sfx.play("boom", 0.05, 1.0)
+	Main.inst.shake(0.6)
+	Main.inst.hitstop(0.05)
+	punch = 1.0
+	var rel := player.global_position - c
+	rel.y = 0
+	# 대시(무적 구르기)로는 흘려 낼 수 있다
+	if player.alive and player.dash_t <= 0.0 and rel.length() < SHOCK_R + player.hit_radius:
+		var d := rel.normalized() if rel.length() > 0.1 else Vector3.BACK
+		player.shove((d + Vector3.BACK * 0.6).normalized(), SHOCK_PUSH)
+		Main.inst.kick(d * 0.8)
+	var cp := _core_pos()
+	var off := randf_range(-0.12, 0.12)
+	for i in 11:
+		var a := off + (i - 5) * 0.34
+		_blue(cp, _dir_from_angle(a), 5.2, 3.0)
+
+
+func _cancel_shock() -> void:
+	shock_t = -1.0
+	if is_instance_valid(shock_ring):
+		shock_ring.queue_free()
+	shock_ring = null
 
 
 var _markers: Array = []
@@ -758,6 +909,7 @@ func _abort_pattern() -> void:
 	bar.weak = false
 	bar.set_pattern("")
 	_clear_warnings()
+	_cancel_shock()
 	for g in muzzle_glow:
 		(g as Node3D).scale = Vector3.ONE * 0.01
 

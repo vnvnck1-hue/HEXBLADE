@@ -158,6 +158,12 @@ func _physics_process(dt: float) -> void:
 	if OS.get_cmdline_user_args().has("--fastp2") and boss and boss.phase == 1 and boss.st == ForgeBoss.St.FIGHT and time > 6.0:
 		boss.take_hit(20, Vector3.FORWARD, boss.global_position, "missile")
 		boss.boss_hp = minf(boss.boss_hp, ForgeBoss.MAX_HP * ForgeBoss.PHASE2_AT + 1.0)
+	if OS.get_cmdline_user_args().has("--perflog") and fmod(time, 10.0) < dt:
+		print("PERF t=%.0f fps=%d nodes=%d objs=%d orphans=%d mem=%.1fMB fires=%d bullets=%d draw=%d" % [time,
+			Performance.get_monitor(Performance.TIME_FPS), Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
+			Performance.get_monitor(Performance.OBJECT_COUNT), Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT),
+			Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0, stage.fires.size(),
+			bullets.get_child_count(), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)])
 	# 전장 경계: 지금 남은 팔각 발판 안
 	if player.alive:
 		player.global_position = Stage.clamp_inside(player.global_position, stage.radius - EDGE)

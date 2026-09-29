@@ -30,8 +30,8 @@ const LASER_RANGE := 24.0
 const MAX_HP := 5
 # 최대 충전 지속 레이저 (벨코즈 궁 스타일)
 const MEGA_TIME := 2.0
-const MEGA_TURN_MAX := 16.0     # 최대 회전 속도 (rad/s) → 거의 즉시 따라옴
-const MEGA_TURN_GAIN := 24.0
+const MEGA_TURN_MAX := 1.4      # 최대 회전 속도 (rad/s, 약 80°/s) → 무겁게 천천히 돈다
+const MEGA_TURN_GAIN := 2.5
 const MEGA_TICK := 0.1
 const MEGA_DMG := 2
 const MEGA_WIDTH := 1.2
@@ -59,7 +59,7 @@ const PHANTOM_WIDTH := 0.9
 const SLASH_TIMES := [0.16, 0.16, 0.2, 0.24]
 const SLASH_SWINGS := [0.05, 0.05, 0.06, 0.1]
 # 궁극기 락온
-const ULT_SLOW := 0.18
+const ULT_SLOW := 0.06
 const ULT_AIM_MAX := 2.0         # 실제 시간 (초)
 const LOCK_PX := 54.0            # 화면 800px 높이 기준 락온 반경
 const LOCK_MAX := 10
@@ -101,6 +101,7 @@ var laser_cd := 0.0
 var laser_recoil := 0.0
 var invuln := 0.0
 var hurt_t := 0.0
+var stun_t := 0.0                 # 경직: 이동·사격·검·대시·충전이 막힌다
 var recoil := 0.0
 var mega_t := 0.0
 var mega_yaw := 0.0
@@ -219,9 +220,12 @@ func _physics_process(dt: float) -> void:
 		var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		move_dir = Vector3(v.x, 0, v.y)
 		aim_point = main.mouse_ground(0.95)
-		fire = Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT)
-		charge_held = Input.is_mouse_button_pressed(MOUSE_BUTTON_RIGHT)
-		slash_pressed = Input.is_action_just_pressed("slash")
+		# 좌클릭 검 · 우클릭 사격 · 좌우 동시 유지 충전
+		var lmb := Input.is_action_pressed("slash_mouse")
+		var rmb := Input.is_action_pressed("fire_mouse")
+		charge_held = lmb and rmb
+		fire = rmb and not lmb
+		slash_pressed = Input.is_action_just_pressed("slash") or (Input.is_action_just_pressed("slash_mouse") and not rmb)
 		dash_pressed = Input.is_action_just_pressed("dash")
 		boost_held = Input.is_action_pressed("boost")
 		if Input.is_action_just_pressed("ult") and ult >= 1.0 and playing and not ult_aiming and ult_queue == 0 and mega_t <= 0.0:
@@ -244,6 +248,19 @@ func _physics_process(dt: float) -> void:
 		charge_held = false
 		boost_held = false
 		move_dir = Vector3.ZERO
+	stun_t = maxf(0.0, stun_t - dt)
+	if stun_t > 0.0:
+		fire = false
+		slash_pressed = false
+		dash_pressed = false
+		charge_held = false
+		charge = 0.0            # 모으던 충전은 레이저 없이 흩어진다
+		move_dir = Vector3.ZERO
+		if mega_t > 0.0:
+			_end_mega()
+		if randf() < 0.35:
+			FX.sparks(global_position + Vector3(randf_range(-0.3, 0.3), randf_range(0.4, 1.4), randf_range(-0.3, 0.3)), 2, [Color.WHITE, Color("8ad8ff")], 3.0, 0.15, 0.0, 0.05)
+			tilt_v += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)) * 3.0
 
 	var to_aim := aim_point - global_position
 	to_aim.y = 0
@@ -278,6 +295,9 @@ func _physics_process(dt: float) -> void:
 	# ── 회피 (드릴 회전) ──
 	dash_cd = max(0.0, dash_cd - dt)
 	chain_grace = maxf(0.0, chain_grace - dt)
+	# 패링: 패링 공격이 닿기 직전이면 대시 대신 반격이 나간다 (대시 쿨다운과 무관)
+	if dash_pressed and lunge_t <= 0.0 and Parry.inst and Parry.inst.try_parry(self):
+		dash_pressed = false
 	if dash_pressed and lunge_t <= 0.0:
 		if mega_t > 0.0:
 			# 레이저 끊기
@@ -473,6 +493,42 @@ func _dash_start(chained := false) -> void:
 		Main.inst.hud.popup("PERFECT", _rainbow(0.35), global_position + Vector3(0, 2.2, 0))
 
 
+## 패링 반격: 공격해 온 적을 향해 검을 휘둘러 받아친다. 대시가 곧바로 다시 차고, 다음 검은 관통 일격이 된다.
+func parry_counter(foe: Vector3, kind: String) -> void:
+	if mega_t > 0.0:
+		_end_mega()
+	if dash_t > 0.0:
+		dash_t = 0.0
+		_dash_end()
+	rainbow = false
+	chain_grace = 0.0
+	var d := foe - global_position
+	d.y = 0
+	if d.length() > 0.01:
+		aim_dir = d.normalized()
+	var aim_yaw := atan2(-aim_dir.x, -aim_dir.z)
+	visual.basis = Basis.IDENTITY
+	(j.upper as Node3D).rotation.y = aim_yaw
+	(j.legs as Node3D).rotation.y = aim_yaw
+	# 받아친 반동: 근접은 뒤로 밀리고, 원거리는 앞으로 내딛는다
+	velocity = aim_dir * (3.0 if kind == "ranged" else -5.0)
+	invuln = maxf(invuln, 0.7)
+	dash_cd = 0.0
+	slash_cd = 0.0
+	phantom_ready = true
+	slash_style = 1 if slash_style == 0 else 0
+	slash_total = SLASH_TIMES[slash_style]
+	slash_swing = SLASH_SWINGS[slash_style]
+	slash_anim = slash_total
+	FX.slash(self, aim_yaw, slash_style)
+	Sfx.play("slash", 0.05, 2.0)
+	tilt_v += -aim_dir * 9.0
+	squash_v -= 8.0
+	_set_flash(true)
+	get_tree().create_timer(0.05, true, false, true).timeout.connect(_set_flash.bind(false))
+	FX.afterimage(visual, Color(1.0, 0.85, 0.4, 0.5), 0.3)
+
+
 func _dash_end() -> void:
 	if not rainbow and chain_ok:
 		chain_grace = CHAIN_GRACE
@@ -630,6 +686,7 @@ func _slash_hit() -> void:
 	tilt_v += aim_dir * 5.0
 	var main := Main.inst
 	var hit_any := false
+	var keep_cd := false
 	for e in get_tree().get_nodes_in_group("enemies"):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
@@ -638,12 +695,18 @@ func _slash_hit() -> void:
 		d.y = 0
 		if d.length() < reach + en.radius and aim_dir.angle_to(d.normalized()) <= cone:
 			en.slash_yaw = atan2(-aim_dir.x, -aim_dir.z)
+			# 장갑 상태(구체 크롤러)에 막힌 검은 콤보 쿨다운을 초기화하지 않는다
+			var guarded: bool = en.has_method("is_armored") and en.is_armored()
+			# 맘모스처럼 검 한 방에 죽지 않는 보스는 맞혀도 쿨다운을 초기화하지 않는다 (붙어서 연타 방지)
+			keep_cd = keep_cd or en.get("no_slash_reset") == true
 			en.take_hit(999, d.normalized(), en.global_position, "slash")
-			hit_any = true
+			hit_any = hit_any or not guarded
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		var bl := b as Bullet
 		var d := bl.position - global_position
 		d.y = 0
+		if bl.unslashable:
+			continue
 		if d.length() < reach + 0.3 and (d.length() < 0.8 or aim_dir.angle_to(d.normalized()) <= cone):
 			FX.flash(bl.position, Pal.BLADE, 0.45, 0.08)
 			bl.queue_free()
@@ -655,7 +718,8 @@ func _slash_hit() -> void:
 		main.shake(0.4)
 		main.camera.fov_punch(-4.0)
 		# 검으로 처치하면 즉시 다시 휘두를 수 있다 (콤보)
-		slash_cd = 0.0
+		if not keep_cd:
+			slash_cd = 0.0
 
 
 ## 관통 일격: 3프레임 만에 적을 꿰뚫고 뒤로 빠져나간 뒤 경로 위의 적을 한꺼번에 벤다
@@ -724,7 +788,7 @@ func _phantom_hit() -> void:
 			marked.append(en)
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		var bl := b as Bullet
-		if _seg_dist(phantom_from, dir, length, bl.position) < PHANTOM_WIDTH + 0.3:
+		if not bl.unslashable and _seg_dist(phantom_from, dir, length, bl.position) < PHANTOM_WIDTH + 0.3:
 			bl.queue_free()
 	# 빠져나간 뒤 뒤돌아 베는 자세: 역베기 모션 + 경로를 가르는 일섬
 	slash_style = 1
@@ -1019,6 +1083,44 @@ func take_hit(from: Vector3) -> bool:
 	if hp <= 0:
 		die(d)
 	return true
+
+
+## 경직: t 초 동안 조작이 막히고 몸이 푸른 전류에 감긴 채 떤다
+func stagger(t: float) -> void:
+	if not alive:
+		return
+	stun_t = maxf(stun_t, t)
+	print("PLAYER_STUN %.2fs hp=%d" % [t, hp])
+	if lunge_t > 0.0:
+		lunge_t = 0.0
+		lunge_phantom = false
+	if dash_t > 0.0:
+		dash_t = 0.0
+		_dash_end()
+	velocity *= 0.3
+	var c := global_position + Vector3(0, 0.9, 0)
+	FX.sparks(c, 16, [Color.WHITE, Color("8ad8ff"), Color("2a6cff")], 7.0, 0.35, -6.0, 0.07)
+	FX.shockwave(global_position, Color("3aa8ff"), 2.2, 0.25)
+	Main.inst.hud.popup("STUN", Color("8ad8ff"), global_position + Vector3(0, 2.2, 0))
+	Sfx.play("powerdown", 0.1, -4.0)
+
+
+## 충격파에 밀려난다: 돌진·대시를 끊고 dir 쪽으로 speed 만큼 튕겨 나간다 (피해는 없음)
+func shove(dir: Vector3, speed: float) -> void:
+	if not alive:
+		return
+	if lunge_t > 0.0:
+		lunge_t = 0.0
+		lunge_phantom = false
+	if dash_t > 0.0:
+		dash_t = 0.0
+		_dash_end()
+	dir.y = 0
+	dir = dir.normalized()
+	velocity = dir * speed
+	tilt_v += dir * 14.0
+	squash_v -= 7.0
+	slash_cd = maxf(slash_cd, 0.35)
 
 
 func die(push := Vector3.ZERO) -> void:

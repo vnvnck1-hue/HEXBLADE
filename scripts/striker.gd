@@ -3,7 +3,7 @@ extends Enemy
 ## 고속 요격기. 플레이어처럼 빠르게 선회·대시하며 짧은 속사를 퍼붓고,
 ## 가끔 멈춰 서서 차지 레이저를 쏜다. 발사 전에는 바닥에 붉은 띠로 공격 범위를 예고한다.
 
-enum S { MOVE, CHARGE, RECOVER }
+enum S { MOVE, CHARGE, RECOVER, LUNGE_TELE, LUNGE }
 
 const SPEED := 6.4
 const ACCEL := 30.0
@@ -20,6 +20,14 @@ const BEAM_W := 0.9
 const BEAM_RANGE := 22.0
 const BEAM_HIT_WINDOW := 0.1
 const RECOVER_TIME := 0.45
+# 근접 돌진 베기 (패링 공격): 금빛 예고 → 뒤로 젖혀 힘을 모았다가 → 플레이어에게 고속 돌진
+const LUNGE_TRIGGER := 8.0      # 이 거리 안이면 돌진을 노린다
+const LUNGE_TELE := 0.6
+const LUNGE_TRACK := 0.45       # 예고 중 이 시간까지 조준을 따라온다
+const LUNGE_SPEED := 24.0
+const LUNGE_MAX := 0.5
+const LUNGE_REACH := 1.1
+const STAGGER_TIME := 2.2
 
 var state := S.MOVE
 var vel := Vector3.ZERO
@@ -37,6 +45,13 @@ var beam_hit_t := 0.0
 var recover_t := 0.0
 var warning: LaserWarning
 var charge_snd: AudioStreamPlayer
+var lunge_cd := 3.0
+var lunge_t := 0.0
+var lunge_dir := Vector3.FORWARD
+var lunge_hit := false
+var lunge_marker: MeshInstance3D
+## 확인 모드: 거리와 무관하게 돌진만 한다
+var lunge_only := false
 
 
 func _ready() -> void:
@@ -47,6 +62,7 @@ func _ready() -> void:
 	shot_cd = randf_range(0.9, 1.4)
 	beam_cd = randf_range(3.0, 4.5)
 	dash_cd = randf_range(0.6, 1.4)
+	lunge_cd = randf_range(2.5, 4.5)
 
 
 func _build(v: Node3D) -> Dictionary:
@@ -75,7 +91,12 @@ func _ai(dt: float) -> void:
 			if active:
 				shot_cd -= dt
 				beam_cd -= dt
-				if beam_cd <= 0.0 and dist < BEAM_RANGE - 2.0 and dash_t <= 0.0 and burst_left == 0:
+				lunge_cd -= dt
+				if lunge_cd <= 0.0 and dist < LUNGE_TRIGGER and dash_t <= 0.0 and burst_left == 0:
+					_begin_lunge(dir)
+				elif lunge_only:
+					pass
+				elif beam_cd <= 0.0 and dist < BEAM_RANGE - 2.0 and dash_t <= 0.0 and burst_left == 0:
 					_begin_charge()
 				elif shot_cd <= 0.0 and burst_left == 0:
 					shot_cd = randf_range(1.0, 1.6)
@@ -96,6 +117,10 @@ func _ai(dt: float) -> void:
 				_cancel_charge()
 			elif charge_t >= BEAM_TRACK + BEAM_LOCK:
 				_fire_beam()
+		S.LUNGE_TELE:
+			_lunge_tele(dt, dir, dist, active)
+		S.LUNGE:
+			_lunge(dt, player)
 		S.RECOVER:
 			vel = vel.move_toward(Vector3.ZERO, 30.0 * dt)
 			recover_t -= dt
@@ -189,8 +214,8 @@ func _face(dir: Vector3, dt: float, rate: float) -> void:
 
 func _animate_jets(dt: float) -> void:
 	var flame := 0.35
-	if dash_t > 0.0:
-		flame = 1.3
+	if dash_t > 0.0 or state == S.LUNGE:
+		flame = 1.6
 	elif state == S.CHARGE:
 		flame = 0.12
 	else:
@@ -294,12 +319,157 @@ func _clear_warning() -> void:
 	charge_snd = null
 
 
+# ── 근접 돌진 베기 (패링 공격) ──────────────────────────
+
+func _begin_lunge(dir: Vector3) -> void:
+	state = S.LUNGE_TELE
+	charge_t = 0.0
+	lunge_dir = dir
+	lunge_hit = false
+	burst_left = 0
+	lunge_marker = ParryFX.lunge_marker()
+	_warn(_nose(), "melee")
+	Parry.inst.register(self)
+	Sfx.play("rev", 0.05, -4.0)
+
+
+func _nose() -> Vector3:
+	return global_position + Vector3(0, 1.0, 0) - global_basis.z * 0.8
+
+
+## 예고: 조준을 따라오며 몸을 뒤로 젖혀 힘을 모은다. 바닥에 돌진 경로가 금빛으로 깔린다.
+func _lunge_tele(dt: float, dir: Vector3, dist: float, active: bool) -> void:
+	charge_t += dt
+	var k := clampf(charge_t / LUNGE_TELE, 0.0, 1.0)
+	if charge_t < LUNGE_TRACK:
+		lunge_dir = lunge_dir.slerp(dir, 1.0 - exp(-12.0 * dt)).normalized()
+	_face(lunge_dir, dt, 30.0)
+	# 살짝 물러서며 웅크린다
+	vel = vel.move_toward(-lunge_dir * 2.2 * (1.0 - k), 40.0 * dt)
+	wob_v.x += 14.0 * k * dt
+	var cm: StandardMaterial3D = j.core_mat
+	cm.emission_energy_multiplier = 1.0 + k * 5.0
+	ParryFX.set_lunge_marker(lunge_marker, global_position, lunge_dir, minf(dist + 1.5, LUNGE_SPEED * LUNGE_MAX), 1.1, k)
+	fx_t -= dt
+	if fx_t <= 0.0:
+		fx_t = lerpf(0.08, 0.03, k)
+		FX.flash(_nose() + Vector3(randf_range(-0.5, 0.5), randf_range(-0.2, 0.3), randf_range(-0.5, 0.5)), ParryFX.GOLD, 0.16, 0.1)
+	if not active:
+		_end_lunge()
+		state = S.MOVE
+	elif charge_t >= LUNGE_TELE:
+		state = S.LUNGE
+		lunge_t = 0.0
+		vel = lunge_dir * LUNGE_SPEED
+		ghost_t = 0.0
+		Sfx.play("launch", 0.05, -2.0)
+		FX.shockwave(global_position, ParryFX.GOLD, 2.2, 0.22, 0.06)
+		punch = 0.8
+
+
+func _lunge(dt: float, player: Player) -> void:
+	lunge_t += dt
+	vel = lunge_dir * LUNGE_SPEED
+	ghost_t -= dt
+	if ghost_t <= 0.0:
+		ghost_t = 0.02
+		FX.afterimage(visual, Color(1.0, 0.75, 0.25, 0.35))
+	if lunge_marker:
+		ParryFX.set_lunge_marker(lunge_marker, global_position, lunge_dir, 2.0, 1.1, 1.0)
+	var to := player.global_position - global_position
+	to.y = 0
+	if not lunge_hit and player.alive and to.length() < LUNGE_REACH + player.hit_radius:
+		lunge_hit = true
+		# 날개 끝으로 베고 지나간다 (대시 무적이면 그냥 스쳐 간다)
+		if player.take_hit(global_position):
+			FX.flash(player.global_position + Vector3(0, 0.9, 0), Color(1, 0.6, 0.3), 1.0, 0.08)
+	var ahead := global_position + lunge_dir * (radius + 0.3)
+	if lunge_t >= LUNGE_MAX or Main.inst.is_blocked(ahead):
+		_end_lunge()
+		state = S.RECOVER
+		recover_t = RECOVER_TIME
+		vel = lunge_dir * 5.0
+
+
+func _end_lunge() -> void:
+	lunge_cd = randf_range(3.5, 5.5) if not lunge_only else randf_range(1.6, 2.2)
+	shot_cd = maxf(shot_cd, 0.8)
+	if is_instance_valid(lunge_marker):
+		lunge_marker.queue_free()
+	lunge_marker = null
+	_end_warn()
+	if Parry.inst:
+		Parry.inst.unregister(self)
+
+
+func parry_eta() -> float:
+	var p := Main.inst.player
+	if not p.alive or not alive or stagger_t > 0.0:
+		return INF
+	var to := p.global_position - global_position
+	to.y = 0
+	var gap := maxf(0.0, to.length() - LUNGE_REACH - p.hit_radius)
+	match state:
+		S.LUNGE_TELE:
+			if gap > LUNGE_SPEED * LUNGE_MAX:
+				return INF
+			return (LUNGE_TELE - charge_t) + gap / LUNGE_SPEED
+		S.LUNGE:
+			if lunge_hit or to.dot(lunge_dir) < -0.3:
+				return INF
+			return gap / LUNGE_SPEED
+	return INF
+
+
+func parry_kind() -> String:
+	return "melee"
+
+
+func parry_point() -> Vector3:
+	var p := Main.inst.player.global_position + Vector3(0, 0.95, 0)
+	return p.lerp(_nose(), 0.5)
+
+
+func parry_source() -> Node3D:
+	return self
+
+
+func parry_window_open() -> void:
+	ParryFX.cue(_nose())
+
+
+## 패링당함: 크게 튕겨 나가 경직된다
+func parry_hit(p: Player) -> void:
+	var d := global_position - p.global_position
+	d.y = 0
+	_end_lunge()
+	state = S.RECOVER
+	recover_t = 0.0
+	vel = Vector3.ZERO
+	stagger(d.normalized(), STAGGER_TIME)
+	take_hit(1, d.normalized(), global_position, "parry")
+
+
+func _on_stagger() -> void:
+	_clear_warning()
+	_end_lunge()
+	state = S.MOVE
+	vel = Vector3.ZERO
+	dash_t = 0.0
+	(j.core as MeshInstance3D).scale = Vector3.ONE
+
+
 func die(dir := Vector3.ZERO, source := "bullet") -> void:
 	if alive:
 		_clear_warning()
+		_end_lunge()
 		state = S.MOVE
 	super(dir, source)
 
 
 func _exit_tree() -> void:
 	_clear_warning()
+	if is_instance_valid(lunge_marker):
+		lunge_marker.queue_free()
+	if Parry.inst:
+		Parry.inst.unregister(self)
