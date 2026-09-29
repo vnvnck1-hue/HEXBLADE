@@ -163,6 +163,38 @@ func generate(seed_value: int) -> void:
 	_compute_anchors()
 
 
+## 섹터 런용: 방 하나만 맵 가운데 찍는다 (통로·차단막 없음). combat 이 거짓이면 안전 구역.
+## size 를 주면 그 크기의 엄폐물 없는 홀(RECT)이 된다.
+func generate_single(seed_value: int, shape_id: int, combat: bool, size := Vector2i.ZERO) -> void:
+	rng.seed = seed_value
+	var n := W * H
+	grid.resize(n)
+	grid.fill(VOID)
+	room_of.resize(n)
+	room_of.fill(-1)
+	gate_of.resize(n)
+	gate_of.fill(-1)
+	discovered.resize(n)
+	discovered.fill(0)
+	rooms.clear()
+	start_room = _stamp(Vector2i(W / 2, H / 2), _shape(shape_id, size), shape_id, combat)
+	_compute_anchors()
+
+
+## 방 안에서 둘레 3×3 칸이 모두 비어 있는 바닥 칸의 월드 위치 목록
+func open_spots(id: int) -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	for c in rooms[id].cells:
+		var ok := true
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if is_blocked_cell(c + Vector2i(dx, dy)):
+					ok = false
+		if ok:
+			out.append(world_of(c))
+	return out
+
+
 func _fits(c: Vector2i, r: float) -> bool:
 	var m := int(ceil(r)) + 4
 	if c.x < m or c.y < m or c.x >= W - m or c.y >= H - m:
