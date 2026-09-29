@@ -22,6 +22,7 @@
 | E / F | 광선검. 전방 8m 안 가장 가까운 적에게 초속 62m로 순간 돌진해서(대상이 없으면 앞으로 2.8m 내디디며) **한 방에 절단**합니다. 모션 4종(가로 베기 · 역베기 · 내려찍기 · 회전 베기) 중 하나가 무작위로 나오고, 같은 모션은 연속으로 나오지 않습니다. 내려찍기는 좁고 멀리, 회전 베기는 주위 전체를 벱니다. **검으로 적을 처치하면 쿨다운이 바로 초기화**되어 연속으로 벨 수 있습니다. 2단 대시 뒤 첫 검은 **관통 일격**입니다: 9m 안의 적을 3프레임(0.05초) 만에 꿰뚫고 적 뒤 2.2m까지 빠져나간 뒤, 한 박자 늦게 경로 위의 적이 한꺼번에 갈라집니다 |
 | R / Q 유지 → 놓기 | 궁극기 락온 미사일. 누르고 있는 동안 슬로우모션(0.18배, 최대 실제 시간 2초)이 걸리고, 카메라가 줌아웃해 주변을 보여 줍니다. 포인터는 락온 크로스헤어로 바뀌고 카메라가 포인터 쪽으로 따라 움직입니다. 포인터로 적을 스치면 락온됩니다(최대 10기). 락온된 적에는 붉은 빗금이 덮이고, 조여 드는 괄호와 LOCK 표식이 붙습니다. R 을 떼거나 2초가 지나면 락온한 적에게 미사일 18발을 나눠 쏩니다. 락온이 없으면 가까운 적을 자동 조준합니다. MISSILE 게이지는 시간(14초)과 처치(+10%)로 찹니다 |
 | I | 임팩트 프레임 켜기/끄기. 3단 이상 충전 레이저와 최대 레이저를 쏘는 순간 화면이 1~4프레임 동안 순수 흑백으로 바뀝니다(원판 → 반전). 총구를 소실점으로 하는 집중선이 함께 나옵니다. 실행 인자 `--noimpact`로 끈 채 시작할 수 있습니다 |
+| O | 카툰 외곽선 켜기/끄기. 깊이·노멀 경계에 진한 선을 긋는 후처리이며 조명 파츠는 두 단 셀 음영으로 칠합니다. 발광 파츠(예광탄·속도선 등)는 선을 긋지 않습니다 |
 | V | 카메라 프리셋 전환: CLASSIC / ACTION(기본) / CINEMATIC / TACTICAL |
 | F5 | 언제든 재시작 (결과 화면에서는 R 로도 재시작) · M 효과음 끄기/켜기 |
 
@@ -84,7 +85,6 @@
 - 격파: 연쇄 폭발 속에 남은 보조포·포드·주포가 차례로 떨어지고, 대폭발과 함께 포탑과 궤도가 튕겨 나갑니다.
 - 보스는 검·관통 일격에 한 번에 죽지 않습니다(각각 12, 22 피해). 체력·페이즈 경계는 `boss_enemy.gd` 상단 `MAX_HP`·`PHASE2_AT`, 도로 속도는 `boss_main.gd` 의 `SPEED_1`·`SPEED_2` 입니다.
 
-## 파일
 ## 용광로 보스전 — VULCAN
 
 `forge_battle.cmd` 로 바로 실행하거나, 게임 중 **B** 키로 방 탐색 → 추격 보스전 → 용광로 보스전 순서로 오갑니다.
@@ -109,6 +109,7 @@
 - 격파: 눈이 하나씩 꺼지고 팔이 늘어져 용암에 잠기며 연쇄 폭발 → 대폭발과 함께 머리·팔이 튕겨 나가고 몸통이 용암 속으로 가라앉습니다.
 - 체력·페이즈 경계는 `forge_boss.gd` 상단 `MAX_HP`·`PHASE2_AT`, 발판 크기는 `forge_stage.gd` 의 `R_OUTER`·`R_INNER` 입니다.
 
+## 파일
 
 | 파일 | 역할 |
 |---|---|
@@ -142,13 +143,13 @@
 | `scripts/boss_camera.gd` | 플레이어와 보스를 함께 담는 추격 카메라 |
 | `scripts/boss_bar.gd` | 상단 보스 체력바 |
 | `scripts/speed_fx.gd` | 화면 속도감 셰이더 (방사형 블러·집중선·색수차) |
-| `scripts/beam_impact.gd` | 강력 레이저 피격 지점 연출: 흰 심·광채, 쏜 쪽으로 휘어 튀는 칼날 물보라, 빛줄기, 수직 충격파, 십자 플레어, 점광원. 보스는 빔이 표면에서 막힌다 |
 | `scripts/forge_main.gd` | 용광로 보스전 진행 (Main 상속): 좁아지는 팔각 전장 경계, 보스 등장·승리, 용광로 조명, 자동 플레이 |
 | `scripts/forge_boss.gd` | 용광로 보스 AI: 패턴 8종, 2관절 팔 IK, 쇳물 웅덩이, 2페이즈 전환(장갑 이탈·발판 붕괴), 격파 연출 |
 | `scripts/forge_titan.gd` | 용광로 보스 모델 (몸통·다섯 눈 얼굴·어깨·도가니 포신 팔) |
 | `scripts/forge_fist.gd` | 박힌 팔(포신) 피격 판정 — 받은 피해를 본체로 넘김 |
 | `scripts/forge_stage.gd` | 팔각 발판(안쪽 판 + 가라앉는 바깥 8조각)·용암·용광로 설비·도가니·폭포·불티, 불길/연기·튕겨 나가는 부품·바닥 경고(부채꼴/원)·쇳물 웅덩이 표시 |
 | `scripts/forge_camera.gd` | 발판 전체와 거신을 함께 담는 높은 쿼터뷰 카메라 |
+| `scripts/beam_impact.gd` | 강력 레이저 피격 지점 연출: 흰 심·광채, 쏜 쪽으로 휘어 튀는 칼날 물보라, 빛줄기, 수직 충격파, 십자 플레어, 점광원. 보스는 빔이 표면에서 막힌다 |
 
 조정할 값은 `player.gd` 상단 상수(속도, 회피, 레이저), `map.gd` 상단(방 개수 `COMBAT_ROOMS`, 맵 크기, 벽 높이), `main.gd`의 `POOLS`·`MAX_ALIVE`(적 구성), `camera_rig.gd`의 `PRESETS`에 있습니다.
 
@@ -160,9 +161,9 @@ Godot --path . -- --bot --overview --seed=1           # 맵 전체 조감
 Godot --path . --fixed-fps 60 -- --capture=DIR --every=10 --seconds=30 --bot
 Godot --path . --fixed-fps 60 -- --capture=DIR --every=2 --seconds=6 --showcase   # 연출 순서 재생
 Godot --path . --fixed-fps 60 res://scenes/boss.tscn -- --capture=DIR --every=10 --seconds=70 --bot --godmode   # 보스전 자동 플레이 (무적)
-Godot --path . --fixed-fps 60 -- --capture=DIR --every=3 --seconds=8 --turretshow  # 시작 방 벽가 해치에서 포탑 둘을 올려 등장·조준·연사·절단·폭발 확인
 Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=30 --seconds=40 --bot --godmode   # 용광로 보스전 자동 플레이 (무적)
 Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=30 --seconds=34 --bot --godmode --fastp2   # 6초 뒤 바로 2페이즈로
+Godot --path . --fixed-fps 60 -- --capture=DIR --every=3 --seconds=8 --turretshow  # 시작 방 벽가 해치에서 포탑 둘을 올려 등장·조준·연사·절단·폭발 확인
 ```
 
 폭발 시연 영상(근접 · 슬로모션 · 게임 시점): `Godot --path . --fixed-fps 60 --write-movie _capture/explo1/f.png -s _capture/explosion_show.gd`

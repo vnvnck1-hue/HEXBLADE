@@ -59,6 +59,7 @@ func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	noise.frequency = 0.05
 	far = 200.0
+	ToonOutline.attach(self)
 
 
 func set_preset(i: int) -> void:

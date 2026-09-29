@@ -46,21 +46,29 @@ static var _flash_mat: StandardMaterial3D
 static var _lock_mat: ShaderMaterial
 
 
-## 조명을 받는 저폴리곤 파츠용 머티리얼
+## 조명을 받는 저폴리곤 파츠용 머티리얼. 카툰 렌더링: 명암을 두 단으로 끊고 하이라이트도 뚝 끊는다.
+## 외곽선은 ToonOutline 후처리가 그린다.
 static func lit(c: Color, emission := 0.0) -> StandardMaterial3D:
 	var key := "%s_%s" % [c.to_html(), emission]
 	if _lit.has(key):
 		return _lit[key]
 	var m := StandardMaterial3D.new()
+	toon(m)
 	m.albedo_color = c
-	m.roughness = 0.95
-	m.metallic_specular = 0.2
 	if emission > 0.0:
 		m.emission_enabled = true
 		m.emission = c
 		m.emission_energy_multiplier = emission
 	_lit[key] = m
 	return m
+
+
+## 툰 음영 설정. 거칠기가 명암 경계의 부드러움을 정하므로 낮게 둔다.
+static func toon(m: StandardMaterial3D) -> void:
+	m.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
+	m.specular_mode = BaseMaterial3D.SPECULAR_TOON
+	m.roughness = 0.22
+	m.metallic_specular = 0.12
 
 
 ## 조명 무시 단색. 색은 인스턴스 파라미터 tint / energy 로 지정한다.
@@ -72,7 +80,8 @@ shader_type spatial;
 render_mode unshaded, cull_back, shadows_disabled;
 instance uniform vec4 tint : source_color = vec4(1.0);
 instance uniform float energy = 1.0;
-void fragment() { ALBEDO = tint.rgb * energy; }
+// ROUGHNESS 0 은 ToonOutline 에게 '외곽선 제외' 표식이다
+void fragment() { ALBEDO = tint.rgb * energy; ROUGHNESS = 0.0; }
 """
 		_flat_mat = ShaderMaterial.new()
 		_flat_mat.shader = _flat_shader
