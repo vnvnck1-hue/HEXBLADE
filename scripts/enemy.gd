@@ -56,7 +56,13 @@ var windup_k := 0.0
 var glow_t := 0.0
 ## 거리 벌리기 (뒷걸음질 · 이탈 대시 · 광선검 회피 반격). 확률은 기체마다 _ready 에서 정한다.
 var evade := Evade.new()
+## 피격 경직: 맞으면 하던 공격을 끊고 HURT_TIME 동안 맞은 방향으로 젖혀졌다 튕겨 돌아온다 (그동안 행동하지 않는다)
+var hurt_t := 0.0
+var hurt_age := 0.0
+var hurt_axis := Vector3.RIGHT   # 몸체를 젖히는 회전축 (자기 좌표)
+var hurt_amp := 0.4
 const GLOW_TIME := 0.12
+const HURT_TIME := 0.3
 ## 패링 탄을 쏠 확률 (기본 드론만 쓴다). 확인 모드에서는 1.
 var orb_chance := 0.45
 ## 확인 모드: 패링 탄만 쏜다
@@ -99,7 +105,6 @@ func _ready() -> void:
 	evade.e = self
 	evade.chance = 0.4
 	evade.back_w = 0.75
-	evade.dodge = 0.25
 
 
 func _physics_process(dt: float) -> void:
@@ -118,6 +123,8 @@ func _physics_process(dt: float) -> void:
 		return
 	if stagger_t > 0.0:
 		_update_stagger(dt)
+	elif hurt_t > 0.0:
+		_update_hurt(dt)
 	else:
 		_ai(dt)
 		evade.update(dt)
@@ -264,12 +271,6 @@ func _evade_attack() -> void:
 	_begin_attack()
 	pattern = keep
 
-
-## 순간이동 반격: 등 뒤에서 곧바로 세 갈래 빠른 탄
-func _counter_attack() -> void:
-	_face_player()
-	_shoot([-0.2, 0.0, 0.2], 11.0)
-	fire_timer = maxf(fire_timer, 1.2)
 
 
 func _begin_attack() -> void:
@@ -433,13 +434,14 @@ func _update_stagger(dt: float) -> void:
 		body.position.y = 1.0
 
 
-func take_hit(dmg: int, dir: Vector3, _pos: Vector3, source := "bullet") -> void:
+func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	if not alive:
 		return
 	if max_hp == 0:
 		_init_hp()
 	if stagger_t > 0.0:
 		dmg *= 2
+	_hit_spark(dmg, dir, pos, source)
 	hp -= dmg
 	_bar_hit = 1.0
 	knock += Vector3(dir.x, 0, dir.z) * (3.0 + dmg)
@@ -451,6 +453,100 @@ func take_hit(dmg: int, dir: Vector3, _pos: Vector3, source := "bullet") -> void
 	Sfx.play("hit", 0.15, -6.0)
 	if hp <= 0:
 		die(dir, source)
+	else:
+		_hurt(dir, dmg)
+
+
+# ── 피격 경직 ───────────────────────────────────────────
+
+## 피격 섬광 (마젠타 별 + 노란 초승달). 무거운 공격일수록 크다.
+func _hit_spark(dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
+	if not is_inside_tree():
+		return
+	var c := (j.body as Node3D).global_position
+	var at := c
+	var flat := Vector3(pos.x - c.x, 0, pos.z - c.z)
+	if pos != Vector3.ZERO and flat.length() < 2.5:
+		at = c.lerp(Vector3(pos.x, c.y, pos.z), 0.6)
+	var k := 1.0
+	match source:
+		"slash", "phantom": k = 1.8
+		"missile": k = 1.5
+		"parry": k = 2.0
+		"laser": k = 0.8
+	HitSpark.spawn(at, dir, maxf(k, 1.0 + dmg * 0.08), self)
+
+
+## 지금 피격 경직에 들어갈 수 있는가 (하위 기체가 덮어써 공중 도약 등을 뺀다)
+func _can_hurt() -> bool:
+	return true
+
+
+## 맞음: 하던 공격을 끊고 맞은 방향으로 젖혀진다. 패링 경직·빠른 회피 이동 중에는 걸리지 않는다.
+func _hurt(dir: Vector3, dmg: int) -> void:
+	if not landed or not is_inside_tree() or stagger_t > 0.0 or evade.moving() or not _can_hurt():
+		return
+	evade.cancel()
+	_interrupt()
+	hurt_t = HURT_TIME
+	hurt_age = 0.0
+	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
+	l.y = 0
+	hurt_axis = Vector3.UP.cross(l.normalized()) if l.length() > 0.01 else Vector3.RIGHT
+	hurt_amp = clampf(0.38 + dmg * 0.06, 0.38, 0.75)
+
+
+## 진행 중이던 공격을 끊는다. 경직이 풀린 뒤에도 곧바로 쏘지 않도록 예고부터 다시 시작한다.
+func _interrupt() -> void:
+	burst_left = 0
+	if orb_next:
+		orb_next = false
+		var cm: StandardMaterial3D = j.core_mat
+		cm.albedo_color = Pal.E_RED
+		cm.emission = Pal.E_RED
+	windup_k = 0.0
+	_end_warn()
+	fire_timer = maxf(fire_timer, TELEGRAPH + 0.35)
+	_on_hurt()
+
+
+## 하위 기체가 맞았을 때 진행 중이던 공격을 정리한다 (기본은 패링 경직과 같은 정리)
+func _on_hurt() -> void:
+	_on_stagger()
+
+
+## 젖힘 곡선: 2프레임 만에 확 젖혀졌다가 스프링처럼 흔들리며 돌아온다
+func _hurt_curve() -> float:
+	return smoothstep(0.0, 0.035, hurt_age) * exp(-hurt_age * 8.0) * cos(hurt_age * 16.0)
+
+
+func _update_hurt(dt: float) -> void:
+	_hurt_tick(dt)
+	global_position += knock * dt
+	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
+	global_position = Main.inst.push_out(global_position, radius)
+	_hurt_pose(j.body)
+
+
+func _hurt_tick(dt: float) -> void:
+	hurt_t -= dt
+	hurt_age += dt
+	wob_v += (-wob * 220.0 - wob_v * 11.0) * dt
+	wob += wob_v * dt
+
+
+## 몸체를 맞은 방향으로 젖히고 잘게 떤다. 경직이 끝나면 제자리로 돌려놓는다.
+func _hurt_pose(body: Node3D) -> void:
+	if hurt_t <= 0.0:
+		hurt_t = 0.0
+		body.position.x = 0.0
+		body.position.z = 0.0
+		body.rotation = Vector3.ZERO
+		return
+	var shake := exp(-hurt_age * 14.0) * 0.07
+	body.position.x = randf_range(-1.0, 1.0) * shake
+	body.position.z = randf_range(-1.0, 1.0) * shake
+	body.basis = Basis(hurt_axis, _hurt_curve() * hurt_amp) * Basis.from_euler(Vector3(wob.x * 0.4, randf_range(-1.0, 1.0) * shake, wob.y * 0.4))
 
 
 func die(dir := Vector3.ZERO, source := "bullet") -> void:

@@ -114,7 +114,7 @@ func _route_cmdline() -> bool:
 	var args := OS.get_cmdline_user_args()
 	var skip := false
 	for a in args:
-		if a not in ["--notoon", "--noimpact"]:
+		if a not in ["--toon", "--notoon", "--noimpact"]:
 			skip = true
 	if not skip:
 		return false

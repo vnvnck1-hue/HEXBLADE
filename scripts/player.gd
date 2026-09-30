@@ -19,6 +19,8 @@ const DASH_SPEED := 17.0
 const DASH_TIME := 0.3
 const DASH_CD := 0.8
 const FIRE_INTERVAL := 0.085
+const MAG_SIZE := 30              # 기본 총기 탄창: 30발마다 재장전
+const RELOAD_TIME := 1.25         # 재장전 시간 (T 키, 또는 탄창이 비면 자동)
 const BULLET_SPEED := 60.0
 const CHARGE_TIME := 1.0
 const CHARGE_MIN := 0.25
@@ -107,6 +109,8 @@ var gust_from := Vector3.ZERO    # 대시 기류: 지난 틱 위치
 
 # 전투 상태
 var fire_cd := 0.0
+var mag := MAG_SIZE                # 탄창에 남은 탄
+var reload_t := 0.0               # 재장전 남은 시간 (0 이면 재장전 중 아님)
 var slash_cd := 0.0
 var slash_anim := 0.0
 var charge := 0.0
@@ -121,6 +125,7 @@ var recoil := 0.0
 var gun_kick := 0.0
 var gun_kick_v := 0.0
 var _arm_l_rest := Vector3.INF
+var _sh_l_rest := Vector3.INF
 const KICK_STIFF := 1400.0        # 스프링 강도 (클수록 빠르게 되돌아온다)
 const KICK_DAMP := 26.0           # 감쇠 (작을수록 앞뒤로 더 출렁인다)
 const KICK_IMPULSE := 34.0        # 한 발당 뒤로 차는 속도
@@ -247,6 +252,7 @@ func _physics_process(dt: float) -> void:
 
 	# ── 입력 ──
 	var fire := false
+	var reload_pressed := false
 	var slash_pressed := false
 	var dash_pressed := false
 	var charge_held := false
@@ -257,6 +263,7 @@ func _physics_process(dt: float) -> void:
 		move_dir = b.move
 		aim_point = b.aim
 		fire = b.fire
+		reload_pressed = b.get("reload", false)
 		slash_pressed = b.slash
 		dash_pressed = b.dash
 		charge_held = b.get("charge", false)
@@ -273,6 +280,7 @@ func _physics_process(dt: float) -> void:
 		var rmb := Input.is_action_pressed("fire_mouse")
 		charge_held = lmb and rmb
 		fire = rmb and not lmb
+		reload_pressed = InputMap.has_action("reload") and Input.is_action_just_pressed("reload")
 		slash_pressed = Input.is_action_just_pressed("slash") or (Input.is_action_just_pressed("slash_mouse") and not rmb)
 		dash_pressed = Input.is_action_just_pressed("dash")
 		boost_held = Input.is_action_pressed("boost")
@@ -448,9 +456,18 @@ func _physics_process(dt: float) -> void:
 	# ── 사격 ──
 	fire_cd -= dt
 	laser_cd -= dt
-	if fire and fire_cd <= 0.0 and slash_anim <= 0.0 and not charging and laser_recoil <= 0.0 and not combo.committed():
+	if reload_t > 0.0:
+		reload_t -= dt
+		if reload_t <= 0.0:
+			_finish_reload()
+	elif playing and ((reload_pressed and mag < MAG_SIZE) or (fire and mag <= 0)):
+		_begin_reload()
+	if fire and reload_t <= 0.0 and mag > 0 and fire_cd <= 0.0 and slash_anim <= 0.0 and not charging and laser_recoil <= 0.0 and not combo.committed():
 		fire_cd = FIRE_INTERVAL
+		mag -= 1
 		_fire()
+		if mag <= 0:
+			_begin_reload()      # 탄창이 비면 곧바로 재장전
 
 	# ── 충전 레이저 ──
 	if charge_held and laser_cd <= 0.0 and not combo.committed() and (charging or energy > 0):
@@ -726,6 +743,29 @@ func _fire() -> void:
 	main.shake(0.05)
 
 
+## 재장전 시작: 빈 탄창을 뽑는 소리와 함께 사격 팔을 내린다
+func _begin_reload() -> void:
+	if reload_t > 0.0 or mag >= MAG_SIZE:
+		return
+	reload_t = RELOAD_TIME
+	Sfx.play("unfold", 0.05, -6.0)
+	var hud = Main.inst.hud if Main.inst else null
+	if hud and mag <= 0:
+		hud.popup("RELOAD", Color("ffd070"), global_position + Vector3(0, 2.2, 0))
+
+
+func _finish_reload() -> void:
+	reload_t = 0.0
+	mag = MAG_SIZE
+	Sfx.play("clank", 0.05, -9.0)
+	Sfx.play("ready", 0.0, -6.0)
+
+
+## 재장전 진행도 0~1 (재장전 중이 아니면 1)
+func reload_k() -> float:
+	return 1.0 - reload_t / RELOAD_TIME if reload_t > 0.0 else 1.0
+
+
 func _fire_laser(k: float) -> void:
 	var main := Main.inst
 	var muzzle: Node3D = j.muzzle
@@ -821,9 +861,6 @@ func combo_strike(dir: Vector3, reach: float, cone_deg: float, dmg: int, kb: flo
 		d.y = 0
 		var l := d.length()
 		if l < reach + en.radius and (l < 0.9 or dir.angle_to(d / maxf(l, 0.001)) <= cone):
-			# 적이 순간이동으로 피하면 이 적은 맞지 않는다 (헛침으로 이어진다)
-			if en.evade.try_dodge(self, dir):
-				continue
 			en.slash_yaw = yaw
 			# 장갑 상태(구체 크롤러)에 막힌 검은 적중으로 치지 않는다 → 콤보가 끊긴다
 			var guarded: bool = en.has_method("is_armored") and en.is_armored()
@@ -1530,6 +1567,22 @@ func _animate(dt: float) -> void:
 	arm_l.position = _arm_l_rest + Vector3(0, kick_back * 0.05, recoil * 0.06 + gun_kick * 0.2)
 	arm_l.rotation.x = recoil * 0.08 + kick_back * 0.42 + minf(gun_kick, 0.0) * 0.15 + shake_arm
 	arm_l.rotation.y = shake_arm
+	# 재장전: 사격 팔을 아래로 내려 탄창을 갈고 다시 든다
+	if reload_t > 0.0:
+		var rk := sin(PI * reload_k())
+		arm_l.rotation.x -= rk * 0.95
+		arm_l.rotation.z = lerpf(arm_l.rotation.z, -rk * 0.35, 0.5)
+	# 어깨 반동: 팔이 달린 어깨 장갑도 함께 뒤로 밀리며 들렸다가 스프링으로 돌아온다
+	var sh_l = j.get("shoulder_l")
+	if sh_l:
+		var shn := sh_l as Node3D
+		if _sh_l_rest == Vector3.INF:
+			_sh_l_rest = shn.position
+		var rdip := sin(PI * reload_k()) if reload_t > 0.0 else 0.0
+		shn.position = _sh_l_rest + Vector3(kick_back * 0.025, kick_back * 0.045 - rdip * 0.03, recoil * 0.05 + gun_kick * 0.13)
+		shn.rotation.x = kick_back * 0.22 + minf(gun_kick, 0.0) * 0.08
+		shn.rotation.y = -kick_back * 0.18 + rdip * 0.15
+		shn.rotation.z = -kick_back * 0.12 - rdip * 0.1
 	var torso_pitch := -0.1 * clampf(spd / SPEED, 0.0, 1.0)
 	if charging:
 		torso_pitch = 0.12 * charge   # 뒤로 버티는 자세

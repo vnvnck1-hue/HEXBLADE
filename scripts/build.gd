@@ -471,12 +471,17 @@ static func robot(visual: Node3D) -> Dictionary:
 	box(head, Vector3(0.3, 0.22, 0.32), Vector3(0, 0.06, 0), Pal.P_LIGHT)
 	glow_box(head, Vector3(0.24, 0.06, 0.04), Vector3(0, 0.07, -0.17), Pal.CYAN, 1.8)
 	box(head, Vector3(0.05, 0.22, 0.05), Vector3(-0.12, 0.26, 0.06), Pal.P_DARK)
-	# 어깨
+	# 어깨: 팔은 어깨 피벗에 달린다 (사격 반동이 어깨 장갑까지 함께 밀리게)
 	for side in [-1, 1]:
-		box(torso, Vector3(0.3, 0.28, 0.4), Vector3(0.46 * side, 0.38, 0), Pal.P_LIGHT)
-		glow_box(torso, Vector3(0.04, 0.12, 0.2), Vector3(0.62 * side, 0.36, 0), Pal.CYAN, 1.3)
+		var sh := pivot(torso, Vector3(0.46 * side, 0.3, 0), "ShoulderL" if side < 0 else "ShoulderR")
+		box(sh, Vector3(0.3, 0.28, 0.4), Vector3(0, 0.08, 0), Pal.P_LIGHT)
+		glow_box(sh, Vector3(0.04, 0.12, 0.2), Vector3(0.16 * side, 0.06, 0), Pal.CYAN, 1.3)
+		if side < 0:
+			j.shoulder_l = sh
+		else:
+			j.shoulder_r = sh
 	# 왼팔: 사격 팔
-	var arm_l := pivot(torso, Vector3(-0.46, 0.3, 0), "ArmL")
+	var arm_l := pivot(j.shoulder_l, Vector3.ZERO, "ArmL")
 	box(arm_l, Vector3(0.17, 0.3, 0.18), Vector3(0, -0.18, 0), Pal.P_BODY)
 	box(arm_l, Vector3(0.19, 0.16, 0.42), Vector3(0, -0.34, -0.14), Pal.P_DARK)
 	box(arm_l, Vector3(0.11, 0.12, 0.5), Vector3(0, -0.33, -0.5), Pal.P_GREY)
@@ -485,7 +490,7 @@ static func robot(visual: Node3D) -> Dictionary:
 	j.arm_l = arm_l
 	j.muzzle = muzzle
 	# 오른팔: 붉은 광선검
-	var arm_r := pivot(torso, Vector3(0.46, 0.3, 0), "ArmR")
+	var arm_r := pivot(j.shoulder_r, Vector3.ZERO, "ArmR")
 	box(arm_r, Vector3(0.17, 0.3, 0.18), Vector3(0, -0.18, 0), Pal.P_BODY)
 	box(arm_r, Vector3(0.19, 0.16, 0.36), Vector3(0, -0.34, -0.1), Pal.P_DARK)
 	var blade := pivot(arm_r, Vector3(0.02, -0.34, -0.26), "Blade")

@@ -7,6 +7,9 @@ enum State { PLAY, WIN, LOSE }
 ## 방 난이도별 적 패턴 풀 (0 조준 3연발, 1 부채꼴, 2 원형탄)
 const POOLS := [[0], [0, 0, 1], [0, 1, 1, 2], [0, 1, 2, 2]]
 const MAX_ALIVE := 4
+## 웨이브 방(가장 큰 방): 웨이브별 적 수 · 웨이브 사이 숨 돌릴 시간
+const WAVE_SIZES := [5, 6, 7, 8, 10]
+const WAVE_GAP := 2.4
 ## 고속 요격기(Striker) 비율. 방마다 반올림 오차를 이월해 전체 적의 20%를 맞춘다.
 const STRIKER := -1
 const STRIKER_RATIO := 0.2
@@ -40,6 +43,8 @@ var room_total := 0
 var room_kills := 0
 var rooms_cleared := 0
 var spawn_queue: Array = []
+## 웨이브 방 진행: 현재 웨이브 번호 (웨이브 방이 아니면 0)
+var wave := 0
 var spawn_timer := 0.0
 var pending_spawns := 0
 var striker_carry := 0.0
@@ -184,7 +189,7 @@ func _setup_input() -> void:
 	var keys := {
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
-		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_E, KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "camera": [KEY_C], "cam_preset": [KEY_V],
+		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_E, KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "reload": [KEY_T], "camera": [KEY_C], "cam_preset": [KEY_V],
 		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I], "toon": [KEY_O], "lens": [KEY_L],
 	}
 	for action in keys:
@@ -305,9 +310,28 @@ func _activate_room(id: int) -> void:
 	r.visited = true
 	active_room = id
 	map.close_gates(id)
-	print("ROOM_ENTER id=%d shape=%d t=%.1f" % [id, r.shape, time])
+	print("ROOM_ENTER id=%d shape=%d scale=%.1f wave=%s t=%.1f" % [id, r.shape, r.scale, r.wave, time])
 	var d: int = clampi(r.difficulty, 1, 6)
-	room_total = clampi(3 + d, 4, 9)
+	turret_spots.clear()
+	shake(0.25)
+	Sfx.play("spawn", 0.0, 0.0)
+	if r.wave:
+		wave = 1
+		_fill_queue(WAVE_SIZES[0], d)
+		spawn_timer = 0.6
+		hud.banner("WAVE 1 / %d" % ArenaMap.WAVES, Color("ff7a9a"), "대형 %s · 웨이브 %d번을 모두 버티세요 · 적 %d기" % [ArenaMap.SHAPE_NAMES[r.shape], ArenaMap.WAVES, room_total])
+		return
+	wave = 0
+	# 넓은 방은 크기만큼 적이 더 나온다 (2배 방 ×1.5, 3배 방 ×2)
+	_fill_queue(roundi(clampi(3 + d, 4, 9) * (1.0 + (r.scale - 1.0) * 0.5)), d)
+	spawn_timer = 0.6
+	var title: String = ArenaMap.SHAPE_NAMES[r.shape] if r.scale <= 1.0 else "대형 " + ArenaMap.SHAPE_NAMES[r.shape]
+	hud.banner(title, Color("ff7a9a"), "차단막이 닫혔습니다 · 적 %d기" % room_total)
+
+
+## 적 count 기를 소환 대기열에 채운다 (요격기·포탑·크롤러 비율은 방마다 이월해 맞춘다)
+func _fill_queue(count: int, d: int) -> void:
+	room_total = count
 	room_kills = 0
 	spawn_queue.clear()
 	var pool: Array = POOLS[mini(d - 1, POOLS.size() - 1)]
@@ -320,7 +344,6 @@ func _activate_room(id: int) -> void:
 	crawler_carry += room_total * CRAWLER_RATIO
 	var crawlers := mini(int(crawler_carry + 0.001), room_total - strikers - turrets)
 	crawler_carry -= crawlers
-	turret_spots.clear()
 	for i in room_total:
 		if i < strikers:
 			spawn_queue.append(STRIKER)
@@ -331,10 +354,28 @@ func _activate_room(id: int) -> void:
 		else:
 			spawn_queue.append(pool[randi() % pool.size()])
 	spawn_queue.shuffle()
-	spawn_timer = 0.6
-	shake(0.25)
-	Sfx.play("spawn", 0.0, 0.0)
-	hud.banner(ArenaMap.SHAPE_NAMES[r.shape], Color("ff7a9a"), "차단막이 닫혔습니다 · 적 %d기" % room_total)
+
+
+## 웨이브 방: 한 웨이브를 정리하면 잠깐 쉬었다가 다음 웨이브가 몰려온다 (웨이브마다 난이도 +1)
+func _next_wave() -> void:
+	wave += 1
+	var r: Dictionary = map.rooms[active_room]
+	var d: int = clampi(r.difficulty + wave - 1, 1, 6)
+	_fill_queue(WAVE_SIZES[mini(wave - 1, WAVE_SIZES.size() - 1)], d)
+	spawn_timer = WAVE_GAP
+	print("WAVE %d/%d t=%.1f hp=%d" % [wave, ArenaMap.WAVES, time, player.hp])
+	Sfx.play("charged", 0.0, 0.0)
+	FX.shockwave(player.global_position, Color("ff7a9a"), 4.0, 0.5)
+	var last := wave == ArenaMap.WAVES
+	hud.banner("FINAL WAVE" if last else "WAVE %d / %d" % [wave, ArenaMap.WAVES], Color("ff5a7a") if last else Color("ff9ab0"), "웨이브 정리 · 다음 적 %d기" % room_total)
+
+
+## 한 방에서 동시에 살아 있을 수 있는 적 수: 넓은 방일수록 많다
+func max_alive() -> int:
+	if active_room < 0:
+		return MAX_ALIVE
+	var r: Dictionary = map.rooms[active_room]
+	return MAX_ALIVE + roundi((r.scale - 1.0) * 1.5) + (1 if r.wave else 0)
 
 
 func _clear_room() -> void:
@@ -342,6 +383,7 @@ func _clear_room() -> void:
 	map.rooms[id].state = "cleared"
 	map.open_gates(id)
 	active_room = -1
+	wave = 0
 	rooms_cleared += 1
 	print("ROOM_CLEAR %d/%d t=%.1f hp=%d id=%d" % [rooms_cleared, combat_rooms(), time, player.hp, get_instance_id()])
 	if player.hp < Player.MAX_HP:
@@ -445,15 +487,6 @@ func _run_evade_show() -> void:
 		camera.snap(player.global_position)
 		var p := player.global_position
 		var foes: Array[Enemy] = []
-		if OS.get_cmdline_user_args().has("--evadesolo"):
-			# 회피 반격만 또렷하게 보기: 드론 한 기가 광선검을 항상 순간이동으로 피한다
-			var solo := Enemy.new()
-			world.add_child(solo)
-			solo.global_position = map.random_spot(_show_room, p, 3.5)
-			solo.hp = 9999
-			solo.evade.chance = 0.0
-			solo.evade.dodge = 1.0
-			return
 		for i in 2:
 			var e := Enemy.new()
 			e.pattern = Enemy.Pattern.AIMED_BURST
@@ -585,7 +618,7 @@ func _physics_process(dt: float) -> void:
 	if state == State.PLAY and active_room >= 0 and spawn_queue.size() > 0:
 		spawn_timer -= dt
 		var alive := get_tree().get_nodes_in_group("enemies").size() + pending_spawns
-		if spawn_timer <= 0.0 and alive < MAX_ALIVE:
+		if spawn_timer <= 0.0 and alive < max_alive():
 			spawn_timer = 0.5
 			_spawn(spawn_queue.pop_front())
 
@@ -594,7 +627,9 @@ func _spawn(pattern: int) -> void:
 	if pattern == TURRET:
 		_spawn_turret(active_room, 6.0)
 		return
-	var pos := map.random_spot(active_room, player.global_position, 5.5)
+	# 넓은 방에서는 플레이어 둘레 16m 안에 나온다 (화면 밖 먼 구석에서 나오지 않게)
+	var far := INF if map.rooms[active_room].scale <= 1.0 else 16.0
+	var pos := map.random_spot(active_room, player.global_position, 5.5, far)
 	pending_spawns += 1
 	FX.spawn_marker(pos, 0.7)
 	Sfx.play("spawn", 0.1, -6.0)
@@ -643,7 +678,10 @@ func on_enemy_killed(_e: Enemy) -> void:
 	if active_room >= 0 and state == State.PLAY:
 		room_kills += 1
 		if room_kills >= room_total:
-			_clear_room()
+			if wave > 0 and wave < ArenaMap.WAVES:
+				_next_wave()
+			else:
+				_clear_room()
 
 
 func _drop_loot(e: Enemy) -> void:

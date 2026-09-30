@@ -105,7 +105,6 @@ func _ready() -> void:
 	# 거미 상태(약점 노출)에서만: 뒷걸음질과 이탈 대시 반반, 광선검은 가끔 피한다
 	evade.chance = 0.45
 	evade.back_w = 0.55
-	evade.dodge = 0.3
 
 
 func _build(v: Node3D) -> Dictionary:
@@ -129,12 +128,6 @@ func _evade_attack() -> void:
 		return
 	_sp(SP.VOLLEY_WIND if randf() < 0.5 else SP.HOP_WIND)
 
-
-## 순간이동 반격: 준비 없이 곧바로 삼안 3연사
-func _counter_attack() -> void:
-	if state != S.SPIDER:
-		return
-	_sp(SP.VOLLEY)
 
 
 # ── 등장: 구체로 떨어져 튕긴다 ─────────────────────────
@@ -807,6 +800,45 @@ func _ricochet_dir(fl: Vector3, n: Vector3, spread := 0.6) -> Vector3:
 func _normal_at(pos: Vector3, fl: Vector3) -> Vector3:
 	var n := Vector3(pos.x - global_position.x, 0, pos.z - global_position.z)
 	return n.normalized() if n.length() > 0.05 else -fl
+
+
+# ── 피격 경직 (거미 상태에서만 맞는다) ──────────────────
+
+## 공중 도약 중에는 경직으로 끊지 않는다 (흔들림만)
+func _can_hurt() -> bool:
+	return not (state == S.SPIDER and sp == SP.HOP)
+
+
+## 연사 준비·연사·도약 준비를 끊고 걷기로 돌아간다 (걷다가 다시 공격을 준비한다)
+func _on_hurt() -> void:
+	if state != S.SPIDER:
+		return
+	if sp == SP.VOLLEY_WIND or sp == SP.VOLLEY or sp == SP.HOP_WIND:
+		volley_left = 0
+		tremble = 0.0
+		eye_k = 1.8
+		_snap("pitch", 0.0, HIT, 0.0, 0.3)
+		_snap("crouch", 0.0, HIT, 0.0, 0.3)
+		_sp(SP.WALK)
+
+
+func _update_hurt(dt: float) -> void:
+	_hurt_tick(dt)
+	core_hit = maxf(0.0, core_hit - dt)
+	global_position += knock * dt
+	global_position = Main.inst.push_out(global_position, R)
+	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
+	walk_amt = move_toward(walk_amt, 0.0, dt * 6.0)
+	_pose(dt)
+	core_mat_pulse()
+	# 자세(_pose) 위에 젖힘을 덧씌운다
+	var body: Node3D = j.body
+	if hurt_t > 0.0:
+		var shake := exp(-hurt_age * 14.0) * 0.06
+		body.position += Vector3(randf_range(-1.0, 1.0), 0.0, randf_range(-1.0, 1.0)) * shake
+		body.basis = Basis(hurt_axis, _hurt_curve() * hurt_amp * 0.8) * body.basis
+	else:
+		hurt_t = 0.0
 
 
 func die(dir := Vector3.ZERO, source := "bullet") -> void:

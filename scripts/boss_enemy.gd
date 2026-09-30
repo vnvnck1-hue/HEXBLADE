@@ -871,6 +871,7 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	boss_hp = maxf(0.0, boss_hp - amount)
 	bar.set_hp(boss_hp / MAX_HP, amount >= 5.0)
 	kill_source = source
+	HitSpark.spawn(pos, dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self)
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	wob2_v += Vector2(l.z, -l.x) * minf(0.05 * amount, 0.8)
 	punch = maxf(punch, minf(0.15 + amount * 0.05, 1.0))

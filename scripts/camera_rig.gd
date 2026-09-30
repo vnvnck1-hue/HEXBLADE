@@ -26,10 +26,10 @@ const PRESETS := [
 	},
 ]
 
-var preset_index := 1
-var p: Dictionary = PRESETS[1]
-var cur_offset: Vector3 = PRESETS[1].offset
-var cur_fov: float = PRESETS[1].fov
+var preset_index := 3   # 기본: TACTICAL (높고 넓은 시야 · 절제된 반응)
+var p: Dictionary = PRESETS[3]
+var cur_offset: Vector3 = PRESETS[3].offset
+var cur_fov: float = PRESETS[3].fov
 
 var focus := Vector3.ZERO
 var lead := Vector3.ZERO

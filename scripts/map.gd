@@ -3,10 +3,11 @@ extends Node3D
 ## 격자 기반 방·통로 맵.
 ## 여러 형태의 방을 트리처럼 이어 붙이고 일부는 고리형 통로로 한 번 더 연결한다.
 ## 방에 들어서면 출입구 차단막이 닫히고, 정리하면 열린다.
+## 몇몇 전투방은 보통 방의 2~3배 크기로 넓게 찍고, 그중 가장 큰 방은 웨이브 방(WAVES 번 웨이브)이 된다.
 
 const CELL := 1.0
-const W := 120
-const H := 120
+const W := 180
+const H := 180
 const VOID := 0
 const FLOOR := 1
 const PILLAR := 2      # 방 안의 높은 기둥
@@ -15,6 +16,14 @@ const WALL_H := 0.8
 const PILLAR_H := 1.5
 const LOW_H := 0.7
 const COMBAT_ROOMS := 9
+## 넓은 방: 전투방 번호(생성 순서) → 보통 방 대비 크기 배율. 자리가 없으면 배율을 조금씩 줄여 다시 찾는다.
+const BIG_ROOMS := {3: 2.0, 6: 2.5, 9: 3.0}
+const BIG_MIN_SCALE := 2.0
+## 넓은 방에 쓰는 형태 (L자 회랑은 늘리면 긴 복도가 돼서 뺀다)
+const BIG_SHAPES := [Shape.RECT, Shape.ROUND, Shape.CROSS, Shape.PILLARS, Shape.RING, Shape.OCTAGON, Shape.BLOB]
+## 웨이브 방(가장 큰 방)에 쓰는 형태: 사방이 트인 넓은 홀
+const WAVE_SHAPES := [Shape.OCTAGON, Shape.PILLARS, Shape.RECT, Shape.RING]
+const WAVES := 5
 # ── 바닥 굴곡 (terrain 이 켜진 맵만. 끄면 모든 칸 높이 0) ──
 const STEP := 0.5          # 걸어서 넘을 수 있는 높이 차. 굴곡은 모두 이보다 완만하다
 
@@ -28,6 +37,7 @@ var discovered := PackedByteArray()
 var rooms: Array = []           # Dictionary 목록
 var rng := RandomNumberGenerator.new()
 var start_room := 0
+var wave_room := -1
 var minimap_img: Image
 var minimap_tex: ImageTexture
 var _disc_t := 0.0
@@ -180,8 +190,42 @@ func generate(seed_value: int) -> void:
 	var tries := 0
 	# 형태 주머니: 모든 형태가 한 번씩 나온 뒤에 반복
 	var bag: Array = []
-	while rooms.size() < COMBAT_ROOMS + 1 and tries < 800:
+	# 넓은 방: 이번 번호의 배율 · 형태 · 실패 횟수
+	var big_scale := 0.0
+	var big_shape := -1
+	var big_fail := 0
+	while rooms.size() < COMBAT_ROOMS + 1 and tries < 3000:
 		tries += 1
+		var want_big: float = BIG_ROOMS.get(rooms.size(), 0.0)
+		if want_big > 0.0:
+			if big_shape < 0:
+				var last: bool = rooms.size() == BIG_ROOMS.keys().max()
+				var pick: Array = WAVE_SHAPES if last else BIG_SHAPES
+				big_shape = pick[rng.randi_range(0, pick.size() - 1)]
+				if big_scale <= 0.0:
+					big_scale = want_big
+			# 넓은 방은 오래 못 찾으면 아무 방에서나 뻗어 나간다 (자리가 넉넉한 쪽을 찾게)
+			var bparent: Dictionary = rooms[rng.randi_range(0 if big_fail > 30 else maxi(0, rooms.size() - 3), rooms.size() - 1)]
+			var bshp := _big_shape(big_shape, big_scale)
+			var bang := rng.randf() * TAU
+			var bdist: float = bparent.r + bshp.r + rng.randf_range(6.0, 11.0)
+			var bc: Vector2i = bparent.center + Vector2i(roundi(cos(bang) * bdist), roundi(sin(bang) * bdist))
+			if not _fits(bc, bshp.r):
+				big_fail += 1
+				if big_fail % 60 == 0:
+					big_scale = maxf(BIG_MIN_SCALE, big_scale - 0.1)
+					big_shape = -1           # 형태도 다시 골라 본다
+				continue
+			var bid := _stamp(bc, bshp, big_shape, true)
+			rooms[bid].scale = big_scale
+			_carve_corridor(bparent.center, bc)
+			bparent.links.append(bid)
+			rooms[bid].links.append(bparent.id)
+			print("BIG_ROOM id=%d shape=%d scale=%.1f r=%.1f cells=%d" % [bid, big_shape, big_scale, bshp.r, rooms[bid].cells.size()])
+			big_shape = -1
+			big_scale = 0.0
+			big_fail = 0
+			continue
 		if bag.is_empty():
 			for k in Shape.size():
 				bag.append(k)
@@ -218,8 +262,21 @@ func generate(seed_value: int) -> void:
 					b.links.append(a.id)
 	_find_doors()
 	_assign_difficulty()
+	_pick_wave_room()
 	Terrain.shape(self)
 	_compute_anchors()
+
+
+## 바닥이 가장 넓은 전투방을 웨이브 방으로 삼는다
+func _pick_wave_room() -> void:
+	wave_room = -1
+	var most := 0
+	for r in rooms:
+		if r.combat and r.scale > 1.0 and r.cells.size() > most:
+			most = r.cells.size()
+			wave_room = r.id
+	if wave_room >= 0:
+		rooms[wave_room].wave = true
 
 
 ## 섹터 런용: 방 하나만 맵 가운데 찍는다 (통로·차단막 없음). combat 이 거짓이면 안전 구역.
@@ -353,6 +410,62 @@ func _shape(s: int, size := Vector2i.ZERO) -> Dictionary:
 	return {"cells": cells, "pillars": pillars, "lows": lows, "r": r}
 
 
+## 보통 형태를 scale 배로 넓힌다. 넓힌 칸마다 원래 형태의 가장 가까운 칸 종류를 따른다.
+## 기둥·엄폐물도 같이 커지고, 넓은 바닥에 엄폐물을 몇 무더기 더 흩어 놓는다.
+func _big_shape(s: int, scale: float) -> Dictionary:
+	var base := _shape(s)
+	var kind := {}
+	for c in base.cells:
+		kind[c] = FLOOR
+	for c in base.lows:
+		kind[c] = LOW
+	for c in base.pillars:
+		kind[c] = PILLAR
+	var cells: Array[Vector2i] = []
+	var pillars: Array[Vector2i] = []
+	var lows: Array[Vector2i] = []
+	var R := ceili(base.r * scale) + 2
+	for y in range(-R, R + 1):
+		for x in range(-R, R + 1):
+			var src := Vector2i(roundi(x / scale), roundi(y / scale))
+			match kind.get(src, VOID):
+				FLOOR:
+					cells.append(Vector2i(x, y))
+				LOW:
+					cells.append(Vector2i(x, y))
+					lows.append(Vector2i(x, y))
+				PILLAR:
+					pillars.append(Vector2i(x, y))
+	# 추가 엄폐물: 넓은 바닥 곳곳에 3칸짜리 낮은 벽 (한가운데는 비워 둔다)
+	var floor_set := {}
+	for c in cells:
+		floor_set[c] = true
+	for c in lows:
+		floor_set.erase(c)
+	for i in int(cells.size() / 160):
+		var at: Vector2i = cells[rng.randi_range(0, cells.size() - 1)]
+		if Vector2(at).length() < 5.0:
+			continue
+		var horiz := rng.randf() < 0.5
+		var ok := true
+		for k in range(-2, 5):
+			for w in range(-2, 3):
+				if not floor_set.has(at + (Vector2i(k, w) if horiz else Vector2i(w, k))):
+					ok = false
+		if not ok:
+			continue
+		for k in 3:
+			var q := at + (Vector2i(k, 0) if horiz else Vector2i(0, k))
+			lows.append(q)
+			floor_set.erase(q)
+	var r := 0.0
+	for c in cells:
+		r = maxf(r, Vector2(c).length())
+	for c in pillars:
+		r = maxf(r, Vector2(c).length())
+	return {"cells": cells, "pillars": pillars, "lows": lows, "r": r}
+
+
 func _disc(out: Array[Vector2i], o: Vector2, R: float) -> void:
 	for y in range(floori(o.y - R), ceili(o.y + R) + 1):
 		for x in range(floori(o.x - R), ceili(o.x + R) + 1):
@@ -382,6 +495,7 @@ func _stamp(c: Vector2i, shp: Dictionary, shape_id: int, combat: bool) -> int:
 		"id": id, "center": c, "r": shp.r, "shape": shape_id, "cells": cells, "links": [],
 		"combat": combat, "state": "idle", "gates_closed": false, "doors": [],
 		"gate_nodes": [], "gate_shapes": [], "gate_body": null, "anchor": c, "difficulty": 0, "visited": not combat,
+		"scale": 1.0, "wave": false,
 	})
 	return id
 
@@ -654,10 +768,11 @@ func _process(dt: float) -> void:
 
 
 ## 전투방 안의 무작위 바닥 위치 (벽·플레이어와 떨어진 곳)
-func random_spot(id: int, avoid: Vector3, min_dist: float) -> Vector3:
+## max_dist 를 주면 avoid 에서 그 안쪽 자리를 고른다 (넓은 방에서 적이 너무 멀리 나오지 않게)
+func random_spot(id: int, avoid: Vector3, min_dist: float, max_dist := INF) -> Vector3:
 	var cells: Array = rooms[id].cells
 	var best := world_of(rooms[id].center)
-	for tries in 60:
+	for tries in (120 if max_dist < INF else 60):
 		var c: Vector2i = cells[rng.randi_range(0, cells.size() - 1)]
 		var ok := true
 		for dy in range(-1, 2):
@@ -667,7 +782,8 @@ func random_spot(id: int, avoid: Vector3, min_dist: float) -> Vector3:
 		if not ok:
 			continue
 		var p := world_of(c)
-		if Vector2(p.x - avoid.x, p.z - avoid.z).length() >= min_dist:
+		var dd := Vector2(p.x - avoid.x, p.z - avoid.z).length()
+		if dd >= min_dist and dd <= max_dist:
 			return p
 		best = p
 	return best

@@ -13,6 +13,8 @@ var laser_bar: ProgressBar
 var energy_icons: AmmoIcons
 var missile_icons: AmmoIcons
 var ult_label: Label
+var ammo_label: Label
+var ammo_bar: ProgressBar
 var flash_rect: ColorRect
 var center: Label
 var sub: Label
@@ -97,6 +99,11 @@ func _ready() -> void:
 	left.add_child(boost_label)
 	boost_bar = _bar(Color("ffb040"))
 	left.add_child(boost_bar)
+	# 기본 총기 탄창: 30발마다 재장전 (T, 비면 자동)
+	ammo_label = _label("AMMO  30 / 30  [T]", 13, Color(0.7, 0.68, 0.95))
+	left.add_child(ammo_label)
+	ammo_bar = _bar(Color("ffe070"))
+	left.add_child(ammo_bar)
 	left.add_child(_label("LASER  [좌+우클릭 유지]", 13, Color(0.7, 0.68, 0.95)))
 	laser_bar = _bar(Color.WHITE)
 	left.add_child(laser_bar)
@@ -210,7 +217,7 @@ void fragment() {
 	sub.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.18))
 	root.add_child(sub)
 
-	hint = _label("WASD 이동   좌클릭 검   우클릭 사격   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   Shift+Space 길게 점프   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
+	hint = _label("WASD 이동   좌클릭 검   우클릭 사격   T 재장전   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   Shift+Space 길게 점프   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
 	hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -286,6 +293,13 @@ func _draw_cross() -> void:
 	cross.draw_circle(p, 2.0, c)
 	for d in [Vector2.RIGHT, Vector2.LEFT, Vector2.UP, Vector2.DOWN]:
 		cross.draw_line(p + d * 15, p + d * 21, c, 2.0, true)
+	# 탄창: 조준점 오른쪽 아래 남은 탄 수 · 재장전 중에는 조준 원 둘레로 진행 호
+	if pl.reload_t > 0.0:
+		cross.draw_arc(p, 26, -PI * 0.5, -PI * 0.5 + TAU * pl.reload_k(), 40, Color("ffd070"), 3.0, true)
+		cross.draw_string(font, p + Vector2(18, 34), "RELOAD", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("ffd070"))
+	else:
+		var ac := Color("ff6a6a") if pl.mag <= 5 else Color(0.85, 1.0, 1.0, 0.85)
+		cross.draw_string(font, p + Vector2(18, 30), str(pl.mag), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, ac)
 
 
 func _brackets(c: Vector2, half: float, ln: float, col: Color, w: float) -> void:
@@ -379,6 +393,15 @@ func _process(_dt: float) -> void:
 	else:
 		bf.bg_color = Color("ffd060") if p.boosting else Color("ffb040")
 		boost_label.text = "BOOST  [Shift]"
+	if p.reload_t > 0.0:
+		ammo_bar.value = p.reload_k()
+		ammo_label.text = "AMMO  RELOADING…"
+		ammo_label.modulate = Color("ffd070") if fmod(m.time, 0.3) < 0.15 else Color.WHITE
+	else:
+		ammo_bar.value = float(p.mag) / Player.MAG_SIZE
+		ammo_label.text = "AMMO  %d / %d  [T]" % [p.mag, Player.MAG_SIZE]
+		ammo_label.modulate = Color("ff8a8a") if p.mag <= 5 else Color.WHITE
+	(ammo_bar.get_theme_stylebox("fill") as StyleBoxFlat).bg_color = Color("ffa040") if p.reload_t > 0.0 else Color("ffe070")
 	laser_bar.value = p.charge if p.charging else (0.0 if p.laser_cd > 0.0 else 1.0)
 	var stage_c: Color = ChargeFX.STAGE_COLORS[mini(p.charge_stage, 3)]
 	(laser_bar.get_theme_stylebox("fill") as StyleBoxFlat).bg_color = stage_c if p.charging else Color(0.4, 0.5, 0.8)
@@ -390,7 +413,10 @@ func _process(_dt: float) -> void:
 	ult_label.text = ("MISSILE  %d / %d  [R]" % [p.missiles, Player.MISSILE_MAX]) if p.missiles > 0 else "MISSILE  — 적이 떨어뜨린 탄을 주우세요"
 	ult_label.modulate = Color("ffd070") if p.missiles > 0 and fmod(m.time, 0.8) < 0.4 else Color.WHITE
 	wave_label.text = "ROOMS  %d / %d" % [m.rooms_cleared, m.combat_rooms()]
-	count_label.text = ("ENEMIES  %d" % m.enemies_left()) if m.active_room >= 0 else "탐색 중"
+	if m.wave > 0:
+		count_label.text = "WAVE %d / %d  ·  ENEMIES  %d" % [m.wave, ArenaMap.WAVES, m.enemies_left()]
+	else:
+		count_label.text = ("ENEMIES  %d" % m.enemies_left()) if m.active_room >= 0 else "탐색 중"
 	cross.queue_redraw()
 	minimap.queue_redraw()
 	_update_combo(m)

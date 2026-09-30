@@ -432,6 +432,11 @@ static func impact(pos: Vector3, face: Vector3, k := 1.0, smoke := SMOKE_LIT) ->
 			AMBER, 2.2, a, {"anchor": Vector2(0, 0.5), "tint2": HOT, "vel": a * randf_range(5.0, 8.0) * k, "drag": 9.0})
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 ## 플레이어 탄에 붙이는 예광 연출. 탄 노드의 자식으로 넣으면 탄을 따라 스스로 그린다.
 static func tracer() -> Tracer:
 	return Tracer.new()

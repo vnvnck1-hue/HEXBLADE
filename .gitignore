@@ -4,3 +4,4 @@ _capture/*.log
 _capture/*.png
 _capture/*.mp4
 _capture/*.txt
+.tools/

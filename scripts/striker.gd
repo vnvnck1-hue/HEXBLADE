@@ -69,7 +69,6 @@ func _ready() -> void:
 	# 고속 요격기: 주로 이탈 대시, 광선검도 자주 피한다
 	evade.chance = 0.5
 	evade.back_w = 0.3
-	evade.dodge = 0.45
 
 
 func _build(v: Node3D) -> Dictionary:
@@ -265,12 +264,6 @@ func _evade_attack() -> void:
 		"lunge":
 			_begin_lunge(d.normalized())
 
-
-## 순간이동 반격: 등 뒤에서 곧바로 속사
-func _counter_attack() -> void:
-	_face_player()
-	burst_left = BURST_SHOTS
-	burst_timer = 0.04
 
 
 # ── 차지 레이저 ──────────────────────────────────────────

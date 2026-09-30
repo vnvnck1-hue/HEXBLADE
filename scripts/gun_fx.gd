@@ -244,6 +244,11 @@ func _chip(pos: Vector3, vel: Vector3, c: Color, size: float) -> void:
 		(old.node as Node).queue_free()
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 func _physics_process(dt: float) -> void:
 	_tink_t -= dt
 	_step(casings, dt, true)

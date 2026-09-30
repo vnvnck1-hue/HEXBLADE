@@ -2,7 +2,9 @@
 rem Finds Godot 4.6.3 in a sibling folder's .tools\godot and runs this project.
 setlocal
 set "G="
-for /d %%D in ("%~dp0..\*") do (
+rem Project-local Godot 4.x (.tools\godot) first.
+for %%E in ("%~dp0.tools\godot\Godot_v4*-stable_win64.exe") do set "G=%%~fE"
+if not defined G for /d %%D in ("%~dp0..\*") do (
   if exist "%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe" set "G=%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe"
 )
 rem Fallback: Godot 4.x installed via winget.

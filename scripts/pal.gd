@@ -64,8 +64,8 @@ static var _flash_mat: StandardMaterial3D
 static var _lock_mat: ShaderMaterial
 static var _parry_mat: ShaderMaterial
 static var _parry_flash_mat: ShaderMaterial
-## 카툰 렌더링(셀 음영 + 외곽선) 켜짐 여부. O 키로 전환, 실행 인자 --notoon 으로 끈 채 시작
-static var toon_on := not OS.get_cmdline_user_args().has("--notoon")
+## 카툰 렌더링(셀 음영 + 외곽선) 켜짐 여부. 기본 꺼짐. O 키로 전환, 실행 인자 --toon 으로 켠 채 시작
+static var toon_on := OS.get_cmdline_user_args().has("--toon")
 static var _toon_mats: Array[StandardMaterial3D] = []
 
 

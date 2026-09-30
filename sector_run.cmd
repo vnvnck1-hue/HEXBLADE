@@ -2,7 +2,9 @@
 rem Runs the hex sector run (main scene) with Godot 4 from a sibling .tools\godot or winget.
 setlocal
 set "G="
-for /d %%D in ("%~dp0..\*") do (
+rem Project-local Godot 4.x (.tools\godot) first.
+for %%E in ("%~dp0.tools\godot\Godot_v4*-stable_win64.exe") do set "G=%%~fE"
+if not defined G for /d %%D in ("%~dp0..\*") do (
   if exist "%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe" set "G=%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe"
 )
 if not defined G (

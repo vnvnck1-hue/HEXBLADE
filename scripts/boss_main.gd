@@ -59,6 +59,7 @@ func _ready() -> void:
 	camera.snap(player.global_position)
 	debris = Debris.new()
 	world.add_child(debris)
+	world.add_child(GunFX.new())
 
 	hud = Hud.new()
 	add_child(hud)

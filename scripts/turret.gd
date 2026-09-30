@@ -53,7 +53,6 @@ func _ready() -> void:
 	shadow.visible = false   # 승강판 위에 서므로 원형 그림자는 쓰지 않는다
 	# 바닥 해치에 고정된 포탑은 움직여 거리를 벌리지 않는다
 	evade.chance = 0.0
-	evade.dodge = 0.0
 
 
 func _build(v: Node3D) -> Dictionary:
@@ -268,6 +267,22 @@ func _end_attack(cd: float) -> void:
 	for b in j.bores:
 		(b as MeshInstance3D).set_instance_shader_parameter("tint", Color("5a1418"))
 		(b as MeshInstance3D).set_instance_shader_parameter("energy", 1.0)
+
+
+## 맞으면 조준선을 거두고 연사를 멈춘다 (경직이 풀린 뒤 잠시 뒤에 다시 조준)
+func _on_hurt() -> void:
+	if state != S.TRACK:
+		_end_attack(0.5)
+	else:
+		fire_timer = maxf(fire_timer, 0.35)
+
+
+## 바닥에 박힌 포탑: 밀려나지 않고 제자리에서 젖혀졌다 튕겨 돌아온다
+func _update_hurt(dt: float) -> void:
+	knock = Vector3.ZERO
+	super(dt)
+	(j.body as Node3D).position.y = 1.0 + PLATE
+	spin = move_toward(spin, 0.0, 40.0 * dt)
 
 
 func die(dir := Vector3.ZERO, source := "bullet") -> void:
