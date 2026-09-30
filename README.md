@@ -5,6 +5,16 @@
 
 ## 실행
 
+게임을 켜면 **로비**(`scenes/lobby.tscn`)가 나옵니다.
+
+| 메뉴 | 내용 |
+|---|---|
+| 메인 게임 · HEX SECTOR RUN | 포탈로 경로를 골라 섹터 2곳을 돌파하는 로그라이트 런 (`docs/sector-run.md`) |
+| 테스트 씬 | 방 탐색 아레나(기존 방 조합 게임, `main.tscn`) · MAMMOTH 추격전(`boss.tscn`) · VULCAN 용광로(`forge.tscn`) 단독 실행 |
+| 종료 | 게임 종료 |
+
+게임 중 **Esc** 를 누르면 로비로 돌아옵니다(섹터 런은 중단됩니다).
+
 - `run_game.cmd` 더블클릭: 옆 폴더 `3D 쿼터뷰 슈팅게임/.tools/godot`의 Godot 4.6.3으로 실행합니다.
 - `open_editor.cmd`: 편집기로 엽니다. 편집기에서 F5를 누르면 실행됩니다.
 - 렌더러는 Forward+(Vulkan)입니다.
@@ -24,6 +34,7 @@
 | I | 임팩트 프레임 켜기/끄기. 3단 이상 충전 레이저와 최대 레이저를 쏘는 순간 화면이 1~4프레임 동안 순수 흑백으로 바뀝니다(원판 → 반전). 총구를 소실점으로 하는 집중선이 함께 나옵니다. 실행 인자 `--noimpact`로 끈 채 시작할 수 있습니다 |
 | O | 카툰 렌더링 켜기/끄기. 조명 파츠의 두 단 셀 음영과 깊이·노멀 경계 외곽선 후처리를 함께 전환하며, 끄면 일반 음영으로 돌아갑니다. 발광 파츠(예광탄·속도선 등)는 선을 긋지 않습니다. 실행 인자 `--notoon`으로 끈 채 시작할 수 있습니다 |
 | V | 카메라 프리셋 전환: CLASSIC / ACTION(기본) / CINEMATIC / TACTICAL |
+| Esc | 로비로 돌아가기 |
 | F5 | 언제든 재시작 (결과 화면에서는 R 로도 재시작) · M 효과음 끄기/켜기 |
 
 ## 콤보와 점수
@@ -44,7 +55,9 @@
 - **카메라**: 쿼터뷰에서 급격히 플레이어 **등 뒤 어깨 너머**로 파고들어(0.12초) 플레이어와 적을 한 화면에 담고, 천천히 밀고 들어가며 더치 앵글로 기울었다가 원래 시점으로 돌아옵니다. 적이 가까운 근접 패링은 둘이 겹치지 않게 비스듬한 3/4 뒤 각도로 잡고, 뒤가 벽이면 벽 앞까지 당깁니다(`camera_rig.gd` `parry_cine`).
 - **보상**: 대시 쿨다운과 검 쿨다운이 바로 초기화되고, 다음 검은 **관통 일격**이 됩니다. 되받아친 탄으로 처치하면 점수 3배.
 
-## 맵과 진행
+## 테스트 씬: 방 탐색 아레나
+
+로비의 **테스트 씬 → 방 탐색 아레나** 로 들어가는 기존 방 조합 게임입니다.
 
 시작 방에서 출발해 통로로 이어진 **전투방 9곳**을 모두 정리하면 승리합니다. 체력 5칸을 모두 잃으면 패배합니다.
 
@@ -136,6 +149,7 @@
 
 | 파일 | 역할 |
 |---|---|
+| `scripts/lobby.gd` | 시작 로비: 메인 게임(섹터 런) · 테스트 씬 선택, Esc 로 돌아오기(`Lobby.back`), 자동 플레이 실행 인자면 로비 건너뛰기 |
 | `scripts/main.gd` | 조명, 방 진입·전투·정리 진행, 승패, 타격 정지, 자동 플레이(경로 탐색) |
 | `scripts/map.gd` | 방·통로 생성, 벽·바닥 메시와 충돌, 차단막, 이동 판정, 미니맵 |
 | `scripts/player.gd` | 이동·조준·사격·회피(2단 대시)·검(4종 모션·관통 일격), 궁극기 락온, 피격, 보행 애니메이션 |
@@ -182,18 +196,20 @@
 
 ## 검증용 실행 인자
 
+씬을 지정하지 않고 실행 인자(`--bot`·`--capture=` 등)를 주면 로비를 건너뛰고 섹터 런으로 바로 들어갑니다(`--test` 를 더하면 방 탐색 아레나). 아래 방 탐색 명령은 `main.tscn` 을 직접 지정합니다.
+
 ```
-Godot --path . --fixed-fps 60 -- --bot --seed=1       # 자동 플레이 (방을 찾아가며 전투)
-Godot --path . -- --bot --overview --seed=1           # 맵 전체 조감
-Godot --path . --fixed-fps 60 -- --capture=DIR --every=10 --seconds=30 --bot
-Godot --path . --fixed-fps 60 -- --capture=DIR --every=2 --seconds=6 --showcase   # 연출 순서 재생
+Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --bot --seed=1       # 자동 플레이 (방을 찾아가며 전투)
+Godot --path . res://scenes/main.tscn -- --bot --overview --seed=1           # 맵 전체 조감
+Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=DIR --every=10 --seconds=30 --bot
+Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=DIR --every=2 --seconds=6 --showcase   # 연출 순서 재생
 Godot --path . --fixed-fps 60 res://scenes/boss.tscn -- --capture=DIR --every=10 --seconds=70 --bot --godmode   # 보스전 자동 플레이 (무적)
 Godot --path . --fixed-fps 60 res://scenes/boss.tscn -- --capture=DIR --every=3 --seconds=45 --bot --hug   # 보스에 붙어 검만 연타 (근접 견제 검증: BOSS_SHOCK / PLAYER_STUN 로그)
 Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=30 --seconds=40 --bot --godmode   # 용광로 보스전 자동 플레이 (무적)
 Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=30 --seconds=34 --bot --godmode --fastp2   # 6초 뒤 바로 2페이즈로
-Godot --path . --fixed-fps 60 -- --capture=res://_capture/crawl --every=1 --seconds=18 --crawlershow --seed=3 --campreset=3   # 전투방에 크롤러 하나: 구르기·반사·도탄·변신·공격·처치 (CRAWLER/CPOS 로그 → _capture/crop.py 로 근접 시트)
-Godot --path . --fixed-fps 60 -- --capture=DIR --every=2 --seconds=11 --parryshow  # 패링 탄 드론 + 5.5초 뒤 돌진 요격기, 자동으로 패링 (PARRY 로그의 f 값 ÷ every = 프레임 번호)
-Godot --path . --fixed-fps 60 -- --capture=DIR --every=3 --seconds=8 --turretshow  # 시작 방 벽가 해치에서 포탑 둘을 올려 등장·조준·연사·절단·폭발 확인
+Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=res://_capture/crawl --every=1 --seconds=18 --crawlershow --seed=3 --campreset=3   # 전투방에 크롤러 하나: 구르기·반사·도탄·변신·공격·처치 (CRAWLER/CPOS 로그 → _capture/crop.py 로 근접 시트)
+Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=DIR --every=2 --seconds=11 --parryshow  # 패링 탄 드론 + 5.5초 뒤 돌진 요격기, 자동으로 패링 (PARRY 로그의 f 값 ÷ every = 프레임 번호)
+Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=DIR --every=3 --seconds=8 --turretshow  # 시작 방 벽가 해치에서 포탑 둘을 올려 등장·조준·연사·절단·폭발 확인
 ```
 
 폭발 시연 영상(근접 · 슬로모션 · 게임 시점): `Godot --path . --fixed-fps 60 --write-movie _capture/explo1/f.png -s _capture/explosion_show.gd`

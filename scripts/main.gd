@@ -551,6 +551,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	if restart_now or (event.is_action_pressed("restart") and state != State.PLAY):
 		Engine.time_scale = 1.0
 		get_tree().reload_current_scene()
+	elif event.is_action_pressed("pause"):
+		# Esc: 로비로 (섹터 런 중이면 런은 중단된다)
+		Lobby.back(get_tree())
 	elif event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_B:
 		# B: 방 탐색 → 추격 보스전 → 용광로 보스전 → 방 탐색 순환
 		Engine.time_scale = 1.0
