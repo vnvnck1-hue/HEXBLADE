@@ -26,6 +26,7 @@ var gust_t := 0.0
 var flowing: Array = []   # [node, dist, speed]
 var streaks: Array = []   # [node, dist, radius, angle]
 var snd: AudioStreamPlayer
+var trail: BeamTrail   # 끝점이 지나간 바닥 궤적 잔상 (빔보다 오래 남는다)
 
 static var _cyl: CylinderMesh
 static var _torus: TorusMesh
@@ -115,6 +116,11 @@ void fragment() {
 	tip_light.light_energy = 12.0
 	tip_light.omni_range = 8.0
 	add_child(tip_light)
+	trail = BeamTrail.new()
+	(FX.root if FX.root else get_parent()).add_child(trail)
+	tree_exiting.connect(func() -> void:
+		if is_instance_valid(trail):
+			trail.finish())
 	snd = AudioStreamPlayer.new()
 	add_child(snd)
 	if not Sfx.inst.muted:
@@ -128,10 +134,15 @@ func set_beam(origin: Vector3, d: Vector3, len: float) -> void:
 	dir = d
 	length = len
 	basis = Basis.looking_at(d, Vector3.UP)
+	if trail and not ending:
+		trail.push(origin + d * len)
 
 
 func finish() -> void:
 	ending = true
+	BeamAfterimage.spawn(global_position, dir, length, 0.16, Color("1ff0ff"), 0.12)
+	if is_instance_valid(trail):
+		trail.finish()
 
 
 func _process(dt: float) -> void:

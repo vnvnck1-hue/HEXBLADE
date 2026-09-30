@@ -50,14 +50,35 @@ var stun_halo: Node3D
 var warn_glow := false
 var orb_next := false
 var orb_cd := 0.0
+## 패링 공격 준비동작 진행도 (0~1). 몸체를 납작하게 웅크리는 데 쓴다
+var windup_k := 0.0
+## 패링 공격 알림 순간의 금빛 전신 섬광 남은 시간
+var glow_t := 0.0
+## 거리 벌리기 (뒷걸음질 · 이탈 대시 · 광선검 회피 반격). 확률은 기체마다 _ready 에서 정한다.
+var evade := Evade.new()
+const GLOW_TIME := 0.12
 ## 패링 탄을 쏠 확률 (기본 드론만 쓴다). 확인 모드에서는 1.
 var orb_chance := 0.45
 ## 확인 모드: 패링 탄만 쏜다
 var orb_only := false
+## 체력바: 첫 프레임에 체력 배율을 적용하며 만든다. 보스처럼 자체 체력 게이지가 있는 기체는 이 경로를 타지 않는다.
+var max_hp := 0
+var hp_bar: MeshInstance3D
+var hp_bar_y := 2.05          # 바 높이 (기체 원점 기준)
+var hp_bar_w := 1.1
+var _bar_chip := 1.0          # 깎인 뒤 천천히 따라 내려오는 잔상 비율
+var _bar_hit := 0.0
 
+## 일반 적 체력 배율 (기체마다 정한 기본 체력에 곱한다)
+const HP_SCALE := 2.5
 const DROP_TIME := 0.45
+
+static var _bar_mat: ShaderMaterial
+static var _bar_mesh: QuadMesh
 const TELEGRAPH := 0.5
 const ORB_CD := 3.2
+## 패링 탄 준비동작 길이: 크게 뒤로 젖혀 웅크리며 코어를 부풀린다. 끝나는 순간 알림과 함께 발사.
+const ORB_WINDUP := 0.8
 
 
 func _ready() -> void:
@@ -74,6 +95,11 @@ func _ready() -> void:
 		Pattern.FAN: desired = 5.0
 		Pattern.RING: desired = 4.2
 	j.body.position.y = 7.0
+	# 기본형 드론: 주로 뒷걸음질, 가끔 이탈 대시, 광선검은 가끔 피한다
+	evade.e = self
+	evade.chance = 0.4
+	evade.back_w = 0.75
+	evade.dodge = 0.25
 
 
 func _physics_process(dt: float) -> void:
@@ -82,7 +108,10 @@ func _physics_process(dt: float) -> void:
 		return
 	if not alive:
 		return
+	if max_hp == 0:
+		_init_hp()
 	t += dt
+	_update_hp_bar(dt)
 	var body: Node3D = j.body
 	if not landed:
 		_update_entry(dt)
@@ -91,13 +120,22 @@ func _physics_process(dt: float) -> void:
 		_update_stagger(dt)
 	else:
 		_ai(dt)
+		evade.update(dt)
 	# 피격 반응
 	punch = move_toward(punch, 0.0, dt * 6.0)
 	body.scale = Vector3(1.0 + punch * 0.22, 1.0 - punch * 0.16, 1.0 + punch * 0.22)
+	if windup_k > 0.0:
+		# 준비동작: 스프링처럼 납작하게 눌러 힘을 모은다
+		var sq := smoothstep(0.05, 0.8, windup_k)
+		body.scale *= Vector3(1.0 + sq * 0.3, 1.0 - sq * 0.36, 1.0 + sq * 0.3)
 	if flash_t > 0.0:
 		flash_t -= dt
 		if flash_t <= 0.0:
 			_set_flash(false)
+	if glow_t > 0.0:
+		glow_t -= dt
+		if glow_t <= 0.0:
+			_set_flash(flash_t > 0.0)
 
 
 ## 등장 연출: 기본은 하늘에서 떨어져 착지한다. 끝나면 landed 를 켠다 (그 전에는 맞지 않는다).
@@ -147,7 +185,12 @@ func _ai(dt: float) -> void:
 		var l := d.length()
 		if l < 2.2 and l > 0.001:
 			move += d / l * (2.2 - l)
-	var speed := 2.0 if burst_left == 0 and fire_timer > TELEGRAPH else 0.6
+	var winding := orb_next and fire_timer <= ORB_WINDUP
+	var speed := 2.0 if burst_left == 0 and fire_timer > TELEGRAPH and not winding else 0.6
+	if winding:
+		# 준비동작 초반에 크게 물러서며 뒤로 빠진다
+		move = -dir * (1.0 - windup_k)
+		speed = 2.6
 	global_position += (move.limit_length(1.0) * speed + knock) * dt
 	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
 	global_position = Main.inst.push_out(global_position, radius)
@@ -169,21 +212,19 @@ func _ai(dt: float) -> void:
 	if player.alive and Main.inst.state == Main.State.PLAY:
 		var was := fire_timer
 		fire_timer -= dt
-		# 예고가 시작되는 순간 다음 공격을 정한다: 패링 탄이면 금빛으로 번쩍이며 알린다
-		if was > TELEGRAPH and fire_timer <= TELEGRAPH:
+		# 준비동작 길이만큼 앞서 다음 공격을 정한다: 패링 탄이면 과장된 준비동작에 들어간다 (알림은 준비동작 끝에)
+		if was > ORB_WINDUP and fire_timer <= ORB_WINDUP:
 			orb_next = orb_cd <= 0.0 and randf() < orb_chance and get_tree().get_nodes_in_group("parry_orbs").size() < 2 or orb_only
-			if orb_next:
-				_warn(core.global_position)
-	var tele: float = clamp(1.0 - fire_timer / TELEGRAPH, 0.0, 1.0)
-	core.scale = Vector3.ONE * (1.0 + tele * 0.6 + sin(t * 40.0) * 0.06 * tele)
-	# 예고 중에는 뒤로 젖혀 힘을 모은다
-	body.rotation.x = wob.x + tele * 0.22
-	body.rotation.z = sin(t * 1.7) * 0.06 + wob.y + sin(t * 45.0) * 0.03 * tele
-	cm.emission_energy_multiplier = 0.6 + tele * 3.0
-	if orb_next and tele > 0.0:
-		cm.albedo_color = Pal.E_RED.lerp(ParryFX.GOLD, tele)
-		cm.emission = Pal.E_RED.lerp(ParryFX.GOLD, tele)
-		core.scale *= 1.0 + tele * 0.35
+	if orb_next and fire_timer <= ORB_WINDUP:
+		_orb_windup(dt, clampf(1.0 - fire_timer / ORB_WINDUP, 0.0, 1.0))
+	else:
+		windup_k = 0.0
+		var tele: float = clamp(1.0 - fire_timer / TELEGRAPH, 0.0, 1.0)
+		core.scale = Vector3.ONE * (1.0 + tele * 0.6 + sin(t * 40.0) * 0.06 * tele)
+		# 예고 중에는 뒤로 젖혀 힘을 모은다
+		body.rotation.x = wob.x + tele * 0.22
+		body.rotation.z = sin(t * 1.7) * 0.06 + wob.y + sin(t * 45.0) * 0.03 * tele
+		cm.emission_energy_multiplier = 0.6 + tele * 3.0
 	if fire_timer <= 0.0:
 		if orb_next:
 			_shoot_orb()
@@ -195,6 +236,40 @@ func _ai(dt: float) -> void:
 			burst_timer = 0.13
 			burst_left -= 1
 			_shoot([0.0], 7.5)
+
+
+# ── 거리 벌리기 (Evade 가 부른다) ───────────────────────
+
+## 지금 거리 벌리기를 해도 되는가: 공격 준비·연사 중이 아닐 때만
+func _can_evade() -> bool:
+	return not orb_next and burst_left == 0 and fire_timer > TELEGRAPH
+
+
+func evading() -> bool:
+	return evade.active()
+
+
+func _face_player() -> void:
+	var d := Main.inst.player.global_position - global_position
+	d.y = 0
+	if d.length() > 0.05:
+		rotation.y = atan2(-d.x, -d.z)
+
+
+## 이탈 대시 뒤 무작위 공격: 조준 연사 · 부채꼴 · 원형탄 중 하나
+func _evade_attack() -> void:
+	_face_player()
+	var keep := pattern
+	pattern = [Pattern.AIMED_BURST, Pattern.FAN, Pattern.RING][randi() % 3]
+	_begin_attack()
+	pattern = keep
+
+
+## 순간이동 반격: 등 뒤에서 곧바로 세 갈래 빠른 탄
+func _counter_attack() -> void:
+	_face_player()
+	_shoot([-0.2, 0.0, 0.2], 11.0)
+	fire_timer = maxf(fire_timer, 1.2)
 
 
 func _begin_attack() -> void:
@@ -216,7 +291,7 @@ func _begin_attack() -> void:
 func _shoot(angles: Array, speed: float, big := false) -> void:
 	var core: MeshInstance3D = j.core
 	var origin := core.global_position
-	origin.y = 0.95
+	origin.y = global_position.y + 0.95
 	var fwd := -global_basis.z
 	fwd.y = 0
 	fwd = fwd.normalized()
@@ -229,9 +304,34 @@ func _shoot(angles: Array, speed: float, big := false) -> void:
 	punch = 0.5
 
 
-## 패링 탄 발사: 금빛 에너지 구체를 플레이어에게 쏜다
+## 패링 탄 준비동작 (k: 0→1). 몸을 크게 뒤로 젖히고 들어 올리며 웅크리고, 코어가 금빛으로 한껏 부푼다.
+## 마지막 구간은 그 자세로 부들부들 떨며 버틴다. 알림은 이 동작이 끝나고 발사할 때 뜬다.
+func _orb_windup(dt: float, k: float) -> void:
+	windup_k = k
+	var body: Node3D = j.body
+	var core: MeshInstance3D = j.core
+	var cm: StandardMaterial3D = j.core_mat
+	var rear := smoothstep(0.0, 0.75, k)
+	var shiver := smoothstep(0.55, 1.0, k)
+	body.rotation.x = wob.x + rear * 1.0 + sin(t * 70.0) * 0.05 * shiver
+	body.rotation.z = wob.y + sin(t * 63.0) * 0.1 * shiver
+	body.position.y += rear * 0.55 + sin(t * 80.0) * 0.04 * shiver
+	core.scale = Vector3.ONE * (1.0 + rear * 0.9 + sin(t * 60.0) * 0.12 * shiver)
+	cm.albedo_color = Pal.E_RED.lerp(ParryFX.GOLD, rear)
+	cm.emission = Pal.E_RED.lerp(ParryFX.GOLD, rear)
+	cm.emission_energy_multiplier = 0.6 + rear * 2.2
+	# 코어로 빨려 드는 금빛 불티: 끝으로 갈수록 잦아진다
+	fx_t -= dt
+	if fx_t <= 0.0:
+		fx_t = lerpf(0.09, 0.025, k)
+		var off := Vector3(randf_range(-1.0, 1.0), randf_range(-0.4, 0.6), randf_range(-1.0, 1.0)) * lerpf(1.1, 0.6, k)
+		FX.flash(core.global_position + off, ParryFX.GOLD, 0.18, 0.1)
+
+
+## 패링 탄 발사: 준비동작을 마친 순간 알림(십자 별빛)과 함께 금빛 에너지 구체를 플레이어에게 쏜다
 func _shoot_orb() -> void:
 	orb_next = false
+	windup_k = 0.0
 	orb_cd = ORB_CD
 	fire_timer = randf_range(2.2, 3.0)
 	_end_warn()
@@ -240,23 +340,32 @@ func _shoot_orb() -> void:
 	cm.albedo_color = Pal.E_RED
 	cm.emission = Pal.E_RED
 	var origin := core.global_position
-	origin.y = 0.95
+	origin.y = global_position.y + 0.95
 	var to := Main.inst.player.global_position - global_position
 	to.y = 0
 	var d := to.normalized() if to.length() > 0.01 else -global_basis.z
 	Main.inst.bullets.add_child(ParryOrb.make(origin + d * 0.4, d, self))
+	ParryFX.warn(origin, "ranged")
+	parry_flash()
 	FX.flash(origin, ParryFX.HOT, 0.9, 0.08)
-	ParryFX.glint(origin, 1.8, ParryFX.GOLD, 0.18)
-	wob_v.x -= 10.0
-	punch = 0.8
+	# 젖혔던 몸을 앞으로 내던지듯 튕긴다
+	wob_v.x -= 30.0
+	punch = 1.0
 	Sfx.play("eshot", 0.04, 0.0)
 
 
 ## 패링 공격 예고: 몸체에 금빛을 덮고 별 섬광을 터뜨린다
 func _warn(at: Vector3, kind := "ranged") -> void:
 	warn_glow = true
-	_set_flash(flash_t > 0.0)
 	ParryFX.warn(at, kind)
+	parry_flash()
+
+
+## 패링 공격 알림: 기체 전체가 아주 잠깐 금백색으로 번쩍인다
+func parry_flash() -> void:
+	glow_t = GLOW_TIME
+	punch = maxf(punch, 0.7)
+	_set_flash(flash_t > 0.0)
 
 
 func _end_warn() -> void:
@@ -273,6 +382,7 @@ func stagger(dir: Vector3, dur: float) -> void:
 	stagger_total = dur
 	burst_left = 0
 	orb_next = false
+	windup_k = 0.0
 	_end_warn()
 	_on_stagger()
 	var d := Vector3(dir.x, 0, dir.z).normalized()
@@ -326,9 +436,12 @@ func _update_stagger(dt: float) -> void:
 func take_hit(dmg: int, dir: Vector3, _pos: Vector3, source := "bullet") -> void:
 	if not alive:
 		return
+	if max_hp == 0:
+		_init_hp()
 	if stagger_t > 0.0:
 		dmg *= 2
 	hp -= dmg
+	_bar_hit = 1.0
 	knock += Vector3(dir.x, 0, dir.z) * (3.0 + dmg)
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	wob_v += Vector2(l.z, -l.x) * (8.0 + dmg * 2.0)
@@ -354,6 +467,8 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 	kill_source = source
 	locked = false
 	warn_glow = false
+	if is_instance_valid(hp_bar):
+		hp_bar.queue_free()
 	if is_instance_valid(stun_halo):
 		stun_halo.queue_free()
 	death = _pick_death(source) if (forced_death < 0 or source == "slash" or source == "phantom") else forced_death
@@ -519,13 +634,13 @@ func _begin_slice() -> void:
 	# 절단 순간: 가로로 긋는 섬광 + 불꽃
 	var slash_line := BoxMesh.new()
 	slash_line.size = Vector3(2.6, 0.04, 0.1)
-	var sl := Pal.flat_mesh(slash_line, Color(0.9, 1.0, 0.7), 3.0)
+	var sl := Pal.flat_mesh(slash_line, Color(1.0, 0.8, 0.7), 3.0)
 	FX.root.add_child(sl)
 	sl.global_transform = Transform3D(cut_frame * Basis(Vector3.UP, PI * 0.5), center)
 	var tw := sl.create_tween()
 	tw.tween_property(sl, "scale", Vector3(1.4, 0.2, 0.2), 0.12).set_ease(Tween.EASE_OUT)
 	tw.tween_callback(sl.queue_free)
-	FX.flash(center, Color(0.85, 1.0, 0.6), 1.3, 0.08)
+	FX.flash(center, Color(1.0, 0.7, 0.6), 1.3, 0.08)
 	FX.sparks(center, 22, [Color.WHITE, Color("ffd060"), Color("ff7a30")], 9.0, 0.45, -14.0, 0.07)
 	FX.sparks(center, 10, [Pal.BLADE, Color.WHITE], 6.0, 0.3, -6.0, 0.06)
 	Sfx.play("slash", 0.0, 2.0)
@@ -545,7 +660,7 @@ func _update_slice(dt: float) -> void:
 		if death_t > 0.08:
 			v.y -= 20.0 * dt
 			var pos := piece.global_position + v * dt
-			var floor_y := 0.19 if side > 0 else 0.2
+			var floor_y := (0.19 if side > 0 else 0.2) + Main.gy(pos)
 			if pos.y < floor_y:
 				pos.y = floor_y
 				if v.y < -2.0:
@@ -594,6 +709,8 @@ func _explode(scale_k: float, power: float, lift: float, push: Vector3) -> void:
 
 func _set_flash(on: bool) -> void:
 	var rest: Material = Pal.lock_hatch() if locked else (Pal.parry_glow() if warn_glow else null)
+	if glow_t > 0.0:
+		rest = Pal.parry_flash()
 	for mi in (j.body as Node3D).find_children("*", "MeshInstance3D", true, false):
 		(mi as MeshInstance3D).material_overlay = Pal.flash() if on else rest
 
@@ -607,3 +724,89 @@ func set_locked(on: bool) -> void:
 	if on:
 		punch = 0.6
 		FX.flash((j.body as Node3D).global_position, Color(1, 0.2, 0.25), 1.1, 0.1)
+
+
+# ── 체력바 ──────────────────────────────────────────────
+
+func _init_hp() -> void:
+	# 확인 모드의 불사(999 이상)는 그대로 둔다
+	if hp < 900:
+		hp = maxi(1, int(round(hp * HP_SCALE)))
+	max_hp = maxi(hp, 1)
+	_bar_chip = 1.0
+	if _bar_mat == null:
+		var sh := Shader.new()
+		sh.code = HP_BAR_SHADER % FX.BILLBOARD
+		_bar_mat = ShaderMaterial.new()
+		_bar_mat.shader = sh
+		_bar_mat.render_priority = 10
+		_bar_mesh = QuadMesh.new()
+	hp_bar = MeshInstance3D.new()
+	hp_bar.mesh = _bar_mesh
+	hp_bar.material_override = _bar_mat
+	hp_bar.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	hp_bar.scale = Vector3(hp_bar_w, hp_bar_w * 0.1, 1.0)
+	hp_bar.position = Vector3(0, hp_bar_y, 0)
+	hp_bar.set_instance_shader_parameter("fill", 1.0)
+	hp_bar.set_instance_shader_parameter("chip", 1.0)
+	hp_bar.set_instance_shader_parameter("ticks", float(max_hp) / 5.0)
+	hp_bar.visible = false
+	add_child(hp_bar)
+
+
+func _update_hp_bar(dt: float) -> void:
+	if not is_instance_valid(hp_bar):
+		return
+	var k := clampf(float(hp) / float(max_hp), 0.0, 1.0)
+	# 깎인 부분은 흰 잔상으로 잠깐 남았다가 따라 내려온다
+	if _bar_chip > k:
+		_bar_chip = move_toward(_bar_chip, k, dt * (0.25 if _bar_hit > 0.6 else 1.6))
+	else:
+		_bar_chip = k
+	_bar_hit = maxf(0.0, _bar_hit - dt * 2.5)
+	hp_bar.visible = landed
+	hp_bar.set_instance_shader_parameter("fill", k)
+	hp_bar.set_instance_shader_parameter("chip", _bar_chip)
+	hp_bar.set_instance_shader_parameter("hit", _bar_hit)
+	hp_bar.set_instance_shader_parameter("full", 1.0 if k >= 0.999 else 0.0)
+
+
+const HP_BAR_SHADER := """
+shader_type spatial;
+render_mode unshaded, depth_test_disabled, depth_draw_never, cull_disabled, shadows_disabled;
+instance uniform float fill = 1.0;
+instance uniform float chip = 1.0;
+instance uniform float hit = 0.0;
+instance uniform float full = 1.0;
+instance uniform float ticks = 2.0;
+void vertex() {
+%s
+}
+void fragment() {
+	vec2 uv = UV;
+	// 테두리(검정) · 안쪽 칸
+	float bx = 0.018, by = 0.18;
+	bool inner = uv.x > bx && uv.x < 1.0 - bx && uv.y > by && uv.y < 1.0 - by;
+	vec3 col = vec3(0.03, 0.02, 0.05);
+	if (inner) {
+		float x = (uv.x - bx) / (1.0 - bx * 2.0);
+		float y = (uv.y - by) / (1.0 - by * 2.0);
+		col = vec3(0.16, 0.05, 0.08);
+		if (x < chip) col = vec3(1.0, 0.92, 0.8);
+		if (x < fill) {
+			// 체력이 줄수록 붉은색 → 짙은 진홍, 위쪽에 밝은 줄
+			vec3 hi = mix(vec3(1.0, 0.28, 0.2), vec3(1.0, 0.55, 0.25), fill);
+			col = mix(hi, hi * 0.55, smoothstep(0.35, 1.0, y));
+			col += vec3(0.35) * (1.0 - smoothstep(0.0, 0.3, y));
+			col += vec3(1.0) * hit * 0.6;
+		}
+		// 5칸 단위 눈금
+		float tk = fract(x * ticks);
+		float tw = 0.006 * ticks;
+		if (ticks > 1.0 && x < fill && tk < tw && x > tw) col *= 0.45;
+	}
+	ALBEDO = col;
+	// 다치지 않은 적은 흐리게, 맞은 적은 또렷하게
+	ALPHA = 0.9 * mix(1.0, 0.5, full);
+}
+"""

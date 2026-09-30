@@ -53,18 +53,19 @@ var ult_look := Vector3.ZERO
 var ult_prev_ptr := Vector2.ZERO
 var noise := FastNoiseLite.new()
 var t := 0.0
-# 패링 시네마틱: 플레이어 등 뒤 어깨 너머로 파고들어 플레이어와 적을 한 화면에 담는다 (실제 시간으로 진행)
-const CINE_IN := 0.12
-const CINE_HOLD := 0.8
-const CINE_END := 1.25
+# 패링 줌: 플레이어와 적 사이로 시선을 조금 당기며 적당히 줌인했다가 곧 돌아온다 (실제 시간으로 진행)
+const CINE_IN := 0.05
+const CINE_HOLD := 0.16
+const CINE_END := 0.45
+const CINE_ZOOM := 0.87         # 오프셋 배율 (1 = 평소 거리)
+const CINE_SHIFT := 0.3         # 시선을 적 쪽으로 옮기는 비율 (플레이어~적 중간까지의 거리 기준)
 var cine_start := -1
 var cine_player: Player
 var cine_foe: Node3D
 var cine_foe_pos := Vector3.ZERO
-var cine_side := 1.0
-var cine_back := 2.6
-var cine_prev_proj := -1
 var cine_w := 0.0
+# 광각 렌즈 배럴 왜곡 세기 (LensFX 가 화면을 휘고, 아래 두 함수가 화면 좌표를 같은 식으로 맞춘다)
+var lens_k := 0.0
 
 
 func _ready() -> void:
@@ -72,6 +73,39 @@ func _ready() -> void:
 	noise.frequency = 0.05
 	far = 200.0
 	ToonOutline.attach(self)
+
+
+## 월드 → 실제로 보이는 화면 좌표 (렌즈 왜곡 반영). HUD 마커 · 락온 판정용.
+func screen_pos(wp: Vector3) -> Vector2:
+	var r := unproject_position(wp)
+	if lens_k <= 0.001:
+		return r
+	var vs := get_viewport().get_visible_rect().size
+	var q := (r - vs * 0.5) / vs.y
+	var rr := q.length()
+	if rr < 0.00001:
+		return r
+	var n := 1.0 + lens_k * _lens_rm2(vs)
+	# r (1 + k r²) / n = rr 를 뉴턴법으로 푼다
+	var x := rr
+	for i in 5:
+		x -= (x * (1.0 + lens_k * x * x) / n - rr) / ((1.0 + 3.0 * lens_k * x * x) / n)
+	return vs * 0.5 + q * (x / rr) * vs.y
+
+
+## 보이는 화면 좌표 → 렌더된 화면 좌표 (마우스 조준 광선용)
+func render_pos(sp: Vector2) -> Vector2:
+	if lens_k <= 0.001:
+		return sp
+	var vs := get_viewport().get_visible_rect().size
+	var q := (sp - vs * 0.5) / vs.y
+	var src := q * (1.0 + lens_k * q.length_squared()) / (1.0 + lens_k * _lens_rm2(vs))
+	return vs * 0.5 + src * vs.y
+
+
+func _lens_rm2(vs: Vector2) -> float:
+	var a := vs.x / maxf(1.0, vs.y)
+	return a * a * 0.25 + 0.25
 
 
 func set_preset(i: int) -> void:
@@ -124,22 +158,12 @@ func set_ult_view(on: bool) -> void:
 		kick_v += -ult_look * 1.5
 
 
-## 패링 성공: 등 뒤 극적 구도로 전환
+## 패링 성공: 적당한 줌인
 func parry_cine(player: Player, foe: Node3D, foe_pos: Vector3) -> void:
 	cine_start = Parry.now_ms()
 	cine_player = player
 	cine_foe = foe
 	cine_foe_pos = foe_pos
-	# 지금 카메라가 있는 쪽 어깨로 돌아 들어가 휘감는 움직임이 짧고 자연스럽게
-	var d := foe_pos - player.global_position
-	d.y = 0
-	d = d.normalized() if d.length() > 0.01 else player.aim_dir
-	var side := Vector3(-d.z, 0, d.x)
-	var cam_rel := global_position - player.global_position
-	cine_side = 1.0 if cam_rel.dot(side) >= 0.0 else -1.0
-	if projection == PROJECTION_ORTHOGONAL:
-		cine_prev_proj = PROJECTION_ORTHOGONAL
-		projection = PROJECTION_PERSPECTIVE
 	trauma = minf(trauma, 0.3)
 
 
@@ -161,6 +185,7 @@ func update(dt: float, player: Player) -> void:
 	cur_fov = lerpf(cur_fov, p.fov, 1.0 - exp(-4.0 * dt))
 
 	var target := player.global_position
+	target.y = player.view_y           # 점프로 화면이 출렁이지 않게 지면 높이(부드럽게)를 따른다
 	var hv := Vector3(player.velocity.x, 0, player.velocity.z)
 	if player.alive:
 		var look := player.aim_point - player.global_position
@@ -224,78 +249,37 @@ func update(dt: float, player: Player) -> void:
 
 
 func _apply(shake_off: Vector3) -> void:
-	var base := focus + kick_pos
+	var cz := _cine_update()
+	var shift: Vector3 = cz[1]
+	var base: Vector3 = focus + kick_pos + shift
+	var z: float = zoom * lerpf(1.0, CINE_ZOOM, cz[0])
 	fov = clampf(cur_fov + fov_add, 20.0, 80.0)
-	size = 13.0 * zoom
-	global_position = base + cur_offset * zoom
+	size = 13.0 * z
+	global_position = base + cur_offset * z
 	look_at(base, Vector3.UP)
 	# 흔들림은 화면 평면 기준
 	global_position += global_basis.x * shake_off.x + global_basis.y * shake_off.y
 	global_position.z += shake_off.z
 	rotate_object_local(Vector3.FORWARD, roll)
-	_apply_cine(shake_off, base)
 
 
-func _apply_cine(shake_off: Vector3, base_look: Vector3) -> void:
+## 패링 줌 진행: [가중치 0~1, 시선 이동량]. 들어갈 때는 급격히, 나올 때는 부드럽게.
+func _cine_update() -> Array:
 	if cine_start < 0:
-		return
+		return [0.0, Vector3.ZERO]
 	var e := (Parry.now_ms() - cine_start) * 0.001
 	if e >= CINE_END or not is_instance_valid(cine_player):
 		cine_start = -1
 		cine_w = 0.0
-		if cine_prev_proj >= 0:
-			projection = cine_prev_proj as ProjectionType
-			cine_prev_proj = -1
-		return
-	# 들어갈 때는 급격히(지수 감속), 나올 때는 부드럽게
+		return [0.0, Vector3.ZERO]
 	if e < CINE_IN:
 		cine_w = 1.0 - pow(1.0 - e / CINE_IN, 3.0)
 	elif e < CINE_HOLD:
 		cine_w = 1.0
 	else:
 		cine_w = 1.0 - smoothstep(CINE_HOLD, CINE_END, e)
-	var pp := cine_player.global_position
 	if is_instance_valid(cine_foe):
 		cine_foe_pos = cine_foe_pos.lerp(cine_foe.global_position, 0.25)
-	var d := cine_foe_pos - pp
+	var d := cine_foe_pos - cine_player.global_position
 	d.y = 0
-	var dist := d.length()
-	d = d / dist if dist > 0.01 else cine_player.aim_dir
-	var side := Vector3(-d.z, 0, d.x) * cine_side
-	# 천천히 밀고 들어가며(돌리) 어깨 쪽으로 살짝 돈다
-	var push := smoothstep(0.0, CINE_HOLD, e)
-	var back := lerpf(3.1, 2.2, push)
-	# 근접처럼 적이 가까우면 플레이어 몸에 가리지 않도록 옆으로 더 빼고 조금 더 물러선다
-	var near := clampf((4.5 - dist) / 3.0, 0.0, 1.0)
-	back = lerpf(back, lerpf(1.9, 1.5, push), near)
-	var lat := lerpf(lerpf(1.55, 1.2, push), lerpf(2.9, 2.5, push), near)
-	var h := lerpf(1.8, 1.5, push)
-	var off := -d * back + side * lat
-	var cam := pp + off * _cine_clear(pp, off) + Vector3(0, h, 0)
-	# 시선: 플레이어 너머 적 쪽. 적이 멀면 중간쯤을 봐서 둘 다 화면에 들어오게 한다
-	# 시선을 적 쪽 어깨 반대편으로 살짝 비켜 플레이어가 화면 한쪽, 적이 반대쪽에 서게 한다
-	var look := pp + d * lerpf(clampf(dist * 0.6, 1.5, 5.0), dist * 0.55 + 0.4, near) - side * 0.35 * (1.0 - near) + Vector3(0, lerpf(1.05, 0.95, push), 0)
-	# 눈 위치와 시선점을 따로 보간해 전환 중에도 플레이어가 화면을 벗어나지 않게 한다
-	var w := cine_w
-	var eye := global_position.lerp(cam, w)
-	var tgt := base_look.lerp(look, w)
-	var b := Basis.looking_at(tgt - eye, Vector3.UP)
-	# 더치 앵글: 어깨 쪽으로 기울인다
-	b = b * Basis(Vector3.FORWARD, deg_to_rad(7.0) * cine_side * (0.6 + 0.4 * push) * w + roll * (1.0 - w))
-	var sh := (b.x * shake_off.x + b.y * shake_off.y) * 0.5 * w
-	global_transform = Transform3D(b, eye + sh)
-	fov = lerpf(fov, lerpf(62.0, 50.0, push), cine_w)
-
-
-## 플레이어 뒤쪽이 벽에 막히면 카메라를 벽 앞까지 당긴다 (오프셋에 곱할 비율)
-func _cine_clear(pp: Vector3, off: Vector3) -> float:
-	var main := Main.inst
-	if main == null:
-		return 1.0
-	var n := 12
-	var l := maxf(off.length(), 0.01)
-	for i in range(1, n + 1):
-		var k := float(i) / n
-		if main.is_blocked(pp + off * k):
-			return clampf(k - 0.35 / l, 0.3, 1.0)
-	return 1.0
+	return [cine_w, d.limit_length(8.0) * 0.5 * CINE_SHIFT * cine_w]

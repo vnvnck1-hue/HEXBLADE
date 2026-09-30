@@ -1,0 +1,37 @@
+{
+  "pdf_pages": 19,
+  "storyboard_pages": [
+    3,
+    5,
+    7
+  ],
+  "image_artifacts": [
+    {
+      "variant": "A",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 2407462
+    },
+    {
+      "variant": "B",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 2472911
+    },
+    {
+      "variant": "C",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 2154899
+    }
+  ],
+  "out_of_bounds_text": 0,
+  "runtime_modified": false,
+  "visual_review": "All pages reviewed; storyboard edges and Korean tables verified"
+}

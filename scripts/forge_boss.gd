@@ -8,6 +8,7 @@ const Titan := preload("res://scripts/forge_titan.gd")
 const Stage := preload("res://scripts/forge_stage.gd")
 const Bar := preload("res://scripts/boss_bar.gd")
 const Fist := preload("res://scripts/forge_fist.gd")
+const MoltenSplash := preload("res://scripts/presentation/molten_splash.gd")
 
 signal phase_changed(phase: int)
 signal defeated
@@ -73,6 +74,7 @@ var fx_cd := 0.0
 var smoke_points: Array = []
 var beam: Node3D
 var _drop_mesh: SphereMesh
+var _molten: MoltenSplash
 
 
 func _ready() -> void:
@@ -585,7 +587,8 @@ func _slams(_dt: float, player: Player, count: int, period: float, warn: float, 
 
 
 func _slam_impact(p: Vector3, ring: int, pool_life: float, player: Player) -> void:
-	FX.fire_explosion(p + Vector3(0, 0.3, 0), 0.55)
+	molten().burst(p, 1.25 if phase == 1 else 1.05, p - _flat(global_position))
+	FX.fire_explosion(p + Vector3(0, 0.3, 0), 0.3)
 	FX.shockwave(p + Vector3(0, 0.15, 0), Color("ff9a40"), SLAM_R * 2.8, 0.35, 0.12)
 	FX.ring(p + Vector3(0, 0.3, 0), 7.0, Pal.RING_ORANGE, 0.45)
 	FX.sparks(p + Vector3(0, 0.3, 0), 22, [Color.WHITE, Color("ffd060"), Color("ff6a20")], 11.0, 0.55, -14.0, 0.1)
@@ -702,10 +705,12 @@ func _drop(p: Vector3, r: float, fuse: float) -> void:
 	btw.tween_interval(fuse - 0.35)
 	btw.tween_callback(func(): blob.visible = true)
 	btw.tween_property(blob, "position", Vector3(0, 0.4, 0), 0.35).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
+	btw.parallel().tween_property(blob, "scale", Vector3(0.7, 1.9, 0.7), 0.35).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_QUAD)
 
 
 func _slag_impact(p: Vector3, r: float) -> void:
-	FX.fire_explosion(p + Vector3(0, 0.3, 0), 0.4)
+	molten().impact(p, 0.85)
+	FX.fire_explosion(p + Vector3(0, 0.3, 0), 0.2)
 	FX.sparks(p + Vector3(0, 0.3, 0), 14, [Color("fff0a0"), Color("ffa030"), Color("ff4a10")], 8.0, 0.5, -14.0, 0.09)
 	Sfx.play("boom", 0.2, -5.0)
 	Main.inst.shake(0.18)
@@ -943,6 +948,7 @@ func _p_eruption(dt: float, player: Player) -> bool:
 
 
 func _geyser(p: Vector3) -> void:
+	molten().column(p, 0.9)
 	for k in 5:
 		stage.fire(p + Vector3(randf_range(-0.6, 0.6), 0.2, randf_range(-0.6, 0.6)), Vector3(randf_range(-1.2, 1.2), randf_range(10.0, 17.0), randf_range(-1.2, 1.2)), randf_range(1.4, 2.2), randf_range(0.55, 0.75), Color(1.0, 0.5 + randf() * 0.3, 0.1, 0.9), true, -9.0)
 	stage.fire(p + Vector3(0, 1.0, 0), Vector3(0, 4.0, 0), 3.2, 1.3, Color(0.2, 0.12, 0.12, 0.45), false, 0.5)
@@ -951,6 +957,16 @@ func _geyser(p: Vector3) -> void:
 
 
 # ── 쇳물 웅덩이 ─────────────────────────────────────────
+
+## 액체 쇳물 스플래시 연출 (presentation 모듈). 발판 밖은 용암 높이에 떨어진다.
+func molten() -> MoltenSplash:
+	if _molten == null:
+		_molten = MoltenSplash.new()
+		_molten.name = "MoltenSplash"
+		_molten.ground_fn = func(p: Vector3) -> float: return 0.0 if Stage.oct_dist(p) <= stage.radius else Stage.LAVA_Y
+		stage.add_child(_molten)
+	return _molten
+
 
 func _add_puddle(p: Vector3, r: float, life: float) -> void:
 	stage.pool(p, r, life)
@@ -995,8 +1011,8 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 ## 팔 피격 (forge_fist.gd): 박힌 포신을 치면 본체보다 크게 들어간다
 func part_hit(part: Enemy, dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
 	if source == "slash" or source == "phantom":
-		FX.sparks(part.global_position + Vector3(0, 1.0, 0), 18, [Color.WHITE, Color("c0ff90"), Color("ffb040")], 9.0, 0.4, -10.0, 0.08)
-		Main.inst.hud.popup("CRUSH", Color("c8ff80"), part.global_position + Vector3(0, 2.6, 0))
+		FX.sparks(part.global_position + Vector3(0, 1.0, 0), 18, [Color.WHITE, Pal.BLADE, Color("ffb040")], 9.0, 0.4, -10.0, 0.08)
+		Main.inst.hud.popup("CRUSH", Color("ff8a70"), part.global_position + Vector3(0, 2.6, 0))
 	_damage(float(mini(dmg, 20)), dir, pos, source, 1.35, (arms[(part as Fist).arm_index] as Dictionary).fore)
 
 
@@ -1156,6 +1172,7 @@ func _update_transition(_dt: float) -> void:
 
 
 func _slam_fx_only(p: Vector3) -> void:
+	molten().burst(p, 1.3)
 	FX.fire_explosion(p + Vector3(0, 0.3, 0), 0.8)
 	FX.shockwave(p + Vector3(0, 0.15, 0), Color("ff9a40"), 10.0, 0.4, 0.15)
 	FX.sparks(p + Vector3(0, 0.3, 0), 28, [Color.WHITE, Color("ffd060"), Color("ff6a20")], 12.0, 0.6, -14.0, 0.1)

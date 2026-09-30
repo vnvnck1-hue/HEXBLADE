@@ -11,7 +11,18 @@ const P_DARK := Color("382b78")
 const P_LIGHT := Color("7e6ad8")
 const P_GREY := Color("4c4a5e")
 const CYAN := Color("35e8ff")
-const BLADE := Color("6dff4a")
+## 플레이어 기체(컨셉 원화): 크림 장갑 · 회베이지 보조 패널 · 짙은 금속 관절 · 노란 두 눈.
+## 무광 도장이라 하이라이트를 거의 끈 mech() 머티리얼로 칠한다.
+const M_CREAM := Color("dccda0")
+const M_PANEL := Color("aeaca0")
+const M_MID := Color("7c7a72")
+const M_DARK := Color("3d3c39")
+const M_DEEP := Color("252422")
+const M_EYE := Color("ffd21a")
+const BLADE := Color("ff2e3a")      # 붉은 광선검
+const BLADE_CORE := Color("ffd8cc")
+const JET := Color("ff3a24")        # 백팩 부스터 불꽃
+const JET_CORE := Color("ffd2a0")
 
 const E_WHITE := Color("e8e6f0")
 const E_GREY := Color("6a6878")
@@ -52,6 +63,7 @@ static var _flat_mat: ShaderMaterial
 static var _flash_mat: StandardMaterial3D
 static var _lock_mat: ShaderMaterial
 static var _parry_mat: ShaderMaterial
+static var _parry_flash_mat: ShaderMaterial
 ## 카툰 렌더링(셀 음영 + 외곽선) 켜짐 여부. O 키로 전환, 실행 인자 --notoon 으로 끈 채 시작
 static var toon_on := not OS.get_cmdline_user_args().has("--notoon")
 static var _toon_mats: Array[StandardMaterial3D] = []
@@ -74,6 +86,19 @@ static func lit(c: Color, emission := 0.0) -> StandardMaterial3D:
 	return m
 
 
+## 플레이어 기체용 무광 셀 음영 (하이라이트가 번져 빛나지 않게 반사를 낮춘다)
+static func mech(c: Color) -> StandardMaterial3D:
+	var key := "mech_%s" % c.to_html()
+	if _lit.has(key):
+		return _lit[key]
+	var m := StandardMaterial3D.new()
+	m.set_meta("nospec", true)
+	toon(m, 0.95, 0.1, 0.0)
+	m.albedo_color = c
+	_lit[key] = m
+	return m
+
+
 ## 툰 음영 설정. 거칠기가 명암 경계의 부드러움을 정하므로 낮게 둔다.
 ## plain_* 는 카툰을 껐을 때 돌아갈 일반 음영 값이다.
 static func toon(m: StandardMaterial3D, plain_rough := 0.95, plain_spec := 0.2, cel_spec := 0.12) -> void:
@@ -89,6 +114,8 @@ static func _apply_toon(m: StandardMaterial3D) -> void:
 		m.specular_mode = BaseMaterial3D.SPECULAR_TOON
 		m.roughness = 0.22
 		m.metallic_specular = v[2]
+		if m.has_meta("nospec"):
+			m.specular_mode = BaseMaterial3D.SPECULAR_DISABLED
 	else:
 		m.diffuse_mode = BaseMaterial3D.DIFFUSE_BURLEY
 		m.specular_mode = BaseMaterial3D.SPECULAR_SCHLICK_GGX
@@ -164,6 +191,24 @@ void fragment() {
 
 
 ## 패링 공격 예고 중인 적 위에 덮는 금빛 발광 (가장자리가 강하고 빠르게 맥동한다)
+## 패링 공격 알림 순간 몸체 전체를 덮는 강한 금백색 섬광 (블룸이 걸리게 HDR 로 밝게)
+static func parry_flash() -> ShaderMaterial:
+	if _parry_flash_mat == null:
+		var sh := Shader.new()
+		sh.code = """
+shader_type spatial;
+render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
+void fragment() {
+	float rim = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 1.2);
+	ALBEDO = mix(vec3(1.0, 0.86, 0.4), vec3(1.0), 0.45 + rim * 0.55) * 4.0;
+	ALPHA = 0.97;
+}
+"""
+		_parry_flash_mat = ShaderMaterial.new()
+		_parry_flash_mat.shader = sh
+	return _parry_flash_mat
+
+
 static func parry_glow() -> ShaderMaterial:
 	if _parry_mat == null:
 		var sh := Shader.new()

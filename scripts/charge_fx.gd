@@ -151,7 +151,7 @@ func stage_up(st: int) -> void:
 	FX.flash(global_position, c.lerp(Color.WHITE, 0.5), 0.9 + stage * 0.35, 0.1)
 	FX.sparks(global_position, 8 + stage * 6, [Color.WHITE, c], 5.0 + stage * 2.0, 0.3, -4.0, 0.07)
 	var pos := global_position
-	FX.ring(Vector3(pos.x, 0.3, pos.z), 1.6 + stage * 0.9, [c, c.darkened(0.3), Color.WHITE], 0.25)
+	FX.ring(Vector3(pos.x, Main.gy(pos) + 0.3, pos.z), 1.6 + stage * 0.9, [c, c.darkened(0.3), Color.WHITE], 0.25)
 	FX.shockwave(pos, c, 1.5 + stage * 0.8, 0.25, 0.05)
 	if stage >= 3:
 		flash_full()

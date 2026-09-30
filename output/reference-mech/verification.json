@@ -1,0 +1,18 @@
+{
+  "clay_toggle": "passed",
+  "glb_roundtrip": "passed",
+  "invalid_geometry_values": 0,
+  "materials": [
+    "Graphite",
+    "Ivory",
+    "Edge",
+    "Recess",
+    "Inset",
+    "Yellow",
+    "Steel"
+  ],
+  "mesh_parts": 240,
+  "orbit_and_zoom": "passed",
+  "vertices": 221184,
+  "view_presets": "passed"
+}

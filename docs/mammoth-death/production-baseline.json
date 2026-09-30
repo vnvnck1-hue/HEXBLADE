@@ -1,0 +1,38 @@
+[
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\boss_enemy.gd",
+    "Hash": "23A9602BA277873852F03D7397C442DA7642C9A6B415E446C01335378981B6A5"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\boss_main.gd",
+    "Hash": "D6806B70F386E523EE47F31BFC3141729C688B02216E6BC979B3BEB0C0210364"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\boss_camera.gd",
+    "Hash": "05F45C9290AC6D810EC7197C5518E0E7AE20E195E948D7D6E67E602D9FCE066D"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\boss_tank.gd",
+    "Hash": "C97B239E50DFD2CD493AFEC8473166191A1386DA7A81257A26AFC76082178B80"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\boss_stage.gd",
+    "Hash": "420BF07F45E92A0BA89E4BBAE786D870CDC59D6E3F4E8A312DE93C57412E9070"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\main.gd",
+    "Hash": "A8B723FAA46FFA3F8109672247488AF3E4ED39C5F6283C1908BA29A02D2D6E90"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scripts\\run_state.gd",
+    "Hash": "2EE8EC14D1F26A3543CAD5424EFDC9CA6414A49CD376CA6FF6C475D8137135F2"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\project.godot",
+    "Hash": "67145D80BFCFF9C9FE6714FD96D1D749C3730117146A05646A55FBAB1076D04A"
+  },
+  {
+    "Path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\scenes\\boss.tscn",
+    "Hash": "49FAC6CDF5770AAF3C0FD92132227C5A6A7A623C10AC8F88A17E93617BEF3D77"
+  }
+]

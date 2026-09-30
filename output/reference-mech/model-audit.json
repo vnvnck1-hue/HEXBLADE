@@ -1,0 +1,19 @@
+{
+  "bounds_min": [
+    -2.1471004486084,
+    -0.0000000534055288881063,
+    -0.762444496154785
+  ],
+  "bounds_size": [
+    4.2942008972168,
+    4.69480133056641,
+    2.14491295814514
+  ],
+  "front_axis": "-Z",
+  "gltf_export": 0,
+  "mesh_parts": 240,
+  "rear_surfaces": "inferred",
+  "scene_save": 0,
+  "triangles": 73728,
+  "up_axis": "+Y"
+}

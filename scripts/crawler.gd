@@ -95,12 +95,17 @@ var _last_flash := -1.0
 func _ready() -> void:
 	super()
 	hp = 14
+	hp_bar_w = 1.4
 	radius = R
 	desired = 5.5
 	slice_size = Vector3(1.05, 1.0, 1.05)
 	slice_color = Pal.CR_YELLOW
 	shadow.scale = Vector3.ONE * 0.4
 	_pose(0.0)
+	# 거미 상태(약점 노출)에서만: 뒷걸음질과 이탈 대시 반반, 광선검은 가끔 피한다
+	evade.chance = 0.45
+	evade.back_w = 0.55
+	evade.dodge = 0.3
 
 
 func _build(v: Node3D) -> Dictionary:
@@ -109,6 +114,27 @@ func _build(v: Node3D) -> Dictionary:
 
 func is_armored() -> bool:
 	return alive and armored
+
+
+# ── 거리 벌리기 (Evade 가 부른다) ───────────────────────
+
+## 다리를 펴고 걷거나 자리 잡는 중에만 (구체·도약·연사 준비 중에는 하지 않는다)
+func _can_evade() -> bool:
+	return state == S.SPIDER and (sp == SP.SETTLE or sp == SP.WALK)
+
+
+## 이탈 대시 뒤 무작위 공격: 삼안 3연사 · 도약 내려찍기 중 하나
+func _evade_attack() -> void:
+	if state != S.SPIDER:
+		return
+	_sp(SP.VOLLEY_WIND if randf() < 0.5 else SP.HOP_WIND)
+
+
+## 순간이동 반격: 준비 없이 곧바로 삼안 3연사
+func _counter_attack() -> void:
+	if state != S.SPIDER:
+		return
+	_sp(SP.VOLLEY)
 
 
 # ── 등장: 구체로 떨어져 튕긴다 ─────────────────────────
@@ -563,7 +589,7 @@ func _volley_shot(active: bool, last: bool) -> void:
 		FX.flash(origin, Color(0.7, 0.9, 1.0), 0.35, 0.05)
 		if not active:
 			continue
-		origin.y = 0.95
+		origin.y = global_position.y + 0.95
 		var aim := Main.inst.player.global_position - origin
 		aim.y = 0
 		var d := aim.normalized().rotated(Vector3.UP, fan[i])
@@ -610,7 +636,7 @@ func _land(active: bool) -> void:
 	var off := randf() * TAU
 	for i in RING_SHOTS:
 		var d := Vector3.FORWARD.rotated(Vector3.UP, off + TAU * i / RING_SHOTS)
-		Main.inst.add_bullet(Bullet.make_enemy(Vector3(gp.x, 0.95, gp.z) + d * 0.9, d, 6.5))
+		Main.inst.add_bullet(Bullet.make_enemy(Vector3(gp.x, Main.gy(gp) + 0.95, gp.z) + d * 0.9, d, 6.5))
 	if near < SPIDER_R + p.hit_radius + 0.4:
 		p.take_hit(gp)
 

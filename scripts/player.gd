@@ -20,8 +20,6 @@ const DASH_TIME := 0.3
 const DASH_CD := 0.8
 const FIRE_INTERVAL := 0.085
 const BULLET_SPEED := 60.0
-const SLASH_CD := 0.5
-const SLASH_RANGE := 2.9
 const CHARGE_TIME := 1.0
 const CHARGE_MIN := 0.25
 const IMPACT_MIN_CHARGE := 0.67  # 이 이상 충전(3단)해 쏘면 임팩트 프레임
@@ -36,16 +34,14 @@ const MEGA_TICK := 0.1
 const MEGA_DMG := 2
 const MEGA_WIDTH := 1.2
 const MEGA_MOVE := 0.3
-# 검 돌진
-const LUNGE_RANGE := 8.0         # 이 거리 안의 적에게 파고든다
-const LUNGE_SPEED := 62.0        # 돌진 속도 (m/s)
-const LUNGE_MIN_TIME := 0.035
-const LUNGE_STOP := 1.45
-const LUNGE_FREE := 2.8          # 대상이 없을 때 앞으로 내딛는 거리
 # 궁극기: 미사일 난사
-const ULT_TIME := 14.0           # 자연 충전 시간
-const ULT_PER_KILL := 0.1
-const ULT_MISSILES := 18
+# ── 한정 재화 ──
+# 에너지: 충전 레이저 탄창. 최소 발사 단계부터 1칸, 2단 2칸, 최대(지속 레이저) 3칸을 쓴다.
+const ENERGY_MAX := 3
+const ENERGY_REGEN := 9.0        # 이 시간(초)마다 에너지 1칸이 저절로 찬다
+# 미사일: 궁극기 탄. 가진 개수만큼만 쏜다. 적이 죽을 때 가끔 떨어뜨리는 아이템을 직접 주워야 는다.
+const MISSILE_MAX := 12
+const MISSILE_START := 4
 const CHARGE_STAGES := [0.34, 0.67, 1.0]
 # 2단 대시: 대시 마지막 CHAIN_WINDOW 초 ~ 끝난 뒤 CHAIN_GRACE 초 안에 다시 누르면 성공
 const CHAIN_WINDOW := 0.1
@@ -55,6 +51,8 @@ const PHANTOM_RANGE := 9.0
 const PHANTOM_TIME := 0.05       # 3프레임
 const PHANTOM_BEHIND := 2.2      # 적 뒤로 빠져나가는 거리
 const PHANTOM_WIDTH := 0.9
+const PHANTOM_DMG := 20
+const PHANTOM_WINDOW := 3.0      # 2단 대시(또는 패링) 성공 후 관통 일격을 쓸 수 있는 시간
 # 검 휘두르기 4종: 가로 베기 / 역베기 / 내려찍기 / 회전 베기
 const SLASH_TIMES := [0.16, 0.16, 0.2, 0.24]
 const SLASH_SWINGS := [0.05, 0.05, 0.06, 0.1]
@@ -63,6 +61,12 @@ const ULT_SLOW := 0.06
 const ULT_AIM_MAX := 2.0         # 실제 시간 (초)
 const LOCK_PX := 54.0            # 화면 800px 높이 기준 락온 반경
 const LOCK_MAX := 10
+
+# 점프: Shift 를 누른 채 Space 를 JUMP_HOLD 초 이상 누르고 있으면 뛴다 (짧게 떼면 평소 대시)
+const JUMP_HOLD := 0.18
+const JUMP_V := 8.8              # 정점 약 1.5m
+const GRAVITY := 25.0
+const FALL_SNAP := 0.35          # 이보다 급히 꺼지는 지면은 걸어 내려가지 않고 떨어진다
 
 ## 추격 보스전: 부스터 무한 비행 · 전장 안에서 좌우로 움직이는 속도
 var infinite_boost := false
@@ -90,6 +94,16 @@ var boost_idle := 0.0
 var hover := 0.0
 var hover_v := 0.0
 var puff_t := 0.0
+# 높이 상태 (global_position.y 가 발 높이)
+var gy := 0.0                     # 발밑 지면 높이
+var vy := 0.0                     # 수직 속도
+var airborne := false
+var view_y := 0.0                 # 카메라·조준 기준 높이: 지면 높이를 부드럽게 따라간다 (점프로 흔들리지 않게)
+var jump_wait := false            # Shift+Space 를 누른 채 점프 충전 중
+var jump_hold := 0.0
+var jump_fx: JumpFX
+var shadow: MeshInstance3D
+var gust_from := Vector3.ZERO    # 대시 기류: 지난 틱 위치
 
 # 전투 상태
 var fire_cd := 0.0
@@ -103,6 +117,13 @@ var invuln := 0.0
 var hurt_t := 0.0
 var stun_t := 0.0                 # 경직: 이동·사격·검·대시·충전이 막힌다
 var recoil := 0.0
+## 사격 팔 반동 스프링: 쏘는 순간 뒤로 튕겼다가 앞으로 살짝 넘쳐 되돌아온다 (연출 전용)
+var gun_kick := 0.0
+var gun_kick_v := 0.0
+var _arm_l_rest := Vector3.INF
+const KICK_STIFF := 1400.0        # 스프링 강도 (클수록 빠르게 되돌아온다)
+const KICK_DAMP := 26.0           # 감쇠 (작을수록 앞뒤로 더 출렁인다)
+const KICK_IMPULSE := 34.0        # 한 발당 뒤로 차는 속도
 var mega_t := 0.0
 var mega_yaw := 0.0
 var mega_tick := 0.0
@@ -112,7 +133,10 @@ var mega_impact: BeamImpact
 var lunge_t := 0.0
 var lunge_vel := Vector3.ZERO
 var lunge_dir := Vector3.ZERO
-var ult := 0.6
+var energy := ENERGY_MAX
+var energy_regen_t := 0.0
+var missiles := MISSILE_START
+var ult_count := 0               # 이번 궁극기에 쏘는 미사일 수
 var ult_queue := 0
 var ult_t := 0.0
 var charge_stage := 0
@@ -121,6 +145,7 @@ var chain_grace := 0.0
 var rainbow := false             # 지금 대시가 2단 대시인가
 var dash_skip_in := false
 var phantom_ready := false
+var phantom_t := 0.0             # 관통 일격 남은 시간 (0 이 되면 칼날 불꽃이 꺼진다)
 var lunge_phantom := false
 var phantom_from := Vector3.ZERO
 var slash_style := 0
@@ -148,6 +173,11 @@ var dodge_ring: MeshInstance3D
 var ready_ping := 0.0
 var charge_fx: ChargeFX
 var blade_fx: BladeFX
+var trail: SaberTrail     # 광선검 잔상 리본
+var combo: SwordCombo     # 5단 검술 콤보
+var body_trails: Array[SaberTrail] = []   # 팔·다리 리본 (대시 회전·돌진 중에만 보임)
+var rush_feet: Array = []                 # 돌진 중 발 아래 바닥의 지난 위치 [왼, 오]
+var rushing := false
 var charge_snd: AudioStreamPlayer
 var boost_snd: AudioStreamPlayer
 var celebrate_t := -1.0
@@ -172,7 +202,9 @@ func _ready() -> void:
 	body.position.y = -PIVOT_Y
 	lean.add_child(body)
 	j = Build.robot(body)
-	FX.blob_shadow(self, 2.6, 0.75)
+	shadow = FX.blob_shadow(self, 2.6, 0.75)
+	jump_fx = JumpFX.new()
+	add_child(jump_fx)
 	var tor := TorusMesh.new()
 	tor.inner_radius = 0.82
 	tor.outer_radius = 0.87
@@ -188,6 +220,20 @@ func _ready() -> void:
 	blade_fx = BladeFX.new()
 	blade_fx.player = self
 	(j.blade as Node3D).add_child(blade_fx)
+	trail = SaberTrail.new()
+	trail.blade = j.blade
+	trail.anchor = self
+	trail.gust = true
+	add_child(trail)
+	combo = SwordCombo.new(self)
+	combo.trail = trail
+	# 몸 리본: 어깨→손끝, 무릎 위→발끝. 드릴 회전하면 나선으로 감기고, 돌진하면 뒤로 곧게 끌린다.
+	var lt: Array = j.leg_trail
+	for spec in [[j.arm_l, j.arm_base, j.arm_tip_l, 0.0], [j.arm_r, j.arm_base, j.arm_tip_r, 0.3],
+			[j.knee_l, lt[0], lt[1], 0.6], [j.knee_r, lt[0], lt[1], 0.9]]:
+		var bt := SaberTrail.body(spec[0], spec[1], spec[2], spec[3])
+		add_child(bt)
+		body_trails.append(bt)
 	boost_snd = AudioStreamPlayer.new()
 	add_child(boost_snd)
 	boost_snd.volume_db = -80.0
@@ -205,6 +251,7 @@ func _physics_process(dt: float) -> void:
 	var dash_pressed := false
 	var charge_held := false
 	var boost_held := false
+	var bot_jump := false
 	if bot:
 		var b := main.bot_input(self)
 		move_dir = b.move
@@ -214,12 +261,13 @@ func _physics_process(dt: float) -> void:
 		dash_pressed = b.dash
 		charge_held = b.get("charge", false)
 		boost_held = b.get("boost", false)
-		if b.get("ult", false) and ult >= 1.0 and playing and not ult_aiming and ult_queue == 0 and mega_t <= 0.0:
+		bot_jump = b.get("jump", false)
+		if b.get("ult", false) and missiles > 0 and playing and not ult_aiming and ult_queue == 0 and mega_t <= 0.0:
 			_begin_ult_aim()
 	else:
 		var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		move_dir = Vector3(v.x, 0, v.y)
-		aim_point = main.mouse_ground(0.95)
+		aim_point = main.mouse_ground(view_y + 0.95)
 		# 좌클릭 검 · 우클릭 사격 · 좌우 동시 유지 충전
 		var lmb := Input.is_action_pressed("slash_mouse")
 		var rmb := Input.is_action_pressed("fire_mouse")
@@ -228,8 +276,11 @@ func _physics_process(dt: float) -> void:
 		slash_pressed = Input.is_action_just_pressed("slash") or (Input.is_action_just_pressed("slash_mouse") and not rmb)
 		dash_pressed = Input.is_action_just_pressed("dash")
 		boost_held = Input.is_action_pressed("boost")
-		if Input.is_action_just_pressed("ult") and ult >= 1.0 and playing and not ult_aiming and ult_queue == 0 and mega_t <= 0.0:
-			_begin_ult_aim()
+		if Input.is_action_just_pressed("ult") and playing and not ult_aiming and ult_queue == 0 and mega_t <= 0.0:
+			if missiles > 0:
+				_begin_ult_aim()
+			else:
+				_deny("NO MISSILE", "missile")
 	if mega_t > 0.0:
 		# 지속 레이저 중에는 대시만 받는다 (대시로 레이저를 끊는다)
 		fire = false
@@ -264,7 +315,7 @@ func _physics_process(dt: float) -> void:
 
 	var to_aim := aim_point - global_position
 	to_aim.y = 0
-	if to_aim.length() > 0.3 and lunge_t <= 0.0:
+	if to_aim.length() > 0.3 and lunge_t <= 0.0 and not combo.committed():
 		aim_dir = to_aim.normalized()
 
 	# ── 부스터 게이지 ──
@@ -298,6 +349,33 @@ func _physics_process(dt: float) -> void:
 	# 패링: 패링 공격이 닿기 직전이면 대시 대신 반격이 나간다 (대시 쿨다운과 무관)
 	if dash_pressed and lunge_t <= 0.0 and Parry.inst and Parry.inst.try_parry(self):
 		dash_pressed = false
+	# ── 점프: Shift 를 누른 채 Space 를 살짝 길게 누르고 있어야 뛴다. 짧게 떼면 평소처럼 대시. ──
+	if bot:
+		if bot_jump and _can_jump():
+			_jump_start()
+	else:
+		var shift_held := Input.is_action_pressed("boost")
+		var space_held := Input.is_action_pressed("dash")
+		if dash_pressed and shift_held and _can_jump():
+			jump_wait = true
+			jump_hold = 0.0
+			dash_pressed = false
+		elif jump_wait:
+			if not _can_jump():
+				jump_wait = false
+				jump_fx.stop_charge()
+			elif not space_held or not shift_held:
+				# 단타: 점프 대신 대시가 나간다
+				jump_wait = false
+				jump_fx.stop_charge()
+				dash_pressed = playing and stun_t <= 0.0 and not ult_aiming
+			else:
+				jump_hold += dt
+				jump_fx.charge(jump_hold / JUMP_HOLD)
+				squash_v -= 26.0 * dt         # 뛰기 전에 무릎을 굽혀 웅크린다
+				if jump_hold >= JUMP_HOLD:
+					jump_wait = false
+					_jump_start()
 	if dash_pressed and lunge_t <= 0.0:
 		if mega_t > 0.0:
 			# 레이저 끊기
@@ -313,20 +391,18 @@ func _physics_process(dt: float) -> void:
 			_dash_start(true)
 		elif dash_cd <= 0.0:
 			_dash_start(false)
+	combo.update(dt)
 	if lunge_t > 0.0:
 		lunge_t -= dt
 		velocity = lunge_vel
 		ghost_t -= dt
 		if ghost_t <= 0.0:
-			ghost_t = 0.0 if lunge_phantom else 0.012
-			FX.afterimage(visual, _ghost_color(0.5) if lunge_phantom else FX.GHOST, 0.0 if lunge_phantom else 0.32)
+			ghost_t = 0.0
+			FX.afterimage(visual, _ghost_color(0.5), 0.0)
 		if lunge_t <= 0.0:
-			if lunge_phantom:
-				velocity = lunge_dir * 3.0
-				_phantom_hit()
-			else:
-				velocity = lunge_dir * 2.5
-				_slash_hit()
+			lunge_phantom = false
+			velocity = lunge_dir * 3.0
+			_phantom_hit()
 	elif dash_t > 0.0:
 		dash_t -= dt
 		var k := 1.0 - dash_t / DASH_TIME
@@ -343,6 +419,10 @@ func _physics_process(dt: float) -> void:
 			FX.vortex(visual.global_position, Basis(Vector3.UP, ay) * Basis(Vector3.RIGHT, -PI * 0.5), vc)
 		if dash_t <= 0.0:
 			_dash_end()
+	elif combo.committed():
+		velocity = combo.vel
+		if combo.ph == SwordCombo.Ph.LUNGE:
+			FX.afterimage(visual, FX.GHOST, 0.18)
 	else:
 		var target_speed := BOOST_SPEED if boosting else SPEED
 		if infinite_boost:
@@ -356,9 +436,11 @@ func _physics_process(dt: float) -> void:
 			dir = aim_dir
 		var accel := BOOST_ACCEL if boosting and not infinite_boost else ACCEL
 		velocity = velocity.move_toward(dir * target_speed, accel * dt)
-	velocity.y = 0
-	move_and_slide()
-	global_position.y = 0
+	_move_body(dt)
+	_update_rush()
+	if dash_t > 0.0:
+		GustFX.dash_trail(gust_from, global_position, _gust_tint(), 1.25 if rainbow else 1.0)
+	gust_from = global_position
 
 	if mega_t > 0.0:
 		_update_mega(dt)
@@ -366,19 +448,20 @@ func _physics_process(dt: float) -> void:
 	# ── 사격 ──
 	fire_cd -= dt
 	laser_cd -= dt
-	if fire and fire_cd <= 0.0 and slash_anim <= 0.0 and not charging and laser_recoil <= 0.0:
+	if fire and fire_cd <= 0.0 and slash_anim <= 0.0 and not charging and laser_recoil <= 0.0 and not combo.committed():
 		fire_cd = FIRE_INTERVAL
 		_fire()
 
 	# ── 충전 레이저 ──
-	if charge_held and laser_cd <= 0.0:
+	if charge_held and laser_cd <= 0.0 and not combo.committed() and (charging or energy > 0):
 		if not charging:
 			charging = true
 			charge = 0.0
 			charge_stage = 0
 			charge_fx.begin()
 			charge_snd = Sfx.play("charge", 0.0, -6.0)
-		charge = minf(1.0, charge + dt / CHARGE_TIME)
+		# 가진 에너지로 쏠 수 있는 단계까지만 모인다 (1칸: 1단, 2칸: 2단, 3칸: 최대)
+		charge = minf(charge_cap(), charge + dt / CHARGE_TIME)
 		# 단계가 오를 때마다 색이 바뀌며 번쩍
 		var st := 0
 		for th in CHARGE_STAGES:
@@ -402,23 +485,86 @@ func _physics_process(dt: float) -> void:
 		if charge_snd and charge_snd.playing:
 			charge_snd.stop()
 		if charge >= 1.0:
+			_spend_energy(laser_cost(charge))
 			_start_mega()
 		elif charge >= CHARGE_MIN:
+			_spend_energy(laser_cost(charge))
 			_fire_laser(charge)
 		else:
 			FX.fizzle((j.muzzle as Node3D).global_position)
 		charge = 0.0
+	elif charge_held and laser_cd <= 0.0 and energy <= 0 and not combo.committed():
+		_deny("NO ENERGY", "energy")
+	_regen_energy(dt)
 
 	# ── 검 ──
 	slash_cd -= dt
-	if slash_pressed and slash_cd <= 0.0 and not charging and lunge_t <= 0.0:
-		slash_cd = SLASH_CD
+	if slash_pressed and not charging and lunge_t <= 0.0:
 		_slash()
 
 	invuln = max(0.0, invuln - dt)
 	hurt_t = max(0.0, hurt_t - dt)
+	if phantom_ready:
+		phantom_t -= dt
+		if phantom_t <= 0.0:
+			phantom_ready = false
+			blade_fx.douse()
 	_update_ult(dt)
 	_animate(dt)
+
+
+## 수평 이동(벽 충돌) 뒤 바닥 굴곡 높이를 따른다. 점프 중에는 중력으로 떨어져 바닥에 내려앉는다.
+func _move_body(dt: float) -> void:
+	var main := Main.inst
+	var feet := global_position.y
+	velocity.y = 0
+	move_and_slide()
+	var p := main.push_out_feet(global_position, 0.42, feet, 0.1 if airborne else ArenaMap.STEP)
+	gy = main.floor_at(p)
+	if airborne:
+		vy -= GRAVITY * dt
+		feet += vy * dt
+		if feet <= gy and vy <= 0.0:
+			_land(-vy)
+			feet = gy
+		elif feet < gy:
+			feet = gy                    # 모서리를 넘어서는 순간 살짝 올려 세운다
+	elif gy < feet - FALL_SNAP:
+		# 낭떠러지: 걸어 내려가지 않고 떨어진다
+		airborne = true
+		vy = 0.0
+	else:
+		feet = gy
+	p.y = feet
+	global_position = p
+	view_y = lerpf(view_y, gy, 1.0 - exp(-7.0 * dt))
+	# 그림자·회피 링은 지면에 남는다
+	shadow.position.y = gy - feet + 0.015
+	dodge_ring.position.y = gy - feet + 0.03
+	jump_fx.follow(p, gy)
+
+
+func _can_jump() -> bool:
+	return alive and not airborne and Main.inst.state == Main.State.PLAY and stun_t <= 0.0 and lunge_t <= 0.0 		and dash_t <= 0.0 and mega_t <= 0.0 and not ult_aiming and celebrate_t < 0.0
+
+
+func _jump_start() -> void:
+	_combo_break()
+	airborne = true
+	vy = JUMP_V
+	squash_v += 14.0                 # 쭉 늘어나며 튀어 오른다
+	tilt_v += -move_dir.limit_length(1.0) * 3.0
+	jump_fx.launch(Vector3(global_position.x, gy, global_position.z))
+	Main.inst.camera.fov_punch(2.0)
+
+
+func _land(fall: float) -> void:
+	airborne = false
+	vy = 0.0
+	squash_v -= clampf(fall * 1.1, 4.0, 14.0)
+	jump_fx.land(Vector3(global_position.x, gy, global_position.z), fall)
+	if fall > 9.0:
+		Main.inst.shake(0.12)
 
 
 ## 락온 조준은 실제 시간 기준으로 매 화면 프레임 갱신한다 (슬로우모션 중 물리 틱과 무관하게 부드럽게)
@@ -444,8 +590,9 @@ func _ghost_color(a: float) -> Color:
 # ── 행동 ────────────────────────────────────────────────
 
 func _boost_start() -> void:
-	FX.shockwave(global_position, Pal.CYAN, 2.2, 0.3)
-	FX.sparks(global_position + Vector3(0, 0.1, 0), 10, [Color("8a8ac8"), Pal.CYAN], 5.0, 0.35, -3.0, 0.08)
+	FX.shockwave(global_position, Pal.JET, 2.2, 0.3)
+	FX.sparks(global_position + Vector3(0, 0.1, 0), 10, [Color("ff9a60"), Pal.JET], 5.0, 0.35, -3.0, 0.08)
+	GustFX.boost_burst(global_position, move_dir if move_dir.length() > 0.1 else aim_dir)
 	Sfx.play("dash", 0.05, -4.0)
 	hover_v += 5.0
 	squash_v -= 6.0
@@ -462,6 +609,7 @@ func _boost_end() -> void:
 
 
 func _dash_start(chained := false) -> void:
+	_combo_break()
 	dash_skip_in = chained and dash_t > 0.0
 	rainbow = chained
 	chain_ok = true
@@ -477,13 +625,15 @@ func _dash_start(chained := false) -> void:
 	drill = 0.0
 	FX.shockwave(global_position, Pal.CYAN, 2.4, 0.28)
 	FX.sparks(global_position + Vector3(0, 0.15, 0), 12, [Color("9a9ad8"), Pal.CYAN], 6.0, 0.3, -5.0, 0.08)
+	GustFX.dash_burst(global_position, dash_dir, _gust_tint())
+	gust_from = global_position
 	Sfx.play("roll", 0.08)
 	Sfx.play("dash", 0.05, -6.0)
 	Main.inst.kick(dash_dir * 0.8)
 	Main.inst.camera.fov_punch(7.0)
 	if chained:
-		# 2단 대시 성공: 무지개빛 충격파 + 다음 검은 관통 일격
-		phantom_ready = true
+		# 2단 대시 성공: 무지개빛 충격파 + 3초 안의 다음 검은 관통 일격 (칼날이 불타오른다)
+		_arm_phantom()
 		for i in 3:
 			FX.shockwave(global_position, _rainbow(0.5, i * 0.33), 2.0 + i * 0.7, 0.3 + i * 0.05)
 		FX.sparks(global_position + Vector3(0, 0.5, 0), 18, [_rainbow(0.5, 0.0), _rainbow(0.5, 0.33), _rainbow(0.5, 0.66), Color.WHITE], 8.0, 0.4, -6.0, 0.08)
@@ -500,6 +650,7 @@ func parry_counter(foe: Vector3, kind: String) -> void:
 	if dash_t > 0.0:
 		dash_t = 0.0
 		_dash_end()
+	_combo_break()
 	rainbow = false
 	chain_grace = 0.0
 	var d := foe - global_position
@@ -515,7 +666,7 @@ func parry_counter(foe: Vector3, kind: String) -> void:
 	invuln = maxf(invuln, 0.7)
 	dash_cd = 0.0
 	slash_cd = 0.0
-	phantom_ready = true
+	_arm_phantom()
 	slash_style = 1 if slash_style == 0 else 0
 	slash_total = SLASH_TIMES[slash_style]
 	slash_swing = SLASH_SWINGS[slash_style]
@@ -542,12 +693,18 @@ func _dash_end() -> void:
 	squash_v += 7.0
 	tilt_v += dash_dir * 5.0
 	FX.shockwave(global_position, Color("8a7ae0"), 1.4, 0.22, 0.05)
+	GustFX.dash_stop(global_position, dash_dir)
+
+
+## 대시 기류가 머금는 빛: 평소 청록, 2단 대시는 무지개
+func _gust_tint() -> Color:
+	return _rainbow(0.45) if rainbow else Color("8ad8ff")
 
 
 func _fire() -> void:
 	var muzzle: Node3D = j.muzzle
 	var origin := muzzle.global_position
-	origin.y = 0.95
+	origin.y = global_position.y + 0.95
 	var d := aim_point - origin
 	d.y = 0
 	if d.length() < 1.2:
@@ -560,6 +717,9 @@ func _fire() -> void:
 	GunFX.eject(origin - d * 0.45 + out * 0.08, (out - d * 0.2).normalized(), d)
 	Sfx.play("shoot", 0.08, -8.0)
 	recoil = 1.0
+	# 이전 반동이 남아 있어도 매 발 새로 세게 걷어찬다
+	gun_kick = maxf(gun_kick, 0.25)
+	gun_kick_v = maxf(gun_kick_v, 0.0) + KICK_IMPULSE * randf_range(0.9, 1.1)
 	tilt_v -= d * 0.9
 	var main := Main.inst
 	main.kick(-d * 0.09)
@@ -570,7 +730,7 @@ func _fire_laser(k: float) -> void:
 	var main := Main.inst
 	var muzzle: Node3D = j.muzzle
 	var origin := muzzle.global_position
-	origin.y = 0.95
+	origin.y = global_position.y + 0.95
 	var dir := aim_point - origin
 	dir.y = 0
 	dir = dir.normalized() if dir.length() > 0.5 else aim_dir
@@ -626,105 +786,86 @@ func _seg_dist(o: Vector3, d: Vector3, length: float, p: Vector3) -> float:
 	return (rel - d * t).length()
 
 
-## 전방(또는 아주 가까운) 적 중 가장 가까운 대상
-func _lunge_target() -> Enemy:
-	var best: Enemy = null
-	var bd := LUNGE_RANGE
-	for e in get_tree().get_nodes_in_group("enemies"):
-		var en := e as Enemy
-		if not en.alive or not en.landed:
-			continue
-		var d := en.global_position - global_position
-		d.y = 0
-		var l := d.length()
-		if l < bd and (l < 2.0 or aim_dir.angle_to(d / maxf(l, 0.001)) < deg_to_rad(70)):
-			bd = l
-			best = en
-	return best
-
-
+## 검 버튼: 관통 일격이 준비돼 있으면 그것을, 아니면 콤보를 잇는다 (SwordCombo 가 적중 여부로 연결을 판단)
 func _slash() -> void:
-	if phantom_ready:
+	if phantom_ready and slash_cd <= 0.0 and not combo.committed():
+		_combo_break()
 		_phantom_start()
 		return
-	var target := _lunge_target()
-	var gap := LUNGE_FREE
-	if target:
-		var to := target.global_position - global_position
-		to.y = 0
-		aim_dir = to.normalized()
-		gap = to.length() - LUNGE_STOP
-	if gap > 0.25:
-		# 적에게 파고들며 (대상이 없으면 앞으로 크게 내딛으며) 베기
-		lunge_dir = aim_dir
-		lunge_t = maxf(gap / LUNGE_SPEED, LUNGE_MIN_TIME)
-		lunge_vel = lunge_dir * (gap / lunge_t)
-		invuln = maxf(invuln, lunge_t + 0.05)
-		ghost_t = 0.0
-		slash_anim = 0.0
-		tilt_v += lunge_dir * 8.0
-		FX.shockwave(global_position, Pal.BLADE, 1.8, 0.22, 0.05)
-		Sfx.play("dash", 0.08, -5.0)
-		Main.inst.camera.fov_punch(3.0)
-		return
-	_slash_hit()
+	combo.press()
 
 
-func _slash_hit() -> void:
-	# 매번 다른 모션이 나오도록 직전 모션은 제외하고 고른다
-	var st := randi() % 3
-	slash_style = st if st < slash_style else st + 1
-	slash_total = SLASH_TIMES[slash_style]
-	slash_swing = SLASH_SWINGS[slash_style]
-	slash_anim = slash_total
-	var yaw := atan2(-aim_dir.x, -aim_dir.z)
-	FX.slash(self, yaw, slash_style)
-	Sfx.play("slash", 0.08)
-	var reach := SLASH_RANGE + (0.8 if slash_style == 2 else 0.0)
-	var cone := deg_to_rad([80.0, 80.0, 40.0, 180.0][slash_style])
-	velocity += aim_dir * 6.0
-	tilt_v += aim_dir * 5.0
-	var main := Main.inst
-	var hit_any := false
-	var keep_cd := false
+## 콤보를 즉시 끊는다: 떠 있던 높이는 부유 스프링이 이어받아 부드럽게 떨어진다
+func _combo_break() -> void:
+	var lf := combo.lift()
+	if lf > 0.05:
+		hover = maxf(hover, lf)
+	combo.cancel(true)
+
+
+## 콤보 한 타의 판정. dir 방향 부채꼴(cone 은 반각°) 안의 적을 베고 적탄을 지운다.
+## 반환: hit 유효 적중 수 · blocked 장갑에 막힌 수 · killed 처치 수
+func combo_strike(dir: Vector3, reach: float, cone_deg: float, dmg: int, kb: float, slam := false) -> Dictionary:
+	var cone := deg_to_rad(cone_deg)
+	var hit := 0
+	var blocked := 0
+	var killed := 0
+	var yaw := atan2(-dir.x, -dir.z)
 	for e in get_tree().get_nodes_in_group("enemies"):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
 		var d := en.global_position - global_position
+		if absf(d.y) > 1.6:
+			continue                  # 높이가 크게 다른 적은 베지 못한다
 		d.y = 0
-		if d.length() < reach + en.radius and aim_dir.angle_to(d.normalized()) <= cone:
-			en.slash_yaw = atan2(-aim_dir.x, -aim_dir.z)
-			# 장갑 상태(구체 크롤러)에 막힌 검은 콤보 쿨다운을 초기화하지 않는다
+		var l := d.length()
+		if l < reach + en.radius and (l < 0.9 or dir.angle_to(d / maxf(l, 0.001)) <= cone):
+			# 적이 순간이동으로 피하면 이 적은 맞지 않는다 (헛침으로 이어진다)
+			if en.evade.try_dodge(self, dir):
+				continue
+			en.slash_yaw = yaw
+			# 장갑 상태(구체 크롤러)에 막힌 검은 적중으로 치지 않는다 → 콤보가 끊긴다
 			var guarded: bool = en.has_method("is_armored") and en.is_armored()
-			# 맘모스처럼 검 한 방에 죽지 않는 보스는 맞혀도 쿨다운을 초기화하지 않는다 (붙어서 연타 방지)
-			keep_cd = keep_cd or en.get("no_slash_reset") == true
-			en.take_hit(999, d.normalized(), en.global_position, "slash")
-			hit_any = hit_any or not guarded
+			var push := d.normalized() if slam and l > 0.2 else dir
+			var k0 := en.knock
+			en.take_hit(dmg, push, en.global_position, "slash")
+			en.knock = k0 + (en.knock - k0) * kb
+			if guarded:
+				blocked += 1
+				continue
+			hit += 1
+			if not en.alive:
+				killed += 1
+			else:
+				# 베었지만 버틴 적: 칼날 불꽃이 튄다
+				var hp_ := en.global_position + Vector3(0, 1.0, 0) - d.normalized() * en.radius * 0.6
+				FX.sparks(hp_, 10, [Color.WHITE, Color(1.0, 0.5, 0.8), Pal.BLADE], 7.0, 0.25, -10.0, 0.06)
+				FX.flash(hp_, Color(1.0, 0.75, 0.9), 0.45, 0.04)
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		var bl := b as Bullet
-		var d := bl.position - global_position
-		d.y = 0
 		if bl.unslashable:
 			continue
-		if d.length() < reach + 0.3 and (d.length() < 0.8 or aim_dir.angle_to(d.normalized()) <= cone):
+		var d := bl.position - global_position
+		d.y = 0
+		if d.length() < reach + 0.3 and (d.length() < 0.8 or dir.angle_to(d.normalized()) <= cone):
 			FX.flash(bl.position, Pal.BLADE, 0.45, 0.08)
 			bl.queue_free()
-	# 휘두르기만 해도 짧은 흔들림, 베면 강하게
-	main.shake(0.2)
-	main.kick(aim_dir * 0.35)
-	if hit_any:
-		main.hitstop(0.09)
-		main.shake(0.4)
-		main.camera.fov_punch(-4.0)
-		# 검으로 처치하면 즉시 다시 휘두를 수 있다 (콤보)
-		if not keep_cd:
-			slash_cd = 0.0
+	return {"hit": hit, "blocked": blocked, "killed": killed}
+
+
+## 관통 일격 준비: PHANTOM_WINDOW 초 동안 칼날이 불타오르고, 그 안에 휘두르면 관통 일격이 나간다
+func _arm_phantom() -> void:
+	phantom_t = PHANTOM_WINDOW
+	phantom_ready = true
+	blade_fx.ignite()
 
 
 ## 관통 일격: 3프레임 만에 적을 꿰뚫고 뒤로 빠져나간 뒤 경로 위의 적을 한꺼번에 벤다
 func _phantom_start() -> void:
 	phantom_ready = false
+	phantom_t = 0.0
+	blade_fx.release()
 	var main := Main.inst
 	var best: Enemy = null
 	var bd := PHANTOM_RANGE
@@ -762,7 +903,7 @@ func _phantom_start() -> void:
 	ghost_t = 0.0
 	slash_anim = 0.0
 	tilt_v += dir * 10.0
-	FX.flash(global_position + Vector3(0, 0.9, 0), Color(0.9, 1.0, 0.8), 1.2, 0.08)
+	FX.flash(global_position + Vector3(0, 0.9, 0), Color(1.0, 0.8, 0.7), 1.2, 0.08)
 	FX.shockwave(global_position, _rainbow(0.4), 2.6, 0.25, 0.06)
 	Sfx.play("dash", 0.0, -2.0)
 	Sfx.play("roll", 0.05, -4.0)
@@ -808,11 +949,11 @@ func _phantom_hit() -> void:
 		for en in marked:
 			if is_instance_valid(en) and (en as Enemy).alive:
 				(en as Enemy).slash_yaw = yaw
-				(en as Enemy).take_hit(999, dir, (en as Enemy).global_position, "phantom")
+				(en as Enemy).take_hit(PHANTOM_DMG, dir, (en as Enemy).global_position, "phantom")
 		Main.inst.hitstop(0.12)
 		Main.inst.shake(0.6)
-		Main.inst.hud.screen_flash(Color(0.85, 1.0, 0.8), 0.35)
-		Main.inst.hud.popup("PIERCE x%d" % marked.size() if marked.size() > 1 else "PIERCE", Color(0.8, 1.0, 0.6), to + Vector3(0, 2.2, 0))
+		Main.inst.hud.screen_flash(Color(1.0, 0.8, 0.75), 0.35)
+		Main.inst.hud.popup("PIERCE x%d" % marked.size() if marked.size() > 1 else "PIERCE", Color(1.0, 0.55, 0.45), to + Vector3(0, 2.2, 0))
 		Sfx.play("hit", 0.0, 2.0))
 
 
@@ -820,13 +961,14 @@ func _phantom_hit() -> void:
 
 ## R 누름: 슬로우모션 + 줌아웃 + 락온 조준 시작
 func _begin_ult_aim() -> void:
+	_combo_break()
 	ult_aiming = true
 	ult_aim_start = Time.get_ticks_msec()
 	_clear_locks()
 	var main := Main.inst
 	ult_ptr = main.get_viewport().get_mouse_position()
 	if bot:
-		ult_ptr = main.camera.unproject_position(global_position)
+		ult_ptr = main.camera.screen_pos(global_position)
 	main.set_slowmo(ULT_SLOW)
 	main.camera.set_ult_view(true)
 	main.hud.ult_mode(true)
@@ -858,7 +1000,7 @@ func _update_ult_aim() -> void:
 		var wp := en.global_position + Vector3(0, 1.0, 0)
 		if cam.is_position_behind(wp):
 			continue
-		if cam.unproject_position(wp).distance_to(ult_ptr) < r:
+		if cam.screen_pos(wp).distance_to(ult_ptr) < r:
 			_lock(en)
 	var released := not Input.is_action_pressed("ult")
 	if bot:
@@ -903,8 +1045,10 @@ func _end_ult_aim(fire: bool) -> void:
 
 
 func _fire_ult() -> void:
-	ult = 0.0
-	ult_queue = ULT_MISSILES
+	# 가진 미사일을 전부 쏜다
+	ult_count = missiles
+	missiles = 0
+	ult_queue = ult_count
 	ult_t = 0.0
 	var main := Main.inst
 	if not ult_targets.is_empty():
@@ -915,40 +1059,32 @@ func _fire_ult() -> void:
 	squash_v -= 9.0
 	hover_v += 4.0
 	FX.shockwave(global_position, Color("ffb050"), 3.5, 0.35)
-	FX.ring(Vector3(global_position.x, 0.3, global_position.z), 3.5, [Color("ffd060"), Color("ff7a30"), Color.WHITE], 0.35)
+	FX.ring(Vector3(global_position.x, Main.gy(global_position) + 0.3, global_position.z), 3.5, [Color("ffd060"), Color("ff7a30"), Color.WHITE], 0.35)
 	Sfx.play("overload", 0.0, -2.0)
 
 
 func _update_ult(dt: float) -> void:
-	if ult < 1.0 and ult_queue == 0:
-		var before := ult
-		ult = minf(1.0, ult + dt / ULT_TIME)
-		if before < 1.0 and ult >= 1.0:
-			Sfx.play("charged", 0.0, -6.0)
 	if ult_queue > 0:
 		ult_t -= dt
 		while ult_t <= 0.0 and ult_queue > 0:
-			ult_t += 0.03
-			_launch_missile(ULT_MISSILES - ult_queue)
+			ult_t += 0.05
+			_launch_missile(ult_count - ult_queue)
 			ult_queue -= 1
+			Main.inst.hud.ammo_spent("missile", 1)
 
 
 func _launch_missile(i: int) -> void:
 	var jet: Node3D = j.jet_l if i % 2 == 0 else j.jet_r
 	var origin := jet.global_position + Vector3(0, 0.2, 0)
-	# 락온한 적에게 고르게 나눠 쏘고, 락온이 없으면 가까운 적을 자동 조준
-	var targets := ult_targets.filter(func(en): return is_instance_valid(en) and (en as Enemy).alive)
-	if targets.is_empty():
-		targets = Missile.pick_targets(global_position, 16.0)
+	# 락온한 적들에게 차례로 한 발씩 나눠 유도한다. 락온이 없으면 자동 조준 없이 주변 바닥에 흩뿌려진다.
 	var m := Missile.new()
-	if targets.size() > 0:
-		m.target = targets[i % targets.size()]
+	var en: Variant = ult_targets[i % ult_targets.size()] if not ult_targets.is_empty() else null
+	if is_instance_valid(en) and (en as Enemy).alive:
+		m.target = en as Enemy
 	else:
-		var a := randf() * TAU
-		m.target_pos = global_position + Vector3(cos(a), 0, sin(a)) * randf_range(3.0, 7.0)
-		m.target_pos.y = 0.3
+		m.target_pos = _stray_spot()
 	# 흩날리듯 사방으로 퍼져 올라간다
-	var a2 := TAU * float(i) / ULT_MISSILES + randf_range(-0.2, 0.2)
+	var a2 := TAU * float(i) / maxi(ult_count, 1) + randf_range(-0.2, 0.2)
 	var out := Vector3(cos(a2), 0, sin(a2))
 	m.vel = out * randf_range(5.0, 9.0) + Vector3(0, randf_range(6.0, 10.0), 0) - aim_dir * 1.5
 	FX.root.add_child(m)
@@ -959,9 +1095,100 @@ func _launch_missile(i: int) -> void:
 	recoil = 0.6
 
 
+## 조준하지 못한 미사일이 떨어질 주변 바닥 지점 (벽 안은 피한다)
+func _stray_spot() -> Vector3:
+	var p := global_position
+	for _k in 6:
+		var a := randf() * TAU
+		p = global_position + Vector3(cos(a), 0, sin(a)) * randf_range(2.5, 9.0)
+		p.y = global_position.y
+		if not Main.inst.is_blocked(p):
+			break
+	p.y = Main.gy(p)
+	return p
+
+
+# ── 한정 재화: 에너지 · 미사일 ───────────────────────────
+
+## 지금 에너지로 모을 수 있는 최대 충전량. 다음 단계 문턱 바로 아래에서 멈춘다.
+func charge_cap() -> float:
+	if energy >= 3:
+		return 1.0
+	if energy <= 0:
+		return 0.0
+	return CHARGE_STAGES[energy] - 0.001
+
+
+## 이 충전량으로 쏘는 레이저의 에너지 비용 (최소 발사 단계 1칸 ~ 최대 3칸)
+static func laser_cost(k: float) -> int:
+	var st := 0
+	for th in CHARGE_STAGES:
+		if k >= th:
+			st += 1
+	return clampi(st, 1, 3)
+
+
+func _spend_energy(n: int) -> void:
+	n = mini(n, energy)
+	if n <= 0:
+		return
+	energy -= n
+	Main.inst.hud.ammo_spent("energy", n)
+
+
+func _regen_energy(dt: float) -> void:
+	if energy >= ENERGY_MAX:
+		energy_regen_t = 0.0
+		return
+	energy_regen_t += dt
+	if energy_regen_t >= ENERGY_REGEN:
+		energy_regen_t = 0.0
+		gain("energy", 1)
+
+
+## 에너지 재충전까지 진행도 (HUD 표시용, 0~1)
+func energy_regen_k() -> float:
+	return 0.0 if energy >= ENERGY_MAX else energy_regen_t / ENERGY_REGEN
+
+
+## 재화 획득. 실제로 늘어난 개수를 돌려준다 (가득 차 있으면 0).
+func gain(kind: String, n: int) -> int:
+	var got := 0
+	match kind:
+		"energy":
+			got = mini(n, ENERGY_MAX - energy)
+			energy += got
+		"missile":
+			got = mini(n, MISSILE_MAX - missiles)
+			missiles += got
+	if got > 0:
+		Main.inst.hud.ammo_gained(kind, got)
+	return got
+
+
+func is_full(kind: String) -> bool:
+	return energy >= ENERGY_MAX if kind == "energy" else missiles >= MISSILE_MAX
+
+
+var _deny_t := 0
+## 재화가 없어 못 쓸 때: 짧은 경고 (연타해도 한 번씩만)
+func _deny(text: String, kind: String) -> void:
+	var now := Time.get_ticks_msec()
+	if now - _deny_t < 700:
+		return
+	_deny_t = now
+	FX.fizzle((j.muzzle as Node3D).global_position)
+	var ping := Sfx.play("tink", 0.0, -4.0)
+	if ping:
+		ping.pitch_scale = 0.6
+	Main.inst.hud.ammo_denied(kind)
+	Main.inst.hud.popup(text, Color("ff5a6a"), global_position + Vector3(0, 2.2, 0))
+
+
 # ── 최대 충전 지속 레이저 ────────────────────────────────
 
 func _start_mega() -> void:
+	_combo_break()
 	mega_t = MEGA_TIME
 	mega_yaw = atan2(-aim_dir.x, -aim_dir.z)
 	mega_tick = 0.0
@@ -969,14 +1196,14 @@ func _start_mega() -> void:
 	FX.root.add_child(mega_node)
 	var main := Main.inst
 	var origin: Vector3 = (j.muzzle as Node3D).global_position
-	origin.y = 0.95
+	origin.y = global_position.y + 0.95
 	ImpactFrame.inst.mega(origin, aim_dir)
 	main.dramatic(true)
 	main.shake(0.6)
 	main.hitstop(ImpactFrame.inst.duration("mega") + 0.05)
 	main.camera.fov_punch(9.0)
 	FX.shockwave(global_position, Pal.CYAN, 4.0, 0.4)
-	FX.ring(Vector3(global_position.x, 0.3, global_position.z), 5.0, Pal.RING_CYAN, 0.45)
+	FX.ring(Vector3(global_position.x, Main.gy(global_position) + 0.3, global_position.z), 5.0, Pal.RING_CYAN, 0.45)
 	Sfx.play("laser", 0.0, 2.0)
 	squash_v -= 8.0
 	_update_mega(0.0)
@@ -995,7 +1222,7 @@ func _update_mega(dt: float) -> void:
 	var dir := _mega_dir()
 	var muzzle: Node3D = j.muzzle
 	var origin := muzzle.global_position
-	origin.y = 0.95
+	origin.y = global_position.y + 0.95
 	var length := 0.0
 	while length < LASER_RANGE:
 		length += 0.25
@@ -1065,6 +1292,7 @@ func take_hit(from: Vector3) -> bool:
 	hp -= 1
 	invuln = 1.1
 	hurt_t = 1.1
+	_combo_break()
 	var d := global_position - from
 	d.y = 0
 	d = d.normalized()
@@ -1090,6 +1318,7 @@ func stagger(t: float) -> void:
 	if not alive:
 		return
 	stun_t = maxf(stun_t, t)
+	_combo_break()
 	print("PLAYER_STUN %.2fs hp=%d" % [t, hp])
 	if lunge_t > 0.0:
 		lunge_t = 0.0
@@ -1115,6 +1344,7 @@ func shove(dir: Vector3, speed: float) -> void:
 	if dash_t > 0.0:
 		dash_t = 0.0
 		_dash_end()
+	_combo_break()
 	dir.y = 0
 	dir = dir.normalized()
 	velocity = dir * speed
@@ -1132,6 +1362,10 @@ func die(push := Vector3.ZERO) -> void:
 	charge_fx.end()
 	boost_snd.stop()
 	blade_fx.visible = false
+	combo.cancel(true)
+	trail.visible = false
+	for bt in body_trails:
+		bt.visible = false
 	FX.shatter(visual, push)
 	visual.visible = false
 	dodge_ring.visible = false
@@ -1210,6 +1444,8 @@ func _animate(dt: float) -> void:
 		_animate_jets(dt, 0.0)
 		_animate_ring(dt)
 		visual.visible = true
+		trail.feed(dt, [])
+		_feed_body_trails(dt)
 		return
 	else:
 		# 회피 직후: 기울였던 자세를 빠르게 되돌림
@@ -1252,6 +1488,15 @@ func _animate(dt: float) -> void:
 		kl.rotation.x = lerpf(kl.rotation.x, -0.9, 0.2)
 		kr.rotation.x = lerpf(kr.rotation.x, -1.1, 0.2)
 		upper.position.y = 0.74
+	elif airborne:
+		# 점프: 오를 때는 무릎을 당겨 몸을 웅크리고, 떨어질 때는 다리를 뻗어 착지를 준비한다
+		var up := clampf(vy / JUMP_V, -1.0, 1.0)
+		var tuck := clampf(up, 0.0, 1.0)
+		hl.rotation.x = lerpf(hl.rotation.x, lerpf(0.25, 0.9, tuck), 0.3)
+		hr.rotation.x = lerpf(hr.rotation.x, lerpf(-0.1, 0.35, tuck), 0.3)
+		kl.rotation.x = lerpf(kl.rotation.x, lerpf(-0.35, -1.3, tuck), 0.3)
+		kr.rotation.x = lerpf(kr.rotation.x, lerpf(-0.2, -0.8, tuck), 0.3)
+		upper.position.y = 0.74 + tuck * 0.04
 	else:
 		var moving: float = clampf(spd / SPEED, 0.0, 1.0)
 		walk += dt * (4.0 + spd * 1.6)
@@ -1275,8 +1520,15 @@ func _animate(dt: float) -> void:
 	laser_recoil = maxf(0.0, laser_recoil - dt)
 	var arm_l: Node3D = j.arm_l
 	var shake_arm := sin(t * 70.0) * 0.03 * charge if charging else 0.0
-	arm_l.position.z = recoil * 0.1
-	arm_l.rotation.x = recoil * 0.14 + shake_arm
+	# 반동 스프링 (반암시적 오일러: 빠른 스프링도 안정적)
+	gun_kick_v += (-KICK_STIFF * gun_kick - KICK_DAMP * gun_kick_v) * dt
+	gun_kick += gun_kick_v * dt
+	gun_kick = clampf(gun_kick, -0.45, 1.3)
+	var kick_back := maxf(gun_kick, 0.0)
+	if _arm_l_rest == Vector3.INF:
+		_arm_l_rest = arm_l.position
+	arm_l.position = _arm_l_rest + Vector3(0, kick_back * 0.05, recoil * 0.06 + gun_kick * 0.2)
+	arm_l.rotation.x = recoil * 0.08 + kick_back * 0.42 + minf(gun_kick, 0.0) * 0.15 + shake_arm
 	arm_l.rotation.y = shake_arm
 	var torso_pitch := -0.1 * clampf(spd / SPEED, 0.0, 1.0)
 	if charging:
@@ -1284,13 +1536,16 @@ func _animate(dt: float) -> void:
 	if mega_t > 0.0:
 		torso_pitch = 0.2 + sin(t * 60.0) * 0.03
 		arm_l.rotation.x = sin(t * 80.0) * 0.05
-	torso_pitch += recoil * 0.06
+	torso_pitch += recoil * 0.06 + gun_kick * 0.08
 	torso.rotation.x = lerpf(torso.rotation.x, torso_pitch, 0.25)
 
 	# 검 휘두르기: 오른쪽 → 왼쪽
 	var blade: Node3D = j.blade
 	var arm_r: Node3D = j.arm_r
-	if lunge_t > 0.0:
+	var combo_pose := combo.posing() and lunge_t <= 0.0 and slash_anim <= 0.0
+	if combo_pose:
+		pass                      # 콤보 자세는 아래에서 마지막에 덮어쓴다
+	elif lunge_t > 0.0:
 		# 돌진 중: 검을 뒤로 당긴 준비 자세
 		arm_r.rotation.y = lerpf(arm_r.rotation.y, -1.4, 0.5)
 		arm_r.rotation.x = -0.5
@@ -1333,13 +1588,56 @@ func _animate(dt: float) -> void:
 		arm_r.rotation.y = lerp_angle(arm_r.rotation.y, 0.0, 0.25)
 		arm_r.rotation.x = lerpf(arm_r.rotation.x, 0.0, 0.25)
 		blade.rotation_degrees = blade.rotation_degrees.lerp(Vector3(38, -18, 0), 0.25)
+		blade.scale = blade.scale.lerp(Vector3.ONE, 0.3)
 		torso.rotation.y = lerpf(torso.rotation.y, 0.0, 0.25)
 
 	_animate_jets(dt, 1.0 if boosting else 0.0)
+	# 검술 콤보: 관절·높이·몸 기울기를 콤보 자세로 덮고, 스윙 사이 칼 위치를 잔상에 넘긴다
+	trail.tint = blade_fx.flame_k
+	if combo_pose:
+		combo.pose(dt)
+	else:
+		trail.boost = 1.0 if slash_anim > 0.0 or lunge_t > 0.0 else 0.0
+		trail.feed(dt, [])
+	_feed_body_trails(dt)
 
 	# 피격 무적 깜빡임 (회피 무적은 잔상으로 표현)
 	visual.visible = not (hurt_t > 0.0 and fmod(hurt_t, 0.12) < 0.05)
 	_animate_ring(dt)
+
+
+## 팔·다리 리본: 대시(드릴 회전) 중이거나 돌진 중일 때만 보인다
+func _feed_body_trails(dt: float) -> void:
+	var on := dash_t > 0.0 or rushing or lunge_t > 0.0 or combo.ph == SwordCombo.Ph.LUNGE
+	# 대시 회전·돌진은 몸 톤 리본만: 광선검의 분홍 초승달은 끈다 (자세를 잡는 칼이 궤적을 어지럽히지 않게)
+	trail.active = not on
+	for bt in body_trails:
+		bt.active = on
+		bt.feed(dt, [])
+
+
+## 돌진(콤보 파고들기·관통 일격) 중 강철 발이 바닥을 긁는다: 마찰 불꽃 + 달아오른 쇳자국. 멈추면 제동 불꽃.
+func _update_rush() -> void:
+	var now := (lunge_t > 0.0 or combo.ph == SwordCombo.Ph.LUNGE) and not airborne
+	var feet := []
+	for ft in [j.foot_l, j.foot_r]:
+		var f := (ft as Node3D).to_global(Vector3(0, -0.12, -0.05))
+		feet.append(Vector3(f.x, Main.gy(f), f.z))
+	if now and not rushing:
+		rush_feet = feet
+		FX.flash(global_position + Vector3(0, 0.1, 0), Color(1.0, 0.75, 0.4), 0.4, 0.04)
+	elif now:
+		var k := 1.4 if lunge_phantom else 1.0
+		for i in 2:
+			RushFX.scrape(rush_feet[i], feet[i], k)
+			RushFX.heat(rush_feet[i], feet[i])
+		rush_feet = feet
+	elif rushing:
+		for i in 2:
+			RushFX.heat(rush_feet[i], feet[i])
+		var d := velocity if velocity.length() > 0.1 else aim_dir
+		RushFX.brake(global_position, d)
+	rushing = now
 
 
 func _animate_jets(dt: float, on: float) -> void:
@@ -1358,6 +1656,7 @@ func _animate_jets(dt: float, on: float) -> void:
 				var n := jet as Node3D
 				var p := n.global_position - n.global_basis.y.normalized() * 0.6
 				FX.boost_puff(p, -velocity * 0.3 + Vector3(0, -1.5, 0))
+				GustFX.boost_wash(n.global_position, velocity)
 		if not Sfx.inst.muted:
 			boost_snd.volume_db = lerpf(boost_snd.volume_db, -9.0, 0.2)
 			boost_snd.pitch_scale = 0.9 + velocity.length() / BOOST_SPEED * 0.4

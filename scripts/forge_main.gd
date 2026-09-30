@@ -47,6 +47,8 @@ func _ready() -> void:
 	camera = ForgeCamera.new()
 	add_child(camera)
 	camera.current = true
+	if cam_preset_arg >= 0:
+		camera.set_preset(cam_preset_arg)
 	camera.snap(player.global_position)
 	debris = Debris.new()
 	world.add_child(debris)
@@ -155,6 +157,8 @@ func _physics_process(dt: float) -> void:
 		_spawn_boss()
 	if OS.get_cmdline_user_args().has("--godmode"):
 		player.invuln = 999.0
+	if boss and boss.alive:
+		boss_loot(boss, boss.boss_hp / ForgeBoss.MAX_HP)
 	if OS.get_cmdline_user_args().has("--fastp2") and boss and boss.phase == 1 and boss.st == ForgeBoss.St.FIGHT and time > 6.0:
 		boss.take_hit(20, Vector3.FORWARD, boss.global_position, "missile")
 		boss.boss_hp = minf(boss.boss_hp, ForgeBoss.MAX_HP * ForgeBoss.PHASE2_AT + 1.0)
@@ -210,7 +214,7 @@ func bot_input(p: Player) -> Dictionary:
 	if cyc > 4.6 and boss.alive:
 		out.charge = true
 		out.fire = false
-	out.ult = p.ult >= 1.0 and boss.alive and boss.landed
+	out.ult = p.missiles > 0 and boss.alive and boss.landed
 	if OS.get_cmdline_user_args().has("--pacifist"):
 		# 패턴 확인용: 공격하지 않고 피하기만 한다
 		out.fire = false

@@ -1,10 +1,11 @@
 class_name Missile
 extends Node3D
 ## 궁극기 미사일. 발사 직후 사방으로 흩날리다가(SCATTER) 방향을 틀어 목표로 급가속 유도한다.
+## 목표(락온한 적)가 없으면 target_pos 바닥 지점에 떨어진다. 다른 적을 스스로 찾아 조준하지 않는다.
 
 const SCATTER := 0.3
 const MAX_SPEED := 36.0
-const DAMAGE := 4
+const DAMAGE := 6
 const SPLASH := 1.6
 
 static var _body_mesh: BoxMesh
@@ -17,17 +18,6 @@ var age := 0.0
 var trail_t := 0.0
 var flame: MeshInstance3D
 var wobble := Vector3.ZERO
-
-
-## 가까운 적을 거리순으로
-static func pick_targets(from: Vector3, radius: float) -> Array:
-	var out := []
-	for e in Main.inst.get_tree().get_nodes_in_group("enemies"):
-		var en := e as Enemy
-		if en.alive and en.landed and en.global_position.distance_to(from) < radius:
-			out.append(en)
-	out.sort_custom(func(a, b): return a.global_position.distance_to(from) < b.global_position.distance_to(from))
-	return out
 
 
 func _ready() -> void:
@@ -54,15 +44,13 @@ func _ready() -> void:
 func _physics_process(dt: float) -> void:
 	age += dt
 	if target != null and (not is_instance_valid(target) or not target.alive):
-		# 목표가 먼저 죽으면 다른 적으로 갈아탄다
-		var t := pick_targets(global_position, 18.0)
-		target = t[randi() % t.size()] if t.size() > 0 else null
-		if target == null:
-			target_pos = global_position + Vector3(vel.x, 0, vel.z).normalized() * 3.0
-			target_pos.y = 0.3
+		# 목표가 먼저 죽으면 다른 적을 찾지 않고, 목표가 있던 자리 바닥에 떨어진다
+		target = null
+		target_pos.y = Main.gy(target_pos)
 	var goal := target_pos
 	if target != null:
 		goal = target.global_position + Vector3(0, 1.0, 0)
+		target_pos = target.global_position
 	if age < SCATTER:
 		# 흩날림: 감속하며 살짝 흔들린다
 		vel *= exp(-3.0 * dt)
@@ -82,7 +70,7 @@ func _physics_process(dt: float) -> void:
 		trail_t = 0.018
 		_trail()
 	var hit_r := 0.9 if target != null else 0.6
-	if global_position.distance_to(goal) < hit_r or global_position.y < 0.15 or age > 3.0:
+	if global_position.distance_to(goal) < hit_r or global_position.y < Main.gy(global_position) + 0.15 or age > 3.0:
 		_explode()
 
 

@@ -15,6 +15,8 @@ const WALL_H := 0.8
 const PILLAR_H := 1.5
 const LOW_H := 0.7
 const COMBAT_ROOMS := 9
+# ── 바닥 굴곡 (terrain 이 켜진 맵만. 끄면 모든 칸 높이 0) ──
+const STEP := 0.5          # 걸어서 넘을 수 있는 높이 차. 굴곡은 모두 이보다 완만하다
 
 enum Shape { RECT, ROUND, L, CROSS, PILLARS, RING, OCTAGON, BLOB }
 const SHAPE_NAMES := ["홀", "원형 광장", "L자 회랑", "십자 교차로", "기둥 홀", "고리 광장", "팔각 홀", "동굴"]
@@ -32,6 +34,10 @@ var _disc_t := 0.0
 var _gate_mat: StandardMaterial3D
 var _floor_shader: Shader
 var _t := 0.0
+var terrain := false
+var hgt := PackedFloat32Array()       # 칸 중심 높이 (벽 칸은 이웃 바닥 중 가장 높은 값)
+var smooth := PackedInt32Array()      # 곡면 지형 요소 번호. -1 이면 hgt 높이의 평평한 칸
+var feats: Array = []                 # 곡면 요소: 둔덕/오목한 자리(mound)
 
 
 # ── 좌표 ────────────────────────────────────────────────
@@ -41,7 +47,46 @@ func cell_of(p: Vector3) -> Vector2i:
 
 
 func world_of(c: Vector2i) -> Vector3:
-	return Vector3((c.x - W * 0.5 + 0.5) * CELL, 0, (c.y - H * 0.5 + 0.5) * CELL)
+	var p := Vector3((c.x - W * 0.5 + 0.5) * CELL, 0, (c.y - H * 0.5 + 0.5) * CELL)
+	p.y = cell_h(c)
+	return p
+
+
+## 칸 중심의 지면 높이
+func cell_h(c: Vector2i) -> float:
+	if hgt.is_empty() or not _in(c):
+		return 0.0
+	var i := _idx(c)
+	if smooth[i] >= 0:
+		return feat_h(smooth[i], (c.x - W * 0.5 + 0.5) * CELL, (c.y - H * 0.5 + 0.5) * CELL)
+	return hgt[i]
+
+
+## 월드 xz 지점의 지면 높이 (곡면 칸은 연속 함수, 나머지는 칸 높이)
+func height_at(p: Vector3) -> float:
+	if hgt.is_empty():
+		return 0.0
+	var c := cell_of(p)
+	if not _in(c):
+		return 0.0
+	var i := _idx(c)
+	return feat_h(smooth[i], p.x, p.z) if smooth[i] >= 0 else hgt[i]
+
+
+## 칸 c 의 지면 높이를 점 p 에 가장 가까운 칸 안 지점에서 잰다 (비탈을 오를 때 칸 이음새에서 막히지 않게)
+func _near_h(c: Vector2i, p: Vector3) -> float:
+	var i := _idx(c)
+	if smooth[i] < 0:
+		return hgt[i]
+	var mn := Vector3((c.x - W * 0.5) * CELL, 0, (c.y - H * 0.5) * CELL)
+	return feat_h(smooth[i], clampf(p.x, mn.x, mn.x + CELL), clampf(p.z, mn.z, mn.z + CELL))
+
+
+## 곡면 요소 f 의 (x, z) 높이. 둥근 S자(smoothstep) 단면이라 바닥과 이음새 없이 이어진다.
+func feat_h(f: int, x: float, z: float) -> float:
+	var ft: Dictionary = feats[f]
+	var r := Vector2(x, z).distance_to(ft.c)
+	return ft.base + ft.h * (1.0 - smoothstep(ft.r0, ft.r1, r))
 
 
 func _idx(c: Vector2i) -> int:
@@ -68,18 +113,31 @@ func is_blocked_cell(c: Vector2i) -> bool:
 	return g >= 0 and rooms[g].gates_closed
 
 
+## 벽·기둥·닫힌 차단막, 그리고 p.y 보다 STEP 넘게 높은 지면이면 막힘 (굴곡은 모두 이보다 완만하다)
 func is_blocked(p: Vector3) -> bool:
-	return is_blocked_cell(cell_of(p))
+	if is_blocked_cell(cell_of(p)):
+		return true
+	return terrain and height_at(p) > p.y + STEP
 
 
-## 원(반지름 r)을 막힌 칸 밖으로 밀어낸다
+## 원(반지름 r)을 막힌 칸 밖으로 밀어낸다. 지형이 있으면 p.y 를 발 높이로 보고,
+## 끝나면 지면 높이로 붙인다 (내리막·낭떠러지는 몇 프레임에 걸쳐 내려앉는다).
 func push_out(p: Vector3, r: float) -> Vector3:
+	p = push_out_feet(p, r, p.y, STEP)
+	if terrain:
+		var h := height_at(p)
+		p.y = h if h >= p.y else lerpf(p.y, h, 0.35)
+	return p
+
+
+## push_out 과 같되 높이를 바꾸지 않는다. feet 보다 climb 넘게 높은 칸을 벽으로 본다 (플레이어 점프용).
+func push_out_feet(p: Vector3, r: float, feet: float, climb := STEP) -> Vector3:
 	for iter in 2:
 		var c := cell_of(p)
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
 				var n := c + Vector2i(dx, dy)
-				if not is_blocked_cell(n):
+				if not is_blocked_cell(n) and not (terrain and _near_h(n, p) > feet + climb):
 					continue
 				var mn := world_of(n) - Vector3(CELL, 0, CELL) * 0.5
 				var q := Vector2(clampf(p.x, mn.x, mn.x + CELL), clampf(p.z, mn.z, mn.z + CELL))
@@ -160,6 +218,7 @@ func generate(seed_value: int) -> void:
 					b.links.append(a.id)
 	_find_doors()
 	_assign_difficulty()
+	Terrain.shape(self)
 	_compute_anchors()
 
 
@@ -178,6 +237,7 @@ func generate_single(seed_value: int, shape_id: int, combat: bool, size := Vecto
 	discovered.fill(0)
 	rooms.clear()
 	start_room = _stamp(Vector2i(W / 2, H / 2), _shape(shape_id, size), shape_id, combat)
+	Terrain.shape(self)
 	_compute_anchors()
 
 
@@ -188,7 +248,7 @@ func open_spots(id: int) -> Array[Vector3]:
 		var ok := true
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
-				if is_blocked_cell(c + Vector2i(dx, dy)):
+				if is_blocked_cell(c + Vector2i(dx, dy)) or not _flat_near(c, c + Vector2i(dx, dy)):
 					ok = false
 		if ok:
 			out.append(world_of(c))
@@ -410,15 +470,7 @@ func build() -> void:
 	for rid in regions:
 		var st := SurfaceTool.new()
 		st.begin(Mesh.PRIMITIVE_TRIANGLES)
-		st.set_normal(Vector3.UP)
-		for c in regions[rid]:
-			var p := world_of(c) - Vector3(CELL, 0, CELL) * 0.5
-			var a := p
-			var b := p + Vector3(CELL, 0, 0)
-			var cc := p + Vector3(CELL, 0, CELL)
-			var d := p + Vector3(0, 0, CELL)
-			st.add_vertex(a); st.add_vertex(b); st.add_vertex(cc)
-			st.add_vertex(a); st.add_vertex(cc); st.add_vertex(d)
+		Terrain.floor_cells(self, st, regions[rid])
 		var mi := MeshInstance3D.new()
 		mi.mesh = st.commit()
 		var m := ShaderMaterial.new()
@@ -427,19 +479,25 @@ func build() -> void:
 		m.set_shader_parameter("base", tint)
 		m.set_shader_parameter("line_col", Pal.FLOOR_LINE)
 		mi.material_override = m
+		mi.layers = 1 | MechDecals.RECEIVER
 		add_child(mi)
 
-	# 벽·기둥·엄폐물: 같은 종류 칸을 가로로 이어 상자 하나로
+	# 벽·기둥·엄폐물: 같은 종류·같은 높이 칸을 가로로 이어 상자 하나로
+	var wall_prop_cells := WallProps.dress(self)
 	var solid := PackedByteArray()
 	solid.resize(W * H)
+	var base := PackedFloat32Array()
+	base.resize(W * H)
 	for y in H:
 		for x in W:
 			var i := y * W + x
 			var g := grid[i]
 			if g == PILLAR or g == LOW:
 				solid[i] = g
+				base[i] = cell_h(Vector2i(x, y))
 			elif g == VOID and _near_floor(Vector2i(x, y)):
-				solid[i] = 9
+				solid[i] = 10 if wall_prop_cells.has(Vector2i(x, y)) else 9
+				base[i] = hgt[i] if not hgt.is_empty() else 0.0
 	var side_st := SurfaceTool.new()
 	side_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var top_st := SurfaceTool.new()
@@ -450,21 +508,26 @@ func build() -> void:
 		var x := 0
 		while x < W:
 			var t := solid[y * W + x]
+			var b0 := base[y * W + x]
 			if t == 0:
 				x += 1
 				continue
 			var x0 := x
-			while x < W and solid[y * W + x] == t:
+			while x < W and solid[y * W + x] == t and absf(base[y * W + x] - b0) < 0.001:
 				x += 1
-			var h := WALL_H if t == 9 else (PILLAR_H if t == PILLAR else LOW_H)
-			var mn := world_of(Vector2i(x0, y)) - Vector3(CELL, 0, CELL) * 0.5
-			var mx := world_of(Vector2i(x - 1, y)) + Vector3(CELL * 0.5, h, CELL * 0.5)
-			_box(side_st, top_st, mn, mx)
+			var h := WALL_H if t >= 9 else (PILLAR_H if t == PILLAR else LOW_H)
+			var mn := Vector3((x0 - W * 0.5) * CELL, 0, (y - H * 0.5) * CELL)
+			var mx := Vector3((x - W * 0.5) * CELL, b0 + h, (y - H * 0.5 + 1) * CELL)
+			# 벽은 이웃 바닥(가장 높은 층) 위로 WALL_H 만큼 솟고, 아래는 분지 바닥까지 내려간다
+			mn.y = -1.0 if t >= 9 else b0 - 0.4     # 기둥·엄폐물 밑동은 굴곡 비탈 아래까지 묻는다
+			if t != 10:
+				_box(side_st, top_st, mn, mx)
 			var cs := CollisionShape3D.new()
 			var bs := BoxShape3D.new()
-			bs.size = Vector3(mx.x - mn.x, 3.0, CELL)
+			var top := mx.y + 3.0
+			bs.size = Vector3(mx.x - mn.x, top - mn.y, CELL)
 			cs.shape = bs
-			cs.position = Vector3((mn.x + mx.x) * 0.5, 1.5, (mn.z + mx.z) * 0.5)
+			cs.position = Vector3((mn.x + mx.x) * 0.5, (mn.y + top) * 0.5, (mn.z + mx.z) * 0.5)
 			body.add_child(cs)
 	var wm := ArrayMesh.new()
 	side_st.commit(wm)
@@ -473,7 +536,9 @@ func build() -> void:
 	wm.surface_set_material(1, Pal.lit(Color(0.17, 0.16, 0.29)))
 	var wall_mi := MeshInstance3D.new()
 	wall_mi.mesh = wm
+	wall_mi.layers = 1 | MechDecals.RECEIVER
 	add_child(wall_mi)
+	MechDecals.dress(self, wall_prop_cells)
 
 	_build_gates()
 	_build_minimap()
@@ -597,12 +662,12 @@ func random_spot(id: int, avoid: Vector3, min_dist: float) -> Vector3:
 		var ok := true
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
-				if is_blocked_cell(c + Vector2i(dx, dy)):
+				if is_blocked_cell(c + Vector2i(dx, dy)) or not _flat_near(c, c + Vector2i(dx, dy)):
 					ok = false
 		if not ok:
 			continue
 		var p := world_of(c)
-		if p.distance_to(avoid) >= min_dist:
+		if Vector2(p.x - avoid.x, p.z - avoid.z).length() >= min_dist:
 			return p
 		best = p
 	return best
@@ -621,12 +686,12 @@ func wall_spot(id: int, avoid: Vector3, min_dist: float, taken: Array) -> Dictio
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
 				var n := cell + Vector2i(dx, dy)
-				if cell_type(n) != FLOOR or gate_of[_idx(n)] >= 0:
+				if cell_type(n) != FLOOR or gate_of[_idx(n)] >= 0 or not _flat_near(cell, n, 0.05):
 					ok = false
 		if not ok:
 			continue
 		var p := world_of(cell)
-		if p.distance_to(avoid) < min_dist:
+		if Vector2(p.x - avoid.x, p.z - avoid.z).length() < min_dist:
 			continue
 		for d in doors:
 			if world_of(d[0]).distance_to(p) < 3.5:
@@ -655,6 +720,11 @@ func wall_spot(id: int, avoid: Vector3, min_dist: float, taken: Array) -> Dictio
 	return {}
 
 
+## 두 칸의 높이 차가 tol 이하인가 (소환·해치 자리가 비탈에 걸치지 않게)
+func _flat_near(a: Vector2i, b: Vector2i, tol := 0.3) -> bool:
+	return absf(cell_h(a) - cell_h(b)) <= tol
+
+
 func room_center_world(id: int) -> Vector3:
 	return world_of(rooms[id].anchor)
 
@@ -677,6 +747,9 @@ func _compute_anchors() -> void:
 			for door in r.doors:
 				door_d = minf(door_d, Vector2(c - door[0]).length())
 			var score: float = clear * 2.0 + minf(door_d, 8.0) * 0.5 - Vector2(c - r.center).length() * 0.15
+			# 기준점(출발·귀환 지점)은 바닥층의 평평한 곳에 둔다
+			if absf(cell_h(c)) > 0.05 or (not hgt.is_empty() and smooth[_idx(c)] >= 0):
+				score -= 6.0
 			if score > bs:
 				bs = score
 				best = c
@@ -740,6 +813,10 @@ func _cell_color(i: int) -> Color:
 	var r := room_of[i]
 	if gate_of[i] >= 0 and rooms[gate_of[i]].gates_closed:
 		return Color(1.0, 0.25, 0.4, 1.0)
+	return _cell_color_flat(i, r)
+
+
+func _cell_color_flat(i: int, r: int) -> Color:
 	if r < 0:
 		return Color(0.32, 0.32, 0.5, 0.9)
 	var room: Dictionary = rooms[r]

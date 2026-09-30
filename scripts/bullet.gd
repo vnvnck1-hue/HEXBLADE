@@ -2,7 +2,10 @@ class_name Bullet
 extends Node3D
 ## 플레이어탄 / 적탄. 판정은 수평 거리로 단순화한다.
 
-static var _p_mesh: CylinderMesh
+## 고저차: 탄은 지면에서 HUG 이상 떠서 날고, 높이 차가 HIT_DY 넘는 대상(다른 층)은 맞히지 않는다
+const HUG := 0.45
+const HIT_DY := 1.35
+
 static var _e_mesh: SphereMesh
 static var _e_core: SphereMesh
 
@@ -13,7 +16,7 @@ var radius := 0.15
 var age := 0.0
 var mesh: MeshInstance3D
 var color_phase := 0
-var streak: Node3D
+var tracer: ToonGunFX.Tracer
 var origin := Vector3.ZERO
 ## 장갑에 튕겨 나간 도탄: 적을 맞히지 않고, 벽에 한 번 더 튕긴 뒤 사라진다
 var deflected := false
@@ -22,44 +25,18 @@ var bounces := 0
 var unslashable := false
 var stun := 0.0
 
-const STREAK_LEN := 1.5
 const BLUE: Array[Color] = [Color("2a6cff"), Color("3aa8ff"), Color("8ad8ff"), Color("3aa8ff")]
 
 
-## 플레이어탄: 머리(현재 위치)에서 뒤로 길게 뻗는 레이저형 광선. 발사 직후에는 총구에서 자라난다.
+## 플레이어탄: 보이는 모습은 ToonGunFX 예광 연출(깜빡이는 머리 · 궤적 위 잔광 · 옅은 연기 선)이 맡는다.
 static func make_player(pos: Vector3, dir: Vector3, speed: float) -> Bullet:
-	if _p_mesh == null:
-		_p_mesh = CylinderMesh.new()
-		_p_mesh.top_radius = 1.0
-		_p_mesh.bottom_radius = 0.25
-		_p_mesh.height = 1.0
-		_p_mesh.radial_segments = 8
-		_p_mesh.rings = 1
 	var b := Bullet.new()
 	b.from_player = true
 	b.vel = dir * speed
 	b.radius = 0.16
 	b.life = 0.48
-	b.streak = Node3D.new()
-	b.add_child(b.streak)
-	b.streak.basis = Basis.looking_at(dir, Vector3.UP)
-	# 예광탄: 바깥 주황 광채 · 안쪽 흰 노랑 심 · 머리의 밝은 점
-	for L in [[Pal.TRACER_GLOW, 1.6, 0.06, 1.0], [Pal.TRACER_CORE, 2.6, 0.028, 0.75]]:
-		var mi := Pal.flat_mesh(_p_mesh, L[0], L[1])
-		# 원기둥 +Y → -Z(진행 방향): 굵은 쪽이 머리, 가는 쪽이 꼬리(+Z)
-		mi.rotation_degrees.x = -90.0
-		mi.position = Vector3(0, 0, 0.5 * L[3])
-		mi.scale = Vector3(L[2], L[3], L[2])
-		b.streak.add_child(mi)
-		if b.mesh == null:
-			b.mesh = mi
-	var head := SphereMesh.new()
-	head.radius = 0.055
-	head.height = 0.11
-	head.radial_segments = 8
-	head.rings = 4
-	b.add_child(Pal.flat_mesh(head, Pal.TRACER_CORE, 3.0))
-	b.streak.scale = Vector3(1, 1, 0.05)
+	b.tracer = ToonGunFX.tracer().setup(dir)
+	b.add_child(b.tracer)
 	b.position = pos
 	b.origin = pos
 	return b
@@ -109,6 +86,10 @@ func _physics_process(dt: float) -> void:
 		queue_free()
 		return
 	var main := Main.inst
+	# 바닥 굴곡: 탄은 둔덕을 타고 넘는다
+	var fy := Main.gy(position) + HUG
+	if fy > position.y and fy - position.y < ArenaMap.STEP + HUG and not deflected:
+		position.y = fy
 	if from_player:
 		# 빠른 탄이라 이번 프레임에 지나간 선분 전체로 판정한다 (벽·적 관통 방지)
 		var step := vel * dt
@@ -140,6 +121,8 @@ func _physics_process(dt: float) -> void:
 			var en := e as Enemy
 			if not en.alive or not en.landed:
 				continue
+			if absf(en.global_position.y + 1.0 - position.y) > HIT_DY:
+				continue                 # 다른 층의 적
 			var rel := Vector3(en.global_position.x - prev.x, 0, en.global_position.z - prev.z)
 			var along := clampf(rel.dot(fwd), 0.0, travel)
 			if (rel - fwd * along).length() < en.radius + radius and along < best_t:
@@ -174,21 +157,17 @@ func _physics_process(dt: float) -> void:
 		color_phase = idx
 		mesh.set_instance_shader_parameter("tint", Pal.E_BULLETS[[0, 1, 2, 1][idx] + (1 if age > 0.8 else 0)])
 	var p := main.player
-	if p.alive and _flat_dist(p.global_position) < p.hit_radius + radius:
+	if p.alive and _flat_dist(p.global_position) < p.hit_radius + radius and absf(p.global_position.y + 0.95 - position.y) < HIT_DY:
 		if p.take_hit(position):
 			if stun > 0.0:
 				p.stagger(stun)
 			queue_free()
 
 
-## 광선 길이: 총구(도탄은 튕긴 지점)에서 자라나 최대 길이까지. 도탄은 사라지기 직전 가늘어진다.
+## 도탄은 사라지기 직전 가늘어진다
 func _update_streak() -> void:
-	var shown := minf(STREAK_LEN * (0.6 if deflected else 1.0), (position - origin).length())
-	streak.scale.z = maxf(shown, 0.05)
-	if deflected:
-		var th := clampf(life / 0.12, 0.15, 1.0)
-		streak.scale.x = th
-		streak.scale.y = th
+	if deflected and tracer:
+		tracer.thin = clampf(life / 0.12, 0.15, 1.0)
 
 
 ## 튕겨 나가는 도탄으로 바꾼다: pos 에서 dir 방향으로 다시 날아간다
@@ -200,15 +179,14 @@ func ricochet(pos: Vector3, dir: Vector3, speed: float, new_life := -1.0) -> voi
 	origin = pos
 	vel = dir * speed
 	life = new_life if new_life > 0.0 else randf_range(0.2, 0.36)
-	if absf(dir.normalized().dot(Vector3.UP)) < 0.98:
-		streak.basis = Basis.looking_at(dir, Vector3.UP)
-	streak.scale = Vector3(1, 1, 0.05)
+	if tracer:
+		tracer.redirect(pos, dir)
 
 
 ## 막힌 칸에 들어간 점 p 에서 진행 방향 fwd 로 들어온 면의 법선 (격자 벽이라 X 또는 Z 축)
 static func _wall_normal(p: Vector3, fwd: Vector3) -> Vector3:
 	var back := p - fwd * 0.3
-	if not Main.inst.is_blocked(Vector3(back.x, 0, p.z)):
+	if not Main.inst.is_blocked(Vector3(back.x, p.y, p.z)):
 		return Vector3(-signf(fwd.x), 0, 0)
 	return Vector3(0, 0, -signf(fwd.z))
 

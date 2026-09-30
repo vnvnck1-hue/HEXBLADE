@@ -51,6 +51,9 @@ func _ready() -> void:
 	(j.body as Node3D).position.y = RISE_FROM
 	(j.head as Node3D).rotation.x = FOLD
 	shadow.visible = false   # 승강판 위에 서므로 원형 그림자는 쓰지 않는다
+	# 바닥 해치에 고정된 포탑은 움직여 거리를 벌리지 않는다
+	evade.chance = 0.0
+	evade.dodge = 0.0
 
 
 func _build(v: Node3D) -> Dictionary:

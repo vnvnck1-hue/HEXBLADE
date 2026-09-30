@@ -1,0 +1,21 @@
+@echo off
+rem Runs only the B storyboard preview room. Does not start a combat run.
+setlocal
+set "G="
+if exist "%~dp0.tools\godot\Godot_v4.6.3-stable_win64.exe" set "G=%~dp0.tools\godot\Godot_v4.6.3-stable_win64.exe"
+if not defined G (
+  for /d %%D in ("%~dp0..\*") do (
+    if exist "%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe" set "G=%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe"
+  )
+)
+if not defined G (
+  for /d %%P in ("%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine*") do (
+    for %%E in ("%%~fP\Godot_v4*-stable_win64.exe") do set "G=%%~fE"
+  )
+)
+if not defined G (
+  echo Godot 4.6.3 not found. Open project.godot with Godot 4.6 or newer.
+  pause
+  exit /b 1
+)
+start "" "%G%" --path "%~dp0." res://scenes/mammoth_death_lab.tscn

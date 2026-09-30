@@ -112,8 +112,9 @@ func _physics_process(dt: float) -> void:
 		var pos := mi.global_position + v * dt
 		var half: float = pc.half
 		var ang: Vector3 = pc.ang
-		if pos.y < half:
-			pos.y = half
+		var g := Main.gy(pos)
+		if pos.y < g + half:
+			pos.y = g + half
 			if v.y < -1.5:
 				v.y = -v.y * 0.38        # 튕김
 				ang *= 0.6
@@ -123,10 +124,13 @@ func _physics_process(dt: float) -> void:
 			v.z *= 0.72
 			ang *= 0.8
 		var old := mi.global_position
-		if pos.y < 1.2 and Main.inst.is_blocked(Vector3(pos.x, 0, old.z)):
+		# 낮게 날면 벽에, 높이와 상관없이 솟은 절벽 면에 튕긴다
+		var qx := Vector3(pos.x, pos.y, old.z)
+		if (pos.y - g < 1.2 and Main.inst.is_blocked(qx)) or Main.gy(qx) > pos.y:
 			pos.x = old.x
 			v.x = -v.x * 0.4
-		if pos.y < 1.2 and Main.inst.is_blocked(Vector3(pos.x, 0, pos.z)):
+		var qz := Vector3(pos.x, pos.y, pos.z)
+		if (pos.y - g < 1.2 and Main.inst.is_blocked(qz)) or Main.gy(qz) > pos.y:
 			pos.z = old.z
 			v.z = -v.z * 0.4
 		mi.global_position = pos

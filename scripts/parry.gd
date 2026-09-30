@@ -11,7 +11,9 @@ extends Node3D
 ##   parry_source() -> Node3D    공격한 적 (카메라 구도용)
 ##   parry_hit(player)           패링당했을 때의 결과 (반사 / 경직)
 ##   parry_window_open()         판정 창이 열리는 순간의 신호 연출
-## 시간 연출(정지 → 슬로우 → 복귀)은 실제 시간(ms)으로 진행해 슬로우모션 중에도 길이가 일정하다.
+## 모든 패링 공격은 과장된 준비동작 → 십자 별빛 알림 → 알림 후 정확히 TRAVEL 초 뒤에 닿는다 (타이밍이 매번 같다).
+## 성공 연출은 전투 속도를 끊지 않게 짧다: 2프레임 정지 + 몇 프레임 슬로우, 적당한 줌인, 글자 없음.
+## 시간 연출(정지 → 슬로우 → 복귀)은 실제 시간(ms)으로 진행한다.
 
 static var inst: Parry
 
@@ -19,12 +21,13 @@ const EARLY := 0.26           # 닿기 전 이만큼(게임 초)부터 패링된
 const LATE := 0.07            # 닿은 뒤 이만큼까지 봐준다 (입력 지연 보정)
 const EARLY_LOCK := 0.4       # 창이 열리기 전 이만큼 안에 누르면 헛패링: 잠시 패링 불가
 const LOCKOUT := 0.32
-const CUE_TIME := 0.75        # 플레이어 둘레의 타이밍 링이 조여드는 시간
-# 시간 연출 (실제 초)
-const FREEZE := 0.09
-const SLOW := 0.12
-const SLOW_HOLD := 0.62
-const SLOW_END := 1.0
+const TRAVEL := 0.4           # 알림이 뜬 뒤 공격이 플레이어에게 닿기까지 (게임 초). 모든 패링 공격 공통
+const CUE_TIME := TRAVEL      # 플레이어 둘레의 타이밍 링이 조여드는 시간 (알림과 함께 시작)
+# 시간 연출 (실제 초): 단 몇 프레임
+const FREEZE := 0.034         # 2프레임 정지
+const SLOW := 0.3
+const SLOW_HOLD := 0.05       # 슬로우 유지 (약 3프레임)
+const SLOW_END := 0.11        # 이때 정상 속도로 완전히 복귀
 
 var threats: Array = []
 var lock_t := 0.0
@@ -115,7 +118,6 @@ func try_parry(p: Player) -> bool:
 					if e > EARLY and e <= EARLY + EARLY_LOCK:
 						# 너무 일찍 눌렀다: 잠깐 패링을 막아 연타를 막는다
 						lock_t = LOCKOUT
-						Main.inst.hud.popup("EARLY", Color(1.0, 0.55, 0.4), p.global_position + Vector3(0, 2.0, 0))
 						break
 		return false
 	_success(t, p)
@@ -149,7 +151,7 @@ func _update_cue(dt: float, p: Player, t: Object, eta: float) -> void:
 	cue.visible = _cue_k > 0.01
 	if not cue.visible:
 		return
-	cue.global_position = Vector3(p.global_position.x, 0.06, p.global_position.z)
+	cue.global_position = Vector3(p.global_position.x, Main.gy(p.global_position) + 0.06, p.global_position.z)
 	if not on:
 		cue.scale = Vector3.ONE * _cue_k
 		return
@@ -192,7 +194,7 @@ func _success(t: Object, p: Player) -> void:
 	# 부딪히는 지점: 플레이어 가슴 앞
 	var contact := chest + dir * 0.45
 	if kind == "ranged":
-		contact = Vector3(at.x, 0.95, at.z)
+		contact = Vector3(at.x, Main.gy(at) + 0.95, at.z)
 		if contact.distance_to(chest) > 1.4:
 			contact = chest + dir * 1.0
 	p.parry_counter(foe, kind)
@@ -204,12 +206,11 @@ func _success(t: Object, p: Player) -> void:
 		ImpactFrame.inst.parry(contact, dir)
 	var main := Main.inst
 	main.camera.parry_cine(p, src, foe)
-	main.shake(0.7)
-	main.kick(-dir * 0.6)
+	main.shake(0.45)
+	main.kick(-dir * 0.5)
 	Sfx.play("parry", 0.03, 3.0)
-	Sfx.play("slowin", 0.0, -2.0)
 	print("PARRY %s t=%.2f n=%d f=%d" % [kind, main.time, count, main.capture_frame])
-	# 시간: 짧게 멈췄다가 슬로우모션, 실제 시간으로 서서히 복귀
+	# 시간: 2프레임 멈췄다가 몇 프레임 슬로우, 곧바로 정상 속도
 	_seq_start = Parry.now_ms()
 	main.set_slowmo(SLOW)
 	main.hitstop(FREEZE)

@@ -33,6 +33,8 @@ func _ready() -> void:
 		capture_dir = "%s/s%d_%02d" % [capture_dir, run.sector, run.path.size()]
 		DirAccess.make_dir_recursive_absolute(capture_dir)
 	player.hp = run.hp
+	player.energy = run.energy
+	player.missiles = run.missiles
 	var r: Dictionary = map.rooms[map.start_room]
 	r.difficulty = nd.difficulty
 	if nd.kind in [G.Kind.COMBAT, G.Kind.ELITE]:

@@ -18,6 +18,10 @@ const CRAWLER := -3
 const CRAWLER_RATIO := 0.12
 ## 연속 처치 콤보: 이 시간 안에 다음 적을 처치하면 이어진다
 const COMBO_TIME := 3.0
+# 재화 드롭: 적이 죽을 때 가끔 그 자리에 떨어뜨린다 (플레이어가 직접 주워야 한다)
+const DROP_MISSILE := 0.3
+const DROP_ENERGY := 0.18
+const BOSS_LOOT_STEP := 0.1      # 보스 체력이 이만큼 깎일 때마다 미사일 하나를 흘린다
 
 static var inst: Main
 
@@ -74,6 +78,16 @@ var turret_show := false
 var parry_show := false
 ## 크롤러 확인용: 시작 방에 크롤러를 떨어뜨리고 피격 무시 상태로 쏘며 구르기·반사·도탄·변신·공격·처치를 본다
 var crawler_show := false
+## 검술 콤보 확인용: 적이 내려앉기 전 허공을 베어 헛침 경직을 보인 뒤, 튼튼한 드론과 일반 드론을 연타로 잇는다
+var combo_show := false
+## 돌진 연출 확인용: 옆 대시 → 먼 적에게 긴 돌진 베기 → 다시 먼 적 → 관통 일격
+var rush_show := false
+## 확인 모드: 거리 벌리기 (다른 확인 모드에서는 결과가 흔들리지 않게 거리 벌리기를 끈다)
+var evade_show := false
+## 굴곡 확인용: 출발 방의 둔덕·오목한 자리를 차례로 걸어 지나간 뒤 출발점으로 돌아온다
+var terrain_show := false
+var _tshow_goals: Array[Vector3] = []
+var _tshow_wait := 0.0
 var _show_crawler: Crawler
 var _show_room := -1
 var _show_step := 0
@@ -152,6 +166,18 @@ func _parse_args() -> void:
 		elif a == "--crawlershow":
 			showcase = true
 			crawler_show = true
+		elif a == "--comboshow":
+			showcase = true
+			combo_show = true
+		elif a == "--rushshow":
+			showcase = true
+			rush_show = true
+		elif a == "--evadeshow":
+			showcase = true
+			evade_show = true
+		elif a == "--terrainshow":
+			showcase = true
+			terrain_show = true
 
 
 func _setup_input() -> void:
@@ -159,7 +185,7 @@ func _setup_input() -> void:
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
 		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_E, KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "camera": [KEY_C], "cam_preset": [KEY_V],
-		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I], "toon": [KEY_O],
+		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I], "toon": [KEY_O], "lens": [KEY_L],
 	}
 	for action in keys:
 		if not InputMap.has_action(action):
@@ -215,6 +241,8 @@ func _build_environment() -> void:
 func _build_arena() -> void:
 	map = ArenaMap.new()
 	world.add_child(map)
+	# 방 탐색 아레나는 바닥에 완만한 굴곡이 있다. --flat 이면 예전처럼 평지.
+	map.terrain = not OS.get_cmdline_user_args().has("--flat")
 	map.generate(map_seed if map_seed >= 0 else randi())
 	map.build()
 
@@ -229,6 +257,21 @@ func push_out(p: Vector3, radius: float) -> Vector3:
 	return map.push_out(p, radius)
 
 
+## 지면 높이 (지형이 없는 장면은 0)
+func floor_at(p: Vector3) -> float:
+	return map.height_at(p) if map else 0.0
+
+
+## 어느 장면에서든 쓰는 지면 높이 조회 (이펙트·파편이 바닥에 붙을 때)
+static func gy(p: Vector3) -> float:
+	return inst.floor_at(p) if is_instance_valid(inst) else 0.0
+
+
+## 플레이어용: 높이는 그대로 두고 feet 보다 climb 넘게 높은 지형을 벽처럼 밀어낸다
+func push_out_feet(p: Vector3, radius: float, feet: float, climb: float) -> Vector3:
+	return map.push_out_feet(p, radius, feet, climb) if map and map.terrain else p
+
+
 func add_bullet(b: Bullet) -> void:
 	if not b.from_player:
 		b.add_to_group("enemy_bullets")
@@ -236,7 +279,7 @@ func add_bullet(b: Bullet) -> void:
 
 
 func mouse_ground(h: float) -> Vector3:
-	var mp := get_viewport().get_mouse_position()
+	var mp := camera.render_pos(get_viewport().get_mouse_position())
 	var o := camera.project_ray_origin(mp)
 	var d := camera.project_ray_normal(mp)
 	if abs(d.y) < 0.0001:
@@ -371,6 +414,80 @@ func _run_crawler_show() -> void:
 		print("CRAWLER %.3f HP_LOW" % time)
 
 
+func _run_combo_show() -> void:
+	if _show_step == 0 and time >= 0.2:
+		_show_step = 1
+		player.invuln = 999.0
+		var p := player.global_position
+		var tank := _spawn_show(p, Vector3(0.3, 0, -3.4), 40)
+		tank.desired = 1.6
+		_spawn_show(p, Vector3(3.6, 0, -5.0), 3)
+		_spawn_show(p, Vector3(-3.8, 0, -4.2), 3)
+		_show_aim = p + Vector3(5.0, 0.95, 1.5)
+
+
+## 드론 둘 · 요격기 · 크롤러를 띄우고, 봇이 가까운 적에게 붙어 광선검을 연타한다
+func _run_evade_show() -> void:
+	if _show_step == 0 and time >= 0.2:
+		_show_step = 1
+		player.invuln = 999.0
+		# 가까운 전투방에 가두고 싸운다 (구체 크롤러가 통로로 빠져나가지 않게)
+		_show_room = map.start_room
+		var bd := 1e9
+		for r in map.rooms:
+			var d: float = map.room_center_world(r.id).distance_to(player.global_position)
+			if r.combat and d < bd:
+				bd = d
+				_show_room = r.id
+		map.rooms[_show_room].state = "active"
+		map.close_gates(_show_room)
+		player.global_position = map.room_center_world(_show_room)
+		camera.snap(player.global_position)
+		var p := player.global_position
+		var foes: Array[Enemy] = []
+		if OS.get_cmdline_user_args().has("--evadesolo"):
+			# 회피 반격만 또렷하게 보기: 드론 한 기가 광선검을 항상 순간이동으로 피한다
+			var solo := Enemy.new()
+			world.add_child(solo)
+			solo.global_position = map.random_spot(_show_room, p, 3.5)
+			solo.hp = 9999
+			solo.evade.chance = 0.0
+			solo.evade.dodge = 1.0
+			return
+		for i in 2:
+			var e := Enemy.new()
+			e.pattern = Enemy.Pattern.AIMED_BURST
+			foes.append(e)
+		foes.append(Striker.new())
+		foes.append(Crawler.new())
+		for e in foes:
+			world.add_child(e)
+			e.global_position = map.random_spot(_show_room, p, 3.5)
+			e.hp = 9999
+
+
+func _run_rush_show() -> void:
+	# 방 가운데 기준으로 세운다 (대시로 벽가에 붙어도 적이 방 밖으로 밀려나지 않게)
+	var p := map.room_center_world(map.start_room)
+	var steps := [0.2, 1.6, 2.6, 3.7]
+	if _show_step >= steps.size() or time < steps[_show_step]:
+		return
+	match _show_step:
+		0:
+			player.invuln = 999.0
+			_show_aim = p + Vector3(-3.0, 0.95, 0.5)
+		1:
+			player.global_position = p + Vector3(-2.5, 0, 1.0)
+			camera.snap(player.global_position)
+			_show_aim = _spawn_show(p, Vector3(3.5, 0, -1.5), 40).global_position + Vector3(0, 0.95, 0)
+		2:
+			_show_aim = _spawn_show(p, Vector3(-3.5, 0, 1.5), 40).global_position + Vector3(0, 0.95, 0)
+		3:
+			_show_aim = _spawn_show(p, Vector3(2.5, 0, 3.5), 40).global_position + Vector3(0, 0.95, 0)
+			player._arm_phantom()
+	_show_step += 1
+
+
 func _run_parry_show() -> void:
 	if _show_step == 0 and time >= 0.2:
 		_show_step = 1
@@ -392,6 +509,14 @@ func _run_parry_show() -> void:
 
 
 func _run_showcase() -> void:
+	if terrain_show:
+		if _tshow_goals.is_empty() and _show_step == 0:
+			_show_step = 1
+			player.invuln = 999.0
+			_tshow_goals = _terrain_goals()
+		if fmod(time, 0.25) < get_physics_process_delta_time():
+			print("TSHOW t=%.2f pos=(%.1f,%.2f,%.1f) gy=%.2f air=%s goals=%d" % [time, player.global_position.x, player.global_position.y, player.global_position.z, player.gy, player.airborne, _tshow_goals.size()])
+		return
 	if parry_show:
 		_run_parry_show()
 		return
@@ -400,6 +525,15 @@ func _run_showcase() -> void:
 		return
 	if crawler_show:
 		_run_crawler_show()
+		return
+	if combo_show:
+		_run_combo_show()
+		return
+	if rush_show:
+		_run_rush_show()
+		return
+	if evade_show:
+		_run_evade_show()
 		return
 	var p := player.global_position
 	var steps := [0.2, 3.6, 4.2, 5.2]
@@ -422,7 +556,7 @@ func _run_showcase() -> void:
 			for i in 7:
 				var a := TAU * i / 7.0
 				_spawn_show(p, Vector3(cos(a), 0, sin(a)) * randf_range(4.5, 7.0), 4)
-			player.ult = 1.0
+			player.missiles = Player.MISSILE_MAX
 	_show_step += 1
 
 
@@ -502,7 +636,7 @@ func on_enemy_killed(_e: Enemy) -> void:
 	var pts := 100 * combo * mult
 	score += pts
 	hud.combo_pop(pts, _e.kill_source)
-	player.ult = minf(1.0, player.ult + Player.ULT_PER_KILL)
+	_drop_loot(_e)
 	hitstop(0.07)
 	shake(0.35)
 	camera.kill_punch(_e.global_position)
@@ -510,6 +644,38 @@ func on_enemy_killed(_e: Enemy) -> void:
 		room_kills += 1
 		if room_kills >= room_total:
 			_clear_room()
+
+
+func _drop_loot(e: Enemy) -> void:
+	var pos := e.global_position
+	if randf() < DROP_MISSILE:
+		drop_pickup("missile", pos)
+	if randf() < DROP_ENERGY:
+		drop_pickup("energy", pos)
+
+
+func drop_pickup(kind: String, pos: Vector3, amount := 1) -> Pickup:
+	var pk := Pickup.new()
+	pk.kind = kind
+	pk.amount = amount
+	pos.y = maxf(pos.y, gy(pos)) + 0.8
+	pk.position = pos
+	world.add_child(pk)
+	return pk
+
+
+var _boss_loot_given := 0
+## 보스전은 잡몹이 없으므로, 보스 체력이 BOSS_LOOT_STEP 깎일 때마다 보스 앞에 미사일을 흘린다
+func boss_loot(boss_node: Enemy, hp_frac: float) -> void:
+	var due := int((1.0 - hp_frac) / BOSS_LOOT_STEP)
+	while _boss_loot_given < due:
+		_boss_loot_given += 1
+		var pos := boss_node.global_position.lerp(player.global_position, 0.55)
+		if is_blocked(pos):
+			pos = player.global_position
+		drop_pickup("missile", pos)
+		if _boss_loot_given % 2 == 0:
+			drop_pickup("energy", pos)
 
 
 func on_player_hurt() -> void:
@@ -565,6 +731,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("cam_preset"):
 		camera.set_preset(camera.preset_index + 1)
 		hud.banner("CAMERA  %s" % camera.p.name, Color(0.8, 0.9, 1.0), camera.p.desc)
+	elif event.is_action_pressed("lens") and camera.has_method("cycle_lens"):
+		var lv: Array = camera.call("cycle_lens")
+		hud.banner("LENS  %s" % lv[0], Color(0.8, 0.9, 1.0), lv[1])
 	elif event.is_action_pressed("mute"):
 		Sfx.inst.muted = not Sfx.inst.muted
 	elif event.is_action_pressed("impact"):
@@ -653,9 +822,50 @@ func _capture() -> void:
 		get_tree().quit()
 
 
+## 출발 방의 굴곡 견학 순서: 둔덕·오목한 자리 가운데를 차례로 · 출발점
+func _terrain_goals() -> Array[Vector3]:
+	var out: Array[Vector3] = []
+	var home := map.room_center_world(map.start_room)
+	for f in map.feats:
+		if f.k == "mound" and map.room_at(Vector3(f.c.x, 0, f.c.y)) == map.start_room:
+			out.append(Vector3(f.c.x, f.h, f.c.y))
+	out.append(home)
+	return out
+
+
+## 굴곡 견학 봇: 경로를 따라 걸어 굴곡을 지나간다
+func _terrain_bot(p: Player, out: Dictionary) -> Dictionary:
+	if _tshow_goals.is_empty():
+		return out
+	var goal: Vector3 = _tshow_goals[0]
+	var flat := Vector2(goal.x - p.global_position.x, goal.z - p.global_position.z)
+	if flat.length() < 0.7:
+		_tshow_wait += get_physics_process_delta_time()
+		if _tshow_wait > 0.8:
+			_tshow_wait = 0.0
+			_tshow_goals.pop_front()
+			bot_path.clear()
+		return out
+	bot_path_t -= get_physics_process_delta_time()
+	if bot_path.is_empty() or bot_path_t <= 0.0:
+		bot_path_t = 0.5
+		bot_path = map.find_path(p.global_position, goal)
+	while bot_path.size() > 1 and Vector2(bot_path[0].x - p.global_position.x, bot_path[0].z - p.global_position.z).length() < 0.6:
+		bot_path.pop_front()
+	if bot_path.is_empty():
+		return out
+	var wp: Vector3 = bot_path[0]
+	var d := Vector3(wp.x - p.global_position.x, 0, wp.z - p.global_position.z)
+	out.move = d.normalized()
+	out.aim = p.global_position + d.normalized() * 4.0 + Vector3(0, 0.95, 0)
+	return out
+
+
 ## 자동 플레이: 가까운 적 주위를 돌며 사격, 가까운 적탄은 회피
 func bot_input(p: Player) -> Dictionary:
-	var out := {"move": Vector3.ZERO, "aim": p.global_position - Vector3(0, 0, 3), "fire": false, "slash": false, "dash": false, "charge": false, "boost": false}
+	var out := {"move": Vector3.ZERO, "aim": p.global_position - Vector3(0, 0, 3), "fire": false, "slash": false, "dash": false, "charge": false, "boost": false, "jump": false}
+	if terrain_show:
+		return _terrain_bot(p, out)
 	if turret_show:
 		# 천천히 원을 그리며 포탑이 따라오는지 보고, 5.5초에 한 기를 베어 절단 연출을 본 뒤 남은 포탑을 쏜다
 		var a := time * 0.5
@@ -675,6 +885,55 @@ func bot_input(p: Player) -> Dictionary:
 				out.aim = (e as Node3D).global_position + Vector3(0, 0.95, 0)
 		var th := Parry.inst.best_threat()
 		out.dash = th != null and th.parry_eta() < Parry.EARLY * 0.5
+		return out
+	if rush_show:
+		out.aim = _show_aim
+		var tt := time
+		if tt > 1.1 and tt < 1.12:
+			out.move = Vector3(1, 0, 0.2)
+			out.dash = true
+		out.slash = (tt > 2.3 and tt < 2.317) or (tt > 3.3 and tt < 3.317) or (tt > 4.3 and tt < 4.317)
+		return out
+	if evade_show:
+		# 가장 가까운 적에게 다가가 붙으면 0.15초마다 검을 휘두른다
+		var bd4 := 1e9
+		var tgt: Enemy = null
+		for e in get_tree().get_nodes_in_group("enemies"):
+			var en := e as Enemy
+			var dd := en.global_position.distance_to(p.global_position)
+			if en.landed and dd < bd4:
+				bd4 = dd
+				tgt = en
+		if tgt:
+			out.aim = tgt.global_position + Vector3(0, 0.95, 0)
+			var to := tgt.global_position - p.global_position
+			to.y = 0
+			out.move = to.normalized() if bd4 > 2.2 else Vector3.ZERO
+			out.slash = bd4 < 3.2 and fmod(time, 0.15) < 0.017
+		return out
+	if combo_show:
+		# 0.5초: 적이 아직 내려앉기 전 허공을 벤다 (헛침 → 경직 중 연타는 무시된다)
+		# 1.3초~: 가까운 적을 조준하고 0.1초마다 연타 → 적중할 때마다 다음 단으로 이어진다
+		# 3.9초~4.5초: 손을 떼 링크가 끊기는 것을 보이고(4초에 대시) 다시 연타
+		out.aim = _show_aim
+		var tt := time
+		# 대시 확인: 시작 직후 옆으로 한 번, 링크를 끊은 사이에 한 번
+		if (tt > 0.25 and tt < 0.27) or (tt > 4.0 and tt < 4.02):
+			out.move = Vector3(-1, 0, 0.3) if tt < 1.0 else Vector3(1, 0, -0.2)
+			out.dash = true
+		if tt < 1.2:
+			out.slash = (tt > 0.5 and tt < 0.52) or (fmod(tt, 0.1) < 0.017 and tt > 0.6 and tt < 0.95)
+			return out
+		var bd3 := 1e9
+		for e in get_tree().get_nodes_in_group("enemies"):
+			var en := e as Enemy
+			if not en.landed:
+				continue
+			var dd := en.global_position.distance_to(p.global_position)
+			if dd < bd3:
+				bd3 = dd
+				out.aim = en.global_position + Vector3(0, 0.95, 0)
+		out.slash = fmod(tt, 0.1) < 0.017 and not (tt > 3.9 and tt < 4.5)
 		return out
 	if crawler_show:
 		# 크롤러와 6m 안팎을 유지하며 옆으로 돌고 계속 쏜다: 구체일 때는 도탄, 거미일 때는 약점 피격
@@ -788,7 +1047,7 @@ func bot_ult_pointer(p: Player, ptr: Vector2) -> Vector2:
 		var en := e as Enemy
 		if not en.alive or not en.landed or p.locks.has(en):
 			continue
-		var sp := camera.unproject_position(en.global_position + Vector3(0, 1.0, 0))
+		var sp := camera.screen_pos(en.global_position + Vector3(0, 1.0, 0))
 		var d := sp.distance_to(ptr)
 		if d < bd:
 			bd = d

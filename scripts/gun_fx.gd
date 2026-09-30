@@ -1,6 +1,7 @@
 class_name GunFX
 extends Node3D
-## 총기 연출 전용: 총구 화염(별 모양 불꽃·순간 조명·연기), 탄피 배출, 착탄(파편·먼지·불꽃).
+## 총기 연출 전용: 총구 화염(톱니 창 불꽃·순간 조명·연기), 탄피 배출, 착탄(파편·먼지·불꽃).
+## 불꽃·섬광·연기 모양은 손그림 플립북 모듈(ToonGunFX)이 그리고, 여기서는 조명·탄피·파편·불똥을 더한다.
 ## 탄피와 벽 파편은 바닥에 떨어져 한동안 남아 전투 흔적을 쌓는다. 게임 판정과 무관하다.
 
 const GRAVITY := 22.0
@@ -11,16 +12,11 @@ const CHIP_LIFE := 11.0
 const FADE := 1.5
 
 const BRASS := Color("f2c22e")
-const FLASH_CORE := Color("fffbe0")
-const FLASH_MID := Color("ffd23a")
-const FLASH_TIP := Color("ff7a14")
 const SPARK_COLORS: Array[Color] = [Color("fffbe0"), Color("ffd23a"), Color("ff8a1a")]
 const SMOKE := Color(0.62, 0.62, 0.7)
 
 static var inst: GunFX
 
-var _flash_mesh: ArrayMesh
-var _flash_mat: StandardMaterial3D
 var _smoke_mat: ShaderMaterial
 var _sphere: SphereMesh
 var _casing_mesh: CylinderMesh
@@ -36,13 +32,7 @@ var _tink_t := 0.0
 
 func _ready() -> void:
 	inst = self
-	_flash_mesh = _build_flash_mesh()
-	_flash_mat = StandardMaterial3D.new()
-	_flash_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	_flash_mat.vertex_color_use_as_albedo = true
-	_flash_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	_flash_mat.albedo_color = Color(1.6, 1.6, 1.6)
-	_flash_mesh.surface_set_material(0, _flash_mat)
+	add_child(ToonGunFX.new())
 
 	var sh := Shader.new()
 	sh.code = """
@@ -94,33 +84,6 @@ void fragment() {
 	_streak_mesh.material = smat
 
 
-## 4갈래 별 모양 불꽃. 앞(-Z)으로 긴 갈래, 옆으로 짧은 갈래. 가운데는 흰색, 끝은 주황.
-func _build_flash_mesh() -> ArrayMesh:
-	var st := SurfaceTool.new()
-	st.begin(Mesh.PRIMITIVE_TRIANGLES)
-	# [각도(앞=0), 길이, 폭]
-	var spikes := [[0.0, 0.62, 0.11], [0.95, 0.3, 0.08], [-0.95, 0.3, 0.08], [2.3, 0.14, 0.06], [-2.3, 0.14, 0.06]]
-	for plane in 2:
-		for s in spikes:
-			var a: float = s[0]
-			var d := Vector3(-sin(a), 0, -cos(a))
-			var side := d.cross(Vector3.UP).normalized() * float(s[2])
-			var tip := d * float(s[1])
-			var base_c := Vector3(0, 0, 0)
-			if plane == 1:
-				# 세로 판: 앞 갈래만 위아래로 (옆 갈래는 위·아래로 세운다)
-				tip = Basis(Vector3.FORWARD, PI * 0.5) * tip
-				side = Basis(Vector3.FORWARD, PI * 0.5) * side
-			st.set_color(FLASH_CORE); st.add_vertex(base_c + side)
-			st.set_color(FLASH_TIP); st.add_vertex(tip)
-			st.set_color(FLASH_CORE); st.add_vertex(base_c - side)
-			# 안쪽 밝은 심
-			st.set_color(FLASH_CORE); st.add_vertex(base_c + side * 0.45)
-			st.set_color(FLASH_MID); st.add_vertex(tip * 0.6)
-			st.set_color(FLASH_CORE); st.add_vertex(base_c - side * 0.45)
-	return st.commit()
-
-
 # ── 총구 화염 ───────────────────────────────────────────
 
 ## size 1.0 = 플레이어 소총. light: 순간 조명을 켤지 (연사 중 조명이 너무 많아지지 않게)
@@ -129,30 +92,20 @@ static func muzzle(pos: Vector3, dir: Vector3, size := 1.0, light := true) -> vo
 		return
 	var g := inst
 	var fwd := Vector3(dir.x, 0, dir.z).normalized()
-	# 별 모양 불꽃: 매번 크기·비틀림이 달라 깜빡이듯 보인다
-	var mi := MeshInstance3D.new()
-	mi.mesh = g._flash_mesh
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	g.add_child(mi)
-	mi.global_transform = Transform3D(Basis.looking_at(fwd, Vector3.UP) * Basis(Vector3.FORWARD, randf_range(-0.5, 0.5)), pos)
-	var k := size * randf_range(0.8, 1.2)
-	mi.scale = Vector3(k * randf_range(0.8, 1.1), k, k * randf_range(0.85, 1.25))
-	var tw := mi.create_tween()
-	tw.tween_interval(0.025)
-	tw.tween_property(mi, "scale", mi.scale * Vector3(0.2, 0.2, 1.3), 0.035)
-	tw.tween_callback(mi.queue_free)
-	# 가운데 섬광 구체
-	FX.flash(pos + fwd * 0.06 * size, FLASH_CORE, 0.3 * size, 0.045)
+	# 톱니 창 불꽃 · 옆 파편 · 짧은 섬광 (손그림 플립북)
+	ToonGunFX.muzzle(pos, fwd, size)
 	if light:
+		# 순간 조명: 매우 밝게 켜졌다가 급격히 꺼진다 (주변 바닥·벽이 번쩍인다)
 		var l := OmniLight3D.new()
-		l.light_color = Color("ffb850")
-		l.light_energy = 2.2 * size
-		l.omni_range = 3.2 * size
+		l.light_color = Color("ffb044")
+		l.light_energy = minf(9.0 * size, 14.0) * randf_range(0.85, 1.15)
+		l.omni_range = 6.5 * sqrt(size)
+		l.omni_attenuation = 1.4
 		l.shadow_enabled = false
 		g.add_child(l)
-		l.global_position = pos + fwd * 0.2 + Vector3(0, 0.2, 0)
+		l.global_position = pos + fwd * 0.35 + Vector3(0, 0.35, 0)
 		var lt := l.create_tween()
-		lt.tween_property(l, "light_energy", 0.0, 0.07)
+		lt.tween_property(l, "light_energy", 0.0, 0.1).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
 		lt.tween_callback(l.queue_free)
 	# 옅은 총구 연기
 	if randf() < 0.7:
@@ -193,16 +146,13 @@ static func impact_wall(pos: Vector3, normal: Vector3, fwd: Vector3, k := 1.0) -
 	var g := inst
 	var n := Vector3(normal.x, 0, normal.z).normalized()
 	var refl := (fwd - 2.0 * fwd.dot(n) * n).normalized()
-	FX.flash(pos, FLASH_CORE, 0.34 * k, 0.05)
-	g._star(pos, n, 0.45 * k)
-	g._spray(pos, (refl + n).normalized(), int(7 * k), 55.0, 9.0, 0.22)
+	ToonGunFX.impact(pos, n, k)
+	g._spray(pos, (refl + n).normalized(), int(4 * k), 55.0, 9.0, 0.2)
 	for i in int(randf_range(2, 4) * k):
 		var c := Color(0.2, 0.2, 0.33).lerp(Color(0.09, 0.09, 0.16), randf())
 		var v := (n * randf_range(1.5, 3.5) + refl * randf_range(0.5, 2.0)).rotated(Vector3.UP, randf_range(-0.7, 0.7))
 		v.y = randf_range(2.0, 4.5)
 		g._chip(pos + n * 0.05, v, c, randf_range(0.7, 1.2))
-	for i in 2:
-		g._smoke(pos + n * 0.15, n * randf_range(0.4, 0.9) + Vector3(0, randf_range(0.3, 0.7), 0), 0.22 * k, 0.55, 0.45 + randf() * 0.2)
 
 
 ## 적 몸체에 맞음: 흰 섬광, 관통 방향으로 뿜는 불꽃, 몸체색 부스러기
@@ -210,10 +160,8 @@ static func impact_body(pos: Vector3, fwd: Vector3, body_c: Color, k := 1.0) -> 
 	if inst == null:
 		return
 	var g := inst
-	FX.flash(pos, Color.WHITE, 0.5 * k, 0.06)
-	g._star(pos - fwd * 0.1, -fwd, 0.55 * k)
-	g._spray(pos, fwd, int(6 * k), 35.0, 8.0, 0.2)
-	g._spray(pos, -fwd, int(3 * k), 60.0, 5.0, 0.15)
+	ToonGunFX.impact(pos - fwd * 0.1, -fwd, 0.9 * k, ToonGunFX.SMOKE_LIT.lerp(body_c, 0.3))
+	g._spray(pos, fwd, int(4 * k), 35.0, 8.0, 0.18)
 	for i in int(randf_range(1, 3) * k):
 		var v := (fwd * randf_range(1.5, 3.0)).rotated(Vector3.UP, randf_range(-0.9, 0.9))
 		v.y = randf_range(2.0, 4.0)
@@ -221,22 +169,6 @@ static func impact_body(pos: Vector3, fwd: Vector3, body_c: Color, k := 1.0) -> 
 
 
 # ── 내부 요소 ───────────────────────────────────────────
-
-## 착탄 지점의 작은 별 모양 섬광 (normal 방향으로 벌어진다)
-func _star(pos: Vector3, n: Vector3, size: float) -> void:
-	var mi := MeshInstance3D.new()
-	mi.mesh = _flash_mesh
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	add_child(mi)
-	var d := Vector3(n.x, 0, n.z)
-	if d.length() < 0.01:
-		d = Vector3.FORWARD
-	mi.global_transform = Transform3D(Basis.looking_at(d.normalized(), Vector3.UP) * Basis(Vector3.FORWARD, randf() * TAU), pos)
-	mi.scale = Vector3.ONE * size * Vector3(1.2, 1.2, 0.6)
-	var tw := mi.create_tween()
-	tw.tween_property(mi, "scale", Vector3.ONE * 0.01, 0.07).set_ease(Tween.EASE_IN)
-	tw.tween_callback(mi.queue_free)
-
 
 ## 방향이 있는 불꽃 막대 (속도 방향으로 정렬)
 func _spray(pos: Vector3, dir: Vector3, count: int, spread: float, speed: float, life: float) -> void:
@@ -340,7 +272,7 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 		v.y -= GRAVITY * dt
 		var old := mi.global_position
 		var pos := old + v * dt
-		var floor_y: float = pc.r if is_casing else pc.half
+		var floor_y: float = (pc.r if is_casing else pc.half) + Main.gy(pos)
 		var ang: Vector3 = pc.ang
 		if pos.y < floor_y:
 			pos.y = floor_y
@@ -367,11 +299,11 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 					mi.rotation = Vector3(0, mi.rotation.y, 0)
 					mi.scale = Vector3.ONE * float(pc.s0)
 				pos.y = floor_y
-		if main and pos.y < 1.3:
-			if main.is_blocked(Vector3(pos.x, 0, old.z)):
+		if main and pos.y - floor_y < 1.3:
+			if main.is_blocked(Vector3(pos.x, pos.y, old.z)) or Main.gy(Vector3(pos.x, 0, old.z)) > pos.y:
 				pos.x = old.x
 				v.x = -v.x * 0.35
-			if main.is_blocked(Vector3(pos.x, 0, pos.z)):
+			if main.is_blocked(Vector3(pos.x, pos.y, pos.z)) or Main.gy(pos) > pos.y:
 				pos.z = old.z
 				v.z = -v.z * 0.35
 		mi.global_position = pos

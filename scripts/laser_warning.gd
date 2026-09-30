@@ -61,7 +61,7 @@ void fragment() {
 ## origin·dir 은 수평 기준, length 는 벽까지의 거리
 func set_pose(origin: Vector3, dir: Vector3, length: float, width: float, beam_y := 0.95) -> void:
 	var d := Vector3(dir.x, 0, dir.z).normalized()
-	global_position = Vector3(origin.x, 0.035, origin.z)
+	global_position = Vector3(origin.x, Main.gy(origin) + 0.035, origin.z)
 	global_basis = Basis.looking_at(d, Vector3.UP)
 	strip.scale = Vector3(width, 1, length)
 	strip.position = Vector3(0, 0, -length * 0.5)

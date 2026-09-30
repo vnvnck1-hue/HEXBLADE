@@ -135,6 +135,8 @@ func _physics_process(dt: float) -> void:
 		_spawn_boss()
 	if OS.get_cmdline_user_args().has("--godmode"):
 		player.invuln = 999.0
+	if boss and boss.alive:
+		boss_loot(boss, boss.boss_hp / BossEnemy.MAX_HP)
 	# 전장 경계: 좌우 차선 안, 보스 앞쪽으로만
 	if player.alive:
 		var p := player.global_position
@@ -193,7 +195,7 @@ func bot_input(p: Player) -> Dictionary:
 	if cyc > 5.6 and boss.alive:
 		out.charge = true
 		out.fire = false
-	out.ult = p.ult >= 1.0 and boss.alive and boss.landed
+	out.ult = p.missiles > 0 and boss.alive and boss.landed
 	# 기본 위치: 보스 앞 7m, 좌우로 천천히 오간다
 	if fmod(time, 5.0) < 0.02:
 		bot_side = -bot_side

@@ -37,7 +37,7 @@ const NAMES := {
 var stage: Stage
 ## 강력 레이저가 관통하지 못하고 표면에서 막힌다 (beam_impact.gd 가 읽음)
 var blocks_beam := true
-## 검으로 맞혀도 플레이어 검 쿨다운이 초기화되지 않는다 (player.gd _slash_hit 가 읽음)
+## 보스: 검술 콤보 마무리(5타) 뒤 숨 고르기가 길어진다 (sword_combo.gd 가 읽음, 붙어서 무한 연타 방지)
 var no_slash_reset := true
 var bar: Bar
 var st := St.ENTER

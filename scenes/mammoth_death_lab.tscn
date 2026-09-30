@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/mammoth_death_lab.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/presentation/mammoth_death_b.gd" id="2"]
+
+[node name="MammothDeathLab" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Presentation" type="Node3D" parent="."]
+script = ExtResource("2")

@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-30",
+  "scene": "res://scenes/mammoth_death_lab.tscn",
+  "entry": "Lobby direct button: 연출 테스트 · MAMMOTH B안",
+  "engine": "Godot 4.6.3.stable.official.7d41c59c4",
+  "automated_test": "tests/mammoth_death_lab_check.gd",
+  "automated_result": "MAMMOTH_DEATH_LAB_CHECK_OK",
+  "simulation_fps": [30, 60, 144],
+  "reset_and_seek_cycles": 10,
+  "checks_passed": [
+    "5.20-second completion and 90-degree final roll",
+    "One hit, track-detach, impact, and blast cue per playback",
+    "Completion signal emitted once per playback",
+    "Deterministic final position across frame rates",
+    "No hull penetration; final hull minimum height 0.02m",
+    "No child-node growth over reset and seek cycles",
+    "Spark and smoke counts bounded",
+    "Pause freezes presentation; half-speed advances half the time",
+    "Seeking to the end holds the final frame",
+    "Warmup does not hold a flash",
+    "Fixed camera, shake off, and flash off",
+    "Engine time scale and physics tick rate unchanged",
+    "Main gameplay instance absent",
+    "Run active, HP, score, coins, kills, sector, and current sector state unchanged",
+    "Back returns to actual lobby; actual lobby button opens the lab"
+  ],
+  "render_review": {
+    "renderer": "Forward+ / Vulkan 1.4.329",
+    "gpu": "NVIDIA GeForce RTX 3070",
+    "resolution": [1280, 800],
+    "fixed_fps": 60,
+    "frame_count": 105,
+    "duration_with_warmup_and_end_hold_seconds": 7,
+    "stderr_empty": true,
+    "reviewed": ["Six camera compositions", "Track and turret detachment", "Secondary blast and shock ring", "Final grounded wreck", "Return to quarter view", "Lobby collapsed and expanded scrolling layout"],
+    "preview": "output/mammoth-death-b/engine-preview.gif",
+    "contact_sheet": "output/mammoth-death-b/engine-contact-sheet.jpg"
+  },
+  "production_isolation": {
+    "approved_for_production": false,
+    "production_death_hooks_added": false,
+    "baseline_sha256_files_verified_unchanged": ["scripts/boss_enemy.gd", "scripts/boss_main.gd", "scripts/boss_camera.gd", "scripts/boss_tank.gd", "scripts/boss_stage.gd", "scripts/main.gd", "scripts/run_state.gd", "project.godot", "scenes/boss.tscn"]
+  },
+  "limits": ["Capture is not a performance benchmark", "Other GPU and resolution combinations untested", "Synthesized audio timing implemented; speaker listening review pending"]
+}

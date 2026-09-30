@@ -84,6 +84,8 @@ void fragment() {
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never;
 uniform float progress = 0.0;
+uniform vec3 deep = vec3(0.78, 0.06, 0.1);
+uniform vec3 light = vec3(1.0, 0.72, 0.55);
 void fragment() {
 	float u = UV.x;
 	float v = UV.y;
@@ -96,9 +98,7 @@ void fragment() {
 	float vmin = 1.0 - shape * mix(0.25, 0.95, along);
 	if (v < vmin) discard;
 	float edge = smoothstep(vmin, 1.0, v);
-	vec3 green = vec3(0.12, 0.72, 0.28);
-	vec3 light = vec3(0.86, 1.0, 0.42);
-	ALBEDO = mix(green, light, edge) * 1.35;
+	ALBEDO = mix(deep, light, edge) * 1.35;
 	ALPHA = clamp(along * 1.8, 0.0, 1.0) * (1.0 - smoothstep(0.7, 1.0, progress)) * 0.95;
 }
 """
@@ -281,7 +281,9 @@ static func enemy_explosion(pos: Vector3, k := 1.0) -> void:
 
 ## 스타일라이즈드 화염 폭발 (explosion_fx.gd). k = 크기 배율, 1 ≈ 반경 1.6m
 static func fire_explosion(pos: Vector3, k := 1.0) -> void:
-	StylizedExplosion.spawn(root, pos, k)
+	StylizedExplosion.spawn(root, pos, k, Main.gy(pos))
+	# 공기가 휘는 굴절 충격파 + 불덩이 안쪽 아지랑이
+	Distortion.burst(pos, StylizedExplosion.BASE_R * k * 2.4, 0.4 + 0.12 * sqrt(k), clampf(0.7 + 0.3 * k, 0.7, 1.6), 1.0)
 
 
 ## 추락하는 적이 뿜는 연기
@@ -298,19 +300,19 @@ static func smoke(pos: Vector3) -> void:
 
 
 static func player_hurt(pos: Vector3) -> void:
-	var ground := Vector3(pos.x, 0.25, pos.z)
+	var ground := Vector3(pos.x, Main.gy(pos) + 0.25, pos.z)
 	ring(ground, 4.2, Pal.RING_PINK, 0.4)
 	puffs(pos, 7, Pal.PUFF_RED, 0.7, 0.8, 0.55)
 
 
 static func player_death(pos: Vector3) -> void:
-	ring(Vector3(pos.x, 0.25, pos.z), 6.0, Pal.RING_PINK, 0.6)
+	ring(Vector3(pos.x, Main.gy(pos) + 0.25, pos.z), 6.0, Pal.RING_PINK, 0.6)
 	puffs(pos, 14, Pal.PUFF_MAGENTA, 1.4, 1.3, 1.1)
 	sparks(pos, 24, [Pal.P_LIGHT, Pal.P_BODY, Pal.CYAN], 10.0, 0.9, -16.0, 0.14)
 
 
 static func victory(pos: Vector3) -> void:
-	ring(Vector3(pos.x, 0.2, pos.z), 5.0, Pal.RING_CYAN, 0.7)
+	ring(Vector3(pos.x, Main.gy(pos) + 0.2, pos.z), 5.0, Pal.RING_CYAN, 0.7)
 	for i in 10:
 		var a := TAU * i / 10.0
 		var d := Vector3(cos(a), 0, sin(a))
@@ -332,14 +334,14 @@ static func spawn_marker(pos: Vector3, dur: float) -> void:
 	t.rings = 24
 	var mi := Pal.flat_mesh(t, Pal.E_RED, 1.2)
 	mi.scale = Vector3(1.6, 0.06, 1.6)
-	_add(mi, Vector3(pos.x, 0.03, pos.z))
+	_add(mi, Vector3(pos.x, Main.gy(pos) + 0.03, pos.z))
 	var tw := mi.create_tween()
 	tw.tween_property(mi, "scale", Vector3(0.7, 0.06, 0.7), dur).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	tw.tween_callback(mi.queue_free)
 
 
 static func land_dust(pos: Vector3) -> void:
-	sparks(Vector3(pos.x, 0.1, pos.z), 10, [Color("8a8ac8"), Color("4a4a80")], 4.0, 0.35, -4.0, 0.1)
+	sparks(Vector3(pos.x, Main.gy(pos) + 0.1, pos.z), 10, [Color("8a8ac8"), Color("4a4a80")], 4.0, 0.35, -4.0, 0.1)
 
 
 ## 검 원호. style: 0 가로 베기 · 1 역베기(좌우 반전) · 2 내려찍기(세로 호) · 3 회전 베기(호 3개 연속)
@@ -353,16 +355,16 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 			# 호를 세워 위 → 아래로 긋고, 앞바닥을 내려친 충격을 더한다
 			_slash_arc(pos + Vector3(0, 0.3, 0), up * Basis(Vector3.BACK, PI * 0.5) * Basis.from_scale(Vector3(0.9, 1, 1.1)), 0.06)
 			var fwd := -up.z
-			var hit := Vector3(pos.x, 0.05, pos.z) + fwd * 2.2
+			var hit := Vector3(pos.x, Main.gy(pos) + 0.05, pos.z) + fwd * 2.2
 			shockwave(hit, Pal.BLADE, 2.2, 0.25, 0.07)
-			sparks(hit + Vector3(0, 0.1, 0), 14, [Color.WHITE, Pal.BLADE, Color("e8ffb0")], 7.0, 0.35, -12.0, 0.08)
+			sparks(hit + Vector3(0, 0.1, 0), 14, [Color.WHITE, Pal.BLADE, Pal.BLADE_CORE], 7.0, 0.35, -12.0, 0.08)
 		3:
 			for i in 3:
 				_slash_arc(pos, Basis(Vector3.UP, yaw + i * TAU / 3.0) * Basis.from_scale(Vector3(1.05, 1, 1.05)), 0.045, i * 0.033)
-			shockwave(Vector3(pos.x, 0.05, pos.z), Pal.BLADE, 3.2, 0.28, 0.06)
+			shockwave(Vector3(pos.x, Main.gy(pos) + 0.05, pos.z), Pal.BLADE, 3.2, 0.28, 0.06)
 		_:
 			_slash_arc(pos, up, 0.05)
-	# 바닥의 옅은 녹색 원 (GIF 36 프레임)
+	# 바닥의 옅은 붉은 원 (GIF 36 프레임)
 	var disc := CylinderMesh.new()
 	disc.top_radius = 1.9
 	disc.bottom_radius = 1.9
@@ -371,12 +373,12 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 	var gm := StandardMaterial3D.new()
 	gm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	gm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	gm.albedo_color = Color(0.45, 0.9, 0.35, 0.12)
+	gm.albedo_color = Color(0.95, 0.25, 0.22, 0.12)
 	disc.material = gm
 	var dm := MeshInstance3D.new()
 	dm.mesh = disc
 	dm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	_add(dm, Vector3(owner.global_position.x, 0.02, owner.global_position.z))
+	_add(dm, Vector3(owner.global_position.x, Main.gy(owner.global_position) + 0.02, owner.global_position.z))
 	var tw2 := dm.create_tween()
 	tw2.tween_property(gm, "albedo_color:a", 0.0, 0.2)
 	tw2.tween_callback(dm.queue_free)
@@ -400,6 +402,25 @@ static func _slash_arc(pos: Vector3, b: Basis, swing: float, delay := 0.0) -> vo
 	tw.tween_callback(mi.queue_free)
 
 
+## 검술 콤보용 짧은 초승달 섬광: 분홍·보라빛 호가 swing 초 만에 그어지고 life 초 안에 사라진다.
+## 쿼터뷰에서 옆으로 누워 보이는 세로 베기도 호 모양이 읽히도록 기울여 겹쳐 쓴다.
+static func crescent(pos: Vector3, b: Basis, swing := 0.035, life := 0.11) -> void:
+	var mi := MeshInstance3D.new()
+	mi.mesh = _slash_mesh
+	var mat := _slash_mat.duplicate() as ShaderMaterial
+	mat.set_shader_parameter("progress", 0.0)
+	mat.set_shader_parameter("deep", Vector3(0.42, 0.12, 0.95))
+	mat.set_shader_parameter("light", Vector3(1.0, 0.82, 0.95))
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	_add(mi, pos)
+	mi.basis = b
+	var tw := mi.create_tween()
+	tw.tween_property(mat, "shader_parameter/progress", 0.72, swing).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+	tw.tween_property(mat, "shader_parameter/progress", 1.0, life).set_ease(Tween.EASE_IN)
+	tw.tween_callback(mi.queue_free)
+
+
 ## 관통 일격의 일섬: 지나간 경로를 따라 가는 빛줄기가 번쩍였다가 가늘어지며 사라진다
 static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 	var d := to - from
@@ -408,11 +429,11 @@ static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 	if length < 0.1:
 		return
 	var dir := d / length
-	var mid := Vector3(from.x, 0.95, from.z) + dir * length * 0.5
+	var mid := Vector3(from.x, Main.gy(from) + 0.95, from.z) + dir * length * 0.5
 	var b := Basis.looking_at(dir, Vector3.UP)
 	var line := BoxMesh.new()
 	line.size = Vector3(1, 1, 1)
-	for L in [[Color(0.75, 1.0, 0.55), 2.2, 0.22, 0.08], [Color.WHITE, 3.2, 0.07, 0.035]]:
+	for L in [[Color(1.0, 0.45, 0.35), 2.2, 0.22, 0.08], [Color.WHITE, 3.2, 0.07, 0.035]]:
 		var mi := Pal.flat_mesh(line, L[0], L[1])
 		_add(mi, mid)
 		mi.basis = b * Basis.from_scale(Vector3(L[2], L[3], length + 1.2))
@@ -427,7 +448,7 @@ static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 	var scar := BoxMesh.new()
 	scar.size = Vector3(0.18, 0.01, length)
 	var sm := Pal.flat_mesh(scar, tint, 1.6)
-	_add(sm, Vector3(mid.x, 0.03, mid.z))
+	_add(sm, Vector3(mid.x, Main.gy(mid) + 0.03, mid.z))
 	sm.basis = b
 	var stw := sm.create_tween()
 	stw.tween_method(func(v: Color): sm.set_instance_shader_parameter("tint", v), tint, Color(0.09, 0.08, 0.16), 0.8).set_ease(Tween.EASE_OUT)
@@ -435,9 +456,9 @@ static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 	var step := 1.0
 	var t := 0.5
 	while t < length:
-		sparks(Vector3(from.x, 0.95, from.z) + dir * t, 3, [Color.WHITE, Pal.BLADE, tint], 5.0, 0.3, -8.0, 0.06)
+		sparks(Vector3(from.x, Main.gy(from) + 0.95, from.z) + dir * t, 3, [Color.WHITE, Pal.BLADE, tint], 5.0, 0.3, -8.0, 0.06)
 		t += step
-	flash(Vector3(to.x, 0.95, to.z), Color(0.9, 1.0, 0.8), 1.3, 0.1)
+	flash(Vector3(to.x, Main.gy(to) + 0.95, to.z), Color(1.0, 0.85, 0.8), 1.3, 0.1)
 
 
 ## 회피 잔상: 현재 로봇 파츠를 반투명하게 복제 (기본 보라, 2단 대시는 무지개빛)
@@ -494,7 +515,7 @@ static func _ring_mesh() -> TorusMesh:
 static func shockwave(pos: Vector3, c: Color, size: float, dur := 0.35, thick := 0.08) -> void:
 	var mi := Pal.flat_mesh(_ring_mesh(), c, 1.3)
 	mi.scale = Vector3(0.2, thick, 0.2)
-	_add(mi, Vector3(pos.x, 0.04, pos.z))
+	_add(mi, Vector3(pos.x, Main.gy(pos) + 0.04, pos.z))
 	var tw := mi.create_tween()
 	tw.tween_property(mi, "scale", Vector3(size, thick * 0.3, size), dur).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.parallel().tween_method(func(v: Color): mi.set_instance_shader_parameter("tint", v), c, Pal.FLOOR, dur).set_ease(Tween.EASE_IN)
@@ -503,7 +524,7 @@ static func shockwave(pos: Vector3, c: Color, size: float, dur := 0.35, thick :=
 
 ## 부스터 배기 구체
 static func boost_puff(pos: Vector3, vel: Vector3) -> void:
-	var c := Pal.CYAN if randf() < 0.6 else Color("9a80ff")
+	var c := Pal.JET if randf() < 0.6 else Color("ff8a3a")
 	var mi := Pal.flat_mesh(_sphere, c, 1.3)
 	_add(mi, pos)
 	var s := randf_range(0.16, 0.28)
@@ -511,7 +532,7 @@ static func boost_puff(pos: Vector3, vel: Vector3) -> void:
 	var tw := mi.create_tween()
 	tw.tween_property(mi, "global_position", pos + vel * 0.25 + Vector3(0, -0.15, 0), 0.25)
 	tw.parallel().tween_property(mi, "scale", Vector3.ONE * 0.01, 0.25).set_ease(Tween.EASE_IN)
-	tw.parallel().tween_method(func(v: Color): mi.set_instance_shader_parameter("tint", v), c, Color("3a2a80"), 0.25)
+	tw.parallel().tween_method(func(v: Color): mi.set_instance_shader_parameter("tint", v), c, Color("5a1420"), 0.25)
 	tw.tween_callback(mi.queue_free)
 
 
@@ -519,6 +540,8 @@ static func boost_puff(pos: Vector3, vel: Vector3) -> void:
 static func laser(origin: Vector3, dir: Vector3, length: float, w: float, k: float) -> void:
 	_beam(origin, dir, length, w, k, [[Pal.CYAN, 1.8, 1.0], [Color("b0fbff"), 2.4, 0.62], [Color.WHITE, 3.0, 0.32]],
 		Pal.RING_CYAN, [Pal.CYAN, Color("5a8cff"), Color.WHITE], [Color.WHITE, Pal.CYAN, Color("8a70ff")], Pal.CYAN, Color(0.6, 1.0, 1.0))
+	# 빔 몸통이 가늘어질 무렵 잔상이 이어받아 일렁이다 부서진다
+	BeamAfterimage.spawn(origin, dir, length, clampf(w * 0.14, 0.1, 0.19), Color("1ff0ff"), 0.16 + 0.06 * k)
 
 
 ## 적 차지 레이저 빔 (붉은색)
@@ -550,9 +573,9 @@ static func _beam(origin: Vector3, dir: Vector3, length: float, w: float, k: flo
 	htw.tween_callback(holder.queue_free)
 	# 총구·끝점 폭발
 	var end := origin + dir * length
-	ring(Vector3(origin.x, 0.3, origin.z), 2.4 + 2.0 * k, ring_a, 0.35)
+	ring(Vector3(origin.x, Main.gy(origin) + 0.3, origin.z), 2.4 + 2.0 * k, ring_a, 0.35)
 	flash(origin, Color.WHITE, 1.2 + k, 0.12)
-	ring(Vector3(end.x, 0.3, end.z), 2.0 + 2.5 * k, ring_b, 0.4)
+	ring(Vector3(end.x, Main.gy(end) + 0.3, end.z), 2.0 + 2.5 * k, ring_b, 0.4)
 	sparks(end, 16 + int(16 * k), spark_c, 10.0, 0.5, -10.0, 0.1)
 	shockwave(origin, main_c, 2.5 + 2.0 * k, 0.35)
 	# 빔을 따라 튀는 불꽃
@@ -565,7 +588,7 @@ static func _beam(origin: Vector3, dir: Vector3, length: float, w: float, k: flo
 	var scorch := BoxMesh.new()
 	scorch.size = Vector3(w * 0.7, 0.01, length)
 	var sm := Pal.flat_mesh(scorch, main_c, 1.2)
-	_add(sm, Vector3(origin.x, 0.025, origin.z) + Vector3(dir.x, 0, dir.z) * length * 0.5)
+	_add(sm, Vector3(origin.x, Main.gy(origin) + 0.025, origin.z) + Vector3(dir.x, 0, dir.z) * length * 0.5)
 	sm.look_at(sm.global_position + Vector3(dir.x, 0, dir.z), Vector3.UP)
 	var stw := sm.create_tween()
 	stw.tween_method(func(v: Color): sm.set_instance_shader_parameter("tint", v), scorch_c, Color(0.09, 0.08, 0.16), 1.2).set_ease(Tween.EASE_OUT)

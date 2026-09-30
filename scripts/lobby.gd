@@ -5,10 +5,12 @@ extends Control
 
 const SCENE := "res://scenes/lobby.tscn"
 const RUN_SCENE := "res://scenes/run.tscn"
+const DEATH_TEST_SCENE := "res://scenes/mammoth_death_lab.tscn"
 const TEST_SCENES := [
 	{"title": "방 탐색 아레나", "desc": "전투방 9곳을 통로로 이은 기존 절차 생성 맵", "scene": "res://scenes/main.tscn"},
 	{"title": "MAMMOTH 추격전", "desc": "도로 위 전차 보스 단독 실행", "scene": "res://scenes/boss.tscn"},
 	{"title": "VULCAN 용광로", "desc": "좁아지는 용암 아레나 보스 단독 실행", "scene": "res://scenes/forge.tscn"},
+	{"title": "MAMMOTH 죽음 연출 · B안", "desc": "궤도 파손과 전복 컷씬 확인 (본선 미적용)", "scene": "res://scenes/lab_mammoth_b.tscn"},
 ]
 const CYAN := Color("7cf5ff")
 const PINK := Color("ff4a8a")
@@ -50,9 +52,18 @@ func _ready() -> void:
 	bg.draw.connect(_draw_bg)
 	add_child(bg)
 
+	var margin := MarginContainer.new()
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for edge in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + edge, 20)
+	add_child(margin)
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	margin.add_child(scroll)
 	var center := CenterContainer.new()
-	center.set_anchors_preset(Control.PRESET_FULL_RECT)
-	add_child(center)
+	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.add_child(center)
 	var col := VBoxContainer.new()
 	col.add_theme_constant_override("separation", 14)
 	col.custom_minimum_size = Vector2(520, 0)
@@ -70,6 +81,10 @@ func _ready() -> void:
 	main_btn = _button("메인 게임  ·  HEX SECTOR RUN", "포탈로 경로를 골라 섹터를 돌파하고 MAMMOTH · VULCAN 을 격파", CYAN, 21)
 	main_btn.pressed.connect(_start_run)
 	col.add_child(main_btn)
+
+	var death_btn := _button("연출 테스트  ·  MAMMOTH B안", "궤도 파손과 전복 · 재생 / 일시정지 / 컷별 미리보기", PINK, 20)
+	death_btn.pressed.connect(_go.bind(DEATH_TEST_SCENE))
+	col.add_child(death_btn)
 
 	var test_btn := _button("테스트 씬", "기존 방 조합 게임과 보스전을 따로 실행", GOLD, 20)
 	test_btn.pressed.connect(_toggle_tests)

@@ -10,7 +10,8 @@ var dash_bar: ProgressBar
 var boost_bar: ProgressBar
 var boost_label: Label
 var laser_bar: ProgressBar
-var ult_bar: ProgressBar
+var energy_icons: AmmoIcons
+var missile_icons: AmmoIcons
 var ult_label: Label
 var flash_rect: ColorRect
 var center: Label
@@ -99,10 +100,15 @@ func _ready() -> void:
 	left.add_child(_label("LASER  [좌+우클릭 유지]", 13, Color(0.7, 0.68, 0.95)))
 	laser_bar = _bar(Color.WHITE)
 	left.add_child(laser_bar)
+	# 한정 재화: 최대치만큼 칸이 반투명하게 늘 보이고, 가진 만큼 불투명하게 켜진다
+	energy_icons = AmmoIcons.new()
+	energy_icons.setup("energy", Player.ENERGY_MAX, Color("5af0ff"), Vector2(18, 26))
+	left.add_child(energy_icons)
 	ult_label = _label("MISSILE  [R]", 13, Color(0.7, 0.68, 0.95))
 	left.add_child(ult_label)
-	ult_bar = _bar(Color("ffb040"))
-	left.add_child(ult_bar)
+	missile_icons = AmmoIcons.new()
+	missile_icons.setup("missile", Player.MISSILE_MAX, Color("ffa040"), Vector2(14, 26))
+	left.add_child(missile_icons)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -204,7 +210,7 @@ void fragment() {
 	sub.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.18))
 	root.add_child(sub)
 
-	hint = _label("WASD 이동   좌클릭 검   우클릭 사격   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
+	hint = _label("WASD 이동   좌클릭 검   우클릭 사격   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   Shift+Space 길게 점프   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
 	hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH
@@ -255,7 +261,7 @@ func _draw_cross() -> void:
 		var wp: Vector3 = (en as Enemy).global_position + Vector3(0, 1.0, 0)
 		if m.camera.is_position_behind(wp):
 			continue
-		var sp := m.camera.unproject_position(wp)
+		var sp := m.camera.screen_pos(wp)
 		var age: float = (now - int(pl.lock_times.get((en as Enemy).get_instance_id(), now))) / 1000.0
 		var k := clampf(age / 0.14, 0.0, 1.0)
 		var half := lerpf(70.0, 26.0, ease(k, 0.4))
@@ -274,7 +280,7 @@ func _draw_cross() -> void:
 		return
 	var p := cross.get_local_mouse_position()
 	if m.capture_mode:
-		p = m.camera.unproject_position(m.player.aim_point)
+		p = m.camera.screen_pos(m.player.aim_point)
 	var c := Color(0.55, 1.0, 1.0, 0.9)
 	cross.draw_arc(p, 11, 0, TAU, 24, c, 2.0, true)
 	cross.draw_circle(p, 2.0, c)
@@ -376,14 +382,13 @@ func _process(_dt: float) -> void:
 	laser_bar.value = p.charge if p.charging else (0.0 if p.laser_cd > 0.0 else 1.0)
 	var stage_c: Color = ChargeFX.STAGE_COLORS[mini(p.charge_stage, 3)]
 	(laser_bar.get_theme_stylebox("fill") as StyleBoxFlat).bg_color = stage_c if p.charging else Color(0.4, 0.5, 0.8)
-	ult_bar.value = p.ult
-	var uf := ult_bar.get_theme_stylebox("fill") as StyleBoxFlat
-	if p.ult >= 1.0:
-		uf.bg_color = Color("ffe070") if fmod(m.time, 0.4) < 0.2 else Color("ff9a30")
-		ult_label.text = "MISSILE  READY [R]"
-	else:
-		uf.bg_color = Color("a06a30")
-		ult_label.text = "MISSILE  [R]"
+	energy_icons.set_count(p.energy)
+	energy_icons.pending = Player.laser_cost(p.charge) if p.charging and p.charge >= Player.CHARGE_MIN else 0
+	energy_icons.regen = p.energy_regen_k()
+	missile_icons.set_count(_shown(p, "missile"))
+	missile_icons.pending = p.missiles if p.ult_aiming else 0
+	ult_label.text = ("MISSILE  %d / %d  [R]" % [p.missiles, Player.MISSILE_MAX]) if p.missiles > 0 else "MISSILE  — 적이 떨어뜨린 탄을 주우세요"
+	ult_label.modulate = Color("ffd070") if p.missiles > 0 and fmod(m.time, 0.8) < 0.4 else Color.WHITE
 	wave_label.text = "ROOMS  %d / %d" % [m.rooms_cleared, m.combat_rooms()]
 	count_label.text = ("ENEMIES  %d" % m.enemies_left()) if m.active_room >= 0 else "탐색 중"
 	cross.queue_redraw()
@@ -458,7 +463,6 @@ func combo_pop(pts: int, source: String) -> void:
 	match source:
 		"slash": tag = "  검 x2"
 		"phantom": tag = "  일격 x3"
-		"parry": tag = "  패링 x3"
 	gain_label.text = "+%d%s" % [pts, tag]
 	gain_label.modulate.a = 1.0
 	var tw := gain_label.create_tween().set_ignore_time_scale(true)
@@ -488,7 +492,7 @@ func popup(text: String, col: Color, world_pos: Vector3) -> void:
 	l.add_theme_color_override("font_outline_color", Color(0.06, 0.04, 0.14))
 	root.add_child(l)
 	l.reset_size()
-	var sp := m.camera.unproject_position(world_pos)
+	var sp := m.camera.screen_pos(world_pos)
 	l.position = sp - l.size * 0.5
 	l.pivot_offset = l.size * 0.5
 	l.scale = Vector2(1.6, 1.6)
@@ -512,6 +516,35 @@ func ult_mode(on: bool) -> void:
 		ult_header.visible = false
 		ult_timer.visible = false
 		screen_flash(Color(1, 0.9, 0.7), 0.3)
+
+
+# ── 한정 재화 아이콘 ────────────────────────────────────
+
+func _icons(kind: String) -> AmmoIcons:
+	return energy_icons if kind == "energy" else missile_icons
+
+
+## 아이콘에 보이는 개수 (궁극기 발사 중에는 아직 안 나간 미사일도 켜 두고 한 발씩 끈다)
+func _shown(p: Player, kind: String) -> int:
+	return p.energy if kind == "energy" else p.missiles + p.ult_queue
+
+
+func ammo_gained(kind: String, n: int) -> void:
+	var p := Main.inst.player
+	var ic := _icons(kind)
+	ic.set_count(_shown(p, kind))
+	ic.gained(n)
+
+
+func ammo_spent(kind: String, n: int) -> void:
+	var p := Main.inst.player
+	var ic := _icons(kind)
+	ic.set_count(_shown(p, kind))
+	ic.spent(n)
+
+
+func ammo_denied(kind: String) -> void:
+	_icons(kind).denied()
 
 
 func lock_flash() -> void:
