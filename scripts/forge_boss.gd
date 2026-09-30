@@ -758,6 +758,10 @@ func _p_breath(dt: float, player: Player) -> bool:
 	if pt < CHARGE:
 		var k := pt / CHARGE
 		core_k = k
+		if pt >= CHARGE - Parry.TRAVEL and not ps.get("danger", false):
+			# 방사 0.4초 전: 패링 불가 공격의 붉은 섬광 (패링 공격과 같은 리듬)
+			ps.danger = true
+			DangerFX.warn((tt.core as Node3D).global_position)
 		var d0 := Vector3(sin(a0), 0, cos(a0))
 		(warnings[0] as MeshInstance3D).set_instance_shader_parameter("progress", k * 0.6)
 		var lw: LaserWarning = warnings[1]
@@ -813,13 +817,17 @@ func _p_breath(dt: float, player: Player) -> bool:
 			var end_d := minf(BEAM_LEN, _edge_along(origin, dir, r))
 			FX.sparks(origin + dir * end_d + Vector3(0, 0.5, 0), 6, [Color.WHITE, Color("ffd060"), Color("ff6a20")], 9.0, 0.4, -10.0, 0.08)
 			Main.inst.shake(0.12)
-		if not ps.get("hit", false) and player.alive and player.invuln <= 0.0:
+		if not ps.get("hit", false) and player.alive:
 			var rel := player.global_position - origin
 			rel.y = 0
 			var along := clampf(rel.dot(dir), 0.0, BEAM_LEN)
 			if (rel - dir * along).length() < BEAM_W * 0.5 + player.hit_radius:
-				ps.hit = true
-				_hurt(origin, 1)
+				if player.invuln > 0.0:
+					# 대시 무적으로 빔을 뚫고 지나가는 순간: 퍼펙트 회피 연출 (판정은 그대로)
+					DangerFX.evaded(player, origin + dir * along)
+				else:
+					ps.hit = true
+					_hurt(origin, 1)
 		return false
 	# 과열: 약점 노출, 두 팔이 발판에 늘어진다
 	if not ps.get("vent", false):
@@ -1151,7 +1159,9 @@ func _update_transition(_dt: float) -> void:
 				stage.collapse([6, 5, 7, 4, 0, 3, 1, 2], 0.9, 0.22)
 				Main.inst.hud.banner("COLLAPSE", Color("ff8a30"), "발판이 무너집니다 — 안쪽으로!")
 			4:
-				Main.inst.hud.banner("PHASE 2", Color("ff4a5a"), "노심을 드러낸 거신이 폭주합니다! 전장이 좁아졌습니다")
+				# 큰 글자는 컷인 타이포가 맡고, 가운데 배너는 안내 문구만 남긴다
+				CutIn.slam("PHASE 2", "VULCAN 노심 노출 · 폭주", Color("ff6a30"), 0.5)
+				Main.inst.hud.banner("", Color("ff4a5a"), "노심을 드러낸 거신이 폭주합니다! 전장이 좁아졌습니다")
 				bar.set_phase(2)
 				phase_changed.emit(2)
 		if s <= 1:
@@ -1231,6 +1241,7 @@ func _begin_dying() -> void:
 	Sfx.play("overload", 0.0, 4.0)
 	Main.inst.on_enemy_killed(self)
 	print("BOSS_DOWN t=%.1f" % Main.inst.time)
+	Showtime.boss_down(self, (tt.body as Node3D).to_global(Vector3(0, 6.0, 1.0)), 30.0, "VULCAN DOWN", "용광로 거신 VULCAN 격파", Color("ff8a30"))
 
 
 ## 연쇄 폭발 → 눈이 하나씩 꺼지고 팔이 늘어져 용암에 잠긴다 → 대폭발 후 몸통이 용암 속으로 가라앉는다

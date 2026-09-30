@@ -62,6 +62,15 @@
 - **카메라**: 쿼터뷰 그대로 플레이어와 적 사이로 시선을 조금 옮기며 적당히 줌인(거리 0.87배, 0.05초)했다가 0.45초에 원래대로 돌아옵니다(`camera_rig.gd` `parry_cine`, `CINE_ZOOM`).
 - **보상**: 대시 쿨다운과 검 쿨다운이 바로 초기화되고, 다음 검은 **관통 일격**이 됩니다. 되받아친 탄으로 처치하면 점수 3배.
 
+## 붉은 섬광 · 컷인 · 격파 쇼타임 (젠레스 존 제로식 연출)
+
+자세한 내용: `docs/zzz-presentation.md`. 세 가지 모두 연출 전용 모듈(`scripts/presentation/`)이며 판정·피해·보상은 바꾸지 않습니다.
+
+- **붉은 섬광 = 막을 수 없다, 피하라** (`danger_fx.gd`): 금빛은 패링할 수 있는 공격, 붉은빛은 패링이 안 되는 강한 공격입니다. 닿기 0.4초 전(패링 공격과 같은 리듬)에 공격 지점에서 붉은 십자 별빛이 **두 번 맥동**하고 낮은 경고음이 납니다. 대상: 요격기 차지 레이저, 크롤러 도약 내려찍기, MAMMOTH 거수포, VULCAN 노심 화염 방사.
+  붉은 공격의 판정 범위 안에서 **대시 무적으로 피하면 퍼펙트 회피**: 0.25배 슬로우(실제 0.3초에 복귀), 청백 잔상·별 섬광·충격파. 보상은 없습니다.
+- **컷인 타이포** (`cut_in.gd`): 드문 순간에만 비스듬한 띠와 굵은 기울임 글자가 화면을 가릅니다 — 최대 레이저(FULL BURST), 관통 일격으로 2기 이상 동시 처치(PIERCE ×N), 보스 2페이즈(PHASE 2). 흑백 임팩트 프레임이 끝난 뒤 들어옵니다. 패링은 지금처럼 글자 없이 둡니다. `--nocutin` 으로 끕니다.
+- **보스 격파 쇼타임** (`showtime.gd`): 보스 결정타 순간 한 번만 게임을 멈추고 보여 줍니다. 흑백 2프레임 → 보스를 낮게 올려다보는 클로즈업 컷(강조색·먹색 2도 망점 필터, HUD 숨김, 큰 컷인) → 약 1초 뒤 원래 카메라로 돌아오고 0.3초에 걸쳐 정상 속도로 복귀합니다. 탄이 모두 지워진 뒤라 판독성을 해치지 않습니다. 궁극기 락온 중이면 컷인만 나옵니다. `--noshowtime` 으로 끕니다.
+
 ## 적의 거리 벌리기
 
 플레이어가 3.6m 안으로 붙으면 적은 일정 확률로 거리를 벌립니다(한 번 하면 2.4~4초 쉼). 공격을 준비하거나 쏘는 중에는 하지 않습니다.
@@ -184,6 +193,9 @@
 | `scripts/striker.gd` | 고속 요격기: 대시·속사·차지 레이저·근접 돌진 베기(패링 공격) |
 | `scripts/parry.gd` | 패링 판정(패링 공격 등록·타이밍 창·헛패링 잠금), 발밑 타이밍 링, 성공 시 시간 연출(정지→슬로우→복귀) |
 | `scripts/parry_fx.gd` | 패링 연출: 짧은 화면 오버레이(얇은 섬광선·집중선·색수차), 알림 십자 별빛, 성공 폭발, 경직 별 |
+| `scripts/presentation/danger_fx.gd` | 붉은 섬광(패링 불가 공격 예고, 두 번 맥동 + 낮은 경고음)과 퍼펙트 회피 연출(짧은 슬로우·잔상) |
+| `scripts/presentation/cut_in.gd` | 큰 순간의 2D 컷인 타이포: 비스듬한 띠·속도선·굵은 기울임 글자·그림자 글자 (실제 시간 기준, 임팩트 프레임 뒤로 미룸) |
+| `scripts/presentation/showtime.gd` | 보스 격파 쇼타임: 세계 정지·클로즈업 카메라 컷·2도 망점 필터·HUD 숨김·컷 백 |
 | `scripts/evade.gd` | 적의 거리 벌리기: 뒷걸음질 · 이탈 대시 후 무작위 공격 · 광선검 회피 순간이동 반격(짧은 슬로모션) |
 | `scripts/parry_orb.gd` | 패링 탄: 항상 0.4초 만에 닿는 고속 금빛 구체(속도만큼 늘어남), 되받아치면 쏜 적에게 고속 유도 |
 | `scripts/turret.gd` | 고정 포탑: 해치 등장·느린 선회 조준·포신 회전 예고·2연장 교대 연사·탄피 배출 |
@@ -235,6 +247,8 @@ Godot --path . --fixed-fps 60 res://scenes/boss.tscn -- --capture=DIR --every=10
 Godot --path . --fixed-fps 60 res://scenes/boss.tscn -- --capture=DIR --every=3 --seconds=45 --bot --hug   # 보스에 붙어 검만 연타 (근접 견제 검증: BOSS_SHOCK / PLAYER_STUN 로그)
 Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=30 --seconds=40 --bot --godmode   # 용광로 보스전 자동 플레이 (무적)
 Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=30 --seconds=34 --bot --godmode --fastp2   # 6초 뒤 바로 2페이즈로
+Godot --path . --fixed-fps 60 res://scenes/boss.tscn -- --capture=DIR --every=2 --seconds=16 --godmode --fastp2 --fastkill=1   # 2페이즈 1초 뒤 격파 → 쇼타임 확인 (SHOWTIME / CUTIN 로그)
+Godot --path . --fixed-fps 60 res://scenes/forge.tscn -- --capture=DIR --every=3 --seconds=40 --godmode --fastp2 --fastkill=16   # 노심 화염 방사 붉은 섬광 · 퍼펙트 회피 → 격파 쇼타임 (DANGER_WARN / PERFECT_EVADE 로그)
 Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=res://_capture/crawl --every=1 --seconds=18 --crawlershow --seed=3 --campreset=3   # 전투방에 크롤러 하나: 구르기·반사·도탄·변신·공격·처치 (CRAWLER/CPOS 로그 → _capture/crop.py 로 근접 시트)
 Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=DIR --every=2 --seconds=11 --parryshow  # 패링 탄 드론 + 5.5초 뒤 돌진 요격기, 자동으로 패링 (PARRY 로그의 f 값 ÷ every = 프레임 번호)
 Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --capture=DIR --every=2 --seconds=20 --evadeshow  # 전투방에 드론 둘·요격기·크롤러, 봇이 붙어서 검을 연타 (EVADE back/dash/blink 로그). --evadesolo 를 더하면 항상 회피하는 드론 한 기만

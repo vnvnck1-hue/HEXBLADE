@@ -953,7 +953,11 @@ func _phantom_hit() -> void:
 		Main.inst.hitstop(0.12)
 		Main.inst.shake(0.6)
 		Main.inst.hud.screen_flash(Color(1.0, 0.8, 0.75), 0.35)
-		Main.inst.hud.popup("PIERCE x%d" % marked.size() if marked.size() > 1 else "PIERCE", Color(1.0, 0.55, 0.45), to + Vector3(0, 2.2, 0))
+		if marked.size() > 1:
+			# 여러 기를 한 번에 꿰뚫은 드문 순간만 컷인 타이포로 크게
+			CutIn.slam("PIERCE ×%d" % marked.size(), "관통 일격", Color(1.0, 0.45, 0.35))
+		else:
+			Main.inst.hud.popup("PIERCE", Color(1.0, 0.55, 0.45), to + Vector3(0, 2.2, 0))
 		Sfx.play("hit", 0.0, 2.0))
 
 
@@ -1206,6 +1210,8 @@ func _start_mega() -> void:
 	FX.ring(Vector3(global_position.x, Main.gy(global_position) + 0.3, global_position.z), 5.0, Pal.RING_CYAN, 0.45)
 	Sfx.play("laser", 0.0, 2.0)
 	squash_v -= 8.0
+	# 컷인 타이포는 흑백 임팩트 프레임이 끝난 뒤에 들어온다 (CutIn 이 알아서 미룬다)
+	CutIn.slam("FULL BURST", "최대 출력 지속 레이저", Pal.CYAN)
 	_update_mega(0.0)
 
 

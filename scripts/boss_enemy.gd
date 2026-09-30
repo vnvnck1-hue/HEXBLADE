@@ -541,6 +541,10 @@ func _p_mega(dt: float, player: Player) -> bool:
 		elif not ps.get("locked", false):
 			ps.locked = true
 			Sfx.play("lock", 0.0, 0.0)
+		if pt >= CHARGE - Parry.TRAVEL and not ps.get("danger", false):
+			# 발사 0.4초 전: 패링 불가 공격의 붉은 섬광 (패링 공격과 같은 리듬)
+			ps.danger = true
+			DangerFX.warn(core.global_position)
 		var k := pt / CHARGE
 		core.set_instance_shader_parameter("tint", Color("ff2040").lerp(Color("fff0f0"), k))
 		core.set_instance_shader_parameter("energy", 2.0 + k * 5.0)
@@ -604,7 +608,10 @@ func _p_mega(dt: float, player: Player) -> bool:
 			var rel := player.global_position - origin
 			rel.y = 0
 			var along := clampf(rel.dot(dir), 0.0, 34.0)
-			if (rel - dir * along).length() < WIDTH * 0.5 + player.hit_radius and player.invuln <= 0.0:
+			var in_beam := (rel - dir * along).length() < WIDTH * 0.5 + player.hit_radius
+			if in_beam and player.invuln > 0.0:
+				DangerFX.evaded(player, origin + dir * along)
+			if in_beam and player.invuln <= 0.0:
 				ps.hit = true
 				if player.take_hit(origin):
 					# 큰 피해: 기본 1칸에 2칸을 더한다
@@ -959,7 +966,9 @@ func _update_transition(_dt: float) -> void:
 					_chunk()
 				_scorch()
 			4:
-				Main.inst.hud.banner("PHASE 2", Color("ff4a5a"), "장갑이 뜯겨 나간 맘모스가 폭주합니다!")
+				# 큰 글자는 컷인 타이포가 맡고, 가운데 배너는 안내 문구만 남긴다
+				CutIn.slam("PHASE 2", "MAMMOTH 장갑 파괴 · 폭주", Color("ff4a5a"), 0.5)
+				Main.inst.hud.banner("", Color("ff4a5a"), "장갑이 뜯겨 나간 맘모스가 폭주합니다!")
 				bar.set_phase(2)
 				phase_changed.emit(2)
 		# 매 단계 폭발
@@ -1045,6 +1054,7 @@ func _begin_dying() -> void:
 	Sfx.play("overload", 0.0, 4.0)
 	Main.inst.on_enemy_killed(self)
 	print("BOSS_DOWN t=%.1f" % Main.inst.time)
+	Showtime.boss_down(self, model.to_global(Vector3(0, 2.2, 0)), 13.5, "MAMMOTH DOWN", "거대 중전차 MAMMOTH 격파", Color("ff3a4a"))
 
 
 ## 연쇄 폭발 → 부품이 차례로 떨어져 나가며 뒤로 처지고 → 대폭발

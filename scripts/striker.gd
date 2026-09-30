@@ -44,6 +44,7 @@ var beam_dir := Vector3.FORWARD
 var beam_len := 10.0
 var beam_origin := Vector3.ZERO
 var beam_hit_t := 0.0
+var danger_warned := false
 var recover_t := 0.0
 var warning: LaserWarning
 var charge_snd: AudioStreamPlayer
@@ -120,6 +121,10 @@ func _ai(dt: float) -> void:
 			var k := clampf(charge_t / (BEAM_TRACK + BEAM_LOCK), 0.0, 1.0)
 			warning.set_progress(k)
 			_charge_look(k)
+			if charge_t >= BEAM_TRACK and not danger_warned and active:
+				# 방향이 고정되는 순간 = 발사 0.4초 전: 패링 불가 공격의 붉은 섬광
+				danger_warned = true
+				DangerFX.warn((j.core as MeshInstance3D).global_position)
 			if not active:
 				_cancel_charge()
 			elif charge_t >= BEAM_TRACK + BEAM_LOCK:
@@ -278,6 +283,7 @@ func _counter_attack() -> void:
 func _begin_charge() -> void:
 	state = S.CHARGE
 	charge_t = 0.0
+	danger_warned = false
 	burst_left = 0
 	var p := Main.inst.player.global_position - global_position
 	p.y = 0
@@ -348,6 +354,8 @@ func _beam_hit_check() -> void:
 		var hit_at := beam_origin + beam_dir * along
 		if p.take_hit(Vector3(hit_at.x, p.global_position.y, hit_at.z)):
 			beam_hit_t = 0.0
+		else:
+			DangerFX.evaded(p, hit_at)
 
 
 func _cancel_charge() -> void:
