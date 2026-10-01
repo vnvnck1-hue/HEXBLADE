@@ -1,0 +1,25 @@
+{
+	"image": "output/spider-boss-20261001/spider-boss-three-views.png",
+	"note": "Generated concept: the three views are not mutually consistent. The side view is drawn ~12% larger than the front, the top view is squashed fore-aft. Each view has its own scale; front + side are the primary references.",
+	"views": {
+		"front": {
+			"crop": [40, 530, 760, 956],
+			"px_per_m": 50.0,
+			"origin": [391, 955],
+			"camera": "front"
+		},
+		"side": {
+			"crop": [785, 470, 1510, 956],
+			"px_per_m": 56.0,
+			"origin": [1230, 955],
+			"camera": "left"
+		},
+		"top": {
+			"crop": [40, 5, 750, 508],
+			"px_per_m": 49.0,
+			"py_per_m": 38.0,
+			"origin": [391, 146],
+			"camera": "top"
+		}
+	}
+}

@@ -8,3 +8,13 @@ _capture/*.txt
 
 # 캡처 프레임 덤프 (최종 이미지·프롬프트만 올린다)
 output/spider-boss-20261001/*/
+
+# Blender: 저장 백업 파일, 미리보기 개별 타일(시트 preview.png 만 올린다)
+*.blend1
+output/models/*/view_*.png
+# 원화 비교 중간 파일 (ref_masks.py · zoom_compare.py 로 다시 만든다)
+output/models/*/ref/
+output/models/*/zoom_*.png
+output/models/*/overlay_*.png
+output/models/*/sweep.log
+output/models/*/compare_colour.png

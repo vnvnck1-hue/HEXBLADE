@@ -23,7 +23,8 @@
 | 새 PC 첫 준비 | `setup_godot.cmd` |
 | 테스트 전체 | `run_tests.cmd` 또는 `powershell -File tools\run_tests.ps1 [이름...]` |
 | 자동 플레이·캡처 등 임의 인자 | `powershell -File tools\godot.ps1 wait <Godot 인자...>` (`--path` 는 자동) |
-| 씬 바로 실행 | `training.cmd`(허수아비 전투 테스트) · `sector_run.cmd` · `boss_battle.cmd` · `forge_battle.cmd` · `abyss_battle.cmd` · `spider_boss.cmd`(거미 보스) · `mammoth_death_test.cmd` · `reference_mech_studio.cmd` |
+| Blender (모델링) | `setup_blender.cmd` · `blender_live.cmd` · `powershell -File tools\blender.ps1 model models\src\<이름>.py` — [docs/blender-modeling.md](docs/blender-modeling.md) |
+| 씬 바로 실행 | `training.cmd`(허수아비 전투 테스트) · `dialogue_test.cmd`(캐릭터 대화) · `sector_run.cmd` · `boss_battle.cmd` · `forge_battle.cmd` · `abyss_battle.cmd` · `spider_boss.cmd`(거미 보스) · `mammoth_death_test.cmd` · `reference_mech_studio.cmd` |
 
 **버전을 올릴 때**: `godot-version.txt` 와 `project.godot` 의 `config/features` 를 함께 바꾸고 → `setup_godot.cmd` →
 `--headless --import` 로 다시 임포트 → `run_tests.cmd` 통과 확인 → 바뀐 `.import`/`.uid` 파일까지 한 커밋으로 올린다.
@@ -53,6 +54,24 @@
 ## 5. 현재 상태 (작업을 마칠 때 갱신한다)
 
 마지막 갱신: 2026-10-01
+
+- 2026-10-01 (미커밋): **캐릭터 대화 시스템 테스트 씬** `scenes/dialogue.tscn` · `dialogue_test.cmd` · 로비 테스트 씬 목록. 리서치·문법·구조 [docs/dialogue.md](docs/dialogue.md). 코드는 모두 `scripts/dialogue/`, 대본은 `data/dialogue/*.dlg`(자체 텍스트 문법), 그림은 `output/character-dialogue-20261001/` 시안을 그대로 씀(`DialogueCast.DIR`).
+  타자기(문장부호 자동 멈춤 · `{p}` · `{fast}`) · 화자 강조 · 표정 교차 전환 · 감정 반동 · 인물별 글자음 · 선택지(꼬리표 · 조건부 · ✓) · 자동 A · 읽은 대사 넘기기 S · Ctrl 빨리 넘기기 · Tab 선택지까지 건너뛰고 요약 · 기록 L · 숨기기 H · 글자 크기/속도 · 움직임 줄이기 M. 본편 연결은 아직.
+  기존 코드 변경은 `lobby.gd` 목록 한 줄뿐. 테스트 `tests/dialogue_check.gd`, 캡처 `_capture/dialogue_show.gd` → `output/dialogue-20261001/`(`.gdignore`).
+  주의: 코드로 만든 Control 은 `set_anchors_and_offsets_preset` 을 써야 한다(`set_anchors_preset` 은 크기 0 을 오프셋으로 남김). 인물 z_index 가 UI 를 덮지 않게 UI 층은 z 50 이상. PowerShell 에서 `& tools\godot.ps1 ... -- --bot` 으로 부르면 `--` 가 먹혀 인자가 안 넘어간다 — `powershell -File` 로 부를 것.
+
+- 2026-10-01 (미커밋): 루트 `.cmd` 실행기 13개가 `powershell` 을 전체 경로 `"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe"` 로 부른다. 시스템 PATH 에서 Windows 기본 경로가 빠진 PC(이 PC가 그랬다)에서도 더블클릭으로 실행된다. 새 `.cmd` 를 만들 때도 같은 식으로 쓴다. Blender 쪽 `blender_live.cmd`·`setup_blender.cmd` 는 다른 작업 중인 파일이라 아직 그대로다.
+
+- 2026-10-01 (미커밋): **거미 보스 Blender 모델 — 원화 재현판** `models/src/spider_boss.py` → `assets/models/spider_boss.glb`(약 5.2만 삼각형), 비교 `output/models/spider_boss/compare.png`, 3/4 렌더 `preview.png`.
+  원화 3면도를 미터 단위로 재서 처음부터 다시 만듦(리그 치수 맞춤판은 폐기). 실루엣 IoU 정면 0.65→0.85 · 측면 0.45→0.87 (`--compare` 수동 18회 + `tools/blender/sweep.py` 좌표 하강 탐색 2회 약 150빌드, 최적값은 스크립트 기본값에 반영). 평면 0.45 는 원화 자체 모순(평면은 네 다리를 모두 앞으로 접고 개틀링이 2m 더 김) 때문이라 정면·측면을 기준으로 함.
+  원화를 따라 팔은 2개(오른쪽 +X 용접기 · 왼쪽 집게+원형 톱), 눈 2개, 머리+가슴 한 덩어리, 높은 뒤 몸통 · 공구 칸 · 태블릿. 시점끼리 모순인 곳(개틀링 높이 · 용접기 자세 · 무릎 높이 · 톱날 방향)은 사이값, 정강이 판과 고관절 원판은 정면·측면 양쪽에서 보이게 대각선으로 돌림. 원화에 없는 속은 메카닉 관례(프레임 위 장갑판 · 볼트 원판 관절 · 유압 · 지렛대 · 판 이음 선)로 채움.
+  계층 `body > head > gatling`, `body > abdomen > tablet`, `body > leg_<k>_coxa > _femur > _tibia > _foot`, `body > arm_<welder|saw>_upper > _fore > _tool (> arm_saw_disc)`, 부착점 `pt_*`. **게임 리그(`spider_rig.gd`, 눈 3 · 팔 4 · 다른 치수)에는 연결하지 않았다.**
+  비교 도구: `models/ref/spider_boss.json`, `tools/blender/{compare,ref_masks,ref_grid,zoom_compare,overlay_zoom,sweep}.py`(compare 는 실루엣 IoU + 색 계열 일치율 `colour`, 탐색은 `HB_OVERRIDE` JSON 으로 치수를 바꿔 빌드). 주의: 실루엣만 보는 탐색은 앞 무릎을 머리 앞으로 옮기는 식으로 점수를 속이므로 결과는 눈으로 확인할 것, hb 에 `deform`·`prism(cuts=)`·`box(taper_axis=)` 추가. 덤으로 테스트 `blender_models_check` 를 새 계층에 맞춤(전체 14종 PASS).
+
+- 2026-10-01 (미커밋): **Blender 모델링 파이프라인** — [docs/blender-modeling.md](docs/blender-modeling.md). Blender 도 Godot 처럼 버전 고정: `blender-version.txt`(5.2.2 LTS), `tools/blender.ps1` 이 `.tools/blender/` 에 공식 포터블 zip 을 받아 SHA256 검증. 
+  모델은 `models/src/<이름>.py`(도우미 `tools/blender/hb.py`) → `tools\blender.ps1 model ...`(`tools/blender/build.py`) 이 `assets/models/<이름>.glb` + `output/models/<이름>/`(미리보기 시트·stats·.blend) 생성. 정면 = Blender +Y = Godot -Z, `part=` 로 파츠 합치기, `after_join()` 에서 피벗·계층, 부착점은 `pt_` 접두어(`@` 는 Godot 노드 이름 불가).
+  라이브 모드 `blender_live.cmd` + `tools\blender.ps1 send code.py` (`tools/blender/live.py`, `snap()` 뷰포트 캡처). `output/models/.gdignore` 필수(없으면 Godot 이 .blend 임포트를 시도해 오류). 예제 `models/src/sample_turret.py`, 테스트 `tests/blender_models_check.gd`(전체 13종 PASS).
+  덤으로 `tools/run_tests.ps1` 이름 지정 실행이 항상 0개였던 버그 수정(`Where-Object` 안의 `$args`).
 
 - 2026-10-01 (미커밋): **거미 보스 SHIPWRIGHT 전용 테스트 씬** `scenes/spider.tscn` · `spider_boss.cmd` · 로비 테스트 씬 목록. 코드는 모두 `scripts/spider/`, 설계 [docs/spider-boss.md](docs/spider-boss.md). 본편 이식은 사용자가 요청할 때.
   3면도 기반 기계 거미(다리 넷 3관절 IK · 공구 팔 넷 · 개틀링 · 태블릿 · 새끼 해치). 발은 `SpiderStage.project()` 로 바닥·벽·기둥 어디든 붙고, 경로(`route`)는 바닥↔벽↔기둥↔구멍을 L 자 모서리로 잇는다.

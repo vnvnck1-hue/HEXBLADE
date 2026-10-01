@@ -7,7 +7,8 @@ $godot = Join-Path $PSScriptRoot 'godot.ps1'
 if ($LASTEXITCODE -ne 0) { exit 1 }
 
 $tests = Get-ChildItem -LiteralPath (Join-Path $root 'tests') -Filter '*.gd' | Sort-Object Name
-if ($args.Count -gt 0) { $tests = $tests | Where-Object { $args -contains $_.BaseName } }
+$names = @($args)   # inside Where-Object { } $args is the block's own (empty) list, so keep the script's here
+if ($names.Count -gt 0) { $tests = $tests | Where-Object { $names -contains $_.BaseName } }
 
 $failed = @()
 foreach ($t in $tests) {

@@ -1,0 +1,48 @@
+model: spider_boss
+size (m)  x 13.919  y(fwd) 12.569  z(up) 8.144
+bounds    min (-6.960, -4.816, -0.012)  max (6.960, 7.752, 8.131)
+triangles 51860
+parts:
+  head                      14360 tris  parent=body  origin=(0.00, 1.20, 4.50)
+  gatling                     992 tris  parent=head  origin=(0.00, 4.70, 2.14)
+  abdomen                    9164 tris  parent=body  origin=(0.00, 1.10, 4.80)
+  tablet                      300 tris  parent=abdomen  origin=(0.00, -2.10, 6.95)
+  body                       4832 tris  parent=-  origin=(0.00, 1.10, 4.85)
+  leg_fl_coxa                 856 tris  parent=body  origin=(-2.30, 2.40, 3.90)
+  leg_fl_femur               1676 tris  parent=leg_fl_coxa  origin=(-4.10, 2.40, 3.45)
+  leg_fl_tibia               1160 tris  parent=leg_fl_femur  origin=(-4.55, 2.75, 4.90)
+  leg_fl_foot                 836 tris  parent=leg_fl_tibia  origin=(-5.99, 3.50, 0.75)
+  leg_fr_coxa                 856 tris  parent=body  origin=(2.30, 2.40, 3.90)
+  leg_fr_femur               1676 tris  parent=leg_fr_coxa  origin=(4.10, 2.40, 3.45)
+  leg_fr_tibia               1160 tris  parent=leg_fr_femur  origin=(4.55, 2.75, 4.90)
+  leg_fr_foot                 836 tris  parent=leg_fr_tibia  origin=(5.99, 3.50, 0.75)
+  leg_bl_coxa                 856 tris  parent=body  origin=(-2.30, -1.90, 3.90)
+  leg_bl_femur               1676 tris  parent=leg_bl_coxa  origin=(-4.10, -1.90, 3.30)
+  leg_bl_tibia               1160 tris  parent=leg_bl_femur  origin=(-4.55, -1.90, 4.10)
+  leg_bl_foot                 836 tris  parent=leg_bl_tibia  origin=(-5.99, -3.85, 0.80)
+  leg_br_coxa                 856 tris  parent=body  origin=(2.30, -1.90, 3.90)
+  leg_br_femur               1676 tris  parent=leg_br_coxa  origin=(4.10, -1.90, 3.30)
+  leg_br_tibia               1160 tris  parent=leg_br_femur  origin=(4.55, -1.90, 4.10)
+  leg_br_foot                 836 tris  parent=leg_br_tibia  origin=(5.99, -3.85, 0.80)
+  arm_welder_upper            556 tris  parent=body  origin=(3.00, 4.00, 3.95)
+  arm_welder_fore             288 tris  parent=arm_welder_upper  origin=(3.15, 5.73, 3.73)
+  arm_welder_tool             420 tris  parent=arm_welder_fore  origin=(3.40, 6.80, 2.90)
+  arm_saw_upper               556 tris  parent=body  origin=(-2.90, 4.00, 3.60)
+  arm_saw_fore                456 tris  parent=arm_saw_upper  origin=(-2.80, 4.60, 2.35)
+  arm_saw_tool               1124 tris  parent=arm_saw_fore  origin=(-2.85, 5.05, 1.60)
+  arm_saw_disc                700 tris  parent=arm_saw_tool  origin=(-3.45, 5.50, 0.98)
+attachment points:
+  pt_eye_l                 (-1.58, 5.40, 3.94)  parent=head
+  pt_eye_r                 (1.58, 5.40, 3.94)  parent=head
+  pt_mouth                 (0.00, 4.98, 3.19)  parent=head
+  pt_searchlight           (0.00, 3.75, 5.78)  parent=head
+  pt_gatling_muzzle        (0.00, 6.60, 2.14)  parent=gatling
+  pt_hatch                 (0.00, -3.80, 5.40)  parent=abdomen
+  pt_spinneret_l           (-0.52, -3.50, 3.55)  parent=abdomen
+  pt_spinneret_r           (0.52, -3.50, 3.55)  parent=abdomen
+  pt_foot_fl               (-6.07, 3.58, -0.00)  parent=leg_fl_foot
+  pt_foot_fr               (6.07, 3.58, -0.00)  parent=leg_fr_foot
+  pt_foot_bl               (-6.07, -4.14, 0.00)  parent=leg_bl_foot
+  pt_foot_br               (6.07, -4.14, 0.00)  parent=leg_br_foot
+  pt_torch                 (3.55, 7.70, 1.25)  parent=arm_welder_tool
+glb: assets\models\spider_boss.glb

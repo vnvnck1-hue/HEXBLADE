@@ -18,6 +18,8 @@
 | 굵은 다리 4 · 회색 원판 관절 · 검은 발굽 | 고관절 원판 → 넓적다리 → 무릎 원판 → 정강이 장갑 → 발목 → 발허리 → 고무 발굽 |
 | (게임용 추가) | 뒤쪽 새끼 해치(붉은 산란실) · 방적돌기 · 머리 탐조등 |
 
+Blender 모델: `models/src/spider_boss.py` → `assets/models/spider_boss.glb` — 원화를 재현한 모델(팔 2 · 눈 2, 치수는 원화 기준이라 이 리그와 다름, 아직 리그에 연결 안 함). 원화 비교는 `output/models/spider_boss/compare.png`, 사용법은 [blender-modeling.md](blender-modeling.md).
+
 ## 움직임 — 살아 있는 거미처럼
 
 - **3관절 다리 IK**: 발허리를 면 법선 쪽으로 세우고 고관절→발목을 2관절로 푼다. 무릎이 몸보다 높이 솟는 거미 실루엣.

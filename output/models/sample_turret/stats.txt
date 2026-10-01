@@ -1,0 +1,12 @@
+model: sample_turret
+size (m)  x 1.511  y(fwd) 2.105  z(up) 1.050
+bounds    min (-0.755, -0.755, 0.000)  max (0.755, 1.350, 1.050)
+triangles 2048
+parts:
+  base                        880 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  turret                      436 tris  parent=base  origin=(0.00, 0.00, 0.50)
+  barrel                      732 tris  parent=turret  origin=(0.00, 0.45, 0.80)
+attachment points:
+  pt_muzzle_l              (-0.14, 1.36, 0.80)  parent=barrel
+  pt_muzzle_r              (0.14, 1.36, 0.80)  parent=barrel
+glb: assets\models\sample_turret.glb
