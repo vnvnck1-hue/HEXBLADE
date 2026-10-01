@@ -66,6 +66,7 @@ var volley_t := 0.0
 var hop_from := Vector3.ZERO
 var hop_to := Vector3.ZERO
 var hop_y := 0.0
+var danger_warned := false
 var air_tuck := 0.0
 var walk_ph := 0.0
 var walk_amt := 0.0
@@ -475,6 +476,7 @@ func _sp(next: int) -> void:
 			_ease("crouch", 0.46, HOP_WIND_T)
 			_ease("pitch", -0.12, HOP_WIND_T)
 			hop_to = _hop_target()
+			danger_warned = false
 			FX.spawn_marker(hop_to, HOP_WIND_T + HOP_T)
 			Sfx.play("twind", 0.08, -6.0)
 		SP.HOP:
@@ -528,6 +530,10 @@ func _spider(dt: float, dir: Vector3, dist: float, active: bool) -> void:
 		SP.HOP_WIND:
 			var k := clampf(sp_t / HOP_WIND_T, 0.0, 1.0)
 			tremble = k * k * 0.03
+			if sp_t >= HOP_WIND_T + HOP_T - Parry.TRAVEL and not danger_warned and active:
+				# 착지 0.4초 전: 내려찍기는 패링되지 않는다 → 붉은 섬광
+				danger_warned = true
+				DangerFX.warn(_center())
 			if sp_t >= HOP_WIND_T:
 				_sp(SP.HOP)
 		SP.HOP:
@@ -631,7 +637,8 @@ func _land(active: bool) -> void:
 		var d := Vector3.FORWARD.rotated(Vector3.UP, off + TAU * i / RING_SHOTS)
 		Main.inst.add_bullet(Bullet.make_enemy(Vector3(gp.x, Main.gy(gp) + 0.95, gp.z) + d * 0.9, d, 6.5))
 	if near < SPIDER_R + p.hit_radius + 0.4:
-		p.take_hit(gp)
+		if not p.take_hit(gp):
+			DangerFX.evaded(p, gp)
 
 
 # ── 변신: 거미 → 구체 ───────────────────────────────────

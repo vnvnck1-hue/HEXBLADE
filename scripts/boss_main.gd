@@ -150,6 +150,11 @@ func _physics_process(dt: float) -> void:
 		player.invuln = 999.0
 	if boss and boss.alive:
 		boss_loot(boss, boss.boss_hp / BossEnemy.MAX_HP)
+	# 검증용: --fastp2 는 6초 뒤 2페이즈 직전까지 깎는다
+	if OS.get_cmdline_user_args().has("--fastp2") and boss and boss.phase == 1 and boss.st == BossEnemy.St.FIGHT and time > 6.0:
+		boss.take_hit(20, Vector3.FORWARD, boss.global_position, "missile")
+		boss.boss_hp = minf(boss.boss_hp, BossEnemy.MAX_HP * BossEnemy.PHASE2_AT + 1.0)
+	_fast_kill(boss, boss != null and boss.phase == 2 and boss.st == BossEnemy.St.FIGHT)
 	# 전장 경계: 좌우 차선 안, 보스 앞쪽으로만
 	if player.alive:
 		var p := player.global_position

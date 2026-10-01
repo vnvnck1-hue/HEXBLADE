@@ -101,8 +101,9 @@
 - 2026-10-01 (미커밋): 적 처치 시 부스터 게이지 회복 — 1킬당 `Player.BOOST_KILL`(0.12, 약 0.24초 비행분), 비행 중에도 찬다. `Main.on_enemy_killed` → `Player.gain_boost()` 라서 모든 전투 씬에 적용.
 
 - `main`: 로비(메인 게임 = 헥스 섹터 런 / 연출 테스트 / 테스트 씬) 시작. 넓은 방·5웨이브·탄창 30발 반영.
-- `feature/zzz-presentation` (`cef07d2`, ZZZ풍 연출: 붉은 위험 섬광·보스 등장·컷인): 원격에 있으나 **main 에 아직 병합 안 됨**.
-- `feature/hex-sector-run`: main 에 병합 완료 (`d38a362`).
+- `feature/zzz-presentation` (ZZZ풍 연출: 붉은 위험 섬광·컷인·격파 쇼타임): 2026-10-01 main 에 병합. MAMMOTH 는 격파 연출 감독(`mammoth_b_director.gd`)이 시간·카메라를 쥐므로 쇼타임 대신 `MAMMOTH DOWN` 컷인만 쓴다 (VULCAN 은 쇼타임 그대로).
+- `feature/hex-sector-run`: main 에 병합 후 원격 브랜치 삭제.
+- 보스전 검증 인자 `--seconds=` 는 `--capture=` 가 있어야 종료한다 (없으면 끝나지 않음). 캡처 폴더는 미리 만들어 둔다.
 - 2026-10-01: Godot 4.7.2 고정 실행기 도입, 크롤러 도탄 생성 순서 오류(`!is_inside_tree()`) 수정. 4.7.2 기준 테스트 4종 PASS.
 - 2026-10-01 (미커밋): 적 피격 섬광(`scripts/presentation/hit_spark.gd`)을 기본총 예광탄과 같은 납작한 방추(SPINDLE) 조합으로 교체 — 외곽선 없음, ToonGunFX 로 그린다. 기본총 착탄(`GunFX.impact_body`)은 그대로. 예전 시트(`assets/fx/hit_spark_sheet.png`·`tools/make_hit_spark_sheet.py`)는 이제 쓰이지 않는다. 근접 캡처: `_capture/hit_spark_show.gd`.
 - 2026-10-01 (미커밋): 플레이어 액션 애니메이션 ZZZ풍 개편. 광선검 5단 → **6단 콤보**(삼연참 · 반동 사격(공중제비+공중 4연사) · 순간이동 난무 · 5바퀴 회전 선풍 · 2연 올려베기 · 낙월+지연 참격), cut 확장 키 `hits`/`blink`/`gun`/`spin`/`dashin`/`after` (`scripts/sword_combo.gd`).

@@ -274,13 +274,16 @@ static func _star_material() -> ShaderMaterial:
 ## 패링 공격 알림: 준비동작이 끝나는 순간 공격 지점에 크고 얇은 십자 별빛.
 ## 가로 줄기가 먼저 과장되게 쭉 뻗었다 튕겨 돌아오고, 이어서 세로 줄기가 똑같이 한 번. 그 뒤 사라진다.
 ## parent 를 주면 그 노드를 따라다닌다.
-static func warn(pos: Vector3, _kind: String, parent: Node3D = null) -> MeshInstance3D:
+## kind 가 "danger" 면 패링이 안 되는 공격의 붉은 섬광이다 (DangerFX.warn 이 부른다): 색 · 조명 · 소리만 바뀐다.
+static func warn(pos: Vector3, kind: String, parent: Node3D = null) -> MeshInstance3D:
+	var danger := kind == "danger"
+	var tint := DangerFX.RED if danger else GOLD
 	var mi := MeshInstance3D.new()
 	mi.material_override = _star_material()
 	mi.mesh = _quad
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.sorting_offset = 12.0
-	mi.set_instance_shader_parameter("tint", GOLD)
+	mi.set_instance_shader_parameter("tint", tint)
 	mi.set_instance_shader_parameter("k", 1.0)
 	mi.set_instance_shader_parameter("lx", 0.0)
 	mi.set_instance_shader_parameter("ly", 0.0)
@@ -304,9 +307,9 @@ static func warn(pos: Vector3, _kind: String, parent: Node3D = null) -> MeshInst
 	tw.tween_callback(mi.queue_free)
 	# 별빛 중심의 강한 섬광과 순간 조명
 	FX.flash(pos, Color.WHITE, 1.3, 0.06)
-	FX.flash(pos, GOLD, 2.2, 0.12)
+	FX.flash(pos, tint, 2.2, 0.12)
 	var light := OmniLight3D.new()
-	light.light_color = Color(1.0, 0.82, 0.4)
+	light.light_color = Color(1.0, 0.25, 0.22) if danger else Color(1.0, 0.82, 0.4)
 	light.light_energy = 7.0
 	light.omni_range = 8.0
 	FX.root.add_child(light)
@@ -314,7 +317,10 @@ static func warn(pos: Vector3, _kind: String, parent: Node3D = null) -> MeshInst
 	var ltw := light.create_tween()
 	ltw.tween_property(light, "light_energy", 0.0, 0.22).set_ease(Tween.EASE_IN)
 	ltw.tween_callback(light.queue_free)
-	Sfx.play("pwarn", 0.02, 1.0)
+	var snd := Sfx.play("pwarn", 0.02, 1.0)
+	if danger and snd:
+		# 붉은 섬광은 한 옥타브 가까이 낮게: 색을 못 봐도 소리로 구분된다
+		snd.pitch_scale = 0.62
 	return mi
 
 

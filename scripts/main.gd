@@ -748,6 +748,19 @@ func boss_loot(boss_node: Enemy, hp_frac: float) -> void:
 			drop_pickup("energy", pos)
 
 
+var _p2_at := -1.0
+## 검증용 `--fastkill=초`: 2페이즈에 들어가고 이 초가 지나면 보스 체력을 한 방 남기고 깎는다 (격파 쇼타임 확인용)
+func _fast_kill(boss_node: Node, in_p2: bool) -> void:
+	if boss_node == null or not in_p2:
+		return
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--fastkill="):
+			if _p2_at < 0.0:
+				_p2_at = time
+			if time - _p2_at >= float(a.substr(11)):
+				boss_node.set("boss_hp", minf(float(boss_node.get("boss_hp")), 2.0))
+
+
 func on_player_hurt() -> void:
 	hud.hurt_flash()
 	if combo > 1:
