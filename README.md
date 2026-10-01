@@ -15,8 +15,11 @@
 
 게임 중 **Esc** 를 누르면 로비로 돌아옵니다(섹터 런은 중단됩니다).
 
-- `run_game.cmd` 더블클릭: 프로젝트 안 `.tools/godot`의 Godot 4.x(현재 4.7.2)를 먼저 찾고, 없으면 옆 폴더 `.tools/godot`의 Godot 4.6.3 → winget 설치본 순으로 찾아 실행합니다. `.tools/`는 git에 올리지 않으므로 새 PC에서는 [Godot 4.7.2](https://github.com/godotengine/godot/releases/tag/4.7.2-stable) win64 zip을 `.tools/godot/`에 풀어 주세요.
+- `run_game.cmd` 더블클릭: **`godot-version.txt`에 고정한 Godot 버전(현재 4.7.2-stable)으로만** 실행합니다. 다른 버전이 PC에 깔려 있어도 쓰지 않습니다.
+- 새 PC에서 처음 실행하면 프로젝트 안 `.tools/godot/`(git 제외)에 그 버전을 자동으로 준비합니다. 같은 버전이 이미 설치된 곳(winget, 옆 폴더 `.tools/godot`, 환경 변수 `GODOT_HOME`)이 있으면 복사하고, 없으면 공식 릴리스에서 내려받아 SHA512로 검증합니다. 미리 해 두려면 `setup_godot.cmd`.
 - `open_editor.cmd`: 편집기로 엽니다. 편집기에서 F5를 누르면 실행됩니다.
+- `run_tests.cmd`: `tests/*.gd` 전체를 고정 버전으로 헤드리스 실행합니다.
+- 다른 PC로 작업을 옮길 때의 규칙과 주의점은 [AGENTS.md](AGENTS.md)에 있습니다.
 - 렌더러는 Forward+(Vulkan)입니다.
 
 ## 조작
@@ -229,6 +232,8 @@
 ## 검증용 실행 인자
 
 씬을 지정하지 않고 실행 인자(`--bot`·`--capture=` 등)를 주면 로비를 건너뛰고 섹터 런으로 바로 들어갑니다(`--test` 를 더하면 방 탐색 아레나). 아래 방 탐색 명령은 `main.tscn` 을 직접 지정합니다.
+
+아래의 `Godot --path .` 는 고정 버전 실행기로 바꿔 씁니다: `powershell -File tools\godot.ps1 wait <인자...>` (`--path` 는 실행기가 붙입니다). 예: `powershell -File tools\godot.ps1 wait --fixed-fps 60 res://scenes/main.tscn -- --bot --seed=1`
 
 ```
 Godot --path . --fixed-fps 60 res://scenes/main.tscn -- --bot --seed=1       # 자동 플레이 (방을 찾아가며 전투)

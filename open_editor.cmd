@@ -1,2 +1,3 @@
 @echo off
-call "%~dp0run_game.cmd" editor
+rem Opens the Godot editor (pinned version).
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\godot.ps1" editor

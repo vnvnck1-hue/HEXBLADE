@@ -1,25 +1,3 @@
 @echo off
-rem Finds Godot 4.6.3 in a sibling folder's .tools\godot and runs this project.
-setlocal
-set "G="
-rem Project-local Godot 4.x (.tools\godot) first.
-for %%E in ("%~dp0.tools\godot\Godot_v4*-stable_win64.exe") do set "G=%%~fE"
-if not defined G for /d %%D in ("%~dp0..\*") do (
-  if exist "%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe" set "G=%%~fD\.tools\godot\Godot_v4.6.3-stable_win64.exe"
-)
-rem Fallback: Godot 4.x installed via winget.
-if not defined G (
-  for /d %%P in ("%LOCALAPPDATA%\Microsoft\WinGet\Packages\GodotEngine.GodotEngine*") do (
-    for %%E in ("%%~fP\Godot_v4*-stable_win64.exe") do set "G=%%~fE"
-  )
-)
-if not defined G (
-  echo Godot 4.6.3 not found. Open project.godot with Godot 4.6 or newer.
-  pause
-  exit /b 1
-)
-if /i "%~1"=="editor" (
-  start "" "%G%" --editor --path "%~dp0."
-) else (
-  start "" "%G%" --path "%~dp0."
-)
+rem Starts the game (lobby) with the pinned Godot version in godot-version.txt. "run_game.cmd editor" opens the editor.
+if /i "%~1"=="editor" (powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\godot.ps1" editor) else (powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0tools\godot.ps1" run)

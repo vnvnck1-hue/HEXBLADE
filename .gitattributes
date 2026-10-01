@@ -1,0 +1,17 @@
+# 어떤 PC(core.autocrlf 설정과 무관)에서든 같은 줄바꿈을 쓴다.
+# Godot 은 .gd/.tscn/.import 등을 LF 로 저장하므로 작업 사본도 LF 로 맞춘다 (가짜 수정 표시 방지).
+* text=auto eol=lf
+
+# Windows 실행 스크립트는 CRLF
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# 바이너리
+*.png binary
+*.jpg binary
+*.gif binary
+*.mp4 binary
+*.glb binary
+*.zip binary
+*.exe binary

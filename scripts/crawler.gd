@@ -785,8 +785,9 @@ func _ping(hit: Vector3, n: Vector3, k: float) -> void:
 func _spawn_ricochet(hit: Vector3, n: Vector3, fl: Vector3, speed: float) -> void:
 	var d := _ricochet_dir(fl, n, 1.0)
 	var b := Bullet.make_player(hit + n * 0.1, d, speed)
-	b.ricochet(hit + n * 0.1, d, speed * randf_range(0.7, 1.0))
+	# 먼저 트리에 넣는다: 도탄 전환 때 예광 연출이 전역 위치를 읽는다
 	Main.inst.add_bullet(b)
+	b.ricochet(hit + n * 0.1, d, speed * randf_range(0.7, 1.0))
 
 
 ## 반사 방향 + 흩어짐. 항상 장갑 바깥쪽을 향하고, 조금 위로 튄다.
