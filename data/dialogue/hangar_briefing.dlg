@@ -1,0 +1,99 @@
+# 격납고 브리핑 — 첫 구출 출격 전. 인물 4명, 선택지 2번, 신뢰 변수, 조건부 선택지.
+# 문법은 docs/dialogue.md
+
+== start
+@title 격납고 · 출격 준비
+@summary 첫 구출 출격 직전, 격납고에 미라 · 에이린 · 세나 · 노아가 모였다.
+@enter mira left confident
+@enter eirin right confident
+@wait 0.4
+> 정비 크레인이 멈추자, 격납고에 남은 소리는 냉각팬과 누군가의 발소리뿐이었다.
+mira confident: 저 안에 아직 사람이 있어.{p} 이번에는 전부 데리고 나오는 거야.
+eirin stern: 감상은 출격 뒤에 해. 섹터 7은 지난주에만 기체 셋을 삼켰어.
+mira angry !: 그래서 {red}{b}또{/b}{/red} 두고 오자고?
+eirin: 두고 오자는 게 아니야. {p=0.3}살아서 돌아오자는 거지.
+
+@enter sena left2 joy
+sena joy !: 다들 표정 좀 풀어요~! {wave}출격 전에 싸우면 운 나빠진다니까요?{/wave}
+mira flustered: …세나, 언제부터 거기 있었어.
+sena: 처음부터요. 고글 닦고 있었거든요.
+
+@enter noa right2 neutral
+noa neutral: 브리핑 시작할게.{p} 섹터 7 외곽 중계소에서 {cyan}동조 신호{/cyan}가 하나 잡혔어.
+noa skeptical: 패턴은 인간 파일럿이야. {p=0.4}그런데 맥박이… {slow}기계 리듬하고 겹쳐.{/slow}
+@shake 0.4
+eirin stern: 변이가 진행 중이란 뜻이군.
+noa: 맞아. 그래서 {gold}목표를 정해야 해.{/gold} 구출이냐, 정리냐.
+
+@summary 섹터 7에서 변이가 진행 중인 파일럿의 동조 신호가 잡혔고, 구출할지 정리할지 정해야 한다.
+mira angry: 정할 것도 없어. 구한다.
+eirin: …너는 어떻게 생각해, 파일럿?
+
+* <미라> 구한다. 전부 데리고 나온다. -> rescue
+* <에이린> 상황을 보고 판단하겠다. -> judge
+* 노아, 신호 정보를 더 줘. -> more_info
+
+== more_info
+@set asked_noa = true
+noa warm: 좋은 질문이야.{p} 신호는 아직 {b}자기 이름{/b}에 반응해. 의식이 남아 있다는 뜻이야.
+noa skeptical: 다만 반응할 때마다 주변 기계도 같이 움직여. 오래 끌면 위험해.
+eirin: 들었지. 그래서, 결정은?
+
+* <미라> 구한다. 전부 데리고 나온다. -> rescue
+* <에이린> 상황을 보고 판단하겠다. -> judge
+
+== rescue
+@set trust_mira += 1
+@summary 파일럿은 구출을 택했다. 미라가 웃었고, 에이린은 조건을 걸었다.
+mira confident: …그래야지. {p=0.2}역시 말이 통하네.
+eirin stern: 좋아. 대신 조건이 있어.{p} 동조율이 {red}80%{/red}를 넘으면 그때는 내가 판단한다.
+mira angry !: 에이린!
+eirin vulnerable: …나도 두고 오고 싶어서 하는 말 아니야.{p=0.5} 너까지 잃고 싶지 않을 뿐이야.
+@wait 0.5
+mira flustered: …알았어.
+-> launch
+
+== judge
+@set trust_eirin += 1
+@summary 파일럿은 현장 판단을 택했다. 에이린이 동의했고, 미라는 불만을 삼켰다.
+eirin confident: 현명하네. 감정으로 출격하면 둘 다 못 돌아와.
+mira angry: …그 판단, 끝까지 구하는 쪽으로 내려 줘.
+sena surprised: 와, 분위기 무거워…
+sena joy: 그럼 제가 앞에서 길 뚫을게요! 빨리 들어가서 빨리 나오면 되잖아요?
+-> launch
+
+== launch
+@exit sena
+noa neutral: 출격 경로 올릴게.{p} 세나가 선두, 미라가 엄호, 에이린이 후방.
+@if asked_noa -> launch_info
+-> launch_go
+
+== launch_info
+noa warm: 아까 물어봐 줘서 고마워.{p} 신호 이름, 출격 중에 바로 띄워 줄게.
+
+== launch_go
+@summary 출격 순서가 정해졌다. 마지막으로 파일럿에게 출격 명령이 남았다.
+eirin: 마지막으로 하나만.
+* [if trust_mira >= 1] <미라> "전부 데리고 나온다." -> end_mira
+* [if trust_eirin >= 1] <에이린> "살아서 돌아온다." -> end_eirin
+* "출격한다." -> end_plain
+
+== end_mira
+mira confident !: {big}좋아.{/big} 가자!
+-> fin
+
+== end_eirin
+eirin confident: …그 말, 기억해 둘게.
+-> fin
+
+== end_plain
+eirin: 짧아서 좋네.
+
+== fin
+@flash
+@shake 0.8
+radio: 격납고 3번, 사출 준비 완료. {fast}카운트 시작 — 3, 2, 1…{/fast}
+@exit all
+@wait 0.6
+> {gray}— 출격 —{/gray}
+@end

@@ -1,0 +1,47 @@
+# 대화 기능 시연 — 꾸밈 문법 · 연출 명령 · 조작을 한 번씩 보여 준다.
+
+== start
+@exit all
+@title 기능 시연 · 대화 시스템
+@summary 대화 시스템의 기능을 하나씩 시연하는 장면.
+@enter noa center neutral
+noa: 대화 기능 시연을 시작할게. {p}Space 나 클릭으로 넘기고, 글자가 나오는 중에 누르면 문장이 바로 완성돼.
+noa: 쉼표, 마침표, 물음표 뒤에는 자동으로 잠깐 멈춰.{p} 이렇게… 끊어 읽는 리듬이 생기지?
+noa skeptical: 직접 멈춤도 넣을 수 있어.{p=1.0} 방금 1초 쉬었어.
+noa: 속도도 바꿔. {slow}천천히 말하거나…{/slow} {fast}아주아주 빠르게 쏟아낼 수도 있고!{/fast}
+noa warm: 글자 꾸밈은 {red}빨강{/red}, {cyan}청록{/cyan}, {gold}금색{/gold}, {b}굵게{/b}, {shake}흔들림{/shake}, {wave}물결{/wave}, {big}크게{/big}.
+@move noa right
+@enter mira left confident
+mira: 말하는 사람은 밝고 크게, 듣는 사람은 어둡게 물러나.
+noa: 그리고 인물마다 {b}목소리(글자 소리) 높이{/b}가 달라.
+mira angry !: 감정이 터질 땐 그림이 흔들리고 튀어 올라!
+@shake 0.7
+mira flustered: …화면도 흔들 수 있고.
+@flash
+noa skeptical: 섬광도.
+@enter sena left2 surprised
+@enter eirin right2 confident
+sena surprised !: 네 명까지 한 화면에 설 수 있어요!
+eirin: 뒤에 선 사람은 조금 작게 그려져.
+> 화자가 없는 줄은 해설로, 이름표 없이 기울어진 회색 글씨로 나온다.
+me: 그림 없는 화자(주인공 · 무전)는 이름표만 붙는다.
+radio: 무전 테스트. 들리나?
+
+@summary 조작 · 표정 · 연출 시연을 마치고 선택지 시연으로 넘어갔다.
+noa: 위 버튼이나 키로 기록(L) · 자동(A) · 넘기기(S) · 숨기기(H) 를 쓸 수 있어.
+noa warm: Tab 을 누르면 다음 선택지까지 건너뛰고, 지나온 줄거리 요약을 보여 줘.
+noa: 선택지는 숫자 키 1~4 로도 고를 수 있고, 한 번 고른 건 ✓ 로 표시돼.
+* <노아> 처음부터 다시 볼래. -> start
+* 조건부 선택지를 보여 줘. -> cond
+* 끝낸다. -> fin
+
+== cond
+@set demo_seen = true
+noa: 변수를 켰어. 다음 선택지에는 조건을 통과한 줄만 나와.
+* [if demo_seen] <조건 통과> 이 줄은 demo_seen 이 켜져서 보인다. -> fin
+* [if not demo_seen] 이 줄은 안 보여야 한다. -> fin
+
+== fin
+@exit all
+> 시연 끝.
+@end
