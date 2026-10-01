@@ -18,3 +18,7 @@ output/models/*/zoom_*.png
 output/models/*/overlay_*.png
 output/models/*/sweep.log
 output/models/*/compare_colour.png
+
+# Python 캐시 (Blender 빌드가 tools/blender 모듈을 불러올 때 생김)
+__pycache__/
+*.pyc
