@@ -1730,7 +1730,7 @@ func _animate(dt: float) -> void:
 		return
 	else:
 		# 회피 직후: 기울였던 자세를 빠르게 되돌림
-		visual.basis = visual.basis.slerp(Basis.IDENTITY, 1.0 - exp(-25.0 * dt))
+		visual.basis = visual.basis.orthonormalized().slerp(Basis.IDENTITY, 1.0 - exp(-25.0 * dt))
 		(j.arm_l as Node3D).rotation.z = lerpf((j.arm_l as Node3D).rotation.z, 0.0, 0.3)
 		(j.arm_r as Node3D).rotation.z = lerpf((j.arm_r as Node3D).rotation.z, 0.0, 0.3)
 
