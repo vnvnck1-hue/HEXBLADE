@@ -13,6 +13,8 @@ const SPEED_2 := 56.0
 const BOSS_DELAY := 1.4
 const MIN_GAP := 4.8          # 보스 중심에서 플레이어까지 최소 앞뒤 거리
 const Z_MAX := 6.0
+const VIEW_K := 1.6           # 총 연출 화면 크기 배율 (ToonGunFX.view_k)
+const FLOW_FAR_Z := 30.0      # 흘러가던 탄피·파편이 이보다 아래(+Z)로 가면 지운다 (화면 밖)
 
 var stage: Stage
 var boss: BossEnemy
@@ -44,6 +46,8 @@ func _ready() -> void:
 	stage = Stage.new()
 	stage.speed = SPEED_1
 	world.add_child(stage)
+	# 흐르는 공간: 탄피·파편·연기·폭발·바닥 흔적이 도로 속도에 맞춰 화면 아래로 흘러간다
+	WorldFlow.attach(world, stage, FLOW_FAR_Z)
 	bullets = Node3D.new()
 	add_child(bullets)
 
@@ -60,6 +64,8 @@ func _ready() -> void:
 	debris = Debris.new()
 	world.add_child(debris)
 	world.add_child(GunFX.new())
+	# 보스전 카메라는 일반 전투보다 멀고(22m) 넓어(FOV 50) 같은 크기의 총 연출이 화면에서 약 0.54배로 보인다
+	ToonGunFX.inst.view_k = VIEW_K
 
 	hud = Hud.new()
 	add_child(hud)
@@ -101,8 +107,14 @@ func _on_phase(p: int) -> void:
 		speed_fx.target_intensity = 1.35
 
 
+## 죽음 연출이 끝나면(카메라 복귀 뒤) 바로 승리 처리한다
 func _on_boss_defeated() -> void:
-	get_tree().create_timer(1.6, false).timeout.connect(_win)
+	_win.call_deferred()
+
+
+## 죽음 연출 중: 입력을 잠그고(자동 비행) 하던 궁극기·지속 레이저를 끊는다
+func _dying() -> bool:
+	return boss != null and boss.death_started()
 
 
 # ── 판정 보조 ───────────────────────────────────────────
@@ -142,11 +154,11 @@ func _physics_process(dt: float) -> void:
 	if player.alive:
 		var p := player.global_position
 		var z_min := -4.0
-		if boss and boss.visual.visible:
+		if boss and boss.visual.visible and not _dying():
 			z_min = boss.global_position.z + MIN_GAP
 		p.x = clampf(p.x, -Stage.HALF_W + 0.4, Stage.HALF_W - 0.4)
 		p.z = clampf(p.z, z_min, Z_MAX)
-		if boss and boss.visual.visible and absf(p.x - boss.global_position.x) < 3.6:
+		if boss and boss.visual.visible and not _dying() and absf(p.x - boss.global_position.x) < 3.6:
 			p.z = maxf(p.z, z_min)
 		player.global_position = p
 		# 부스터 배기가 도로 속도로 뒤로 흩날린다
@@ -157,8 +169,28 @@ func _physics_process(dt: float) -> void:
 			stage.puff(back, Color(0.2, 0.9, 1.0, 0.9) if randf() < 0.6 else Color(0.6, 0.5, 1.0, 0.9), 0.45, 0.22, 0.9, true)
 	var k := stage.speed / SPEED_1
 	(camera as BossCamera).speed_k = k
-	speed_fx.target_intensity = clampf(k, 0.0, 1.4) if state != State.WIN else 0.25
-	speed_fx.track(camera, Vector3(camera.global_position.x * 0.3, 0.0, -60.0))
+	if _dying() and boss.death_fx.active:
+		# 연출 중 속도선 세기는 감독이 정하고, 지금 화면을 찍는 카메라(연출 카메라)를 따라간다
+		player.invuln = maxf(player.invuln, 1.0)
+	else:
+		speed_fx.target_intensity = clampf(k, 0.0, 1.4) if state != State.WIN else 0.25
+	var cur := get_viewport().get_camera_3d()
+	if cur:
+		speed_fx.track(cur, Vector3(cur.global_position.x * 0.3, 0.0, -60.0))
+
+
+func _process(dt: float) -> void:
+	if _dying():
+		if not player.bot:
+			# 연출 시작: 사람이 조작하던 플레이어를 자동 비행으로 바꾸고 하던 큰 기술을 끊는다
+			if player.ult_aiming:
+				player._end_ult_aim(false)
+			elif player.ult_winding():
+				player._cancel_ult_windup()
+			if player.mega_t > 0.0:
+				player._end_mega()
+		player.bot = true
+	super._process(dt)
 
 
 func _win() -> void:
@@ -180,6 +212,12 @@ func _win() -> void:
 
 func bot_input(p: Player) -> Dictionary:
 	var out := {"move": Vector3.ZERO, "aim": p.global_position - Vector3(0, 0, 6), "fire": false, "slash": false, "dash": false, "charge": false, "boost": true}
+	if _dying():
+		# 죽음 연출 중: 넘어지는 맘모스 반대 차선의 안전한 자리로 부스터 비행
+		var to := boss.death_fx.safe_pos - p.global_position
+		to.y = 0
+		out.move = (to * 0.6).limit_length(1.0) if to.length() > 0.3 else Vector3.ZERO
+		return out
 	if boss == null or not boss.visual.visible:
 		return out
 	var bp := boss.global_position

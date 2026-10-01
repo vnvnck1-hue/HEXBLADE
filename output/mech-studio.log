@@ -5,3 +5,52 @@ ERROR: Can't create shader cache folder, no shader caching will happen: user://
 
 ERROR: Failed to read the root certificate store.
    at: get_system_ca_certificates (platform/windows/os_windows.cpp:2570)
+
+================================================================
+CrashHandlerException: Program crashed with signal 11
+Engine version: Godot Engine v4.6.3.stable.official (7d41c59c457bd5a245092b4e7eb2d833e3b3f8c3)
+Dumping the backtrace. Please include this when reporting the bug on: https://github.com/godotengine/godot/issues
+[1] error(22): C:\Users\Loadcomplete\Documents\ChatGPT\3D 쿼터뷰 슈팅게임\.tools\godot\Godot_v4.6.3-stable_win64.exe
+[2] error(-1): failed to read executable information
+[3] error(-1): failed to read executable information
+[4] error(-1): failed to read executable information
+[5] error(-1): failed to read executable information
+[6] error(-1): failed to read executable information
+[7] error(-1): failed to read executable information
+[8] error(-1): failed to read executable information
+[9] error(-1): failed to read executable information
+[10] error(-1): failed to read executable information
+[11] error(-1): failed to read executable information
+[12] error(-1): failed to read executable information
+[13] error(-1): failed to read executable information
+[14] error(-1): failed to read executable information
+[15] error(-1): failed to read executable information
+[16] error(-1): failed to read executable information
+[17] error(-1): failed to read executable information
+[18] error(-1): failed to read executable information
+[19] error(-1): failed to read executable information
+[20] error(-1): failed to read executable information
+[21] error(-1): failed to read executable information
+[22] error(-1): failed to read executable information
+[23] error(-1): failed to read executable information
+[24] error(-1): failed to read executable information
+[25] error(-1): failed to read executable information
+[26] error(-1): failed to read executable information
+[27] error(-1): failed to read executable information
+[28] error(-1): failed to read executable information
+[29] error(-1): failed to read executable information
+[30] error(-1): failed to read executable information
+[31] error(-1): failed to read executable information
+[32] error(-1): failed to read executable information
+[33] error(-1): failed to read executable information
+[34] error(-1): failed to read executable information
+[35] error(-1): failed to read executable information
+[36] error(-1): failed to read executable information
+[37] error(-1): failed to read executable information
+[38] error(-1): failed to read executable information
+[39] error(-1): failed to read executable information
+[40] error(-1): failed to read executable information
+[41] error(-1): failed to read executable information
+[42] error(-1): failed to read executable information
+-- END OF C++ BACKTRACE --
+================================================================

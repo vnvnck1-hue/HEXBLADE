@@ -152,8 +152,9 @@ static func _build_arc_mesh(r_in: float, r_out: float, span: float, seg: int) ->
 	return st.commit()
 
 
-static func _add(n: Node3D, pos: Vector3) -> void:
-	root.add_child(n)
+## flow > 0: 흐르는 씬(추격 보스전)에서 공간을 따라 흘러간다 (WorldFlow.AIR / GROUND). 흐르지 않는 씬에서는 무시된다
+static func _add(n: Node3D, pos: Vector3, flow := 0.0) -> void:
+	(WorldFlow.holder(flow) if flow > 0.0 else root).add_child(n)
 	n.global_position = pos
 
 
@@ -174,7 +175,7 @@ static func blob_shadow(parent: Node3D, size: float, strength := 0.55) -> MeshIn
 	return mi
 
 
-static func ring(pos: Vector3, size: float, colors: Array[Color], duration := 0.42) -> void:
+static func ring(pos: Vector3, size: float, colors: Array[Color], duration := 0.42, flow := WorldFlow.AIR) -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = _quad
 	mi.material_override = _ring_mat
@@ -184,7 +185,7 @@ static func ring(pos: Vector3, size: float, colors: Array[Color], duration := 0.
 	mi.set_instance_shader_parameter("c_inner", colors[2])
 	mi.set_instance_shader_parameter("progress", 0.0)
 	mi.scale = Vector3.ONE * size
-	_add(mi, pos)
+	_add(mi, pos, flow)
 	var tw := mi.create_tween()
 	tw.tween_method(func(v: float): mi.set_instance_shader_parameter("progress", v), 0.0, 1.0, duration)
 	tw.tween_callback(mi.queue_free)
@@ -196,7 +197,7 @@ static func puffs(pos: Vector3, count: int, colors: Array[Color], spread: float,
 		var mi := Pal.flat_mesh(_sphere, c)
 		var off := Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).limit_length(1.0) * spread
 		off.y = randf_range(0.1, 0.9) * size
-		_add(mi, pos + off)
+		_add(mi, pos + off, WorldFlow.AIR)
 		mi.scale = Vector3.ONE * 0.01
 		var s := size * randf_range(0.55, 1.15)
 		var l := life * randf_range(0.7, 1.25)
@@ -216,7 +217,8 @@ static func sparks(pos: Vector3, count: int, colors: Array[Color], speed := 6.0,
 	p.one_shot = true
 	p.explosiveness = 1.0
 	p.lifetime = life
-	p.local_coords = false
+	# 흐르는 씬에서는 운반 노드와 함께 흐르도록 로컬 좌표로 시뮬레이션한다
+	p.local_coords = WorldFlow.active()
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var pm := ParticleProcessMaterial.new()
 	pm.direction = Vector3(0, 1, 0)
@@ -248,14 +250,14 @@ static func sparks(pos: Vector3, count: int, colors: Array[Color], speed := 6.0,
 	pm.color_initial_ramp = gt
 	p.process_material = pm
 	p.draw_pass_1 = _spark_mesh
-	_add(p, pos)
+	_add(p, pos, WorldFlow.AIR)
 	p.emitting = true
 	p.get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
 
 
-static func flash(pos: Vector3, c: Color, size := 0.6, dur := 0.08) -> void:
+static func flash(pos: Vector3, c: Color, size := 0.6, dur := 0.08, flow := WorldFlow.AIR) -> void:
 	var mi := Pal.flat_mesh(_sphere, c, 1.6)
-	_add(mi, pos)
+	_add(mi, pos, flow)
 	mi.scale = Vector3.ONE * size
 	var tw := mi.create_tween()
 	tw.tween_property(mi, "scale", Vector3.ONE * 0.01, dur).set_ease(Tween.EASE_IN)
@@ -265,8 +267,8 @@ static func flash(pos: Vector3, c: Color, size := 0.6, dur := 0.08) -> void:
 # ── 조합 연출 ───────────────────────────────────────────
 
 static func muzzle(pos: Vector3, dir: Vector3) -> void:
-	flash(pos, Color(0.85, 1.0, 1.0), 0.42, 0.055)
-	flash(pos + dir * 0.18, Pal.CYAN, 0.28, 0.07)
+	flash(pos, Color(0.85, 1.0, 1.0), 0.42, 0.055, 0.0)
+	flash(pos + dir * 0.18, Pal.CYAN, 0.28, 0.07, 0.0)
 
 
 static func bullet_hit(pos: Vector3, c: Color) -> void:
@@ -281,7 +283,7 @@ static func enemy_explosion(pos: Vector3, k := 1.0) -> void:
 
 ## 스타일라이즈드 화염 폭발 (explosion_fx.gd). k = 크기 배율, 1 ≈ 반경 1.6m
 static func fire_explosion(pos: Vector3, k := 1.0) -> void:
-	StylizedExplosion.spawn(root, pos, k, Main.gy(pos))
+	StylizedExplosion.spawn(WorldFlow.holder(WorldFlow.AIR), pos, k, Main.gy(pos))
 	# 공기가 휘는 굴절 충격파 + 불덩이 안쪽 아지랑이
 	Distortion.burst(pos, StylizedExplosion.BASE_R * k * 2.4, 0.4 + 0.12 * sqrt(k), clampf(0.7 + 0.3 * k, 0.7, 1.6), 1.0)
 
@@ -290,7 +292,7 @@ static func fire_explosion(pos: Vector3, k := 1.0) -> void:
 static func smoke(pos: Vector3) -> void:
 	var c := Color("5a2a50") if randf() < 0.5 else Color("ff5a3a")
 	var mi := Pal.flat_mesh(_sphere, c)
-	_add(mi, pos + Vector3(randf_range(-0.1, 0.1), 0, randf_range(-0.1, 0.1)))
+	_add(mi, pos + Vector3(randf_range(-0.1, 0.1), 0, randf_range(-0.1, 0.1)), WorldFlow.AIR)
 	mi.scale = Vector3.ONE * randf_range(0.25, 0.45)
 	var tw := mi.create_tween()
 	tw.tween_property(mi, "scale", Vector3.ONE * 0.01, 0.45).set_ease(Tween.EASE_IN)
@@ -512,10 +514,10 @@ static func _ring_mesh() -> TorusMesh:
 
 
 ## 바닥에 퍼지는 원형 충격파
-static func shockwave(pos: Vector3, c: Color, size: float, dur := 0.35, thick := 0.08) -> void:
+static func shockwave(pos: Vector3, c: Color, size: float, dur := 0.35, thick := 0.08, flow := WorldFlow.AIR) -> void:
 	var mi := Pal.flat_mesh(_ring_mesh(), c, 1.3)
 	mi.scale = Vector3(0.2, thick, 0.2)
-	_add(mi, Vector3(pos.x, Main.gy(pos) + 0.04, pos.z))
+	_add(mi, Vector3(pos.x, Main.gy(pos) + 0.04, pos.z), flow)
 	var tw := mi.create_tween()
 	tw.tween_property(mi, "scale", Vector3(size, thick * 0.3, size), dur).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.parallel().tween_method(func(v: Color): mi.set_instance_shader_parameter("tint", v), c, Pal.FLOOR, dur).set_ease(Tween.EASE_IN)
@@ -573,11 +575,11 @@ static func _beam(origin: Vector3, dir: Vector3, length: float, w: float, k: flo
 	htw.tween_callback(holder.queue_free)
 	# 총구·끝점 폭발
 	var end := origin + dir * length
-	ring(Vector3(origin.x, Main.gy(origin) + 0.3, origin.z), 2.4 + 2.0 * k, ring_a, 0.35)
-	flash(origin, Color.WHITE, 1.2 + k, 0.12)
+	ring(Vector3(origin.x, Main.gy(origin) + 0.3, origin.z), 2.4 + 2.0 * k, ring_a, 0.35, 0.0)
+	flash(origin, Color.WHITE, 1.2 + k, 0.12, 0.0)
 	ring(Vector3(end.x, Main.gy(end) + 0.3, end.z), 2.0 + 2.5 * k, ring_b, 0.4)
 	sparks(end, 16 + int(16 * k), spark_c, 10.0, 0.5, -10.0, 0.1)
-	shockwave(origin, main_c, 2.5 + 2.0 * k, 0.35)
+	shockwave(origin, main_c, 2.5 + 2.0 * k, 0.35, 0.08, 0.0)
 	# 빔을 따라 튀는 불꽃
 	var step := 1.6
 	var d := step
@@ -588,7 +590,7 @@ static func _beam(origin: Vector3, dir: Vector3, length: float, w: float, k: flo
 	var scorch := BoxMesh.new()
 	scorch.size = Vector3(w * 0.7, 0.01, length)
 	var sm := Pal.flat_mesh(scorch, main_c, 1.2)
-	_add(sm, Vector3(origin.x, Main.gy(origin) + 0.025, origin.z) + Vector3(dir.x, 0, dir.z) * length * 0.5)
+	_add(sm, Vector3(origin.x, Main.gy(origin) + 0.025, origin.z) + Vector3(dir.x, 0, dir.z) * length * 0.5, WorldFlow.GROUND)
 	sm.look_at(sm.global_position + Vector3(dir.x, 0, dir.z), Vector3.UP)
 	var stw := sm.create_tween()
 	stw.tween_method(func(v: Color): sm.set_instance_shader_parameter("tint", v), scorch_c, Color(0.09, 0.08, 0.16), 1.2).set_ease(Tween.EASE_OUT)

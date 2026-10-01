@@ -79,6 +79,7 @@ var _molten: MoltenSplash
 
 func _ready() -> void:
 	add_to_group("enemies")
+	is_boss = true
 	radius = 6.2
 	slice_size = Vector3(4, 3, 4)
 	slice_color = Titan.IRON

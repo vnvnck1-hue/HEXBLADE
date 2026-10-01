@@ -1,44 +1,25 @@
 class_name HitSpark
 extends RefCounted
-## 적 피격 섬광 (연출 전용). 카툰풍 3프레임 스프라이트 시트를 카메라를 향한 판에 한 장씩 끊어 넘긴다.
-##  1프레임  임팩트: 흰 심지 네 갈래 별 + 긴 대각 줄기 + 두꺼운 노란 초승달
-##  2프레임  확산: 줄기가 길고 가늘어지고, 고리가 커지며 가시가 돋고 파편이 튄다
-##  3프레임  소멸: 끊어진 고리 조각 · 줄기 끝 조각 · 흩어진 파편
-## 외곽선 없이 평면 채색 + 같은 색 번짐으로 그려 게임의 다른 연출과 결을 맞춘다. 다른 물체에 가려지지 않게 맨 위에 그린다.
-## 시트는 tools/make_hit_spark_sheet.py 로 만든다.
+## 적 피격 섬광 (연출 전용). 기본총 예광탄과 같은 납작한 방추(비행접시) 모양을 ToonGunFX 로 겹쳐 띄운다.
+## 외곽선 없이 주황 몸체 + 뜨거운 노랑·흰 심지로, 총구 화염·예광·착탄과 같은 결로 그린다.
+##  비행접시   맞은 방향에 가로로 누운 넓적한 방추가 번쩍 펴졌다가 가늘어진다 (안쪽에 더 작고 뜨거운 방추)
+##  잔물결     한 박자 늦게 더 얇은 방추가 옆으로 길게 퍼져 나간다
+##  관통 방추  맞은 방향으로 탄이 꿰뚫고 지나가듯 짧은 방추
+##  방추 불똥  작은 방추들이 맞은 쪽 반구로 튀며 날아가는 방향으로 늘어난다
+## 밝기는 예광탄보다 낮게(1.1~1.35) 잡아 화면 글로우가 번지지 않고 모양이 또렷하게 남게 한다.
 
-const SHEET := preload("res://assets/fx/hit_spark_sheet.png")
-const FRAMES := 3
-## 각 프레임을 보여 줄 게임 시간 (60fps 기준 3 · 2 · 2 프레임). 임팩트 프레임을 가장 길게 잡는다.
-const HOLD: Array[float] = [0.05, 0.034, 0.034]
-const BASE_ANG := -0.61         # 시트 속 긴 줄기의 방향 (-35°, 화면 오른쪽 위)
-const SIZE := 2.0               # 총알 한 발 기준 판 한 변 (m)
+## SPINDLE 의 폭은 size.x 의 약 0.26 배라, size.x 를 길이(size.y)와 비슷하게 주면 폭:길이 ≈ 0.3 의 납작한 렌즈가 된다.
 const MIN_GAP := 0.045          # 같은 적이 연사로 맞을 때 이보다 촘촘하게는 새로 띄우지 않는다
+const PULL := 0.7               # 기체에 파묻히지 않게 카메라 쪽으로 띄우는 거리 (m)
 
-static var _mat: ShaderMaterial
-static var _quad: QuadMesh
 static var _last := {}
-
-
-static func _setup() -> void:
-	if _mat != null:
-		return
-	_quad = QuadMesh.new()
-	var sh := Shader.new()
-	sh.code = SHADER % FX.BILLBOARD
-	_mat = ShaderMaterial.new()
-	_mat.shader = sh
-	_mat.set_shader_parameter("sheet", SHEET)
-	_mat.set_shader_parameter("frames", float(FRAMES))
-	_mat.set_shader_parameter("base_ang", BASE_ANG)
-	_mat.render_priority = 9
 
 
 ## pos: 맞은 지점 · dir: 맞은 방향(월드) · k: 세기 (총알 1, 검·강공격일수록 크게) · key: 연사 간격 판정용
 static func spawn(pos: Vector3, dir: Vector3, k := 1.0, key: Object = null) -> void:
-	if FX.root == null or not is_instance_valid(FX.root) or not FX.root.is_inside_tree():
+	var g := ToonGunFX.inst
+	if g == null or not is_instance_valid(g) or not g.is_inside_tree():
 		return
-	_setup()
 	if key != null:
 		var now := Time.get_ticks_msec() * 0.001
 		var id := key.get_instance_id()
@@ -47,81 +28,32 @@ static func spawn(pos: Vector3, dir: Vector3, k := 1.0, key: Object = null) -> v
 		_last[id] = now
 		if _last.size() > 64:
 			_last.clear()
-	# 긴 줄기를 맞은 방향(화면에 투영한 기울기)으로 돌린다
-	var cam := FX.root.get_viewport().get_camera_3d()
-	var ang := BASE_ANG + randf_range(-0.4, 0.4)
+	var f := Vector3(dir.x, 0, dir.z)
+	f = f.normalized() if f.length() > 0.01 else Vector3.FORWARD
+	f = f.rotated(Vector3.UP, randf_range(-0.12, 0.12))
+	var side := f.cross(Vector3.UP).normalized()
 	var at := pos
+	var cam := g.get_viewport().get_camera_3d()
 	if cam:
-		at = pos + (cam.global_position - pos).normalized() * 0.6   # 기체 앞쪽에 띄운다
-		var d := Vector3(dir.x, 0, dir.z)
-		if d.length() > 0.01:
-			var sd := cam.global_basis.inverse() * d.normalized()
-			if Vector2(sd.x, sd.y).length() > 0.2:
-				ang = atan2(-sd.y, sd.x)   # 판의 UV 는 y 가 아래쪽
-		ang += randf_range(-0.2, 0.2)
-	var mi := _Player.new()
-	mi.mesh = _quad
-	mi.material_override = _mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mi.set_instance_shader_parameter("frame", 0.0)
-	mi.set_instance_shader_parameter("rot", ang - BASE_ANG)
-	mi.set_instance_shader_parameter("flip", 1.0 if randf() < 0.5 else -1.0)
-	FX.root.add_child(mi)
-	mi.global_position = at
-	mi.scale = Vector3.ONE * SIZE * sqrt(k)
+		at = pos + (cam.global_position - pos).normalized() * PULL
+	var s := sqrt(k)
+	var tilt := side.rotated(f, randf_range(-0.18, 0.18))
 
-
-## 시트 재생: 한 장씩 끊어 넘기되 렌더 프레임마다 최대 한 장만 넘긴다 (프레임이 떨어져도 세 장이 모두 보인다).
-## 게임 시간으로 흐르므로 히트스탑 동안에는 임팩트 프레임에 멈춰 있다.
-class _Player extends MeshInstance3D:
-	var i := 0
-	var t := 0.0
-	var _drawn := false
-
-	func _process(dt: float) -> void:
-		# 생긴 프레임에는 넘기지 않는다 (임팩트 프레임이 최소 한 번은 그려지도록)
-		if not _drawn:
-			_drawn = true
-			return
-		t += dt
-		if t < HOLD[i]:
-			return
-		t = 0.0
-		i += 1
-		if i >= FRAMES:
-			queue_free()
-			return
-		set_instance_shader_parameter("frame", float(i))
-
-
-const SHADER := """
-shader_type spatial;
-render_mode unshaded, blend_mix, cull_disabled, shadows_disabled, depth_draw_never, depth_test_disabled;
-uniform sampler2D sheet : source_color, filter_linear, repeat_disable;
-uniform float frames = 3.0;
-uniform float base_ang = 0.0;
-instance uniform float frame = 0.0;
-instance uniform float rot = 0.0;
-instance uniform float flip = 1.0;
-void vertex() {
-%s
-}
-vec2 rotate(vec2 p, float a) {
-	float c = cos(a), s = sin(a);
-	return vec2(c * p.x - s * p.y, s * p.x + c * p.y);
-}
-void fragment() {
-	// 판 좌표 → 시트 칸 좌표: rot 만큼 돌려 긴 줄기를 맞은 방향에 맞추고, 줄기 축을 기준으로 가끔 뒤집는다
-	vec2 p = UV - 0.5;
-	p = rotate(p, -rot);
-	p = rotate(p, -base_ang);
-	p.y *= flip;
-	p = rotate(p, base_ang);
-	vec2 uv = p + 0.5;
-	if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) discard;
-	vec4 c = texture(sheet, vec2((floor(frame + 0.5) + uv.x) / frames, uv.y));
-	if (c.a < 0.01) discard;
-	ALBEDO = c.rgb;
-	ALPHA = c.a;
-}
-"""
+	# 비행접시: 가로로 누운 넓적한 방추 + 안쪽의 작고 뜨거운 방추
+	g.spawn(ToonGunFX.SPINDLE, at, 0.09, 0, Vector2(1.7, 1.5) * s * randf_range(0.9, 1.1),
+		ToonGunFX.ORANGE, 1.25, tilt, {"tint2": ToonGunFX.HOT})
+	g.spawn(ToonGunFX.SPINDLE, at, 0.06, 0, Vector2(1.05, 0.9) * s,
+		ToonGunFX.AMBER, 1.35, tilt, {"tint2": ToonGunFX.WHITE})
+	# 잔물결: 한 박자 늦게 더 얇고 길게 옆으로 퍼진다
+	g.spawn(ToonGunFX.SPINDLE, at, 0.1, 0, Vector2(0.75, 1.5) * s,
+		ToonGunFX.ORANGE, 1.1, -tilt, {"tint2": ToonGunFX.AMBER, "grow": 5.0, "delay": 0.035})
+	# 관통 방추: 맞은 방향으로 짧게 꿰뚫는다
+	g.spawn(ToonGunFX.SPINDLE, at + f * 0.2 * s, 0.07, 0, Vector2(0.8, 0.85) * s,
+		ToonGunFX.AMBER, 1.3, f, {"tint2": ToonGunFX.HOT})
+	# 방추 불똥: 맞은 쪽 반구로 튀고, 날아가는 방향으로 늘어난다
+	for i in randi_range(4, 6):
+		var a := (f * randf_range(0.2, 1.0) + side * randf_range(-1.1, 1.1) + Vector3(0, randf_range(0.1, 0.9), 0)).normalized()
+		g.spawn(ToonGunFX.SPINDLE, at + a * 0.2 * s, randf_range(0.11, 0.17), 0,
+			Vector2(randf_range(0.42, 0.55), randf_range(0.36, 0.52)) * s,
+			ToonGunFX.ORANGE if randf() < 0.6 else ToonGunFX.AMBER, randf_range(1.15, 1.35), a,
+			{"tint2": ToonGunFX.HOT, "vel": a * randf_range(6.0, 9.0) * s, "drag": 9.0})

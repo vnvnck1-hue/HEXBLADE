@@ -46,6 +46,12 @@ func _charge(sec: float) -> float:
 	return k
 
 
+func _collect_missiles(seen: Dictionary) -> void:
+	for c in FX.root.get_children():
+		if c is Missile:
+			seen[c.get_instance_id()] = true
+
+
 func _missiles_in_world() -> int:
 	var n := 0
 	for c in FX.root.get_children():
@@ -116,16 +122,24 @@ func _run() -> void:
 	await _frames(40)
 
 	player.missiles = 3
-	var before := _missiles_in_world()
 	Input.action_press("ult")
 	await _frames(3)
 	_check(player.ult_aiming, "미사일 3: 궁극기 조준 시작")
 	Input.action_release("ult")
 	await process_frame
+	# R 을 떼면 준비동작(실제 시간 ULT_WINDUP)이 끝난 뒤 발사된다
+	# 미사일이 빨라 금방 터지므로 그동안 새로 생긴 미사일을 매 프레임 모은다
+	var seen := {}
+	var t_end := Time.get_ticks_msec() + int((Player.ULT_WINDUP + 0.03) * 1000.0)
+	while Time.get_ticks_msec() < t_end:
+		_collect_missiles(seen)
+		await process_frame
 	await _frames(2)
 	_check(player.missiles == 0 and player.ult_count == 3, "발사: 가진 미사일 3발을 모두 장전하고 보유량은 0 (m=%d c=%d aim=%s)" % [player.missiles, player.ult_count, player.ult_aiming])
-	await _frames(20)
-	var fired := _missiles_in_world() - before
+	for i in 20:
+		_collect_missiles(seen)
+		await physics_frame
+	var fired := seen.size()
 	_check(player.ult_queue == 0 and fired == 3, "가진 개수(3)만큼만 발사 → %d발" % fired)
 	await _frames(120)
 
@@ -182,7 +196,9 @@ func _run() -> void:
 	var hud := main.hud
 	_check(hud.energy_icons.max_count == Player.ENERGY_MAX and hud.energy_icons.count == 2, "에너지 칸 3개 중 2개 채움")
 	_check(hud.missile_icons.max_count == Player.MISSILE_MAX and hud.missile_icons.count == 5, "미사일 칸 %d개 중 5개 채움" % Player.MISSILE_MAX)
-	_check(hud.missile_icons.visible and hud.energy_icons.visible, "아이콘 줄은 항상 보인다")
+	# 아이콘 줄은 그 줄을 쓰는 HUD 프리셋(LEGACY · CORNERS · TACTICAL)에서 항상 보인다. STRIKER · COCKPIT 은 같은 값을 버튼 호·숫자로 직접 그린다
+	var icon_preset := HudPresets.current in [HudPresets.LEGACY, HudPresets.CORNERS, HudPresets.TACTICAL]
+	_check((hud.missile_icons.visible and hud.energy_icons.visible) == icon_preset, "아이콘 줄은 아이콘 줄을 쓰는 HUD 프리셋에서만 보인다 (%s)" % HudPresets.NAMES[HudPresets.current])
 
 	print("RESULT %s (%d fails)" % ["OK" if fails == 0 else "FAIL", fails])
 	quit(1 if fails > 0 else 0)

@@ -2,7 +2,9 @@
 
 로비의 **「연출 테스트 · MAMMOTH B안」** 버튼으로 들어간다. [mammoth_death_test.cmd](../../mammoth_death_test.cmd)를 실행해 바로 열 수도 있다. 씬 파일은 `res://scenes/mammoth_death_lab.tscn`이다.
 
-기존 보스 모델과 추격 도로를 복제해 보여 주는 독립된 연출 공간이다. 본선 보스의 사망 처리, 승리 화면, 드롭, 보상에는 연결하지 않았다. 실제 전투 적용은 사용자 승인 후 별도 작업한다.
+기존 보스 모델과 추격 도로를 복제해 보여 주는 독립된 연출 공간이다.
+
+> **2026-10-01 본선 적용**: 강화판 감독 `scripts/lab_mammoth_b/mammoth_b_director.gd`(5.7초, 로비 「MAMMOTH 죽음 연출 · B안」 씬)를 본선 `boss.tscn` 격파에 연결했다. `BossEnemy._begin_dying` 이 판정상 격파(점수·드롭)를 끝낸 뒤 감독을 시작하고, 감독이 끝나면 `defeated` → `BossMain._win` 이 바로 호출된다. 연출 중에는 플레이어가 자동 비행·무적이고, 하던 궁극기·지속 레이저는 끊긴다. 예전 연쇄 폭발(`_update_dying`·`_final_blast`)은 쓰지 않는다. 확인: `tests/mammoth_ingame_check.gd`, 캡처 `_capture/mammoth_ingame_show.gd`. 이 문서의 아래 내용(5.20초 `mammoth_death_lab.tscn`)은 이전 B안 관람실 설명이다.
 
 ## 관람과 조작
 

@@ -1,5 +1,5 @@
 extends Main
-## 로비 테스트 씬: MAMMOTH 죽음 연출 B안 "궤도 파손과 전복" 확인용 (본선 boss.tscn 에는 적용하지 않음).
+## 로비 테스트 씬: MAMMOTH 죽음 연출 B안 "궤도 파손과 전복" 반복 확인용. 같은 감독(mammoth_b_director.gd)을 본선 boss.tscn 격파에서도 쓴다.
 ## 추격 보스전과 같은 도로 · 카메라 · 플레이어 위에 공격하지 않는 맘모스 더미를 달리게 하고,
 ## Enter 로 격파 순간부터 복귀까지의 연출만 반복 재생한다. 점수 · 섹터 런 · 저장과 무관.
 ##
@@ -67,6 +67,7 @@ func _ready() -> void:
 	stage = Stage.new()
 	stage.speed = SPEEDS[opt_speed]
 	world.add_child(stage)
+	WorldFlow.attach(world, stage, 30.0)
 	bullets = Node3D.new()
 	add_child(bullets)
 
@@ -127,11 +128,9 @@ func _ready() -> void:
 func _start() -> void:
 	if director.active or director.done:
 		return
-	var bx := dummy.global_position.x
 	var s := float(opt_side)
 	if s == 0.0:
-		# 도로 안쪽 공간이 넓은 쪽으로 넘어진다. 가운데면 플레이어 반대쪽
-		s = -signf(bx) if absf(bx) > 0.5 else (-signf(player.global_position.x) if absf(player.global_position.x) > 0.3 else 1.0)
+		s = Director.pick_side(dummy.global_position.x, player.global_position.x)
 	player.invuln = 999.0
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		b.queue_free()

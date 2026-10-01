@@ -1,0 +1,139 @@
+{
+  "ImageCount": 16,
+  "FullBodyCount": 3,
+  "PortraitCount": 12,
+  "TransparentPortraitCount": 12,
+  "DialogueCount": 1,
+  "UniqueImages": 16,
+  "MissingLinks": [],
+  "Images": [
+    {
+      "File": "dialogue-ui.png",
+      "Width": 1672,
+      "Height": 941,
+      "Portrait": false,
+      "TransparentCorner": false,
+      "SHA256": "E4B1031E978EE105B1B8D4DD6C45B2311F0557120DE70246B9E9B9574A4123B1"
+    },
+    {
+      "File": "eirin-confident.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "C07FEB70189A639ED5994770CC6F12C208151412E834E6ED7F65D62AD0956684"
+    },
+    {
+      "File": "eirin-full.png",
+      "Width": 1024,
+      "Height": 1536,
+      "Portrait": false,
+      "TransparentCorner": false,
+      "SHA256": "AD1143BBC7836C5BD547D1F4AA743C74B1289F38084DED8CF71F47A2999E84DC"
+    },
+    {
+      "File": "eirin-stern.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "B272C19880092F2234A892DA6996BB33C5D1516B619C3D07CEDCF6200E8D3701"
+    },
+    {
+      "File": "eirin-vulnerable.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "687160BD1F510B875F9D3258BD10FA750BE8B60858C64C73941851BF693AEF5E"
+    },
+    {
+      "File": "mira-angry.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "A919662A55B8C9CBE4C018F27701FBDA23B36D80D2FEE2F6F2740538410C2F9F"
+    },
+    {
+      "File": "mira-confident.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "AC54C21235E214345D5D0F3B83E1651D1A3E099E705E3B32C75D0A7D860C5064"
+    },
+    {
+      "File": "mira-flustered.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "12B47F1712A09B52BEB84BDD5DA399B0FFB62C8AB43F5B07CBBA62709D3AE370"
+    },
+    {
+      "File": "noa-full.png",
+      "Width": 1024,
+      "Height": 1536,
+      "Portrait": false,
+      "TransparentCorner": false,
+      "SHA256": "0657EC826E6877C6726232282072845D090EF9B9B0C87FE4ACBABF627767EDBD"
+    },
+    {
+      "File": "noa-neutral.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "58DECC7E2CED38194A7B2DB9D07C177D309ADF7B0E562229CA9AB03C465FFAD9"
+    },
+    {
+      "File": "noa-skeptical.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "17D5D83C8688798EFE179CB797419BCED581A667F4ED2574BBCFAB4A94042F4A"
+    },
+    {
+      "File": "noa-warm.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "C819B0BB2085CF212B6751FC0F2CE2E6C2645210EA8D7FC8C457DB03214A97B8"
+    },
+    {
+      "File": "sena-angry.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "B7CF91BE3FF1569A95CFB7FC98DF94152CF11BEDE33365F7A80A756E017AFF7F"
+    },
+    {
+      "File": "sena-full.png",
+      "Width": 1024,
+      "Height": 1536,
+      "Portrait": false,
+      "TransparentCorner": false,
+      "SHA256": "E7E7144A098AD116CE4172B2C6BC653162AA985465A3D39DA951930D3BF5F06C"
+    },
+    {
+      "File": "sena-joy.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "CF06C844D6C536D133C99992B917EC1149D60A6761CB01FF34D01FA6F03FA32A"
+    },
+    {
+      "File": "sena-surprised.png",
+      "Width": 1254,
+      "Height": 1254,
+      "Portrait": true,
+      "TransparentCorner": true,
+      "SHA256": "24FBA92C6383174376A55FF92499F80FBB4E3FB3D14230944C7D7F71067E976F"
+    }
+  ]
+}

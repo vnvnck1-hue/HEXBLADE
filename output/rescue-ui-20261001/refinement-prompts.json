@@ -1,0 +1,15 @@
+{
+  "mode": "built-in image_gen",
+  "fixes": [
+    {
+      "index": 1,
+      "path": "C:/Users/Loadcomplete/.codex/generated_images/01a0f533-1a37-7ec0-b95e-227ba002cff9/exec-8f43185c-1b42-4e8b-889e-0b4c1223139b.png",
+      "prompt": "Use case: text-localization / precise UI edit. Edit this existing Korean game route screenshot with maximum fidelity. Change ONLY the availability label and its small indicator on TWO character nodes. On LIA / 리아 (upper middle lavender-haired portrait), replace cyan '진입 가능' with gray lock icon and exact text '잠김'; set its small status circle gray, because Mira has not been cleared. On SENA / 세나 (lower left auburn-haired portrait), replace gray lock and '잠김' with cyan status indicator and exact text '진입 가능'; set its small status circle cyan. MIRA remains available. NOA and YUNA remain locked. EIRIN remains target. Preserve all six portraits, all directed lines exactly, all positions, right panel, slot count 0/2, route, typography, palette, Korean labels and entire composition unchanged. No other changes."
+    },
+    {
+      "index": 3,
+      "path": "C:/Users/Loadcomplete/.codex/generated_images/01a0f533-1a37-7ec0-b95e-227ba002cff9/exec-596d9d34-4798-4758-a7a8-5168d960f972.png",
+      "prompt": "Use case: text-localization / precise UI edit. Edit this Korean rescued-character hangar screenshot with maximum fidelity. Change the cyan status text underneath BOTH Mira / 미라 and Eirin / 에이린 portrait cards on the right from '동조 완료' to exactly '구출 완료'. Preserve their cyan check icons. These pilots are rescued and no longer neurally bound to the organic machine, so '동조 완료' is incorrect. Also make the small navigation tab labels at the very top of the right panel exactly '명부', '작전도', '격납고', with 격납고 active/underlined; remove the old four labels 격납고 작전 파일 설정 and distribute three labels neatly within that same existing strip. Everything else must stay identical: beautiful adult Eirin face and outfit, pose, helmet, lighting, male pilot and mech background, current slots2/2, Lia uncollected card, '후반 재도전', all other Korean text, main portrait composition, color, layout. Do not add anything."
+    }
+  ]
+}

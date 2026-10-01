@@ -134,7 +134,9 @@ func _physics_process(dt: float) -> void:
 			if best.has_method("deflect_bullet") and best.deflect_bullet(self, position, fwd):
 				return
 			best.take_hit(1, fwd, position)
-			GunFX.impact_body(position, fwd, best.slice_color)
+			# 큰 기체(맘모스)는 판정점이 차체 안에 묻히므로 연출 위치만 겉면으로 꺼낸다
+			var fx_at: Vector3 = best.call("fx_point", position, fwd) if best.has_method("fx_point") else position
+			GunFX.impact_body(fx_at, fwd, best.slice_color)
 			queue_free()
 			return
 		_update_streak()

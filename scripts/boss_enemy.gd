@@ -6,6 +6,8 @@ extends Enemy
 const BossTank := preload("res://scripts/boss_tank.gd")
 const Stage := preload("res://scripts/boss_stage.gd")
 const Bar := preload("res://scripts/boss_bar.gd")
+const HitLift := preload("res://scripts/presentation/mammoth_hit_lift.gd")
+const DeathDirector := preload("res://scripts/lab_mammoth_b/mammoth_b_director.gd")
 
 signal phase_changed(phase: int)
 signal defeated
@@ -76,10 +78,16 @@ var shock_cd := 1.5
 var shock_t := -1.0               # 0 이상이면 충격파 예고 중
 var shock_ring: MeshInstance3D
 var guard_cd := 0.0
+## 연출: 강력 레이저에 맞은 쪽이 들리며 떨린다 (mammoth_hit_lift.gd)
+var lift := HitLift.new()
+var _grind_cd := 0.0
+## 연출: 격파 시네마틱 (B안 궤도 파손과 전복). 시작되면 visual 의 변환은 감독이 소유한다
+var death_fx: DeathDirector
 
 
 func _ready() -> void:
 	add_to_group("enemies")
+	is_boss = true
 	radius = 3.3
 	slice_size = Vector3(4, 3, 4)
 	visual = Node3D.new()
@@ -204,6 +212,7 @@ func _update_body(dt: float, player: Player) -> void:
 	var rumble := sin(t * 37.0) * 0.012 + sin(t * 23.0) * 0.01
 	visual.position.y = absf(sin(t * 18.0)) * 0.05
 	visual.rotation = Vector3(wob2.x + rumble, 0, wob2.y + rumble * 0.6)
+	_update_lift(dt)
 	punch = move_toward(punch, 0.0, dt * 5.0)
 	model.scale = Vector3(1.0 + punch * 0.03, 1.0 - punch * 0.025, 1.0 + punch * 0.03)
 
@@ -871,7 +880,9 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	boss_hp = maxf(0.0, boss_hp - amount)
 	bar.set_hp(boss_hp / MAX_HP, amount >= 5.0)
 	kill_source = source
-	HitSpark.spawn(pos, dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self)
+	if source == "laser":
+		_laser_lift(dmg, dir)
+	HitSpark.spawn(fx_point(pos, dir), dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self)
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	wob2_v += Vector2(l.z, -l.x) * minf(0.05 * amount, 0.8)
 	punch = maxf(punch, minf(0.15 + amount * 0.05, 1.0))
@@ -1034,21 +1045,34 @@ func _scorch() -> void:
 func _begin_dying() -> void:
 	_abort_pattern()
 	_clear_bullets()
-	st = St.DYING
+	# 판정 기준 격파는 여기서 끝난다. 남은 화면은 죽음 연출(B안 궤도 파손과 전복) 감독이 소유하고,
+	# 감독이 끝나면 defeated 를 보낸다. 예전 연쇄 폭발(_update_dying · _final_blast)은 쓰지 않는다.
+	st = St.DEAD
 	st_t = 0.0
-	ps = {"cd": 0.0, "step": 0}
 	alive = false
 	remove_from_group("enemies")
-	bar.set_hp(0.0, true)
-	Main.inst.hitstop(0.2)
-	Main.inst.shake(1.0)
-	Main.inst.hud.screen_flash(Color.WHITE, 0.8)
-	Sfx.play("overload", 0.0, 4.0)
+	_set_flash(false)
+	lift = HitLift.new()
 	Main.inst.on_enemy_killed(self)
 	print("BOSS_DOWN t=%.1f" % Main.inst.time)
+	var m := Main.inst
+	var pl := m.player
+	var px := pl.global_position.x if is_instance_valid(pl) else 0.0
+	death_fx = DeathDirector.new()
+	m.add_child(death_fx)
+	death_fx.finished.connect(func(_reason: String): defeated.emit())
+	death_fx.begin({
+		"main": m, "dummy": self, "stage": stage, "boss_cam": m.camera, "bar": bar, "speed_fx": m.get("speed_fx"),
+		"side": DeathDirector.pick_side(global_position.x, px),
+	})
 
 
-## 연쇄 폭발 → 부품이 차례로 떨어져 나가며 뒤로 처지고 → 대폭발
+## 죽음 연출이 시작됐는가 (진행 중이거나 끝남). boss_main.gd 가 입력 잠금 · 전장 경계에 쓴다
+func death_started() -> bool:
+	return death_fx != null and is_instance_valid(death_fx) and (death_fx.active or death_fx.done)
+
+
+## 예전 격파 연출 (연쇄 폭발 3초 → 대폭발). 죽음 연출 감독으로 바뀌어 지금은 쓰지 않는다
 func _update_dying(dt: float) -> void:
 	ps.cd = float(ps.cd) - dt
 	var k := clampf(st_t / 3.0, 0.0, 1.0)
@@ -1103,3 +1127,82 @@ func _final_blast() -> void:
 	visual.visible = false
 	shadow.visible = false
 	defeated.emit()
+
+
+# ── 연출: 착탄 위치 · 레이저 피격 들림 ─────────────────
+
+## 탄 판정은 반지름 3.3 원기둥이라 착탄점이 차체(반폭 3.45 · 반길이 3.6) 안쪽 낮은 곳에 묻혀 가려진다.
+## 연출용 위치만 맞은 방향 반대로 거슬러 차체 겉면까지 꺼내고, 카메라 쪽으로 조금 띄운다.
+func fx_point(pos: Vector3, fwd: Vector3) -> Vector3:
+	var lo := Vector3(-3.55, -0.2, -3.75)
+	var hi := Vector3(3.55, 3.0, 3.75)
+	var p := to_local(pos)
+	var d := -(global_basis.inverse() * fwd)
+	d.y = 0.0
+	if d.length() < 0.01:
+		return pos
+	d = d.normalized()
+	# 상자 안에서 출발해 빠져나가는 거리 (슬랩 방식)
+	var t_out := 1e9
+	for i in 3:
+		if absf(d[i]) > 0.0001:
+			var bound: float = hi[i] if d[i] > 0.0 else lo[i]
+			t_out = minf(t_out, (bound - p[i]) / d[i])
+	if t_out < 0.0 or t_out > 6.0:
+		return pos
+	var w := to_global(p + d * (t_out + 0.08))
+	w.y = maxf(w.y, 1.2)
+	var cam := get_viewport().get_camera_3d()
+	if cam:
+		w += (cam.global_position - w).normalized() * 0.35
+	return w
+
+
+## 강력 레이저: 빔이 차체에 닿은 지점을 구해 그쪽을 들어 올린다
+func _laser_lift(dmg: int, dir: Vector3) -> void:
+	var pl := Main.inst.player
+	if not is_instance_valid(pl):
+		return
+	var f := Vector3(dir.x, 0, dir.z)
+	if f.length() < 0.01:
+		return
+	f = f.normalized()
+	var rel := global_position - pl.global_position
+	rel.y = 0
+	var along := rel.dot(f)
+	var perp := rel - f * along                      # 빔에서 보스 중심까지 옆 거리
+	var pd := minf(perp.length(), radius)
+	var hit := -perp.normalized() * pd if perp.length() > 0.01 else Vector3.ZERO
+	hit -= f * sqrt(maxf(0.0, radius * radius - pd * pd))   # 빔이 처음 닿는 겉면
+	var local := global_basis.inverse() * hit
+	# 지속 레이저 틱(2)은 약하게 계속, 충전 레이저(3~10)는 한 번에 크게
+	var k := 0.32 if dmg <= 2 else lerpf(0.5, 1.35, clampf((dmg - 3.0) / 7.0, 0.0, 1.0))
+	lift.kick(Vector2(local.x, local.z), k)
+	if dmg > 2:
+		var at := global_position + hit + Vector3(0, 1.4, 0)
+		FX.sparks(at, int(10 + 14 * k), [Color.WHITE, Color("9ff8ff"), Color("ffd060")], 9.0, 0.35, -12.0, 0.08)
+		Main.inst.shake(0.25 + 0.35 * k)
+		Sfx.play("clank", 0.1, -4.0 + 4.0 * k)
+
+
+func _update_lift(dt: float) -> void:
+	var landed: Variant = lift.step(dt)
+	visual.transform = lift.compose() * visual.transform
+	if landed != null and stage:
+		# 들렸던 모서리가 도로를 다시 찍는다
+		var e: Vector2 = landed
+		var p := to_global(Vector3(e.x, 0.15, e.y))
+		FX.sparks(p, 16, [Color.WHITE, Color("ffd060"), Color("ff7a30")], 9.0, 0.3, -14.0, 0.08)
+		for i in 3:
+			stage.puff(p + Vector3(randf_range(-1.2, 1.2), 0.2, randf_range(-1.2, 1.2)), Color(0.5, 0.46, 0.55, 0.5), randf_range(1.4, 2.2), 0.4, 0.9)
+		Main.inst.shake(0.3)
+		Sfx.play("land", 0.15, -2.0)
+	# 들려 있는 동안 축이 된 반대쪽 궤도 모서리가 도로에 갈린다
+	_grind_cd -= dt
+	if lift.lifted() > 0.1 and _grind_cd <= 0.0:
+		_grind_cd = 0.04
+		var u := lift.tilt.normalized()
+		var edge := to_global(Vector3(-u.x, 0, -u.y) * HitLift.HALF + Vector3(randf_range(-1.5, 1.5) * u.y, 0.1, randf_range(-1.5, 1.5) * u.x))
+		FX.sparks(edge, 5, [Color.WHITE, Color("ffd060"), Color("ff7a30")], 7.0, 0.25, -12.0, 0.06)
+		if stage and randf() < 0.5:
+			stage.puff(edge + Vector3(0, 0.2, 0), Color(0.5, 0.46, 0.55, 0.4), 1.2, 0.3, 0.9)

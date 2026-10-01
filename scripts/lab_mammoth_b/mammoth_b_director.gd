@@ -1,5 +1,7 @@
 extends Node
-## MAMMOTH 죽음 연출 B안 "궤도 파손과 전복" 감독 — 강화판 (연출 테스트 씬 전용, 본선 미적용).
+## MAMMOTH 죽음 연출 B안 "궤도 파손과 전복" 감독 — 강화판.
+## 본선 boss.tscn 의 BossEnemy 격파(_begin_dying)와 연출 테스트 씬(lab_mammoth_b.tscn)의 더미가 같은 감독을 쓴다.
+## body 는 visual · model · tank · shadow 를 가진 맘모스 노드면 된다 (BossEnemy 또는 mammoth_b_dummy.gd).
 ## 기획: docs/mammoth-death/맘모스_죽음연출_기능명세서.md 5장 · storyboard-B.png
 ## 피드백 반영: 고속 주행의 관성으로 차체가 크게 돌며(스핀 아웃) 뒤집히고, 강철이 도로에 갈리며 불꽃이 쏟아진다.
 ##
@@ -16,7 +18,6 @@ extends Node
 
 signal finished(reason: String)
 
-const Dummy := preload("res://scripts/lab_mammoth_b/mammoth_b_dummy.gd")
 const Stage := preload("res://scripts/boss_stage.gd")
 const DeathFX := preload("res://scripts/lab_mammoth_b/mammoth_b_fx.gd")
 const Overlay := preload("res://scripts/lab_mammoth_b/mammoth_b_overlay.gd")
@@ -59,7 +60,11 @@ const SHOTS := [
 
 # ── 외부에서 넣는 값 ──
 var main: Main
-var dummy: Dummy
+var dummy: Node3D                  # 맘모스 루트 (BossEnemy 또는 연출 테스트 더미)
+var visual: Node3D
+var model: Node3D
+var tank: Dictionary
+var shadow: Node3D
 var stage: Stage
 var boss_cam: Camera3D
 var bar: CanvasLayer
@@ -107,6 +112,14 @@ var _cam_handed := false
 var _rig := Transform3D.IDENTITY
 var _contacts: Array = []          # 이번 프레임 도로에 닿은 [표본 번호, 월드 점]
 var _com_w := Vector3.ZERO
+var _turret_yaw := 0.0             # 격파 순간 포탑이 보던 방향 (전복 중에도 유지)
+
+
+## 전복 방향: 도로 안쪽 공간이 넓은 쪽으로 넘어진다. 가운데면 플레이어 반대쪽
+static func pick_side(boss_x: float, player_x: float) -> float:
+	if absf(boss_x) > 0.5:
+		return -signf(boss_x)
+	return -signf(player_x) if absf(player_x) > 0.3 else 1.0
 
 
 ## ctx: main, dummy, stage, boss_cam, bar, speed_fx, side, rate, flash, shake, low
@@ -115,6 +128,10 @@ func begin(ctx: Dictionary) -> void:
 		return
 	main = ctx.main
 	dummy = ctx.dummy
+	visual = dummy.get("visual")
+	model = dummy.get("model")
+	tank = dummy.get("tank")
+	shadow = dummy.get("shadow")
 	stage = ctx.stage
 	boss_cam = ctx.boss_cam
 	bar = ctx.bar
@@ -132,8 +149,10 @@ func begin(ctx: Dictionary) -> void:
 	entry_fov = boss_cam.fov
 	v0 = stage.speed
 	_tread_i = 0 if side > 0.0 else 1          # 모델이 180도 돌아 있어 로컬 -X 궤도가 월드 +X 쪽
-	_turret = dummy.tank.turret
-	dummy.driving = false
+	_turret = tank.turret
+	dummy.set("driving", false)     # 더미: 주행을 멈춘다 (BossEnemy 에는 없는 속성이라 무시된다)
+	model.scale = Vector3.ONE         # 피격 찌그러짐이 남아 있지 않게
+	_turret_yaw = (_turret as Node3D).rotation.y
 	# 뒤집힌 차체(반경 약 4.5m)가 도로 반폭 10 안에 남도록 횡이동량을 정한다
 	slide_max = clampf(5.3 - side * B0.x, -1.5, 4.2)
 	safe_pos = Vector3(clampf(B0.x + side * (slide_max - 7.5), -8.8, 8.8), 0, 3.4)
@@ -192,7 +211,7 @@ func _build_samples() -> void:
 	pts.append([Vector3(0, 3.5, 2.45), true])
 	pts.append([Vector3(0, 3.6, -2.3), true])
 	_samples.clear()
-	var mt := dummy.model.transform
+	var mt := model.transform
 	for p in pts:
 		_samples.append([mt * (p[0] as Vector3), p[1]])
 
@@ -328,7 +347,7 @@ func _solve(tb: float) -> Transform3D:
 func _apply_body() -> void:
 	var tb := _tb(T)
 	_rig = _solve(tb)
-	dummy.visual.transform = _rig
+	visual.transform = _rig
 	_com_w = dummy.to_global(_rig * COM)
 	# 도로에 닿은 표본점 = 불꽃이 튀는 곳
 	_contacts.clear()
@@ -342,19 +361,19 @@ func _apply_body() -> void:
 	if not _turret_gone and is_instance_valid(_turret):
 		# 포탑이 차체보다 늦게 따라와 비틀린다
 		var lag := _roll(tb) - _roll(maxf(0.0, tb - 0.12))
-		_turret.rotation = Vector3(0, 0, -side * deg_to_rad(lag) * 0.6)
+		_turret.rotation = Vector3(0, _turret_yaw, -side * deg_to_rad(lag) * 0.6)
 		for i in 2:
-			var g: Node3D = dummy.tank.cannons[i].pivot
+			var g: Node3D = tank.cannons[i].pivot
 			g.rotation.x = -0.15 * smoothstep(0.2, 1.2, tb) + sin(tb * 13.0 + i * 1.7) * 0.07
-		var core := dummy.tank.core as MeshInstance3D
+		var core := tank.core as MeshInstance3D
 		if T < ENTRY_HOLD + 0.06:
 			core.set_instance_shader_parameter("tint", Color.WHITE)
 			core.set_instance_shader_parameter("energy", 4.0)
 		else:
 			core.set_instance_shader_parameter("tint", Pal.E_RED.lerp(Color("fff0b0"), randf() * 0.4))
 			core.set_instance_shader_parameter("energy", 1.0 + randf() * 2.4)
-	dummy.shadow.global_position = Vector3(_com_w.x, 0.015, _com_w.z)
-	dummy.shadow.global_rotation = Vector3.ZERO
+	shadow.global_position = Vector3(_com_w.x, 0.015, _com_w.z)
+	shadow.global_rotation = Vector3.ZERO
 
 
 ## 요 회전 각속도 (rad/s, 월드 Y)
@@ -387,13 +406,13 @@ func _update_contact(dT: float) -> void:
 		light.global_position = Vector3(_com_w.x, 0.6, _com_w.z)
 		light.light_energy = 3.0
 		for k in 3:
-			var ep := dummy.model.to_global(Vector3(-side * randf_range(1.8, 3.4), randf_range(0.2, 1.8), randf_range(-3.0, 3.0)))
+			var ep := model.to_global(Vector3(-side * randf_range(1.8, 3.4), randf_range(0.2, 1.8), randf_range(-3.0, 3.0)))
 			fx.spark(ep, Vector3(randf_range(-4, 4), randf_range(-2, 4), stage.speed * randf_range(0.2, 0.6)), randf_range(0.3, 0.7), 1.0, 0.4)
 		_dust_cd -= dT
 		if _dust_cd <= 0.0:
 			_dust_cd = 0.03
-			stage.puff(dummy.model.to_global(Vector3(-side * 2.6, 1.0, -3.2)), Color(0.12, 0.1, 0.13, 0.7), randf_range(1.6, 2.4), 0.6, 0.35)
-			stage.puff(dummy.model.to_global(Vector3(-side * 2.6, 1.0, -3.2)), Color(1.0, 0.5, 0.15, 0.85), 1.2, 0.25, 0.35, true)
+			stage.puff(model.to_global(Vector3(-side * 2.6, 1.0, -3.2)), Color(0.12, 0.1, 0.13, 0.7), randf_range(1.6, 2.4), 0.6, 0.35)
+			stage.puff(model.to_global(Vector3(-side * 2.6, 1.0, -3.2)), Color(1.0, 0.5, 0.15, 0.85), 1.2, 0.25, 0.35, true)
 		for k in _marks.keys():
 			_marks.erase(k)
 		return
@@ -455,7 +474,7 @@ func _update_contact(dT: float) -> void:
 
 func _cue(id: String) -> void:
 	print("DEATH_CUE %s t=%.3f" % [id, T])
-	var joint := dummy.model.to_global(Vector3(-side * 2.6, 1.0, -3.0))    # 파손측 궤도 앞 접합부
+	var joint := model.to_global(Vector3(-side * 2.6, 1.0, -3.0))    # 파손측 궤도 앞 접합부
 	var road := stage.speed
 	match id:
 		"hit":
@@ -470,13 +489,13 @@ func _cue(id: String) -> void:
 			Audio.sfx("clank", 0.0, 0.8)
 			audio.play("snap", 0.0)
 		"tread":
-			var xf := Transform3D(dummy.model.global_basis, joint + Vector3(0, 0.2, 0.6))
+			var xf := Transform3D(model.global_basis, joint + Vector3(0, 0.2, 0.6))
 			fx.tread_chunk(xf, Vector3(side * 1.0, 15.0, -9.0))
 			for k in 10:
 				fx.cleat(joint + Vector3(randf_range(-0.5, 0.5), randf_range(0, 0.8), randf_range(-0.5, 0.5)), Vector3(side * randf_range(2, 10), randf_range(6, 13), randf_range(-2, 16)))
 			FX.enemy_explosion(joint, 1.2)
 			fx.spark_fan(joint, 70, Vector3(side, 0, 0), road, 1.2)
-			var tread: Node3D = dummy.tank.treads[_tread_i]
+			var tread: Node3D = tank.treads[_tread_i]
 			BT.glow(tread, Vector3(1.9, 0.5, 0.3), Vector3(0, 1.0, -3.25), Color("ff6a20"), 2.6)
 			Audio.sfx("launch", -1.0, 0.75)
 			Audio.sfx("roll", -4.0, 0.7)
@@ -491,8 +510,8 @@ func _cue(id: String) -> void:
 			Audio.sfx("clank", -2.0, 0.7)
 		"unravel":
 			# 끊긴 궤도 벨트가 풀려 채찍처럼 날아간다
-			var p := dummy.model.to_global(Vector3(-side * 2.6, 1.2, randf_range(-2.0, 2.0)))
-			fx.tread_chunk(Transform3D(dummy.model.global_basis, p), Vector3(randf_range(-8, 8), 11.0, randf_range(4, 14)))
+			var p := model.to_global(Vector3(-side * 2.6, 1.2, randf_range(-2.0, 2.0)))
+			fx.tread_chunk(Transform3D(model.global_basis, p), Vector3(randf_range(-8, 8), 11.0, randf_range(4, 14)))
 			for k in 5:
 				fx.cleat(p, Vector3(randf_range(-9, 9), randf_range(5, 11), randf_range(0, 16)))
 			fx.spark_burst(p, 40, 12.0, road)
@@ -501,7 +520,7 @@ func _cue(id: String) -> void:
 			Audio.sfx("clank", -3.0, randf_range(0.6, 0.8))
 		"groan":
 			audio.play("groan", 0.0, 1.0)
-			FX.enemy_explosion(dummy.model.to_global(Vector3(0.7 * side, 3.6, 2.95)), 0.9)
+			FX.enemy_explosion(model.to_global(Vector3(0.7 * side, 3.6, 2.95)), 0.9)
 		"catch":
 			# 모서리가 도로에 걸려 차체가 들린다
 			for c in _contacts:
@@ -572,7 +591,7 @@ func _cue(id: String) -> void:
 			Audio.sfx("boom", 3.0, 0.55)
 			Audio.sfx("launch", 0.0, 0.6)
 		"blast2", "blast3":
-			var e := dummy.model.to_global(Vector3(randf_range(-1.5, 1.5), 2.0, 3.0 if id == "blast2" else -3.0))
+			var e := model.to_global(Vector3(randf_range(-1.5, 1.5), 2.0, 3.0 if id == "blast2" else -3.0))
 			FX.fire_explosion(e, 1.8)
 			fx.spark_burst(e, 80, 16.0, road * 0.4)
 			FX.shockwave(Vector3(e.x, 0.2, e.z), Color("ffb040"), 6.0, 0.4, 0.12)
@@ -636,10 +655,10 @@ func _update_wreck(dT: float) -> void:
 		wreck_z += wreck_v * dT
 		if not active:
 			_apply_body()
-		if dummy.visual.visible and dummy.global_position.z + wreck_z > Stage.NEAR_Z + 8.0:
-			dummy.visual.visible = false
-			dummy.shadow.visible = false
-	if not dummy.visual.visible:
+		if visual.visible and dummy.global_position.z + wreck_z > Stage.NEAR_Z + 8.0:
+			visual.visible = false
+			shadow.visible = false
+	if not visual.visible:
 		return
 	# 불타는 잔해와 검은 연기 기둥 (포탑이 뜯긴 뒤부터)
 	if T >= TEAR:
@@ -650,7 +669,7 @@ func _update_wreck(dT: float) -> void:
 			var top := _com_w + Vector3(0, 2.0, 0)
 			stage.puff(top + Vector3(randf_range(-1.5, 1.5), 0, randf_range(-2.5, 2.5)), Color(0.13, 0.11, 0.14, 0.78), randf_range(3.2, 4.8), 1.5, rel)
 			for k in 2:
-				var fp := dummy.model.to_global(Vector3(randf_range(-1.8, 1.8), randf_range(1.2, 3.2), randf_range(-2.8, 2.8)))
+				var fp := model.to_global(Vector3(randf_range(-1.8, 1.8), randf_range(1.2, 3.2), randf_range(-2.8, 2.8)))
 				stage.puff(fp, Color(1.0, 0.48 + randf() * 0.2, 0.12, 0.9), randf_range(1.8, 3.0), 0.45, rel * 0.9, true)
 				if randf() < 0.2:
 					fx.spark_burst(fp, 4, 7.0, stage.speed * 0.3)
@@ -680,7 +699,7 @@ func _pose(id: String) -> Array:
 		"entry":
 			return [entry_xf.origin, entry_xf.origin - entry_xf.basis.z * 20.0, entry_fov]
 		"hit":
-			return [C + L * 9.0 + Vector3(0, 5.0, 10.5), dummy.model.to_global(Vector3(-side * 2.6, 1.0, -2.6)), 48.0]
+			return [C + L * 9.0 + Vector3(0, 5.0, 10.5), model.to_global(Vector3(-side * 2.6, 1.0, -2.6)), 48.0]
 		"chase_a":
 			return [C + L * 10.0 + Vector3(0, 3.0, 10.5), H - Vector3(0, 0.6, 0), 52.0]
 		"chase_b":

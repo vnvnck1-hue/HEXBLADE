@@ -165,6 +165,7 @@ var scorch: MeshInstance3D
 var light: OmniLight3D
 var R := BASE_R
 var rng := RandomNumberGenerator.new()
+var _scorch_z := 0.0       # 흐르는 씬: 폭발 본체(공기처럼 늦게 흐름)보다 그을음(도로와 함께 흐름)이 앞서 간 거리
 
 
 static func spawn(parent: Node3D, pos: Vector3, scale_k := 1.0, ground_y := 0.0, seed := -1) -> StylizedExplosion:
@@ -422,6 +423,9 @@ func _start() -> void:
 
 func _process(dt: float) -> void:
 	t += dt
+	# 그을음은 도로에 붙어 있어 운반 노드(WorldFlow.AIR)보다 먼저 도로 속도로 흘러간다
+	_scorch_z += WorldFlow.road_v() * exp(-WorldFlow.AIR * t) * dt
+	scorch.position.z = _scorch_z
 	_update_layers()
 	var i := 0
 	while i < puffs.size():

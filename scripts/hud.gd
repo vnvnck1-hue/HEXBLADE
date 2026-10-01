@@ -37,6 +37,13 @@ var ult_timer: ProgressBar
 var ult_k := 0.0
 var ult_on := false
 var lock_flash_t := 0.0
+var legacy_left: VBoxContainer
+var energy_slot: Control       # LEGACY 배치에서 에너지 아이콘 줄이 놓일 자리
+var missile_slot: Control
+var presets: HudPresets
+const HINT_FULL := "WASD 이동   좌클릭 검   우클릭 사격   T 재장전   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   Shift+Space 길게 점프   R 유지 락온 미사일   V 카메라   F5 재시작   H HUD"
+## 프리셋은 버튼마다 키를 붙여 두므로 안내 줄에는 나머지만 남긴다
+const HINT_SHORT := "WASD 이동   Space 끝날 때 다시: 2단 회피   Shift+Space 길게: 점프   V 카메라   F5 재시작   H HUD 프리셋"
 
 
 func _ready() -> void:
@@ -79,6 +86,7 @@ func _ready() -> void:
 	var left := VBoxContainer.new()
 	left.add_theme_constant_override("separation", 6)
 	row.add_child(left)
+	legacy_left = left
 	left.add_child(_label("ARMOR", 13, Color(0.7, 0.68, 0.95)))
 	hp_box = HBoxContainer.new()
 	hp_box.add_theme_constant_override("separation", 5)
@@ -110,12 +118,16 @@ func _ready() -> void:
 	# 한정 재화: 최대치만큼 칸이 반투명하게 늘 보이고, 가진 만큼 불투명하게 켜진다
 	energy_icons = AmmoIcons.new()
 	energy_icons.setup("energy", Player.ENERGY_MAX, Color("5af0ff"), Vector2(18, 26))
-	left.add_child(energy_icons)
+	energy_slot = Control.new()
+	energy_slot.custom_minimum_size = energy_icons.custom_minimum_size
+	left.add_child(energy_slot)
 	ult_label = _label("MISSILE  [R]", 13, Color(0.7, 0.68, 0.95))
 	left.add_child(ult_label)
 	missile_icons = AmmoIcons.new()
 	missile_icons.setup("missile", Player.MISSILE_MAX, Color("ffa040"), Vector2(14, 26))
-	left.add_child(missile_icons)
+	missile_slot = Control.new()
+	missile_slot.custom_minimum_size = missile_icons.custom_minimum_size
+	left.add_child(missile_slot)
 
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -217,19 +229,68 @@ void fragment() {
 	sub.add_theme_color_override("font_outline_color", Color(0.08, 0.06, 0.18))
 	root.add_child(sub)
 
-	hint = _label("WASD 이동   좌클릭 검   우클릭 사격   T 재장전   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   Shift+Space 길게 점프   R 유지 락온 미사일   V 카메라   F5 재시작", 14, Color(0.75, 0.75, 0.95, 0.85))
-	hint.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
+	hint = _label(HINT_FULL, 14, Color(0.75, 0.75, 0.95, 0.85))
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	hint.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	hint.position.y -= 18
+	hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	hint.offset_top = -44
+	hint.offset_bottom = -18
 	root.add_child(hint)
+
+	# 플레이어 상태 프리셋 (H). 아이콘 줄은 프리셋이 정한 자리로 매 프레임 옮긴다
+	presets = HudPresets.new(self)
+	root.add_child(presets)
+	root.add_child(energy_icons)
+	root.add_child(missile_icons)
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--hud="):
+			var v := a.substr(6).to_upper()
+			var i := HudPresets.NAMES.find(v)
+			HudPresets.current = i if i >= 0 else clampi(int(v), 0, HudPresets.NAMES.size() - 1)
+	_apply_preset()
 
 	cross = Control.new()
 	cross.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	cross.set_anchors_preset(Control.PRESET_FULL_RECT)
 	cross.draw.connect(_draw_cross)
 	root.add_child(cross)
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	var k := event as InputEventKey
+	if k and k.pressed and not k.echo and k.physical_keycode == KEY_H:
+		var n := HudPresets.NAMES.size()
+		HudPresets.current = (HudPresets.current + (n - 1 if k.shift_pressed else 1)) % n
+		_apply_preset()
+		banner("HUD  %d · %s" % [HudPresets.current + 1, HudPresets.NAMES[HudPresets.current]], Color(0.8, 0.95, 1.0), HudPresets.DESCS[HudPresets.current] + "   (H 다음 · Shift+H 이전)")
+		get_viewport().set_input_as_handled()
+
+
+func _apply_preset() -> void:
+	var legacy := HudPresets.current == HudPresets.LEGACY
+	legacy_left.modulate.a = 1.0 if legacy else 0.0
+	hint.text = HINT_FULL if legacy else HINT_SHORT
+	var icons := legacy or HudPresets.current in [HudPresets.CORNERS, HudPresets.TACTICAL]
+	energy_icons.visible = icons
+	missile_icons.visible = icons
+
+
+## 아이콘 줄 위치: LEGACY 는 세로 나열 속 빈 자리, 나머지는 프리셋이 정한 곳
+func _place_icons() -> void:
+	if not energy_icons.visible:
+		return
+	if HudPresets.current == HudPresets.LEGACY:
+		energy_icons.scale = Vector2.ONE
+		missile_icons.scale = Vector2.ONE
+		energy_icons.position = energy_slot.get_global_rect().position - root.get_global_rect().position
+		missile_icons.position = missile_slot.get_global_rect().position - root.get_global_rect().position
+		return
+	var sl := presets.icon_slots()
+	if sl.is_empty():
+		return
+	energy_icons.scale = Vector2.ONE * float(sl.escale)
+	missile_icons.scale = Vector2.ONE * float(sl.mscale)
+	energy_icons.position = sl.energy
+	missile_icons.position = sl.missile
 
 
 func _bar(c: Color) -> ProgressBar:
@@ -271,18 +332,32 @@ func _draw_cross() -> void:
 		var sp := m.camera.screen_pos(wp)
 		var age: float = (now - int(pl.lock_times.get((en as Enemy).get_instance_id(), now))) / 1000.0
 		var k := clampf(age / 0.14, 0.0, 1.0)
-		var half := lerpf(70.0, 26.0, ease(k, 0.4))
+		var big := clampf((en as Enemy).radius / 0.62, 1.0, 3.0)
+		var half := lerpf(90.0, 34.0, ease(k, 0.4)) * big * (1.0 + sin(age * 12.0) * 0.05)
 		var lc := Color(1, 0.18, 0.2).lerp(Color.WHITE, (1.0 - k) * 0.8)
-		_brackets(sp, half, 10.0, lc, 3.0)
+		# 어두운 바탕선을 먼저 깔아 밝은 배경에서도 또렷하게
+		_brackets(sp, half, 14.0, Color(0.05, 0, 0.02, 0.75), 8.0)
+		_brackets(sp, half, 14.0, lc, 4.0)
 		var rot := age * 3.0
 		var dia := PackedVector2Array()
 		for i in 5:
-			dia.append(sp + Vector2(cos(rot + i * PI * 0.5), sin(rot + i * PI * 0.5)) * 12.0)
-		cross.draw_polyline(dia, lc, 2.0, true)
-		cross.draw_string(font, sp + Vector2(half + 6, -half + 12), "LOCK", HORIZONTAL_ALIGNMENT_LEFT, -1, 14, lc)
+			dia.append(sp + Vector2(cos(rot + i * PI * 0.5), sin(rot + i * PI * 0.5)) * 15.0)
+		cross.draw_polyline(dia, Color(0.05, 0, 0.02, 0.7), 6.0, true)
+		cross.draw_polyline(dia, lc, 3.0, true)
+		cross.draw_circle(sp, 4.0, lc)
+		# 머리 위 순번 표 (락온 순서 = 미사일 순서)
+		var idx := pl.locks.find(en) + 1
+		var tag := sp + Vector2(0, -half - 22)
+		var tri := PackedVector2Array([tag + Vector2(-11, -6), tag + Vector2(11, -6), tag + Vector2(0, 8)])
+		cross.draw_colored_polygon(tri, lc)
+		cross.draw_string(font, tag + Vector2(-30, -12), "LOCK %d" % idx, HORIZONTAL_ALIGNMENT_CENTER, 60, 16, lc)
 		if k < 1.0:
-			cross.draw_circle(sp, lerpf(8.0, 44.0, k), Color(1, 0.3, 0.3, (1.0 - k) * 0.5), false, 3.0)
+			cross.draw_circle(sp, lerpf(10.0, 70.0, k) * big, Color(1, 0.35, 0.3, (1.0 - k) * 0.7), false, 4.0)
 	if pl.ult_aiming:
+		# 자석 조준: 실제 마우스 자리에서 달라붙은 조준점까지 가는 끈
+		if pl.ult_raw.distance_to(pl.ult_ptr) > 6.0:
+			cross.draw_dashed_line(pl.ult_raw, pl.ult_ptr, Color(1, 0.55, 0.5, 0.75), 2.0, 7.0, true)
+			cross.draw_arc(pl.ult_raw, 6.0, 0, TAU, 16, Color(1, 0.8, 0.75, 0.8), 2.0, true)
 		_draw_lock_reticle(pl.ult_ptr, pl.locks.size())
 		return
 	var p := cross.get_local_mouse_position()
@@ -409,7 +484,7 @@ func _process(_dt: float) -> void:
 	energy_icons.pending = Player.laser_cost(p.charge) if p.charging and p.charge >= Player.CHARGE_MIN else 0
 	energy_icons.regen = p.energy_regen_k()
 	missile_icons.set_count(_shown(p, "missile"))
-	missile_icons.pending = p.missiles if p.ult_aiming else 0
+	missile_icons.pending = p.ult_shot_count() if p.ult_aiming else 0
 	ult_label.text = ("MISSILE  %d / %d  [R]" % [p.missiles, Player.MISSILE_MAX]) if p.missiles > 0 else "MISSILE  — 적이 떨어뜨린 탄을 주우세요"
 	ult_label.modulate = Color("ffd070") if p.missiles > 0 and fmod(m.time, 0.8) < 0.4 else Color.WHITE
 	wave_label.text = "ROOMS  %d / %d" % [m.rooms_cleared, m.combat_rooms()]
@@ -417,12 +492,15 @@ func _process(_dt: float) -> void:
 		count_label.text = "WAVE %d / %d  ·  ENEMIES  %d" % [m.wave, ArenaMap.WAVES, m.enemies_left()]
 	else:
 		count_label.text = ("ENEMIES  %d" % m.enemies_left()) if m.active_room >= 0 else "탐색 중"
+	_place_icons()
 	cross.queue_redraw()
 	minimap.queue_redraw()
 	_update_combo(m)
 	_update_ult(p)
 	if m.time > 8.0 and m.state == Main.State.PLAY:
-		hint.modulate.a = move_toward(hint.modulate.a, 0.35, _dt)
+		# 프리셋은 버튼마다 키가 붙어 있으므로 안내 줄을 끝까지 걷어 낸다
+		var hint_a := 0.35 if HudPresets.current == HudPresets.LEGACY else 0.0
+		hint.modulate.a = move_toward(hint.modulate.a, hint_a, _dt)
 
 
 var _ctw: Tween

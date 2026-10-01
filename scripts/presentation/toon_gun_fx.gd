@@ -35,6 +35,10 @@ const TRAIL_MAX := 9.0
 
 static var inst: ToonGunFX
 
+## 화면 크기 배율: 카메라가 멀고 넓은 씬(맘모스 추격전 등)에서 총 연출이 작아 보이지 않게 모든 모양을 키운다.
+## 씬마다 GunFX 를 새로 만들므로 씬이 바뀌면 1 로 돌아온다.
+var view_k := 1.0
+
 var _quad: QuadMesh
 var _mats: Array[ShaderMaterial] = []
 var _live: Array = []   # {mi, t, dur, vel, drag, grav, size, grow}
@@ -312,6 +316,7 @@ func spawn(shape: int, pos: Vector3, dur: float, frames: float, size: Vector2, t
 	mi.set_instance_shader_parameter("frames", frames)
 	mi.set_instance_shader_parameter("energy", energy)
 	mi.set_instance_shader_parameter("spin", o.get("spin", 0.0))
+	size *= view_k
 	mi.set_instance_shader_parameter("size", size)
 	mi.set_instance_shader_parameter("anchor", o.get("anchor", Vector2.ZERO))
 	mi.set_instance_shader_parameter("tint", tint)
@@ -321,7 +326,8 @@ func spawn(shape: int, pos: Vector3, dur: float, frames: float, size: Vector2, t
 	mi.visible = delay <= 0.0
 	if not o.get("manual", false):
 		_live.append({"mi": mi, "t": -delay / dur, "dur": dur, "vel": o.get("vel", Vector3.ZERO),
-			"drag": o.get("drag", 0.0), "grav": o.get("grav", 0.0), "size": size, "grow": o.get("grow", 0.0)})
+			"drag": o.get("drag", 0.0), "grav": o.get("grav", 0.0), "size": size, "grow": o.get("grow", 0.0),
+			"flow": o.get("flow", 0.0) if WorldFlow.active() else 0.0})
 	return mi
 
 
@@ -362,6 +368,10 @@ func _process(dt: float) -> void:
 				v.y -= float(s.grav) * dt
 				mi.global_position += v * dt
 				s.vel = v * exp(-float(s.drag) * dt)
+			if s.get("flow", 0.0) > 0.0:
+				# 흐르는 씬: 공기처럼 처음엔 제자리, 나이가 들수록 도로 속도로 끌려간다 (WorldFlow 와 같은 곡선)
+				var age: float = s.t * float(s.dur)
+				mi.global_position.z += WorldFlow.road_v() * (1.0 - exp(-float(s.flow) * age)) * dt
 			if s.grow != 0.0:
 				s.size = (s.size as Vector2) * (1.0 + float(s.grow) * dt)
 				mi.set_instance_shader_parameter("size", s.size)
@@ -419,17 +429,17 @@ static func impact(pos: Vector3, face: Vector3, k := 1.0, smoke := SMOKE_LIT) ->
 	var sh := smoke.lerp(SMOKE_SHADE, 0.55)
 	sh.a = 1.0
 	g.spawn(PUFF, p + side * flip * 0.32 * k + Vector3(0, 0.12, 0) * k, 0.48, 8, Vector2(1.3, 1.2) * k * randf_range(0.9, 1.1),
-		smoke, 1.0, Vector3.ZERO, {"tint2": sh, "vel": (fc * 0.8 + Vector3(0, 0.9, 0) + side * flip * 0.6) * k, "drag": 4.0, "delay": 0.02})
+		smoke, 1.0, Vector3.ZERO, {"tint2": sh, "vel": (fc * 0.8 + Vector3(0, 0.9, 0) + side * flip * 0.6) * k, "drag": 4.0, "delay": 0.02, "flow": WorldFlow.AIR})
 	g.spawn(PUFF, p - side * flip * 0.3 * k + Vector3(0, 0.3, 0) * k, 0.4, 7, Vector2(0.8, 0.75) * k * randf_range(0.85, 1.1),
-		smoke, 1.0, Vector3.ZERO, {"tint2": sh, "vel": (fc * 0.5 + Vector3(0, 1.1, 0) - side * flip * 0.5) * k, "drag": 4.0, "delay": 0.05})
+		smoke, 1.0, Vector3.ZERO, {"tint2": sh, "vel": (fc * 0.5 + Vector3(0, 1.1, 0) - side * flip * 0.5) * k, "drag": 4.0, "delay": 0.05, "flow": WorldFlow.AIR})
 	# 왕관 불꽃: 착탄점에서 화면 위로 솟는다 (연기 위에 겹쳐 그린다)
 	g.spawn(CROWN, p, 0.32, 9, Vector2(0.82 * flip, 1.0) * k * randf_range(0.9, 1.1), FLAME, 1.8, Vector3.ZERO,
-		{"anchor": Vector2(0, 0.38), "tint2": FLAME_CORE})
+		{"anchor": Vector2(0, 0.38), "tint2": FLAME_CORE, "flow": WorldFlow.AIR})
 	# 튀는 파편 조각: 대부분 위·쏜 쪽으로
 	for i in randi_range(2, 3):
 		var a := (fc * randf_range(0.2, 1.0) + side * randf_range(-1.0, 1.0) + Vector3(0, randf_range(0.6, 1.6), 0)).normalized()
 		g.spawn(SHARD, p + a * 0.25 * k, randf_range(0.1, 0.16), 3, Vector2(0.2, 0.42) * k * randf_range(0.7, 1.2),
-			AMBER, 2.2, a, {"anchor": Vector2(0, 0.5), "tint2": HOT, "vel": a * randf_range(5.0, 8.0) * k, "drag": 9.0})
+			AMBER, 2.2, a, {"anchor": Vector2(0, 0.5), "tint2": HOT, "vel": a * randf_range(5.0, 8.0) * k, "drag": 9.0, "flow": WorldFlow.AIR})
 
 
 func _exit_tree() -> void:
@@ -494,7 +504,7 @@ class Tracer extends Node3D:
 		var ln := minf(randf_range(0.75, 1.35), dist + 0.25)
 		head.visible = randf() < 0.85
 		head.position = -dir * ln * 0.42 + side * randf_range(-0.05, 0.05)
-		head.set_instance_shader_parameter("size", Vector2(0.42 * thin, ln))
+		head.set_instance_shader_parameter("size", Vector2(0.42 * thin, ln) * g.view_k)
 		head.set_instance_shader_parameter("energy", randf_range(2.4, 3.6))
 		# 궤적 잔광: 지나온 자리 무작위 위치에 짧게 번쩍인다
 		var n := (1 if randf() < 0.75 else 0) + (1 if randf() < 0.3 else 0)
@@ -509,7 +519,7 @@ class Tracer extends Node3D:
 		var tl := minf(dist, ToonGunFX.TRAIL_MAX)
 		if is_instance_valid(line):
 			line.global_position = now - dir * tl * 0.5
-			line.set_instance_shader_parameter("size", Vector2(0.07 * thin, maxf(tl, 0.01)))
+			line.set_instance_shader_parameter("size", Vector2(0.07 * thin * g.view_k, maxf(tl, 0.01)))
 		last = now
 
 	func _exit_tree() -> void:

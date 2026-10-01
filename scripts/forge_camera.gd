@@ -115,18 +115,14 @@ func update(dt: float, player: Player) -> void:
 	t += dt
 	if pull_t > 0.0:
 		pull_t -= dt
-	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (5.0 if ult_on else 3.0))
+	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (ULT_K_IN if ult_on else ULT_K_OUT))
 	var zoom_target := lerpf(1.0, 1.18, ult_k)
 	if beam_on:
 		zoom_target = 1.08
-	zoom_v += ((zoom_target - zoom) * 40.0 - zoom_v * 9.0) * dt
-	zoom += zoom_v * dt
+	_zoom_spring(dt, zoom_target)
 	zoom = clampf(zoom, 0.88, 1.4)
 
-	fov_v += (-fov_add * 160.0 - fov_v * 14.0) * dt
-	fov_add += fov_v * dt
-	kick_v += (-kick_pos * 180.0 - kick_v * 18.0) * dt
-	kick_pos += kick_v * dt
+	_fov_kick_springs(dt)
 
 	trauma = maxf(0.0, trauma - dt * 1.8)
 	if beam_on:
@@ -136,6 +132,7 @@ func update(dt: float, player: Player) -> void:
 	var shake_off := Vector3(noise.get_noise_2d(shake_time * 260.0, 0.0), noise.get_noise_2d(0.0, shake_time * 260.0), 0.0) * s
 
 	var pp := Vector3(player.global_position.x, 0, player.global_position.z)
+	var aim_shift := _ult_aim_shift(dt, player)
 	if shot.get("legacy", false):
 		var target := CENTER.lerp(pp, FOLLOW)
 		if player.alive:
@@ -144,6 +141,7 @@ func update(dt: float, player: Player) -> void:
 			target += look.limit_length(6.0) * 0.06
 		var pull_k := clampf(pull_t / 0.35, 0.0, 1.0)
 		target += pull * pull_k * pull_k * 0.5
+		target += aim_shift
 		focus = focus.lerp(target, 1.0 - exp(-4.0 * dt))
 		roll = lerpf(roll, -player.velocity.x * 0.0015, 1.0 - exp(-4.0 * dt))
 		cur_offset = OFFSET
@@ -176,6 +174,9 @@ func _shot_update(dt: float, pp: Vector3, shake_off: Vector3, instant: bool) -> 
 	var side := Vector3.UP.cross(_axis).normalized()     # 화면 오른쪽
 	var cam_target := anchor + _axis * float(shot.back) + Vector3.UP * float(shot.height) + side * float(shot.shoulder)
 	var look_target := anchor.lerp(bg, float(shot.look_k)) + Vector3.UP * float(shot.look_y)
+	# 궁극기 락온: 카메라와 시선을 함께 조준점 쪽으로 옮긴다
+	cam_target += ult_shift * ult_k
+	look_target += ult_shift * ult_k
 	# 격파 끌림 · 패링 줌은 시선 쪽으로
 	var pull_k := clampf(pull_t / 0.35, 0.0, 1.0)
 	look_target += pull * pull_k * pull_k * 0.5

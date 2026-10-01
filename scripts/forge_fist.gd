@@ -9,6 +9,7 @@ var arm_index := 0
 
 func _ready() -> void:
 	add_to_group("enemies")
+	is_boss = true
 	radius = 1.9
 	slice_color = Color("5b5566")
 	slice_size = Vector3(2, 2, 2)

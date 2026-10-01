@@ -225,7 +225,7 @@ func _process(_dt: float) -> void:
 		return
 	var main := Main.inst
 	var e := (Parry.now_ms() - _seq_start) * 0.001
-	if main.player.ult_aiming or main.state == Main.State.LOSE:
+	if main.player.ult_busy() or main.state == Main.State.LOSE:
 		# 궁극기 락온이 시간을 넘겨받는다
 		_seq_start = -1
 		return

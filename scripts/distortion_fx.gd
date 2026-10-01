@@ -130,7 +130,8 @@ static func burst(pos: Vector3, radius: float, dur := 0.4, strength := 1.0, haze
 	mi.material_override = _burst_mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.scale = Vector3.ONE * radius * 2.0
-	FX.root.add_child(mi)
+	# 흐르는 씬에서는 폭발 본체와 같은 곡선으로 함께 흐른다 (WorldFlow, 아니면 FX.root)
+	WorldFlow.holder(WorldFlow.AIR).add_child(mi)
 	mi.global_position = pos
 	mi.set_instance_shader_parameter("strength", strength)
 	mi.set_instance_shader_parameter("haze", haze)

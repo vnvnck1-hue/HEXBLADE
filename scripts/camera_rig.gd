@@ -41,6 +41,7 @@ var fov_add := 0.0
 var fov_v := 0.0
 var zoom := 1.0          # 오프셋 배율 (1보다 크면 줌아웃)
 var zoom_v := 0.0
+var charge_zoom := 1.0   # 광선검 기 모으기: 단계마다 계단식으로 줌아웃 (BladeTech 가 정한다)
 var roll := 0.0
 var pull := Vector3.ZERO  # 격파 지점 쪽으로 잠깐 끌림
 var pull_t := 0.0
@@ -146,16 +147,84 @@ func kill_punch(pos: Vector3) -> void:
 	zoom_v = minf(zoom_v, -1.4 * float(p.kill_pull))
 
 
+## 궁극기 락온 전환 속도 (초당). 켤 때는 빠르게(약 0.3초) 줌아웃해 시야를 확보하되 부드럽게 감속하며 닿는다.
+const ULT_K_IN := 6.5
+const ULT_K_OUT := 3.0
+## 락온 중 시선이 조준점 쪽으로 옮겨 가는 비율 (1 = 조준점이 정확히 화면 가운데)과 따라가는 속도
+const ULT_FOCUS := 0.88
+const ULT_FOLLOW := 7.0
+
+
 ## 궁극기 락온: 크게 줌아웃해 주변을 보여 주고, 포인터 쪽으로 시야를 끌어 준다
 func set_ult_view(on: bool) -> void:
 	ult_on = on
 	if on:
 		zoom_v += 6.0
-		fov_v += 40.0
+		fov_v += 30.0
 	else:
 		zoom_v -= 9.0
 		fov_v -= 60.0
-		kick_v += -ult_look * 1.5
+		kick_v += -ult_look * 0.12
+
+
+## 광선검 기 모으기 줌: 단계가 오를 때마다 한 칸씩 툭 물러난다 (단단한 스프링 + 뒤로 차는 충격)
+func set_charge_zoom(z: float) -> void:
+	if z > charge_zoom + 0.001:
+		zoom_v += (z - charge_zoom) * 9.0
+	charge_zoom = z
+
+
+## 줌 스프링. 궁극기 락온 중에는 훨씬 단단하게 당겨 거의 즉시 목표 줌에 닿는다 (살짝 넘쳤다 자리 잡는다).
+## 단단한 스프링은 프레임이 길게 끊기면 발산하므로 1/240초 이하로 쪼개어 적분한다.
+func _zoom_spring(dt: float, zoom_target: float) -> void:
+	var stepped := charge_zoom > 1.001
+	var stiff := 70.0 if ult_on or stepped else 40.0
+	var damp := 15.0 if ult_on else (12.0 if stepped else 9.0)
+	var left := minf(dt, 0.25)
+	while left > 0.0:
+		var h := minf(left, 1.0 / 240.0)
+		left -= h
+		zoom_v += ((zoom_target - zoom) * stiff - zoom_v * damp) * h
+		zoom += zoom_v * h
+
+
+## 보스전 카메라용: 락온 중 시선을 조준점 쪽으로 옮길 양 (ult_k 반영). 매 프레임 한 번 부른다.
+var ult_shift := Vector3.ZERO
+
+
+func _ult_aim_shift(dt: float, player: Player) -> Vector3:
+	var want := Vector3.ZERO
+	if (ult_on or player.ult_winding()) and player.alive:
+		want = player.ult_aim_w - player.global_position
+		want.y = 0.0
+		want *= ULT_FOCUS
+	ult_shift = ult_shift.lerp(want, 1.0 - exp(-ULT_FOLLOW * dt))
+	return ult_shift * ult_k
+
+
+## 락온 순간 카메라 임팩트: 적 쪽으로 툭 끌렸다 돌아오고, 살짝 줌인 펀치 + 짧은 떨림. 락온이 쌓일수록 조금씩 세진다.
+func lock_impact(at: Vector3, count: int) -> void:
+	var k := 1.0 + minf(count - 1, 6) * 0.08
+	var d := at - focus
+	d.y = 0.0
+	if d.length() > 0.01:
+		kick_v += d.normalized() * 2.2 * k
+	zoom_v -= 1.6 * k
+	fov_v -= 26.0 * k
+	roll += (0.012 if count % 2 == 0 else -0.012) * k
+	shake(0.16 * k)
+
+
+## FOV 펀치 · 반동 스프링 (줌 스프링과 같은 이유로 쪼개어 적분한다)
+func _fov_kick_springs(dt: float) -> void:
+	var left := minf(dt, 0.25)
+	while left > 0.0:
+		var h := minf(left, 1.0 / 240.0)
+		left -= h
+		fov_v += (-fov_add * 160.0 - fov_v * 14.0) * h
+		fov_add += fov_v * h
+		kick_v += (-kick_pos * 180.0 - kick_v * 18.0) * h
+		kick_pos += kick_v * h
 
 
 ## 패링 성공: 적당한 줌인
@@ -202,38 +271,35 @@ func update(dt: float, player: Player) -> void:
 		pull_t -= dt
 	var pull_k := clampf(pull_t / 0.35, 0.0, 1.0)
 	target += pull * pull_k * pull_k
-	# 락온 중: 줌아웃만 하고 시야는 거의 고정한다 (포인터를 따라 화면이 움직이면 조준이 어렵다).
-	# 조준 방향 시야 이동도 걷어 내고, 포인터 쪽으로는 아주 살짝만 기운다.
-	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (5.0 if ult_on else 3.0))
+	# 락온 중: 줌아웃하고, 시선을 월드 조준점(player.ult_aim_w) 쪽으로 옮겨 조준점이 화면 가운데 가깝게 오게 한다.
+	# 조준점은 마우스 이동량으로 움직이는 월드 좌표라 카메라가 따라가도 끌려가지 않는다.
+	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (ULT_K_IN if ult_on else ULT_K_OUT))
 	var look_target := Vector3.ZERO
 	var roll_add := 0.0
-	if ult_on:
-		var vs := get_viewport().get_visible_rect().size
-		var m := (player.ult_ptr - vs * 0.5) / (vs * 0.5)
-		m = m.limit_length(1.0)
-		look_target = Vector3(m.x, 0, m.y * 1.3) * 0.35
+	var follow := float(p.follow)
+	if ult_on or player.ult_winding():
+		var aim := player.ult_aim_w - player.global_position
+		aim.y = 0.0
+		look_target = aim * ULT_FOCUS
+		follow = maxf(follow, ULT_FOLLOW)
 	ult_prev_ptr = player.ult_ptr
-	ult_look = ult_look.lerp(look_target, 1.0 - exp(-3.0 * dt))
+	ult_look = ult_look.lerp(look_target, 1.0 - exp(-ULT_FOLLOW * dt))
 	target = target.lerp(player.global_position + lead, ult_k)
-	target += ult_look
-	focus = focus.lerp(target, 1.0 - exp(-float(p.follow) * dt))
+	target += ult_look * ult_k
+	focus = focus.lerp(target, 1.0 - exp(-follow * dt))
 
 	# 줌: 기본 1, 부스터 속도에 비례해 줌아웃, 강력 레이저 시 크게 줌아웃
 	var zoom_target := 1.0 + clampf(hv.length() / Player.BOOST_SPEED, 0.0, 1.0) * float(p.speed_zoom) * (1.0 if player.boosting else 0.35)
 	if beam_on:
 		zoom_target = 1.35
 	zoom_target = lerpf(zoom_target, 1.75, ult_k)
-	zoom_v += ((zoom_target - zoom) * 40.0 - zoom_v * 9.0) * dt
-	zoom += zoom_v * dt
+	zoom_target = maxf(zoom_target, charge_zoom)
+	_zoom_spring(dt, zoom_target)
 	zoom = clampf(zoom, 0.82, 1.9)
 
 	# FOV 스프링
-	fov_v += (-fov_add * 160.0 - fov_v * 14.0) * dt
-	fov_add += fov_v * dt
-
-	# 반동 스프링
-	kick_v += (-kick_pos * 180.0 - kick_v * 18.0) * dt
-	kick_pos += kick_v * dt
+	# FOV · 반동 스프링
+	_fov_kick_springs(dt)
 
 	# 좌우 이동에 따른 기울기 + 시네마틱 흔들림
 	var roll_target := -hv.x * float(p.roll) * 0.1

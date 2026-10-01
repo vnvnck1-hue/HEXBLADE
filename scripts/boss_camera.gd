@@ -28,20 +28,17 @@ func update(dt: float, player: Player) -> void:
 		target += look.limit_length(5.0) * 0.08
 	if pull_t > 0.0:
 		pull_t -= dt
+	target += _ult_aim_shift(dt, player)
 	focus = focus.lerp(target, 1.0 - exp(-5.0 * dt))
 
-	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (5.0 if ult_on else 3.0))
+	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (ULT_K_IN if ult_on else ULT_K_OUT))
 	var zoom_target := lerpf(1.0, 1.25, ult_k)
 	if beam_on:
 		zoom_target = 1.12
-	zoom_v += ((zoom_target - zoom) * 40.0 - zoom_v * 9.0) * dt
-	zoom += zoom_v * dt
+	_zoom_spring(dt, zoom_target)
 	zoom = clampf(zoom, 0.85, 1.5)
 
-	fov_v += (-fov_add * 160.0 - fov_v * 14.0) * dt
-	fov_add += fov_v * dt
-	kick_v += (-kick_pos * 180.0 - kick_v * 18.0) * dt
-	kick_pos += kick_v * dt
+	_fov_kick_springs(dt)
 	# 좌우 이동에 따라 살짝 기울어 비행감을 준다
 	var roll_target := -player.velocity.x * 0.004
 	roll = lerpf(roll, roll_target, 1.0 - exp(-4.0 * dt))

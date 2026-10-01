@@ -1,6 +1,7 @@
 class_name Debris
 extends Node3D
 ## 파괴된 몸체 조각. 간단한 자체 물리로 튀고, 바닥에서 튕기며 구르다 사라진다.
+## 흐르는 씬(WorldFlow)에서는 바닥 마찰이 흐르는 도로 기준이라, 떨어진 조각이 도로에 끌려 화면 아래로 흘러간다.
 
 const GRAVITY := 22.0
 const MAX_PIECES := 220
@@ -97,6 +98,7 @@ func _add_piece(mesh: Mesh, mat: Material, xf: Transform3D, center: Vector3, pow
 
 
 func _physics_process(dt: float) -> void:
+	var road := WorldFlow.road_v()
 	var i := pieces.size() - 1
 	while i >= 0:
 		var pc: Dictionary = pieces[i]
@@ -120,8 +122,8 @@ func _physics_process(dt: float) -> void:
 				ang *= 0.6
 			else:
 				v.y = 0.0
-			v.x *= 0.72                  # 바닥 마찰
-			v.z *= 0.72
+			v.x *= 0.72                  # 바닥 마찰 (흐르는 씬에서는 도로 기준)
+			v.z = road + (v.z - road) * 0.72
 			ang *= 0.8
 		var old := mi.global_position
 		# 낮게 날면 벽에, 높이와 상관없이 솟은 절벽 면에 튕긴다
@@ -130,9 +132,14 @@ func _physics_process(dt: float) -> void:
 			pos.x = old.x
 			v.x = -v.x * 0.4
 		var qz := Vector3(pos.x, pos.y, pos.z)
-		if (pos.y - g < 1.2 and Main.inst.is_blocked(qz)) or Main.gy(qz) > pos.y:
+		if road <= 0.0 and ((pos.y - g < 1.2 and Main.inst.is_blocked(qz)) or Main.gy(qz) > pos.y):
 			pos.z = old.z
 			v.z = -v.z * 0.4
+		if WorldFlow.gone(pos):
+			mi.queue_free()
+			pieces.remove_at(i)
+			i -= 1
+			continue
 		mi.global_position = pos
 		if ang.length() > 0.05:
 			mi.rotate(ang.normalized(), ang.length() * dt)

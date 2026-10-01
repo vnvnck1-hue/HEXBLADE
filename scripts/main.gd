@@ -57,6 +57,7 @@ var combo_t := 0.0
 var best_combo := 0
 var score := 0
 var slowmo := 1.0
+var _cam_us := 0
 var bot_lock_t := 0.0
 var kills := 0
 var time := 0.0
@@ -85,6 +86,7 @@ var parry_show := false
 var crawler_show := false
 ## 검술 콤보 확인용: 적이 내려앉기 전 허공을 베어 헛침 경직을 보인 뒤, 튼튼한 드론과 일반 드론을 연타로 잇는다
 var combo_show := false
+var act_show := false            # 사격·재장전·레이저·미사일 동작 확인
 ## 돌진 연출 확인용: 옆 대시 → 먼 적에게 긴 돌진 베기 → 다시 먼 적 → 관통 일격
 var rush_show := false
 ## 확인 모드: 거리 벌리기 (다른 확인 모드에서는 결과가 흔들리지 않게 거리 벌리기를 끈다)
@@ -111,6 +113,7 @@ func _ready() -> void:
 	FX.setup(world)
 	add_child(Sfx.new())
 	_build_environment()
+	PaintedLook.attach(self, env, sun)
 	_build_arena()
 	bullets = Node3D.new()
 	add_child(bullets)
@@ -174,6 +177,9 @@ func _parse_args() -> void:
 		elif a == "--comboshow":
 			showcase = true
 			combo_show = true
+		elif a == "--actshow":
+			showcase = true
+			act_show = true
 		elif a == "--rushshow":
 			showcase = true
 			rush_show = true
@@ -284,7 +290,12 @@ func add_bullet(b: Bullet) -> void:
 
 
 func mouse_ground(h: float) -> Vector3:
-	var mp := camera.render_pos(get_viewport().get_mouse_position())
+	return screen_ground(get_viewport().get_mouse_position(), h)
+
+
+## 보이는 화면 좌표 sp 를 지나는 시선이 높이 h 평면과 만나는 점
+func screen_ground(sp: Vector2, h: float) -> Vector3:
+	var mp := camera.render_pos(sp)
 	var o := camera.project_ray_origin(mp)
 	var d := camera.project_ray_normal(mp)
 	if abs(d.y) < 0.0001:
@@ -468,6 +479,22 @@ func _run_combo_show() -> void:
 		_show_aim = p + Vector3(5.0, 0.95, 1.5)
 
 
+func _run_act_show() -> void:
+	if _show_step == 0 and time >= 0.2:
+		_show_step = 1
+		player.invuln = 999.0
+		var p := player.global_position
+		# 왼쪽(화면 왼편)을 겨눠 사격 팔(왼팔)이 카메라 쪽을 보게 한다
+		var e := _spawn_show(p, Vector3(-6.5, 0, 0.8), 999)
+		e.desired = 6.5
+		_spawn_show(p, Vector3(-5.5, 0, -2.5), 999).desired = 6.5
+		_show_aim = e.global_position + Vector3(0, 0.95, 0)
+	elif _show_step == 1 and time >= 5.6:
+		_show_step = 2
+		player.energy = Player.ENERGY_MAX
+		player.missiles = Player.MISSILE_MAX
+
+
 ## 드론 둘 · 요격기 · 크롤러를 띄우고, 봇이 가까운 적에게 붙어 광선검을 연타한다
 func _run_evade_show() -> void:
 	if _show_step == 0 and time >= 0.2:
@@ -561,6 +588,9 @@ func _run_showcase() -> void:
 		return
 	if combo_show:
 		_run_combo_show()
+		return
+	if act_show:
+		_run_act_show()
 		return
 	if rush_show:
 		_run_rush_show()
@@ -672,6 +702,8 @@ func on_enemy_killed(_e: Enemy) -> void:
 	score += pts
 	hud.combo_pop(pts, _e.kill_source)
 	_drop_loot(_e)
+	if is_instance_valid(player):
+		player.gain_boost()
 	hitstop(0.07)
 	shake(0.35)
 	camera.kill_punch(_e.global_position)
@@ -780,6 +812,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("toon"):
 		Pal.set_toon(not Pal.toon_on)
 		hud.banner("CARTOON  %s" % ("ON" if Pal.toon_on else "OFF"), Color(1, 1, 1), "셀 음영 + 외곽선")
+	elif event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_K:
+		# K: 하스스톤 식 핸드 페인팅 질감 켜기/끄기 (PaintedLook)
+		hud.banner("PAINTED  %s" % PaintedLook.toggle(), Color(1, 0.9, 0.7), "하스스톤 식 핸드 페인팅 질감")
 
 
 # ── 카메라 · 타격감 ─────────────────────────────────────
@@ -841,8 +876,13 @@ func _update_camera(dt: float) -> void:
 		camera.global_position = Vector3(0, 90, 55)
 		camera.look_at(Vector3.ZERO, Vector3.UP)
 		return
-	if player.ult_aiming:
-		dt = get_process_delta_time() / maxf(Engine.time_scale, 0.01)
+	# 락온 중에는 실제 시간으로 움직인다. 시간 배율이 바뀐 바로 그 프레임에 (프레임 시간 ÷ 배율)로 재면
+	# 수백 ms 가 한 번에 들어가 줌이 순간이동하므로 실제 시계로 잰다.
+	var now := Time.get_ticks_usec()
+	var real_dt := clampf((now - _cam_us) / 1000000.0, 0.0, 0.05)
+	_cam_us = now
+	if player.ult_busy():
+		dt = real_dt
 	camera.update(dt, player)
 
 
@@ -948,6 +988,14 @@ func bot_input(p: Player) -> Dictionary:
 			to.y = 0
 			out.move = to.normalized() if bd4 > 2.2 else Vector3.ZERO
 			out.slash = bd4 < 3.2 and fmod(time, 0.15) < 0.017
+		return out
+	if act_show:
+		# 연사 30발 → 자동 재장전 → 3단 레이저 → 지속 레이저 → 미사일 일제 사격
+		out.aim = _show_aim
+		var ta := time
+		out.fire = ta > 0.3 and ta < 3.4
+		out.charge = (ta > 4.6 and ta < 5.35) or (ta > 5.9 and ta < 7.0)
+		out.ult = ta > 9.4 and ta < 9.45
 		return out
 	if combo_show:
 		# 0.5초: 적이 아직 내려앉기 전 허공을 벤다 (헛침 → 경직 중 연타는 무시된다)

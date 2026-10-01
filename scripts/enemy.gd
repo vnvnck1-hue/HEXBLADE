@@ -40,6 +40,9 @@ var cut_frame: Basis
 var visual: Node3D
 var locked := false
 var kill_source := ""
+## 보스(와 그 피격 부위): 궁극기 미사일이 한 발이 아니라 남은 미사일을 모두 받는다 (player.gd 가 읽음)
+var is_boss := false
+var lock_marker: Node3D            # 락온 표식 (presentation/lock_marker.gd)
 ## 광선검 절단 조각의 크기(폭, 높이, 깊이)와 색. 몸체가 다른 기체는 덮어쓴다.
 var slice_size := Vector3(0.78, 0.74, 0.78)
 var slice_color := Pal.E_WHITE
@@ -459,7 +462,7 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 
 # ── 피격 경직 ───────────────────────────────────────────
 
-## 피격 섬광 (마젠타 별 + 노란 초승달). 무거운 공격일수록 크다.
+## 피격 섬광 (기본총 예광탄과 같은 납작한 방추 모양). 무거운 공격일수록 크다.
 func _hit_spark(dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
 	if not is_inside_tree():
 		return
@@ -817,9 +820,13 @@ func set_locked(on: bool) -> void:
 		return
 	locked = on
 	_set_flash(flash_t > 0.0)
+	if is_instance_valid(lock_marker):
+		lock_marker.queue_free()
+	lock_marker = null
 	if on:
 		punch = 0.6
 		FX.flash((j.body as Node3D).global_position, Color(1, 0.2, 0.25), 1.1, 0.1)
+		lock_marker = LockMarker.attach(self, radius, hp_bar_y)
 
 
 # ── 체력바 ──────────────────────────────────────────────

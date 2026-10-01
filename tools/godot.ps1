@@ -94,6 +94,10 @@ if (-not (Test-Pinned)) {
 }
 
 $q = { param($a) if ($a -match '[\s"]') { '"' + ($a -replace '"', '\"') + '"' } else { $a } }
+# Bandicam installs an implicit Vulkan layer (bdcamvk64.dll) that fails to recreate the swapchain on a
+# window-mode change: F11 fullscreen froze the game and then crashed (VkResult -2). This variable is the
+# layer's own disable switch; it only affects Godot started from here (the editor's play runs inherit it).
+$env:VK_LAYER_bandicam_helper_DEBUG_1 = '1'
 switch ($mode) {
 	'setup' { Write-Host "[godot] $(Get-Version $con)"; exit 0 }
 	'which' { Write-Output $con; exit 0 }

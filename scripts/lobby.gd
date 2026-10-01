@@ -8,9 +8,12 @@ const RUN_SCENE := "res://scenes/run.tscn"
 const DEATH_TEST_SCENE := "res://scenes/mammoth_death_lab.tscn"
 const TEST_SCENES := [
 	{"title": "방 탐색 아레나", "desc": "전투방 9곳을 통로로 이은 기존 절차 생성 맵", "scene": "res://scenes/main.tscn"},
+	{"title": "전투 테스트 · 허수아비", "desc": "넓은 홀에서 허수아비로 콤보·무기·패링을 자유롭게 시험 · 피해 숫자·DPS 표시", "scene": "res://scenes/training.tscn"},
 	{"title": "MAMMOTH 추격전", "desc": "도로 위 전차 보스 단독 실행", "scene": "res://scenes/boss.tscn"},
 	{"title": "VULCAN 용광로", "desc": "좁아지는 용암 아레나 보스 단독 실행", "scene": "res://scenes/forge.tscn"},
-	{"title": "MAMMOTH 죽음 연출 · B안", "desc": "궤도 파손과 전복 컷씬 확인 (본선 미적용)", "scene": "res://scenes/lab_mammoth_b.tscn"},
+	{"title": "LAYER 01 · 심연 성소", "desc": "어두운 부유 아레나 · 페이즈마다 땅이 솟고 꺼짐 · 함정 · 중간보스 HALO WARDEN", "scene": "res://scenes/abyss.tscn"},
+	{"title": "SHAFT 07 · 거미 보스 SHIPWRIGHT", "desc": "높은 벽의 갱도 · 벽과 구멍을 오가는 다관절 거미 · 거미줄 감속 · 새끼 소환 · 끝없는 기둥", "scene": "res://scenes/spider.tscn"},
+	{"title": "MAMMOTH 죽음 연출 · B안", "desc": "궤도 파손과 전복 컷씬 반복 확인 (본선 격파에 적용됨)", "scene": "res://scenes/lab_mammoth_b.tscn"},
 ]
 const CYAN := Color("7cf5ff")
 const PINK := Color("ff4a8a")

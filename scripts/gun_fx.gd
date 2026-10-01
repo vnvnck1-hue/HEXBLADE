@@ -3,6 +3,8 @@ extends Node3D
 ## 총기 연출 전용: 총구 화염(톱니 창 불꽃·순간 조명·연기), 탄피 배출, 착탄(파편·먼지·불꽃).
 ## 불꽃·섬광·연기 모양은 손그림 플립북 모듈(ToonGunFX)이 그리고, 여기서는 조명·탄피·파편·불똥을 더한다.
 ## 탄피와 벽 파편은 바닥에 떨어져 한동안 남아 전투 흔적을 쌓는다. 게임 판정과 무관하다.
+## 흐르는 씬(추격 보스전, WorldFlow)에서는 바닥에 닿는 순간 흐르는 도로에 끌려 구르며 화면 아래로 흘러가고,
+## 연기·불꽃도 공기처럼 뒤로 끌려간다.
 
 const GRAVITY := 22.0
 const MAX_CASINGS := 200
@@ -179,7 +181,7 @@ func _spray(pos: Vector3, dir: Vector3, count: int, spread: float, speed: float,
 	p.one_shot = true
 	p.explosiveness = 1.0
 	p.lifetime = life
-	p.local_coords = false
+	p.local_coords = WorldFlow.active()
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var pm := ParticleProcessMaterial.new()
 	pm.direction = (dir + Vector3(0, 0.25, 0)).normalized()
@@ -206,7 +208,7 @@ func _spray(pos: Vector3, dir: Vector3, count: int, spread: float, speed: float,
 	pm.color_ramp = gt
 	p.process_material = pm
 	p.draw_pass_1 = _streak_mesh
-	add_child(p)
+	(WorldFlow.holder() if WorldFlow.active() else self).add_child(p)
 	p.global_position = pos
 	p.emitting = true
 	get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
@@ -219,7 +221,7 @@ func _smoke(pos: Vector3, drift: Vector3, size: float, alpha: float, life: float
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.set_instance_shader_parameter("tint", SMOKE.lerp(Color(0.4, 0.4, 0.5), randf()))
 	mi.set_instance_shader_parameter("alpha", alpha)
-	add_child(mi)
+	(WorldFlow.holder() if WorldFlow.active() else self).add_child(mi)
 	mi.global_position = pos
 	mi.scale = Vector3.ONE * size * 0.5
 	var tw := mi.create_tween()
@@ -258,6 +260,7 @@ func _physics_process(dt: float) -> void:
 ## 간단한 낙하·튕김. 멈추면 바닥에 눕혀 두고, 수명 끝에 줄어들며 사라진다.
 func _step(list: Array, dt: float, is_casing: bool) -> void:
 	var main := Main.inst
+	var road := WorldFlow.road_v()          # 흐르는 씬: 바닥이 +Z 로 움직이는 속도
 	var i := list.size() - 1
 	while i >= 0:
 		var pc: Dictionary = list[i]
@@ -271,6 +274,12 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 		if pc.life < FADE:
 			mi.scale = Vector3.ONE * float(pc.s0) * maxf(0.01, pc.life / FADE)
 		if pc.rest:
+			if road > 0.0:
+				# 멈춘 탄피·파편은 도로에 실려 흘러간다
+				mi.global_position.z += road * dt
+				if WorldFlow.gone(mi.global_position):
+					mi.queue_free()
+					list.remove_at(i)
 			i -= 1
 			continue
 		var v: Vector3 = pc.vel
@@ -290,10 +299,14 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 				pc.bounced = true
 			else:
 				v.y = 0.0
+			# 바닥 마찰은 흐르는 도로 기준: 닿을 때마다 도로 속도에 끌려가며 구른다
+			var slip := v.z - road
 			v.x *= 0.65
-			v.z *= 0.65
+			v.z = road + slip * 0.65
 			ang *= 0.75
-			if Vector2(v.x, v.z).length() < 0.15 and absf(v.y) < 0.01:
+			if absf(slip) > 3.0:
+				ang += Vector3(-signf(slip) * randf_range(10.0, 22.0), randf_range(-6.0, 6.0), randf_range(-8.0, 8.0))
+			if Vector2(v.x, v.z - road).length() < 0.15 and absf(v.y) < 0.01:
 				pc.rest = true
 				if is_casing:
 					# 옆으로 누운 자세로 정착 (원기둥 축이 수평)
@@ -308,9 +321,14 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 			if main.is_blocked(Vector3(pos.x, pos.y, old.z)) or Main.gy(Vector3(pos.x, 0, old.z)) > pos.y:
 				pos.x = old.x
 				v.x = -v.x * 0.35
-			if main.is_blocked(Vector3(pos.x, pos.y, pos.z)) or Main.gy(pos) > pos.y:
+			if road <= 0.0 and (main.is_blocked(Vector3(pos.x, pos.y, pos.z)) or Main.gy(pos) > pos.y):
 				pos.z = old.z
 				v.z = -v.z * 0.35
+		if WorldFlow.gone(pos):
+			mi.queue_free()
+			list.remove_at(i)
+			i -= 1
+			continue
 		mi.global_position = pos
 		if ang.length() > 0.05:
 			mi.rotate(ang.normalized(), ang.length() * dt)
