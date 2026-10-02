@@ -1,0 +1,74 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+INSECT_LAB ready ant+grub studio=false
+PASS two reusable enemy variants in lab
+PASS ANT emerge + six articulated legs
+PASS ANT mouth attachment above ground
+PASS ANT articulated antenna l
+PASS ANT articulated antenna r
+PASS ANT antenna searches at rest
+PASS ANT attack anticipation changes thorax
+PASS ANT stance feet touch ground error=0.00000
+PASS ANT swing feet lift off ground
+IK ANT max_stance_transition=0.1890 max_lift=0.04500 lifts=366
+PASS ANT finite idle
+PASS ANT finite walk
+PASS ANT finite windup
+PASS ANT finite attack
+PASS ANT finite recover
+PASS ANT finite hurt
+PASS ANT finite stagger
+PASS ANT finite death
+PASS ANT finite emerge
+PASS ANT hurt interrupts attack and unregisters parry
+PASS ANT parry stagger stops attack
+PASS ANT hidden target cancels active attack
+PASS ANT death reports exactly one kill
+PASS GRUB emerge + six articulated legs
+PASS GRUB mouth attachment above ground
+PASS GRUB articulated antenna l
+PASS GRUB articulated antenna r
+PASS GRUB antenna searches at rest
+PASS GRUB attack anticipation changes thorax
+PASS GRUB stance feet touch ground error=0.00000
+PASS GRUB swing feet lift off ground
+IK GRUB max_stance_transition=0.0030 max_lift=0.02100 lifts=291
+PASS GRUB finite idle
+PASS GRUB finite walk
+PASS GRUB finite windup
+PASS GRUB finite attack
+PASS GRUB finite recover
+PASS GRUB finite hurt
+PASS GRUB finite stagger
+PASS GRUB finite death
+PASS GRUB finite emerge
+PASS GRUB hurt interrupts attack and unregisters parry
+PASS GRUB parry stagger stops attack
+PASS GRUB hidden target cancels active attack
+PASS GRUB death reports exactly one kill
+PASS organic death animation removes both enemies
+PASS queue count preserved 0
+PASS queue count preserved 1
+PASS queue count preserved 2
+PASS queue count preserved 3
+PASS queue count preserved 4
+PASS queue count preserved 5
+PASS queue count preserved 6
+PASS queue count preserved 7
+PASS queue count preserved 8
+PASS queue count preserved 9
+PASS queue count preserved 10
+PASS queue count preserved 11
+PASS queue count preserved 12
+PASS queue count preserved 13
+PASS queue count preserved 14
+PASS queue count preserved 15
+PASS queue count preserved 16
+PASS queue count preserved 17
+PASS queue count preserved 18
+PASS queue count preserved 19
+PASS main queue: ant 12% / grub 10%
+PASS reusable ant scene chooses correct model
+PASS reusable grub scene chooses correct model
+PASS main deferred spawn factory creates both real variants
+RESULT OK (0 fails)

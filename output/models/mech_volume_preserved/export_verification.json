@@ -1,0 +1,112 @@
+{
+  "source_sha256": "a3f3197a004c23281769d53fac7fd82988a8bd33ef65d10c0c2920d5af93d259",
+  "asset_sha256": "85912898d42f77bce2764bfa92082ef389659b6b82bb316a9249fc3310850d39",
+  "roundtrip_vertices": [
+    {
+      "source_part": 0,
+      "exported_glb_source_vertex_max_error_m": 2.4073563054116676e-07
+    },
+    {
+      "source_part": 10,
+      "exported_glb_source_vertex_max_error_m": 1.7881393432617188e-07
+    },
+    {
+      "source_part": 11,
+      "exported_glb_source_vertex_max_error_m": 1.341104507446289e-07
+    },
+    {
+      "source_part": 12,
+      "exported_glb_source_vertex_max_error_m": 6.322026990801533e-08
+    },
+    {
+      "source_part": 13,
+      "exported_glb_source_vertex_max_error_m": 7.300048565639372e-08
+    },
+    {
+      "source_part": 16,
+      "exported_glb_source_vertex_max_error_m": 6.322026990801533e-08
+    },
+    {
+      "source_part": 17,
+      "exported_glb_source_vertex_max_error_m": 6.322026990801533e-08
+    },
+    {
+      "source_part": 18,
+      "exported_glb_source_vertex_max_error_m": 8.56006536764653e-08
+    },
+    {
+      "source_part": 19,
+      "exported_glb_source_vertex_max_error_m": 1.2036781527058338e-07
+    },
+    {
+      "source_part": 20,
+      "exported_glb_source_vertex_max_error_m": 8.462232869987929e-08
+    },
+    {
+      "source_part": 21,
+      "exported_glb_source_vertex_max_error_m": 6.828570064953965e-08
+    },
+    {
+      "source_part": 3,
+      "exported_glb_source_vertex_max_error_m": 7.300048565639372e-08
+    },
+    {
+      "source_part": 4,
+      "exported_glb_source_vertex_max_error_m": 1.1944189282075968e-07
+    },
+    {
+      "source_part": 5,
+      "exported_glb_source_vertex_max_error_m": 6.828570064953965e-08
+    },
+    {
+      "source_part": 6,
+      "exported_glb_source_vertex_max_error_m": 1.365714012990793e-07
+    },
+    {
+      "source_part": 7,
+      "exported_glb_source_vertex_max_error_m": 1.365714012990793e-07
+    },
+    {
+      "source_part": 9,
+      "exported_glb_source_vertex_max_error_m": 1.2287812012345967e-07
+    }
+  ],
+  "silhouettes": [
+    {
+      "view": "front",
+      "original_silhouette_retained_ratio": 1.0,
+      "silhouette_iou_including_added_bearings": 1.0,
+      "source_pixels": 70349,
+      "result_pixels": 70349
+    },
+    {
+      "view": "side",
+      "original_silhouette_retained_ratio": 1.0,
+      "silhouette_iou_including_added_bearings": 0.9999338011386204,
+      "source_pixels": 45315,
+      "result_pixels": 45318
+    },
+    {
+      "view": "back",
+      "original_silhouette_retained_ratio": 1.0,
+      "silhouette_iou_including_added_bearings": 1.0,
+      "source_pixels": 70350,
+      "result_pixels": 70350
+    },
+    {
+      "view": "quarter",
+      "original_silhouette_retained_ratio": 1.0,
+      "silhouette_iou_including_added_bearings": 1.0,
+      "source_pixels": 69923,
+      "result_pixels": 69923
+    }
+  ],
+  "video": {
+    "frames": 160,
+    "size": [
+      480,
+      480
+    ]
+  },
+  "scope": "Retained source body, uniformly scaled 2.35 and rotated to engine forward. Excludes deleted ornaments and puddles. Actual exported GLB reimported for audit."
+}

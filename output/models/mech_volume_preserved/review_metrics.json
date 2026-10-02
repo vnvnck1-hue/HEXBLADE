@@ -1,0 +1,246 @@
+{
+  "fidelity": [
+    {
+      "part": 0,
+      "original_vertex_max_error_m": 2.4073563054116676e-07,
+      "source_triangle_plane_max_error_m": 2.3378864749530722e-07,
+      "source_triangle_area_max_error_m2": 1.2650883918999961e-08,
+      "uv_max_error": 1.3328003749250113e-07,
+      "source_to_result_bvh_max_distance_m": 3.066346152991173e-06,
+      "result_to_source_bvh_max_distance_m": 3.276663392171031e-06,
+      "samples": 14424
+    },
+    {
+      "part": 10,
+      "original_vertex_max_error_m": 1.7881393432617188e-07,
+      "source_triangle_plane_max_error_m": 1.7017680670903674e-07,
+      "source_triangle_area_max_error_m2": 7.2367068943215984e-09,
+      "uv_max_error": 2.980232238769531e-07,
+      "source_to_result_bvh_max_distance_m": 6.810140348534333e-06,
+      "result_to_source_bvh_max_distance_m": 2.9292816634551855e-06,
+      "samples": 4232
+    },
+    {
+      "part": 11,
+      "original_vertex_max_error_m": 1.341104507446289e-07,
+      "source_triangle_plane_max_error_m": 1.263868316260982e-07,
+      "source_triangle_area_max_error_m2": 3.923790196404264e-09,
+      "uv_max_error": 1.884864366154897e-07,
+      "source_to_result_bvh_max_distance_m": 1.4600097131278744e-07,
+      "result_to_source_bvh_max_distance_m": 2.528810796320613e-07,
+      "samples": 3152
+    },
+    {
+      "part": 12,
+      "original_vertex_max_error_m": 6.322026990801533e-08,
+      "source_triangle_plane_max_error_m": 5.960464421465748e-08,
+      "source_triangle_area_max_error_m2": 2.8884979239203468e-09,
+      "uv_max_error": 3.03925246810483e-07,
+      "source_to_result_bvh_max_distance_m": 0.00014593817468266934,
+      "result_to_source_bvh_max_distance_m": 9.081795724341646e-05,
+      "samples": 4176
+    },
+    {
+      "part": 13,
+      "original_vertex_max_error_m": 7.300048565639372e-08,
+      "source_triangle_plane_max_error_m": 7.310034058927808e-08,
+      "source_triangle_area_max_error_m2": 3.4940658448154305e-09,
+      "uv_max_error": 1.812804499357408e-07,
+      "source_to_result_bvh_max_distance_m": 4.588009119288472e-07,
+      "result_to_source_bvh_max_distance_m": 5.372689884097781e-07,
+      "samples": 3520
+    },
+    {
+      "part": 16,
+      "original_vertex_max_error_m": 6.322026990801533e-08,
+      "source_triangle_plane_max_error_m": 5.9537061295703604e-08,
+      "source_triangle_area_max_error_m2": 7.766460329125709e-10,
+      "uv_max_error": 3.371747880871523e-07,
+      "source_to_result_bvh_max_distance_m": 7.920075972833729e-08,
+      "result_to_source_bvh_max_distance_m": 2.6915060402643576e-07,
+      "samples": 3344
+    },
+    {
+      "part": 17,
+      "original_vertex_max_error_m": 6.322026990801533e-08,
+      "source_triangle_plane_max_error_m": 2.3949389763143075e-07,
+      "source_triangle_area_max_error_m2": 1.7368266139530797e-09,
+      "uv_max_error": 1.5105581324003564e-06,
+      "source_to_result_bvh_max_distance_m": 3.5400724300416186e-05,
+      "result_to_source_bvh_max_distance_m": 3.5400724300416186e-05,
+      "samples": 3104
+    },
+    {
+      "part": 18,
+      "original_vertex_max_error_m": 8.56006536764653e-08,
+      "source_triangle_plane_max_error_m": 7.246074053061167e-08,
+      "source_triangle_area_max_error_m2": 2.114429409989446e-09,
+      "uv_max_error": 1.609601332711074e-06,
+      "source_to_result_bvh_max_distance_m": 1.2649681593757123e-05,
+      "result_to_source_bvh_max_distance_m": 5.81718097691919e-07,
+      "samples": 3808
+    },
+    {
+      "part": 19,
+      "original_vertex_max_error_m": 1.2036781527058338e-07,
+      "source_triangle_plane_max_error_m": 1.374124426504757e-07,
+      "source_triangle_area_max_error_m2": 4.072975969487231e-09,
+      "uv_max_error": 4.676686175607209e-07,
+      "source_to_result_bvh_max_distance_m": 7.00259261066094e-05,
+      "result_to_source_bvh_max_distance_m": 7.003900100244209e-05,
+      "samples": 3096
+    },
+    {
+      "part": 20,
+      "original_vertex_max_error_m": 8.462232869987929e-08,
+      "source_triangle_plane_max_error_m": 1.242237959351339e-07,
+      "source_triangle_area_max_error_m2": 2.1417026711129106e-09,
+      "uv_max_error": 1.4113837953677761e-06,
+      "source_to_result_bvh_max_distance_m": 2.2923120923223905e-05,
+      "result_to_source_bvh_max_distance_m": 4.188934690319002e-05,
+      "samples": 1976
+    },
+    {
+      "part": 21,
+      "original_vertex_max_error_m": 6.828570064953965e-08,
+      "source_triangle_plane_max_error_m": 7.404959389798129e-07,
+      "source_triangle_area_max_error_m2": 1.7227007817217227e-09,
+      "uv_max_error": 1.1789822843582917e-06,
+      "source_to_result_bvh_max_distance_m": 3.072661274927668e-05,
+      "result_to_source_bvh_max_distance_m": 2.6169282136834227e-05,
+      "samples": 3064
+    },
+    {
+      "part": 3,
+      "original_vertex_max_error_m": 7.300048565639372e-08,
+      "source_triangle_plane_max_error_m": 1.0111969480748206e-07,
+      "source_triangle_area_max_error_m2": 7.734461821007343e-09,
+      "uv_max_error": 1.6858739404357614e-07,
+      "source_to_result_bvh_max_distance_m": 2.013455059568514e-06,
+      "result_to_source_bvh_max_distance_m": 6.97017640050035e-07,
+      "samples": 7712
+    },
+    {
+      "part": 4,
+      "original_vertex_max_error_m": 1.1944189282075968e-07,
+      "source_triangle_plane_max_error_m": 1.070031218547326e-07,
+      "source_triangle_area_max_error_m2": 6.7762469073417986e-09,
+      "uv_max_error": 1.6858739404357614e-07,
+      "source_to_result_bvh_max_distance_m": 5.654592882819998e-07,
+      "result_to_source_bvh_max_distance_m": 4.969040219293674e-07,
+      "samples": 7128
+    },
+    {
+      "part": 5,
+      "original_vertex_max_error_m": 6.828570064953965e-08,
+      "source_triangle_plane_max_error_m": 8.78993191792227e-08,
+      "source_triangle_area_max_error_m2": 5.22149328895799e-09,
+      "uv_max_error": 1.3328003749250113e-07,
+      "source_to_result_bvh_max_distance_m": 6.787409347452922e-06,
+      "result_to_source_bvh_max_distance_m": 1.0001388545788359e-05,
+      "samples": 7640
+    },
+    {
+      "part": 6,
+      "original_vertex_max_error_m": 1.365714012990793e-07,
+      "source_triangle_plane_max_error_m": 1.38170798618919e-07,
+      "source_triangle_area_max_error_m2": 1.0041954591651081e-08,
+      "uv_max_error": 1.7881393432617188e-07,
+      "source_to_result_bvh_max_distance_m": 8.566547649024869e-07,
+      "result_to_source_bvh_max_distance_m": 7.941424087221094e-07,
+      "samples": 6864
+    },
+    {
+      "part": 7,
+      "original_vertex_max_error_m": 1.365714012990793e-07,
+      "source_triangle_plane_max_error_m": 1.3394142827676276e-07,
+      "source_triangle_area_max_error_m2": 1.2605461051709566e-08,
+      "uv_max_error": 1.884864366154897e-07,
+      "source_to_result_bvh_max_distance_m": 2.747638347955217e-07,
+      "result_to_source_bvh_max_distance_m": 2.702825838696299e-07,
+      "samples": 5576
+    },
+    {
+      "part": 9,
+      "original_vertex_max_error_m": 1.2287812012345967e-07,
+      "source_triangle_plane_max_error_m": 3.2452066238956386e-07,
+      "source_triangle_area_max_error_m2": 7.958057038869037e-09,
+      "uv_max_error": 3.1680303253932744e-07,
+      "source_to_result_bvh_max_distance_m": 4.973506975147757e-07,
+      "result_to_source_bvh_max_distance_m": 1.3984134056954645e-05,
+      "samples": 6496
+    }
+  ],
+  "poses": {
+    "neutral": {
+      "feet_z": {
+        "hand": 0.0,
+        "gun": 0.0
+      },
+      "grip": [
+        -0.9047499895095825,
+        0.5052499771118164,
+        0.9987499713897705
+      ],
+      "muzzle": [
+        0.8460000157356262,
+        0.15275001525878906,
+        0.35249999165534973
+      ]
+    },
+    "aim": {
+      "feet_z": {
+        "hand": 0.0,
+        "gun": 0.0
+      },
+      "grip": [
+        -0.9631054401397705,
+        0.4876270890235901,
+        1.1410800218582153
+      ],
+      "muzzle": [
+        0.9367149472236633,
+        0.461250901222229,
+        1.050533652305603
+      ]
+    },
+    "arm_lift": {
+      "feet_z": {
+        "hand": 0.0,
+        "gun": 0.0
+      },
+      "grip": [
+        -1.1201260089874268,
+        0.22350145876407623,
+        1.5193358659744263
+      ],
+      "muzzle": [
+        0.7838024497032166,
+        0.2667168974876404,
+        0.35249999165534973
+      ]
+    },
+    "crouch": {
+      "feet_z": {
+        "hand": 4.330277647568437e-08,
+        "gun": 4.330277647568437e-08
+      },
+      "grip": [
+        -0.7732142806053162,
+        0.6112879514694214,
+        0.9362564086914062
+      ],
+      "muzzle": [
+        0.8066714406013489,
+        0.29734060168266296,
+        0.3086574673652649
+      ]
+    }
+  },
+  "motion": {
+    "frames": 160,
+    "foot_marker_max_error_m": 7.520615952216758e-08,
+    "saved_reopened": true,
+    "overlap_policy": "Allowed. Not optimized or asserted away."
+  }
+}

@@ -22,3 +22,6 @@ output/models/*/compare_colour.png
 # Python 캐시 (Blender 빌드가 tools/blender 모듈을 불러올 때 생김)
 __pycache__/
 *.pyc
+
+# 벌레 적 애니메이션 캡처 프레임 (최종 시트/GIF만 보존)
+output/insects-20261002/*_frames/

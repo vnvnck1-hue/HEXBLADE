@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-02",
+  "blender": "5.2.2",
+  "godot": "4.7.2-stable",
+  "checks": {
+    "import": {
+      "errors": [],
+      "warnings": [],
+      "log": "insect_import.log"
+    },
+    "insect_test": {
+      "errors": [],
+      "warnings": [],
+      "log": "insect_check_final.log",
+      "summary": [
+        "RESULT OK (0 fails)"
+      ]
+    },
+    "regression": {
+      "errors": [],
+      "warnings": [],
+      "log": "insect_regression.log",
+      "summary": [
+        "ALL 21 TESTS PASSED"
+      ]
+    },
+    "studio_24s": {
+      "errors": [],
+      "warnings": [],
+      "log": "insect_studio.log"
+    },
+    "combat_30s": {
+      "errors": [],
+      "warnings": [],
+      "log": "insect_combat.log",
+      "ant_attack_completions": 3,
+      "grub_attack_completions": 1,
+      "successful_parries": 2
+    },
+    "main_bot_60s": {
+      "errors": [],
+      "warnings": [
+        "WARNING: 30 ObjectDB instances were leaked at exit (run with `--verbose` for details)."
+      ],
+      "log": "insect_main_bot.log"
+    }
+  },
+  "models": {
+    "ant": {
+      "triangles": 13464,
+      "glb_bytes": 285664
+    },
+    "grub": {
+      "triangles": 20616,
+      "glb_bytes": 417564
+    }
+  },
+  "animation_tool": "Godot procedural driver; no baked clips in GLB/Blender source"
+}

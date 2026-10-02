@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-02",
+  "revision": 2,
+  "asset": "assets/models/tripo_mecha_proto.glb",
+  "sha256": "d677cf0a6d2d3ab7cdd901878c6251606412e603d4feed2f07d878df66654086",
+  "source_sha256": "8cff56cfbd2994d404a76fac9c06a8d63d5ab5d322a54f92e8ebbbac317be501",
+  "source_unchanged": true,
+  "tests": "ALL 15 TESTS PASSED",
+  "import_errors": 0,
+  "training_bot_errors": 0,
+  "training_bot_seconds": 20,
+  "model_used_in_training": false,
+  "saved_blend_keyframes_verified": true,
+  "triangles": 14782,
+  "previous_triangles": 21082,
+  "motion_frames": 160,
+  "body_crossing_frames": 0,
+  "shell_crossing_frames": 0,
+  "max_foot_marker_error_m": 5.7976318856844955e-08,
+  "validation_scope": {
+    "body": [
+      "torso_fixed_gun",
+      "pelvis_shell",
+      "pelvis_guard"
+    ],
+    "moving_vs_body": [
+      "hand_shell",
+      "forearm_shell",
+      "upper_arm_shell",
+      "shoulder_armor",
+      "thigh_hand",
+      "thigh_gun",
+      "shin_hand",
+      "shin_gun",
+      "knee_guard_hand",
+      "knee_guard_gun"
+    ],
+    "moving_shell_pairs": [
+      "shoulder_armor",
+      "upper_arm_shell",
+      "forearm_shell",
+      "hand_shell",
+      "thigh_hand",
+      "shin_hand",
+      "knee_guard_hand",
+      "foot_hand",
+      "thigh_gun",
+      "shin_gun",
+      "knee_guard_gun",
+      "foot_gun"
+    ],
+    "excluded": "Internal bearing/frame overlaps and meshes on the same rigid joint are intentional and excluded.",
+    "source_crouch_depth_m": 0.11,
+    "method": "Evaluated bevel meshes; BVH surface intersections at each saved integer frame, not continuous collision detection."
+  },
+  "video": {
+    "file": "pose_trial.mp4",
+    "frames": 160,
+    "size": [
+      480,
+      480
+    ]
+  },
+  "remaining": "Armor detail and UV/texturing, fixed gun-arm articulation, hand gripping, head/waist articulation and production animation/game integration."
+}

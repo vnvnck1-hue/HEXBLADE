@@ -1,0 +1,44 @@
+model: mech_volume_preserved
+size (m)  x 2.094  y(fwd) 1.513  z(up) 1.797
+bounds    min (-1.085, -0.757, 0.000)  max (1.009, 0.757, 1.797)
+triangles 13429
+parts:
+  pelvis_original             544 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  torso_original             1354 tris  parent=body  origin=(0.00, -0.23, 0.78)
+  fingers_original            529 tris  parent=hand  origin=(-0.75, 0.35, 0.96)
+  hip_armor_hand_original     394 tris  parent=hip_hand  origin=(-0.32, -0.31, 0.68)
+  groin_original              522 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  hip_armor_gun_original      440 tris  parent=hip_gun  origin=(0.32, -0.31, 0.68)
+  pelvis_detail_16            418 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  pelvis_detail_17            388 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  pelvis_detail_18            476 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  face_detail_original        387 tris  parent=head  origin=(0.00, -0.06, 1.02)
+  pelvis_detail_20            247 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  pelvis_detail_21            383 tris  parent=pelvis  origin=(0.00, -0.28, 0.67)
+  thigh_hand_original         552 tris  parent=hip_hand  origin=(-0.32, -0.31, 0.68)
+  shin_hand_original          606 tris  parent=knee_hand  origin=(-0.41, -0.27, 0.38)
+  foot_hand_original          228 tris  parent=ankle_hand  origin=(-0.43, -0.23, 0.15)
+  gun_original                891 tris  parent=gun_mount  origin=(0.63, -0.11, 0.67)
+  thigh_gun_original          408 tris  parent=hip_gun  origin=(0.32, -0.31, 0.68)
+  shin_gun_original           714 tris  parent=knee_gun  origin=(0.41, -0.27, 0.38)
+  foot_gun_original           242 tris  parent=ankle_gun  origin=(0.43, -0.23, 0.15)
+  shoulder_hand_original      262 tris  parent=shoulder_hand  origin=(-0.51, -0.19, 1.21)
+  upper_arm_hand_original     342 tris  parent=arm_hand_upper  origin=(-0.56, -0.16, 1.14)
+  forearm_hand_original       374 tris  parent=arm_hand_fore  origin=(-0.65, -0.06, 0.95)
+  palm_original               170 tris  parent=hand  origin=(-0.75, 0.35, 0.96)
+  shoulder_gun_original       175 tris  parent=shoulder_gun  origin=(0.51, -0.19, 1.15)
+  upper_arm_gun_original      375 tris  parent=arm_gun_upper  origin=(0.56, -0.16, 1.08)
+  forearm_gun_original        300 tris  parent=arm_gun_fore  origin=(0.55, -0.19, 0.85)
+  face_original               812 tris  parent=head  origin=(0.00, -0.06, 1.02)
+  inner_knee_hand             224 tris  parent=knee_hand  origin=(-0.41, -0.27, 0.38)
+  inner_ankle_hand            224 tris  parent=ankle_hand  origin=(-0.43, -0.23, 0.15)
+  inner_knee_gun              224 tris  parent=knee_gun  origin=(0.41, -0.27, 0.38)
+  inner_ankle_gun             224 tris  parent=ankle_gun  origin=(0.43, -0.23, 0.15)
+attachment points:
+  pt_foot_hand             (-0.43, -0.21, 0.00)  parent=ankle_hand
+  pt_foot_gun              (0.43, -0.21, 0.00)  parent=ankle_gun
+  pt_grip                  (-0.90, 0.51, 1.00)  parent=hand
+  pt_muzzle                (0.85, 0.15, 0.35)  parent=gun_mount
+  pt_booster_hand          (-0.23, -0.70, 1.08)  parent=body
+  pt_booster_gun           (0.23, -0.70, 1.08)  parent=body
+glb: assets\models\mech_volume_preserved.glb

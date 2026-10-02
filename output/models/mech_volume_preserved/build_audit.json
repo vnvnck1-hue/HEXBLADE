@@ -1,0 +1,396 @@
+{
+  "source_sha256": "a3f3197a004c23281769d53fac7fd82988a8bd33ef65d10c0c2920d5af93d259",
+  "uniform_scale": 2.35,
+  "removed_source_parts": {
+    "1": "tall back ornament",
+    "2": "tall back ornament",
+    "14": "figure inside back ornament",
+    "8": "ground puddle",
+    "15": "ground droplet"
+  },
+  "policy": "No original retained surface discarded, shrunk, moved or simplified. Original pose preserved. No collision-clearance optimization.",
+  "surface_area_audit": [
+    {
+      "source_part": 0,
+      "source_surface_area": 0.854720773095362,
+      "result_surface_area": 0.8547207730483365,
+      "max_per_triangle_relative_error": 1.98748783816111e-06,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 3,
+      "source_surface_area": 0.290079254912392,
+      "result_surface_area": 0.29007925528143874,
+      "max_per_triangle_relative_error": 2.4303653387662047e-06,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 4,
+      "source_surface_area": 0.24408587875193832,
+      "result_surface_area": 0.24408587875193832,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 5,
+      "source_surface_area": 0.23188290800458788,
+      "result_surface_area": 0.23188290751672122,
+      "max_per_triangle_relative_error": 2.15861643997888e-06,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 6,
+      "source_surface_area": 0.301595097782869,
+      "result_surface_area": 0.3015950981708228,
+      "max_per_triangle_relative_error": 2.9100923723901927e-05,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 7,
+      "source_surface_area": 0.189105716252277,
+      "result_surface_area": 0.1891057158895634,
+      "max_per_triangle_relative_error": 7.2383900297257515e-06,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 9,
+      "source_surface_area": 0.14274521020353056,
+      "result_surface_area": 0.14274521020353056,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 10,
+      "source_surface_area": 0.07495361068518651,
+      "result_surface_area": 0.07495361068518651,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 11,
+      "source_surface_area": 0.07673252603174861,
+      "result_surface_area": 0.07673252603174861,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 12,
+      "source_surface_area": 0.055237255905975134,
+      "result_surface_area": 0.055237255905975134,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 13,
+      "source_surface_area": 0.05495834442266684,
+      "result_surface_area": 0.05495834442266684,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 16,
+      "source_surface_area": 0.005704935986403587,
+      "result_surface_area": 0.005704935986403587,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 17,
+      "source_surface_area": 0.008797940117363462,
+      "result_surface_area": 0.008797940117363462,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 18,
+      "source_surface_area": 0.0058479848892608035,
+      "result_surface_area": 0.0058479848892608035,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 19,
+      "source_surface_area": 0.017194306880020806,
+      "result_surface_area": 0.017194306880020806,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 20,
+      "source_surface_area": 0.0076993954843241124,
+      "result_surface_area": 0.0076993954843241124,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    },
+    {
+      "source_part": 21,
+      "source_surface_area": 0.005422072617136563,
+      "result_surface_area": 0.005422072617136563,
+      "max_per_triangle_relative_error": 0.0,
+      "lost_surface_area": 0
+    }
+  ],
+  "parts": [
+    {
+      "object": "pelvis_original",
+      "source_part": 0,
+      "parent": "pelvis",
+      "surface_triangles": 539,
+      "cap_triangles": 5
+    },
+    {
+      "object": "torso_original",
+      "source_part": 0,
+      "parent": "body",
+      "surface_triangles": 1349,
+      "cap_triangles": 5
+    },
+    {
+      "object": "fingers_original",
+      "source_part": 10,
+      "parent": "hand",
+      "surface_triangles": 529,
+      "cap_triangles": 0
+    },
+    {
+      "object": "hip_armor_hand_original",
+      "source_part": 11,
+      "parent": "hip_hand",
+      "surface_triangles": 394,
+      "cap_triangles": 0
+    },
+    {
+      "object": "groin_original",
+      "source_part": 12,
+      "parent": "pelvis",
+      "surface_triangles": 522,
+      "cap_triangles": 0
+    },
+    {
+      "object": "hip_armor_gun_original",
+      "source_part": 13,
+      "parent": "hip_gun",
+      "surface_triangles": 440,
+      "cap_triangles": 0
+    },
+    {
+      "object": "pelvis_detail_16",
+      "source_part": 16,
+      "parent": "pelvis",
+      "surface_triangles": 418,
+      "cap_triangles": 0
+    },
+    {
+      "object": "pelvis_detail_17",
+      "source_part": 17,
+      "parent": "pelvis",
+      "surface_triangles": 388,
+      "cap_triangles": 0
+    },
+    {
+      "object": "pelvis_detail_18",
+      "source_part": 18,
+      "parent": "pelvis",
+      "surface_triangles": 476,
+      "cap_triangles": 0
+    },
+    {
+      "object": "face_detail_original",
+      "source_part": 19,
+      "parent": "head",
+      "surface_triangles": 387,
+      "cap_triangles": 0
+    },
+    {
+      "object": "pelvis_detail_20",
+      "source_part": 20,
+      "parent": "pelvis",
+      "surface_triangles": 247,
+      "cap_triangles": 0
+    },
+    {
+      "object": "pelvis_detail_21",
+      "source_part": 21,
+      "parent": "pelvis",
+      "surface_triangles": 383,
+      "cap_triangles": 0
+    },
+    {
+      "object": "thigh_hand_original",
+      "source_part": 3,
+      "parent": "hip_hand",
+      "surface_triangles": 458,
+      "cap_triangles": 94
+    },
+    {
+      "object": "shin_hand_original",
+      "source_part": 3,
+      "parent": "knee_hand",
+      "surface_triangles": 468,
+      "cap_triangles": 138
+    },
+    {
+      "object": "foot_hand_original",
+      "source_part": 3,
+      "parent": "ankle_hand",
+      "surface_triangles": 184,
+      "cap_triangles": 44
+    },
+    {
+      "object": "gun_original",
+      "source_part": 4,
+      "parent": "gun_mount",
+      "surface_triangles": 891,
+      "cap_triangles": 0
+    },
+    {
+      "object": "thigh_gun_original",
+      "source_part": 5,
+      "parent": "hip_gun",
+      "surface_triangles": 326,
+      "cap_triangles": 82
+    },
+    {
+      "object": "shin_gun_original",
+      "source_part": 5,
+      "parent": "knee_gun",
+      "surface_triangles": 581,
+      "cap_triangles": 133
+    },
+    {
+      "object": "foot_gun_original",
+      "source_part": 5,
+      "parent": "ankle_gun",
+      "surface_triangles": 191,
+      "cap_triangles": 51
+    },
+    {
+      "object": "shoulder_hand_original",
+      "source_part": 6,
+      "parent": "shoulder_hand",
+      "surface_triangles": 201,
+      "cap_triangles": 61
+    },
+    {
+      "object": "upper_arm_hand_original",
+      "source_part": 6,
+      "parent": "arm_hand_upper",
+      "surface_triangles": 271,
+      "cap_triangles": 71
+    },
+    {
+      "object": "forearm_hand_original",
+      "source_part": 6,
+      "parent": "arm_hand_fore",
+      "surface_triangles": 362,
+      "cap_triangles": 12
+    },
+    {
+      "object": "palm_original",
+      "source_part": 6,
+      "parent": "hand",
+      "surface_triangles": 170,
+      "cap_triangles": 0
+    },
+    {
+      "object": "shoulder_gun_original",
+      "source_part": 7,
+      "parent": "shoulder_gun",
+      "surface_triangles": 175,
+      "cap_triangles": 0
+    },
+    {
+      "object": "upper_arm_gun_original",
+      "source_part": 7,
+      "parent": "arm_gun_upper",
+      "surface_triangles": 341,
+      "cap_triangles": 34
+    },
+    {
+      "object": "forearm_gun_original",
+      "source_part": 7,
+      "parent": "arm_gun_fore",
+      "surface_triangles": 266,
+      "cap_triangles": 34
+    },
+    {
+      "object": "face_original",
+      "source_part": 9,
+      "parent": "head",
+      "surface_triangles": 812,
+      "cap_triangles": 0
+    }
+  ],
+  "cap_warnings": [
+    {
+      "cut": "waist",
+      "vertices": 73,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "waist",
+      "vertices": 7,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "waist",
+      "vertices": 73,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "waist",
+      "vertices": 7,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "elbow_hand",
+      "vertices": 24,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "elbow_hand",
+      "vertices": 6,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "elbow_hand",
+      "vertices": 24,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "elbow_hand",
+      "vertices": 6,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "wrist_hand",
+      "vertices": 29,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "wrist_hand",
+      "vertices": 19,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "wrist_hand",
+      "vertices": 29,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "wrist_hand",
+      "vertices": 19,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "shoulder_gun",
+      "vertices": 50,
+      "reason": "source opening or branching at cut; left unchanged"
+    },
+    {
+      "cut": "shoulder_gun",
+      "vertices": 50,
+      "reason": "source opening or branching at cut; left unchanged"
+    }
+  ]
+}

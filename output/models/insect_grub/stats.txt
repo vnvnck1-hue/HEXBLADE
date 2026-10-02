@@ -1,0 +1,48 @@
+model: insect_grub
+size (m)  x 1.560  y(fwd) 3.027  z(up) 1.330
+bounds    min (-0.780, -1.330, -0.012)  max (0.780, 1.697, 1.318)
+triangles 20616
+parts:
+  abdomen_0_mesh             2032 tris  parent=abdomen_0  origin=(0.00, 0.55, 0.55)
+  abdomen_1_mesh             2032 tris  parent=abdomen_1  origin=(0.00, 0.23, 0.64)
+  abdomen_2_mesh             2032 tris  parent=abdomen_2  origin=(0.00, -0.09, 0.70)
+  abdomen_3_mesh             2032 tris  parent=abdomen_3  origin=(0.00, -0.41, 0.70)
+  abdomen_4_mesh             2032 tris  parent=abdomen_4  origin=(0.00, -0.73, 0.64)
+  abdomen_5_mesh             2032 tris  parent=abdomen_5  origin=(0.00, -1.05, 0.55)
+  head_mesh                  1568 tris  parent=head  origin=(0.00, 0.90, 0.55)
+  leg_l0_hip_mesh             392 tris  parent=leg_l0_hip  origin=(-0.30, 0.49, 0.51)
+  leg_l0_knee_mesh            168 tris  parent=leg_l0_knee  origin=(-0.50, 0.54, 0.22)
+  leg_l0_foot_mesh            168 tris  parent=leg_l0_foot  origin=(-0.54, 0.64, 0.05)
+  leg_r0_hip_mesh             392 tris  parent=leg_r0_hip  origin=(0.30, 0.49, 0.51)
+  leg_r0_knee_mesh            168 tris  parent=leg_r0_knee  origin=(0.50, 0.54, 0.22)
+  leg_r0_foot_mesh            168 tris  parent=leg_r0_foot  origin=(0.54, 0.64, 0.05)
+  leg_l1_hip_mesh             392 tris  parent=leg_l1_hip  origin=(-0.41, 0.04, 0.51)
+  leg_l1_knee_mesh            168 tris  parent=leg_l1_knee  origin=(-0.62, 0.09, 0.22)
+  leg_l1_foot_mesh            168 tris  parent=leg_l1_foot  origin=(-0.65, 0.19, 0.05)
+  leg_r1_hip_mesh             392 tris  parent=leg_r1_hip  origin=(0.41, 0.04, 0.51)
+  leg_r1_knee_mesh            168 tris  parent=leg_r1_knee  origin=(0.62, 0.09, 0.22)
+  leg_r1_foot_mesh            168 tris  parent=leg_r1_foot  origin=(0.65, 0.19, 0.05)
+  leg_l2_hip_mesh             392 tris  parent=leg_l2_hip  origin=(-0.48, -0.47, 0.51)
+  leg_l2_knee_mesh            168 tris  parent=leg_l2_knee  origin=(-0.68, -0.42, 0.22)
+  leg_l2_foot_mesh            168 tris  parent=leg_l2_foot  origin=(-0.73, -0.32, 0.05)
+  leg_r2_hip_mesh             392 tris  parent=leg_r2_hip  origin=(0.48, -0.47, 0.51)
+  leg_r2_knee_mesh            168 tris  parent=leg_r2_knee  origin=(0.68, -0.42, 0.22)
+  leg_r2_foot_mesh            168 tris  parent=leg_r2_foot  origin=(0.73, -0.32, 0.05)
+  jaw_l_mesh                  212 tris  parent=jaw_l  origin=(-0.18, 1.13, 0.39)
+  antenna_l_0_mesh            288 tris  parent=antenna_l_0  origin=(-0.17, 1.00, 0.77)
+  antenna_l_1_mesh            288 tris  parent=antenna_l_1  origin=(-0.34, 1.23, 0.91)
+  antenna_l_2_mesh            456 tris  parent=antenna_l_2  origin=(-0.51, 1.46, 1.00)
+  jaw_r_mesh                  212 tris  parent=jaw_r  origin=(0.18, 1.13, 0.39)
+  antenna_r_0_mesh            288 tris  parent=antenna_r_0  origin=(0.17, 1.00, 0.77)
+  antenna_r_1_mesh            288 tris  parent=antenna_r_1  origin=(0.34, 1.23, 0.91)
+  antenna_r_2_mesh            456 tris  parent=antenna_r_2  origin=(0.51, 1.46, 1.00)
+attachment points:
+  pt_foot_l0               (-0.54, 0.74, 0.00)  parent=leg_l0_foot
+  pt_foot_r0               (0.54, 0.74, 0.00)  parent=leg_r0_foot
+  pt_foot_l1               (-0.65, 0.29, 0.00)  parent=leg_l1_foot
+  pt_foot_r1               (0.65, 0.29, 0.00)  parent=leg_r1_foot
+  pt_foot_l2               (-0.73, -0.22, 0.00)  parent=leg_l2_foot
+  pt_foot_r2               (0.73, -0.22, 0.00)  parent=leg_r2_foot
+  pt_mouth                 (0.00, 1.43, 0.39)  parent=head
+  pt_target                (0.00, 0.00, 0.95)  parent=body
+glb: assets\models\insect_grub.glb

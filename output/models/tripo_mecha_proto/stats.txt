@@ -1,0 +1,51 @@
+model: tripo_mecha_proto
+size (m)  x 2.354  y(fwd) 1.844  z(up) 1.687
+bounds    min (-1.230, -0.916, 0.000)  max (1.124, 0.928, 1.687)
+triangles 14782
+parts:
+  torso_fixed_gun            8075 tris  parent=body  origin=(0.00, 0.00, 0.72)
+  shoulder_armor              108 tris  parent=shoulder_hand  origin=(-0.71, -0.06, 1.39)
+  hand_shell                 1465 tris  parent=hand  origin=(-1.00, 0.39, 0.99)
+  foot_gun                    332 tris  parent=ankle_gun  origin=(0.42, -0.01, 0.15)
+  foot_hand                   330 tris  parent=ankle_hand  origin=(-0.42, -0.01, 0.15)
+  shoulder_bearing            224 tris  parent=arm_hand_upper  origin=(-0.76, -0.04, 1.12)
+  elbow_bearing               224 tris  parent=arm_hand_fore  origin=(-0.87, -0.00, 0.98)
+  wrist_bearing               224 tris  parent=hand  origin=(-1.00, 0.39, 0.99)
+  hip_bearing_gun             224 tris  parent=hip_gun  origin=(0.34, -0.13, 0.67)
+  knee_bearing_gun            224 tris  parent=knee_gun  origin=(0.40, 0.02, 0.39)
+  ankle_bearing_gun           224 tris  parent=ankle_gun  origin=(0.42, -0.01, 0.15)
+  hip_bearing_hand            224 tris  parent=hip_hand  origin=(-0.34, -0.13, 0.67)
+  knee_bearing_hand           224 tris  parent=knee_hand  origin=(-0.40, 0.02, 0.39)
+  ankle_bearing_hand          224 tris  parent=ankle_hand  origin=(-0.42, -0.01, 0.15)
+  upper_arm_shell              60 tris  parent=arm_hand_upper  origin=(-0.76, -0.04, 1.12)
+  forearm_shell                60 tris  parent=arm_hand_fore  origin=(-0.87, -0.00, 0.98)
+  pelvis_shell                108 tris  parent=body  origin=(0.00, -0.15, 0.71)
+  pelvis_guard                108 tris  parent=body  origin=(0.00, 0.10, 0.65)
+  upper_arm_frame              92 tris  parent=arm_hand_upper  origin=(-0.82, -0.02, 1.05)
+  forearm_frame                92 tris  parent=arm_hand_fore  origin=(-0.94, 0.19, 0.99)
+  thigh_gun                    60 tris  parent=hip_gun  origin=(0.34, -0.13, 0.67)
+  shin_gun                     60 tris  parent=knee_gun  origin=(0.40, 0.02, 0.39)
+  thigh_frame_gun              92 tris  parent=hip_gun  origin=(0.37, -0.06, 0.53)
+  shin_frame_gun               92 tris  parent=knee_gun  origin=(0.41, 0.00, 0.27)
+  knee_guard_gun              108 tris  parent=knee_gun  origin=(0.40, 0.13, 0.39)
+  thigh_hand                   60 tris  parent=hip_hand  origin=(-0.34, -0.13, 0.67)
+  shin_hand                    60 tris  parent=knee_hand  origin=(-0.40, 0.02, 0.39)
+  thigh_frame_hand             92 tris  parent=hip_hand  origin=(-0.37, -0.06, 0.53)
+  shin_frame_hand              92 tris  parent=knee_hand  origin=(-0.41, 0.00, 0.27)
+  knee_guard_hand             108 tris  parent=knee_hand  origin=(-0.40, 0.13, 0.39)
+  deck_cap_-1                 280 tris  parent=body  origin=(0.25, -0.08, 1.49)
+  deck_cap_1                  280 tris  parent=body  origin=(-0.25, -0.08, 1.49)
+  backpack_exhaust             92 tris  parent=body  origin=(0.16, -0.58, 1.57)
+  exhaust_inset                92 tris  parent=body  origin=(0.16, -0.58, 1.65)
+  backpack_exhaust.001         92 tris  parent=body  origin=(0.00, -0.58, 1.60)
+  exhaust_inset.001            92 tris  parent=body  origin=(0.00, -0.58, 1.68)
+  backpack_exhaust.002         92 tris  parent=body  origin=(-0.16, -0.58, 1.57)
+  exhaust_inset.002            92 tris  parent=body  origin=(-0.16, -0.58, 1.65)
+attachment points:
+  pt_foot_gun              (0.42, 0.06, 0.00)  parent=ankle_gun
+  pt_foot_hand             (-0.42, 0.06, 0.00)  parent=ankle_hand
+  pt_grip                  (-1.06, 0.50, 0.96)  parent=hand
+  pt_muzzle                (0.92, 0.70, 0.51)  parent=body
+  pt_booster_gun           (0.21, -0.75, 1.08)  parent=body
+  pt_booster_hand          (-0.21, -0.75, 1.08)  parent=body
+glb: assets\models\tripo_mecha_proto.glb

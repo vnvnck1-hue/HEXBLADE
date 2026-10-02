@@ -1,0 +1,153 @@
+{
+  "neutral": {
+    "foot_markers_z": {
+      "gun": 0.0,
+      "hand": 0.0
+    },
+    "foot_mesh_min_z": {
+      "gun": 0.0022949278354644775,
+      "hand": 0.0
+    },
+    "torso_surface_crossings": {
+      "hand_shell": 0,
+      "forearm_shell": 0,
+      "upper_arm_shell": 0,
+      "shoulder_armor": 0,
+      "thigh_hand": 0,
+      "thigh_gun": 0,
+      "shin_hand": 0,
+      "shin_gun": 0,
+      "knee_guard_hand": 0,
+      "knee_guard_gun": 0
+    },
+    "grip": [
+      -1.0575000047683716,
+      0.5005499720573425,
+      0.9564499855041504
+    ]
+  },
+  "shoot": {
+    "foot_markers_z": {
+      "gun": 0.0,
+      "hand": 0.0
+    },
+    "foot_mesh_min_z": {
+      "gun": 0.0022949278354644775,
+      "hand": 0.0
+    },
+    "torso_surface_crossings": {
+      "hand_shell": 0,
+      "forearm_shell": 0,
+      "upper_arm_shell": 0,
+      "shoulder_armor": 0,
+      "thigh_hand": 0,
+      "thigh_gun": 0,
+      "shin_hand": 0,
+      "shin_gun": 0,
+      "knee_guard_hand": 0,
+      "knee_guard_gun": 0
+    },
+    "grip": [
+      -1.1595349311828613,
+      0.48969539999961853,
+      1.0504167079925537
+    ]
+  },
+  "slash": {
+    "foot_markers_z": {
+      "gun": 0.0,
+      "hand": 0.0
+    },
+    "foot_mesh_min_z": {
+      "gun": 0.0022949278354644775,
+      "hand": 0.0
+    },
+    "torso_surface_crossings": {
+      "hand_shell": 0,
+      "forearm_shell": 0,
+      "upper_arm_shell": 0,
+      "shoulder_armor": 0,
+      "thigh_hand": 0,
+      "thigh_gun": 0,
+      "shin_hand": 0,
+      "shin_gun": 0,
+      "knee_guard_hand": 0,
+      "knee_guard_gun": 0
+    },
+    "grip": [
+      -1.1633449792861938,
+      0.3327835202217102,
+      1.4768646955490112
+    ]
+  },
+  "crouch": {
+    "foot_markers_z": {
+      "gun": 0.0,
+      "hand": 0.0
+    },
+    "foot_mesh_min_z": {
+      "gun": 0.0022949327249079943,
+      "hand": 6.499623950162459e-09
+    },
+    "torso_surface_crossings": {
+      "hand_shell": 0,
+      "forearm_shell": 0,
+      "upper_arm_shell": 0,
+      "shoulder_armor": 0,
+      "thigh_hand": 0,
+      "thigh_gun": 0,
+      "shin_hand": 0,
+      "shin_gun": 0,
+      "knee_guard_hand": 0,
+      "knee_guard_gun": 0
+    },
+    "grip": [
+      -0.9267656207084656,
+      0.6036311388015747,
+      0.8753308057785034
+    ]
+  },
+  "saved_keyframes_verified": true,
+  "motion_sweep": {
+    "frames": 160,
+    "max_foot_marker_error": 5.7976318856844955e-08,
+    "body_crossings": {},
+    "shell_crossings": {}
+  },
+  "validation_scope": {
+    "body": [
+      "torso_fixed_gun",
+      "pelvis_shell",
+      "pelvis_guard"
+    ],
+    "moving_vs_body": [
+      "hand_shell",
+      "forearm_shell",
+      "upper_arm_shell",
+      "shoulder_armor",
+      "thigh_hand",
+      "thigh_gun",
+      "shin_hand",
+      "shin_gun",
+      "knee_guard_hand",
+      "knee_guard_gun"
+    ],
+    "moving_shell_pairs": [
+      "shoulder_armor",
+      "upper_arm_shell",
+      "forearm_shell",
+      "hand_shell",
+      "thigh_hand",
+      "shin_hand",
+      "knee_guard_hand",
+      "foot_hand",
+      "thigh_gun",
+      "shin_gun",
+      "knee_guard_gun",
+      "foot_gun"
+    ],
+    "excluded": "Internal bearing/frame overlaps and meshes on the same rigid joint are intentional and excluded.",
+    "source_crouch_depth_m": 0.11,
+    "method": "Evaluated bevel meshes; BVH surface intersections at each saved integer frame, not continuous collision detection."
+  }
+}

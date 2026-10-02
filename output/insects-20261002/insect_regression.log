@@ -1,0 +1,47 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== abyss_check
+  RESULT OK (0 fail)
+=== ammo_check
+  RESULT OK (0 fails)
+=== blade_tech_check
+  RESULT OK (0 fails)
+=== blender_models_check
+  RESULT OK (0 fails)
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== gimmicks_check
+  RESULT gimmicks_check fails=0
+=== gun_sound_check
+  RESULT gun_sound_check fails=0
+=== hud_preset_check
+  RESULT  OK  (0 fail)
+=== insect_check
+  PASS ANT stance feet touch ground error=0.00000
+  PASS GRUB stance feet touch ground error=0.00000
+  RESULT OK (0 fails)
+=== mammoth_death_lab_check
+  MAMMOTH_DEATH_LAB_CHECK_OK: 30/60/144fps, 10 resets and seeks, floor contact, cue/completion once, pause/rate, reduced motion, unchanged run, real lobby button and return
+=== mammoth_ingame_check
+  RESULT mammoth_ingame_check fails=0
+=== mech_player_check
+  RESULT mech_player_check fails=0
+=== mech_volume_check
+  RESULT mech_volume_check fails=0
+=== missile_check
+  RESULT OK (0 fails)
+=== painted_look_check
+  RESULT  OK  (0 fail)
+=== room_wave_check
+  RESULT OK (0 fail)
+=== rush_skill_check
+  RESULT OK (0 fails)
+=== spider_check
+  SPIDER_CHECK OK
+=== terrain_jump_check
+  TERRAIN_JUMP_CHECK OK (0 fails)
+=== tripo_model_check
+  RESULT OK (0 fails)
+=== world_flow_check
+  RESULT world_flow_check fails=0
+
+ALL 21 TESTS PASSED

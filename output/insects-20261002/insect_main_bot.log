@@ -1,0 +1,28 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BIG_ROOM id=3 shape=0 scale=2.0 r=20.0 cells=713
+BIG_ROOM id=6 shape=4 scale=2.5 r=29.2 cells=1425
+BIG_ROOM id=9 shape=0 scale=2.9 r=25.8 cells=1333
+ROOM_ENTER id=2 shape=4 scale=1.0 wave=false t=4.7
+PARRY ranged t=9.73 n=1 f=1015
+CUTIN FULL BURST
+EVADE back t=10.11 Enemy
+ROOM_CLEAR 1/9 t=10.7 hp=5 id=89422562764
+ROOM_ENTER id=3 shape=0 scale=2.0 wave=false t=18.2
+RELOAD begin t=22.052 f=1887
+PARRY ranged t=23.40 n=2 f=1968
+DANGER_WARN t=26.28
+COMBO step=1 cut=0 FLASH hit=0 blocked=1 t=27.105 f=2309
+COMBO step=1 cut=1 FLASH hit=0 blocked=1 t=27.140 f=2329
+COMBO step=1 cut=2 FLASH hit=0 blocked=1 t=27.208 f=2350
+RELOAD begin t=28.197 f=2477
+DANGER_WARN t=34.83
+RELOAD begin t=35.605 f=3086
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=36.099 f=3141
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=36.144 f=3170
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=36.210 f=3174
+ROOM_CLEAR 2/9 t=40.1 hp=4 id=89422562764
+ROOM_ENTER id=4 shape=2 scale=1.0 wave=false t=54.1
+RELOAD begin t=56.956 f=4493
+WARNING: 30 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

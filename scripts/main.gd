@@ -19,6 +19,11 @@ const TURRET_RATIO := 0.15
 ## 중력 크롤러(Crawler) 비율. 같은 방식으로 이월해 전체 적의 12%를 맞춘다.
 const CRAWLER := -3
 const CRAWLER_RATIO := 0.12
+## 벌레형 괴생명체: 붉은 개미 척후병 / 아이보리 굼벵이. 기존 드론 몫 일부를 쓴다.
+const INSECT_ANT := -4
+const INSECT_GRUB := -5
+const INSECT_ANT_RATIO := 0.12
+const INSECT_GRUB_RATIO := 0.10
 ## 연속 처치 콤보: 이 시간 안에 다음 적을 처치하면 이어진다
 const COMBO_TIME := 3.0
 # 재화 드롭: 적이 죽을 때 가끔 그 자리에 떨어뜨린다 (플레이어가 직접 주워야 한다)
@@ -50,6 +55,8 @@ var pending_spawns := 0
 var striker_carry := 0.0
 var turret_carry := 0.0
 var crawler_carry := 0.0
+var ant_carry := 0.0
+var grub_carry := 0.0
 ## 이번 방에서 포탑 해치를 쓴 자리 (겹치지 않게)
 var turret_spots: Array = []
 var combo := 0
@@ -355,6 +362,12 @@ func _fill_queue(count: int, d: int) -> void:
 	crawler_carry += room_total * CRAWLER_RATIO
 	var crawlers := mini(int(crawler_carry + 0.001), room_total - strikers - turrets)
 	crawler_carry -= crawlers
+	ant_carry += room_total * INSECT_ANT_RATIO
+	var ants := mini(int(ant_carry + 0.001), room_total - strikers - turrets - crawlers)
+	ant_carry -= ants
+	grub_carry += room_total * INSECT_GRUB_RATIO
+	var grubs := mini(int(grub_carry + 0.001), room_total - strikers - turrets - crawlers - ants)
+	grub_carry -= grubs
 	for i in room_total:
 		if i < strikers:
 			spawn_queue.append(STRIKER)
@@ -362,6 +375,10 @@ func _fill_queue(count: int, d: int) -> void:
 			spawn_queue.append(TURRET)
 		elif i < strikers + turrets + crawlers:
 			spawn_queue.append(CRAWLER)
+		elif i < strikers + turrets + crawlers + ants:
+			spawn_queue.append(INSECT_ANT)
+		elif i < strikers + turrets + crawlers + ants + grubs:
+			spawn_queue.append(INSECT_GRUB)
 		else:
 			spawn_queue.append(pool[randi() % pool.size()])
 	spawn_queue.shuffle()
@@ -671,6 +688,10 @@ func _spawn(pattern: int) -> void:
 		match pattern:
 			STRIKER: e = Striker.new()
 			CRAWLER: e = Crawler.new()
+			INSECT_ANT: e = InsectEnemy.new()
+			INSECT_GRUB:
+				e = InsectEnemy.new()
+				(e as InsectEnemy).kind = InsectEnemy.Kind.GRUB
 			_: e = Enemy.new()
 		if pattern >= 0:
 			e.pattern = pattern

@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-02",
+  "asset": "assets/models/mech_volume_preserved.glb",
+  "sha256": "85912898d42f77bce2764bfa92082ef389659b6b82bb316a9249fc3310850d39",
+  "source_sha256": "a3f3197a004c23281769d53fac7fd82988a8bd33ef65d10c0c2920d5af93d259",
+  "source_unchanged": true,
+  "full_suite": "ALL 17 TESTS PASSED",
+  "final_asset_tests": "ALL 2 TESTS PASSED",
+  "import_errors": 0,
+  "training_bot_errors": 0,
+  "training_bot_seconds": 20,
+  "model_used_in_training": false,
+  "export_proof": "export_verification.json",
+  "geometry_proof": "review_metrics.json",
+  "surface_provenance": "build_audit.json",
+  "final_blend_sha256": "90329edf5f8de083055a3ac52a23b530fb7cc403441bec793040f6b15812640f",
+  "remaining": "Some inner cut surfaces need finishing; intentional overlaps remain. Production animation and player integration are outside this step.",
+  "exit_warning": "Training emitted ObjectDB instances leaked at exit (34); not counted as ERROR and not investigated in this model-only task."
+}

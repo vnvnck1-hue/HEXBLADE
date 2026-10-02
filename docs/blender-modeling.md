@@ -57,6 +57,17 @@ Godot 에서 쓰기: `var m := (load("res://assets/models/<이름>.glb") as Pack
 사람이 보고 있는 장면을 에이전트가 같이 고치는 용도이고, 최종 결과물은 `models/src/*.py` + `model` 빌드로 남긴다
 (라이브 모드에서는 `part` 합치기·`after_join` 이 자동으로 돌지 않는다).
 
+### 이 PC 연결 확인 (2026-10-02)
+
+Blender `5.2.2 LTS`로 라이브 창 안에서 Python 명령 실행, 임시 메시 생성·좌표 수정,
+선택 GLB 내보내기와 뷰포트 캡처를 검증했다. `.blend`를 다시 연 뒤에도 연결이 유지된다.
+별도 MCP 애드온 없이 위의 파일 큐 브리지로 Codex가 직접 작업할 수 있다.
+
+- 작업을 시작할 때 `blender_live.cmd [파일.blend]`로 창을 연다. 일반 Blender 바로가기로 연 창에는 이 연결이 없다.
+- Codex는 `tools/blender.ps1 send <코드.py>`로 그 창의 장면을 읽고 수정하고, `snap()` 결과를 이미지로 확인한다.
+- 창을 닫으면 연결이 종료된다. 다음 작업 때 다시 라이브 실행기를 사용한다.
+- 연결 검사용 임시 파일은 `.tools/blender_live/`에만 두며 모델 원본이나 게임 에셋에 섞지 않는다.
+
 ## 원화와 맞추기 (`--compare`)
 
 원화(3면도 등)를 똑같이 재현할 때 쓰는 반복 도구. 예: 거미 보스 [`models/ref/spider_boss.json`](../models/ref/spider_boss.json).

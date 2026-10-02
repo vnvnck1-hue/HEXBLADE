@@ -1,0 +1,68 @@
+새 사용자 모델 — 원본 부피감 보존 관절 분리 작업본
+2026-10-02
+
+사용자 핵심 요구
+등 장식 삭제. 파츠를 관절 단위로 나누되 원본의 두께·부피·디자인 보존.
+조금 겹치더라도 허용하며, 간섭을 없애기 위해 장갑을 축소하거나 작은 형태로 교체하지 않음.
+
+원본
+C:/Users/Loadcomplete/Downloads/mech suit 3d model.glb
+보존 사본: models/source/mech_user/original.glb
+SHA256 a3f3197a004c23281769d53fac7fd82988a8bd33ef65d10c0c2920d5af93d259
+이전 mecha suit 원본 및 tripo_mecha_proto 시제품은 별도로 보존.
+
+결과
+- 높은 등 장식 1/2/14 파츠 제거. 몸통에 속한 낮은 배낭·배기구 외형은 원형 유지.
+- 바닥 액체 8/15는 캐릭터 에셋에서 제외.
+- 나머지 17개 원본 파츠의 외부 표면을 전부 보존해 27개 외피 오브젝트로 분리.
+- 양팔: 어깨 → 상완 → 팔꿈치/전완 → 손목(손 또는 총 부착부).
+- 양다리: 고관절/허벅지 → 무릎/정강이 → 발목/발.
+- 골반 → 허리/몸통 → 중앙 얼굴 부분 계층. 얼굴 주변의 원본 작은 파츠도 함께 연결.
+- 원본 외피에 데시메이션, 축소, 평활화, 리메시, 충돌 회피용 재성형을 적용하지 않음.
+- 분할 평면에서 새 점만 만들고 UV와 노멀을 보간. 원래 표면 점은 이동시키지 않음.
+- 닫힌 절단 경계에는 내부 마감 면 추가. 무릎·발목 안쪽에 작은 연결부 4개 추가.
+- 장갑 사이 일부 겹침은 의도적으로 허용. 외형을 줄여 없애지 않음.
+- 전체에 동일한 2.35배 배율과 전방 축 회전만 적용. 부위별 스케일은 1.
+- 13,429 삼각형, 외피 27개 + 내부 연결부 4개. 크기 약 2.094 × 1.513 × 1.797m.
+
+보존 검증
+1. 원본 삼각형별 출처를 기록하고 분할 후 면적을 합산. 남긴 부위의 유실 표면적 0.
+2. 저장한 Blender 작업본에서 원본 점·원본 삼각형 평면·표면적·UV 보존을 검사.
+3. 실제 내보낸 GLB를 새 장면에 재임포트해 비교. 남긴 원본 정점의 최대 위치 오차
+   약 2.41e-7m(부동소수점 오차 수준). 단순히 바운딩 박스만 비교한 결과가 아님.
+4. GLB 재임포트 결과의 정면/측면/후면/사선 512px 실루엣 검사에서 원본 영역 유지율 100%.
+   내부 연결부 때문에 측면에서만 3픽셀 추가, 나머지 세 시점은 완전 일치.
+5. 원본에 열린 경계가 있어 폐쇄 입체의 수학적 부피를 직접 계산했다고 주장하지 않음.
+   보존 근거는 실제 외부 표면과 원본 점, UV 및 렌더 실루엣이다.
+
+자세 시험
+pose_trial.blend / pose_trial.mp4: 1 중립, 40 총 조준, 80 팔 들기,
+120 웅크리기(골반 0.11m 낮춤), 160 중립 복귀. 30fps, 160프레임.
+IK를 매 프레임 저장. 발 기준점 높이 최대 오차 7.53e-8m 이내.
+저장된 파일을 다시 열어 손잡이/총구 위치와 타임라인 포즈 일치 확인.
+회전과 계층의 가동 확인용이며 기존 게임 애니메이션/6단 콤보를 이식한 것은 아님.
+
+남은 가공
+- 일부 원본 열린 경계·분기 경계 때문에 완전히 닫히지 않은 절단면이 있음.
+  원본 외피를 삭제해 숨기지 않았으며 build_audit.json의 cap_warnings에 기록.
+- 큰 관절 각도에서 보이는 안쪽 틈, 마감 면/장갑 겹침, 피벗 위치는 실제 모션에 맞춰 세부 조정 가능.
+  이때에도 원본 외피 부피를 줄이지 않는 규칙을 유지할 것.
+- 손가락 개별 리그와 무기를 쥐는 형태, 충돌체, 실제 게임 모션/플레이어 연결은 이번 범위 밖.
+- 재질 아틀라스 통합은 아직 하지 않음. 기존 텍스처 보존 우선.
+
+확인 파일
+preservation_compare.png: 왼쪽은 등 장식/바닥 액체만 제외한 원본, 오른쪽은 관절 분리본.
+pose_review.png: 중립 / 총 조준 / 팔 들기 / 웅크리기.
+preview.png: 중립 / 후면 / 높은 시점 / 웅크리기.
+view_exploded.png: 파츠별 형상을 확인하기 위한 임시 벌림 렌더. 실제 중립 자세가 아님.
+build_audit.json, review_metrics.json, export_verification.json: 측정·검증 근거.
+assets/models/mech_volume_preserved.glb: 엔진용 중립 자세, 관절 노드 계층 포함.
+mech_volume_preserved.blend: 원본 좌표 보존 및 출처 속성이 있는 모델링 작업본.
+루트 mech_volume_pose.cmd: 고정 Blender 라이브 모드로 pose_trial.blend 열기.
+
+재생성
+powershell -ExecutionPolicy Bypass -File tools/blender.ps1 model models/src/mech_volume_preserved.py --no-preview
+powershell -ExecutionPolicy Bypass -File tools/blender.ps1 wait --background --python-exit-code 1 --python tools/blender/mech_volume_review.py -- --video
+powershell -ExecutionPolicy Bypass -File tools/blender.ps1 wait --background --python-exit-code 1 --python tools/blender/mech_volume_verify.py
+고정 Godot 임포트 후 tests/mech_volume_check.gd 및 전체 회귀 검사.
+Blender 모델/GLB와 캡처만 생성하며 본편 플레이어 교체는 하지 않음.
