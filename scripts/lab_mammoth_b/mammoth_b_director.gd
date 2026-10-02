@@ -256,6 +256,25 @@ func _process(_dt: float) -> void:
 		_update_wreck(dT)
 	else:
 		_update_wreck(real * rate)
+		if not is_instance_valid(dummy) or not visual.visible:
+			_retire()
+
+
+## 연출이 끝나고 잔해까지 화면 밖으로 사라지면 남은 화면 효과를 치우고 쉰다.
+## 화면에 보이는 것은 없으므로 모습은 그대로다. done 은 유지되어 death_started() 등은 계속 참이다.
+## 남아 있는 불꽃·긁힘 자국(fx)은 스스로 다 사라진 뒤 쉰다.
+func _retire() -> void:
+	set_process(false)
+	if is_instance_valid(light):
+		light.queue_free()
+	light = null
+	if is_instance_valid(overlay):
+		overlay.queue_free()
+	overlay = null
+	if is_instance_valid(audio):
+		# 긁힘 루프는 _finish 에서 이미 꺼졌다. 남은 단발 효과음은 끝까지 울리고 루프 갱신만 멈춘다
+		audio.scrape.stop()
+		audio.set_process(false)
 
 
 ## 전복 정점의 속도 램프: 1.84초부터 0.3배로 늘어졌다가 떨어지기 직전 한 번에 원래 속도로

@@ -67,6 +67,9 @@ var t := 0.0
 var _blip_n := 0
 var _last_visible := 0
 var _ended := false
+var _mark_on: StyleBoxFlat           # 자동 · 넘기기 버튼의 켬/끔 바탕 (한 번만 만든다)
+var _mark_off: StyleBoxFlat
+static var _calm_rx: Array[RegEx] = []   # 기록에서 흔들림 · 물결 태그를 지우는 정규식 (한 번만 컴파일)
 ## 자동 실행 · 테스트용: 모든 대사를 빨리 넘긴다
 var fast_forward := false
 
@@ -622,6 +625,8 @@ func _toggle_hide() -> void:
 func _open_log() -> void:
 	log_layer.visible = true
 	await get_tree().process_frame
+	if not is_inside_tree() or not is_instance_valid(log_scroll):
+		return
 	log_scroll.scroll_vertical = int(log_scroll.get_v_scroll_bar().max_value)
 
 
@@ -631,7 +636,10 @@ func _refresh_buttons() -> void:
 
 
 func _mark(b: Button, on: bool) -> void:
-	b.add_theme_stylebox_override("normal", _flat(Color(0.6, 0.1, 0.13, 0.92) if on else Color(0.05, 0.05, 0.06, 0.82), CREAM if on else Color(CREAM, 0.55), 2))
+	if _mark_on == null:
+		_mark_on = _flat(Color(0.6, 0.1, 0.13, 0.92), CREAM, 2)
+		_mark_off = _flat(Color(0.05, 0.05, 0.06, 0.82), Color(CREAM, 0.55), 2)
+	b.add_theme_stylebox_override("normal", _mark_on if on else _mark_off)
 
 
 func _toast(s: String) -> void:
@@ -666,9 +674,11 @@ func _log_add(who_name: String, c: Color, bb: String) -> void:
 	row.add_theme_color_override("default_color", CREAM)
 	var head := "[b][color=#%s]%s[/color][/b]\n" % [c.to_html(false), who_name] if who_name != "" else ""
 	# 기록에서는 흔들림 · 물결을 뺀다
+	if _calm_rx.is_empty():
+		for tag in ["shake", "wave"]:
+			_calm_rx.append(RegEx.create_from_string("\\[/?" + tag + "[^\\]]*\\]"))
 	var calm := bb
-	for tag in ["shake", "wave"]:
-		var rx := RegEx.create_from_string("\\[/?" + tag + "[^\\]]*\\]")
+	for rx in _calm_rx:
 		calm = rx.sub(calm, "", true)
 	row.text = head + calm
 	log_list.add_child(row)

@@ -31,6 +31,7 @@ var _smoke_t := 0.0
 var _puff_mesh: SphereMesh
 var _puff_mats: Array[ShaderMaterial] = []
 var _quad: QuadMesh
+var _fan_quads := {}              # 경고 판 반폭 → QuadMesh
 
 
 # ── 팔각형 계산 ─────────────────────────────────────────
@@ -702,11 +703,15 @@ func _sink_fx(k: int) -> void:
 
 ## 바닥 부채꼴 경고. center 는 꼭짓점, dir_a 는 +Z 기준 각도(+X 쪽 양수). half ≥ PI 면 원.
 func fan_warning(center: Vector3, dir_a: float, half: float, r_out: float, r_in := 0.0, tint := Color(1.0, 0.28, 0.1)) -> MeshInstance3D:
-	var q := QuadMesh.new()
-	q.orientation = PlaneMesh.FACE_Y
-	q.size = Vector2(r_out * 2.0, r_out * 2.0)
+	# 셰이더가 로컬 좌표로 r_out 바깥을 버리므로 판은 r_out 이상이면 된다: 0.5m 단위로 올려 크기별로 공유한다
+	var half_w := ceilf(r_out * 2.0) * 0.5
+	if not _fan_quads.has(half_w):
+		var q := QuadMesh.new()
+		q.orientation = PlaneMesh.FACE_Y
+		q.size = Vector2(half_w * 2.0, half_w * 2.0)
+		_fan_quads[half_w] = q
 	var mi := MeshInstance3D.new()
-	mi.mesh = q
+	mi.mesh = _fan_quads[half_w]
 	mi.material_override = fan_mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	add_child(mi)
@@ -768,7 +773,7 @@ func _update_fires(dt: float) -> void:
 		if f[2] <= 0.0 or not is_instance_valid(mi):
 			if is_instance_valid(mi):
 				mi.queue_free()
-			fires.remove_at(i)
+			_swap_remove(fires, i)
 			continue
 		var v: Vector3 = f[1]
 		v.y += f[4] * dt
@@ -778,6 +783,15 @@ func _update_fires(dt: float) -> void:
 		var k: float = 1.0 - f[2] / f[3]
 		mi.scale = Vector3.ONE * lerpf(f[5], f[6], 1.0 - pow(1.0 - k, 2.0))
 		mi.set_instance_shader_parameter("fade", 1.0 - k * k)
+
+
+## 순서가 상관없는 목록에서 i 번째를 마지막 원소로 덮어 지운다 (remove_at 의 당김 비용 없이).
+## 뒤에서 앞으로 도는 반복 안에서만 쓴다: 옮겨 오는 마지막 원소는 이미 이번 프레임에 처리됐다.
+static func _swap_remove(arr: Array, i: int) -> void:
+	var last := arr.size() - 1
+	if i != last:
+		arr[i] = arr[last]
+	arr.resize(last)
 
 
 ## 떨어져 나간 부품: 포물선으로 날아가 발판에서는 튕기고, 용암에 닿으면 불꽃을 튀기며 가라앉는다.
@@ -790,7 +804,7 @@ func _update_flings(dt: float) -> void:
 		var e: Array = flings[i]
 		var n: Node3D = e[0]
 		if not is_instance_valid(n):
-			flings.remove_at(i)
+			_swap_remove(flings, i)
 			continue
 		var v: Vector3 = e[1]
 		v.y -= 22.0 * dt
@@ -814,7 +828,7 @@ func _update_flings(dt: float) -> void:
 				var tw := n.create_tween()
 				tw.tween_property(n, "global_position:y", LAVA_Y - 4.0, 1.6).set_ease(Tween.EASE_IN)
 				tw.tween_callback(n.queue_free)
-				flings.remove_at(i)
+				_swap_remove(flings, i)
 				continue
 		n.global_position = p
 		var sp: Vector3 = e[2]
@@ -824,7 +838,7 @@ func _update_flings(dt: float) -> void:
 		e[3] -= dt
 		if e[3] <= 0.0:
 			n.queue_free()
-			flings.remove_at(i)
+			_swap_remove(flings, i)
 
 
 ## 용암이 튀어 오른다

@@ -58,6 +58,8 @@ var eye_mats: Array[StandardMaterial3D] = []
 var vent_mats: Array[StandardMaterial3D] = []
 var torch_mat: StandardMaterial3D
 var torch_light: OmniLight3D
+var torch_flame: Node3D
+var _torch_on := false          # 지난 프레임에 용접 불꽃이 켜져 있었나 (꺼진 채면 매 프레임 갱신하지 않는다)
 var hatch_glow: StandardMaterial3D
 var mouth_glow: StandardMaterial3D
 var meshes: Array = []
@@ -255,7 +257,7 @@ func _build_body() -> void:
 		_bv(holder, Vector3(0.8, 0.75, 0.85), Vector3(0, 0.1, 0), METAL_L, 0.06)
 		for k in 3:
 			var x := (k - 1) * 0.22
-			var hgt := randf_range(0.7, 1.0)
+			var hgt := snappedf(randf_range(0.7, 1.0), 0.05)   # 크기를 끊어야 Build 메시 캐시가 안 늘어난다
 			Build.box(holder, Vector3(0.08, hgt, 0.05), Vector3(x, 0.45 + hgt * 0.5, 0.1 * (k % 2)), GREY, Vector3(0, 0, (k - 1) * 8.0))
 			if k != 1:
 				_bv(holder, Vector3(0.22, 0.14, 0.06), Vector3(x + (k - 1) * 0.03, 0.5 + hgt, 0.1 * (k % 2)), GREY, 0.02)
@@ -271,7 +273,7 @@ func _build_body() -> void:
 	var sq := Build.box(scr, Vector3(1.05, 0.66, 0.02), Vector3(0, 0, -0.07), SCREEN)
 	sq.material_override = sm
 	for k in 4:
-		Build.box(scr, Vector3(randf_range(0.3, 0.8), 0.03, 0.01), Vector3(randf_range(-0.2, 0.2), -0.2 + k * 0.13, -0.085), Color(0.8, 1.0, 1.0), Vector3.ZERO, 2.4)
+		Build.box(scr, Vector3(snappedf(randf_range(0.3, 0.8), 0.05), 0.03, 0.01), Vector3(randf_range(-0.2, 0.2), -0.2 + k * 0.13, -0.085), Color(0.8, 1.0, 1.0), Vector3.ZERO, 2.4)
 	# 뒤쪽 새끼 해치 (위쪽 경첩) · 안쪽은 붉게 달아오른 산란실
 	var inner := Build.box(abdomen, Vector3(1.8, 1.3, 0.3), Vector3(0, 0.25, 3.25), Color(1.0, 0.35, 0.15))
 	hatch_glow = _glow(Color(1.0, 0.35, 0.15), 0.4)
@@ -382,6 +384,8 @@ func _build_arm(i: int) -> Dictionary:
 			var fl := _cy(tool, 0.06, 0.4, Vector3(0, 0, -1.3), Color.WHITE, Vector3(90, 0, 0), 0.0, 8)
 			fl.material_override = torch_mat
 			fl.name = "Flame"
+			fl.visible = false
+			torch_flame = fl
 			torch_light = OmniLight3D.new()
 			torch_light.light_color = Color(0.5, 0.8, 1.0)
 			torch_light.light_energy = 0.0
@@ -453,21 +457,8 @@ func gun_muzzle() -> Vector3:
 	return gatling.global_transform * Vector3(0, 0, -1.6)
 
 
-func gun_dir() -> Vector3:
-	return -gatling.global_basis.z
-
-
-func head_pos() -> Vector3:
-	return head.global_transform * Vector3(0, 0.1, -1.6)
-
-
 func hatch_pos() -> Vector3:
 	return abdomen.global_transform * Vector3(0, 0.2, 3.7)
-
-
-func tool_pos(kind: String) -> Vector3:
-	var a: Dictionary = arms[arm_index(kind)]
-	return (a.tool as Node3D).global_transform * Vector3(0, 0, -1.0)
 
 
 ## 모든 발을 지금 쉬는 자리에 바로 내려놓는다 (순간 이동 뒤)
@@ -660,7 +651,6 @@ func _pose_leg(l: Dictionary, hip: Vector3, foot: Vector3, n: Vector3) -> void:
 	(l.knee as Node3D).global_transform = Transform3D(_axis_y(pn), knee)
 	(l.ank as Node3D).global_transform = Transform3D(_axis_y(pn), ank)
 	(l.pad as Node3D).global_transform = Transform3D(_ortho_up(n, out), foot)
-	l.knee_p = knee
 
 
 static func _look(v: Vector3, up_hint: Vector3) -> Basis:
@@ -754,7 +744,7 @@ func _update_parts(dt: float) -> void:
 	hatch.rotation.x = -hatch_open * 1.9
 	hatch_glow.emission_energy_multiplier = 0.4 + hatch_open * 5.0
 	gatling.rotate_z(gat_spin * dt)
-	if saw_disc:
+	if saw_disc and saw_spin != 0.0:
 		saw_disc.rotate_x(saw_spin * dt)
 	var e := eye_k * (0.9 + 0.1 * sin(_t * 17.0))
 	for m in eye_mats:
@@ -764,8 +754,9 @@ func _update_parts(dt: float) -> void:
 	eye_light.light_energy = 2.2 * e
 	searchlight.light_energy = 7.0 * light_k * eye_k
 	searchlight.visible = light_k * eye_k > 0.02
-	torch_mat.emission_energy_multiplier = torch_k * 8.0 * (0.8 + 0.2 * sin(_t * 60.0))
-	torch_light.light_energy = torch_k * 4.0
-	(torch_mat as StandardMaterial3D).albedo_color.a = 1.0
-	(arms[0].tool as Node3D).get_node("Flame").visible = torch_k > 0.02
+	if torch_k > 0.0 or _torch_on:
+		torch_mat.emission_energy_multiplier = torch_k * 8.0 * (0.8 + 0.2 * sin(_t * 60.0))
+		torch_light.light_energy = torch_k * 4.0
+		torch_flame.visible = torch_k > 0.02
+		_torch_on = torch_k > 0.0
 	mouth_glow.emission_energy_multiplier = mouth_k * 6.0

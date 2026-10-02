@@ -25,7 +25,6 @@ var _casing_mesh: CylinderMesh
 var _casing_mat: StandardMaterial3D
 var _chip_meshes: Array[BoxMesh] = []
 var _streak_mesh: BoxMesh
-var _spark_pm: ParticleProcessMaterial
 
 var casings: Array = []   # {node, vel, ang, life, rest, bounced}
 var chips: Array = []     # {node, vel, ang, life, rest, half}
@@ -98,17 +97,15 @@ static func muzzle(pos: Vector3, dir: Vector3, size := 1.0, light := true) -> vo
 	ToonGunFX.muzzle(pos, fwd, size)
 	if light:
 		# 순간 조명: 매우 밝게 켜졌다가 급격히 꺼진다 (주변 바닥·벽이 번쩍인다)
-		var l := OmniLight3D.new()
-		l.light_color = Color("ffb044")
+		var l := g._muzzle_light()
 		l.light_energy = minf(9.0 * size, 14.0) * randf_range(0.85, 1.15)
 		l.omni_range = 6.5 * sqrt(size)
-		l.omni_attenuation = 1.4
-		l.shadow_enabled = false
-		g.add_child(l)
 		l.global_position = pos + fwd * 0.35 + Vector3(0, 0.35, 0)
+		l.visible = true
 		var lt := l.create_tween()
+		g._light_tw[(g._light_i - 1) % g._lights.size()] = lt
 		lt.tween_property(l, "light_energy", 0.0, 0.1).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_OUT)
-		lt.tween_callback(l.queue_free)
+		lt.tween_callback(l.hide)
 	# 옅은 총구 연기
 	if randf() < 0.7:
 		g._smoke(pos + fwd * 0.25 * size, fwd * 0.6 + Vector3(0, 0.5, 0), 0.16 * size, 0.35, 0.4)
@@ -151,7 +148,8 @@ static func impact_wall(pos: Vector3, normal: Vector3, fwd: Vector3, k := 1.0) -
 	ToonGunFX.impact(pos, n, k)
 	g._spray(pos, (refl + n).normalized(), int(4 * k), 55.0, 9.0, 0.2)
 	for i in int(randf_range(2, 4) * k):
-		var c := Color(0.2, 0.2, 0.33).lerp(Color(0.09, 0.09, 0.16), randf())
+		# 명암 4단계만 쓴다 (색마다 Pal.lit 머티리얼이 하나씩 생기므로 연속값은 피한다)
+		var c := Color(0.2, 0.2, 0.33).lerp(Color(0.09, 0.09, 0.16), randi_range(0, 3) / 3.0)
 		var v := (n * randf_range(1.5, 3.5) + refl * randf_range(0.5, 2.0)).rotated(Vector3.UP, randf_range(-0.7, 0.7))
 		v.y = randf_range(2.0, 4.5)
 		g._chip(pos + n * 0.05, v, c, randf_range(0.7, 1.2))
@@ -183,8 +181,33 @@ func _spray(pos: Vector3, dir: Vector3, count: int, spread: float, speed: float,
 	p.lifetime = life
 	p.local_coords = WorldFlow.active()
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var pm := ParticleProcessMaterial.new()
-	pm.direction = (dir + Vector3(0, 0.25, 0)).normalized()
+	p.process_material = _spray_pm(dir, spread, speed)
+	p.draw_pass_1 = _streak_mesh
+	(WorldFlow.holder() if WorldFlow.active() else self).add_child(p)
+	p.global_position = pos
+	p.emitting = true
+	get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
+
+
+static var _spray_pms := {}
+static var _spray_curve: CurveTexture
+
+
+## 불똥 파티클 머티리얼: 방향을 수평 32방위 · 높이 0.25 단위로 묶어 공유한다
+## (퍼짐 각이 35° 이상이라 11° 차이는 보이지 않는다). 발사·착탄마다 새로 만들면 텍스처를 매번 GPU 로 올린다.
+static func _spray_pm(dir: Vector3, spread: float, speed: float) -> ParticleProcessMaterial:
+	var yaw := roundi(atan2(dir.x, dir.z) / TAU * 32.0)
+	var dy := snappedf(dir.y, 0.25)
+	var key := "%d|%.2f|%.0f|%.1f" % [yaw, dy, spread, speed]
+	var pm: ParticleProcessMaterial = _spray_pms.get(key)
+	if pm:
+		return pm
+	if _spray_pms.size() >= 256:
+		_spray_pms.clear()
+	var a := yaw * TAU / 32.0
+	var d := Vector3(sin(a), 0, cos(a)) * sqrt(maxf(0.0, 1.0 - dy * dy)) + Vector3(0, dy, 0)
+	pm = ParticleProcessMaterial.new()
+	pm.direction = (d + Vector3(0, 0.25, 0)).normalized()
 	pm.spread = spread
 	pm.initial_velocity_min = speed * 0.45
 	pm.initial_velocity_max = speed
@@ -194,24 +217,16 @@ func _spray(pos: Vector3, dir: Vector3, count: int, spread: float, speed: float,
 	pm.particle_flag_align_y = true
 	pm.scale_min = 0.6
 	pm.scale_max = 1.3
-	var cv := Curve.new()
-	cv.add_point(Vector2(0, 1))
-	cv.add_point(Vector2(1, 0))
-	var ct := CurveTexture.new()
-	ct.curve = cv
-	pm.scale_curve = ct
-	var grad := Gradient.new()
-	grad.offsets = PackedFloat32Array([0.0, 0.5, 1.0])
-	grad.colors = PackedColorArray(SPARK_COLORS)
-	var gt := GradientTexture1D.new()
-	gt.gradient = grad
-	pm.color_ramp = gt
-	p.process_material = pm
-	p.draw_pass_1 = _streak_mesh
-	(WorldFlow.holder() if WorldFlow.active() else self).add_child(p)
-	p.global_position = pos
-	p.emitting = true
-	get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
+	if _spray_curve == null:
+		var cv := Curve.new()
+		cv.add_point(Vector2(0, 1))
+		cv.add_point(Vector2(1, 0))
+		_spray_curve = CurveTexture.new()
+		_spray_curve.curve = cv
+	pm.scale_curve = _spray_curve
+	pm.color_ramp = FX.color_ramp(SPARK_COLORS)
+	_spray_pms[key] = pm
+	return pm
 
 
 func _smoke(pos: Vector3, drift: Vector3, size: float, alpha: float, life: float) -> void:
@@ -244,6 +259,30 @@ func _chip(pos: Vector3, vel: Vector3, c: Color, size: float) -> void:
 	while chips.size() > MAX_CHIPS:
 		var old: Dictionary = chips.pop_front()
 		(old.node as Node).queue_free()
+
+
+const MUZZLE_LIGHTS := 6
+var _lights: Array[OmniLight3D] = []
+var _light_tw: Array[Tween] = []
+var _light_i := 0
+
+
+## 총구 조명은 몇 개를 돌려 쓴다 (연사마다 조명 노드를 새로 만들지 않게). 가장 오래된 것을 다시 켠다
+func _muzzle_light() -> OmniLight3D:
+	if _lights.size() < MUZZLE_LIGHTS:
+		var nl := OmniLight3D.new()
+		nl.light_color = Color("ffb044")
+		nl.omni_attenuation = 1.4
+		nl.shadow_enabled = false
+		add_child(nl)
+		_lights.append(nl)
+		_light_tw.append(null)
+	var i := _light_i % _lights.size()
+	_light_i += 1
+	if _light_tw[i] and _light_tw[i].is_valid():
+		_light_tw[i].kill()
+	var l := _lights[i]
+	return l
 
 
 func _exit_tree() -> void:

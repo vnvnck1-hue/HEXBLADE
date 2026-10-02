@@ -122,13 +122,6 @@ func _away(p: Player) -> Vector3:
 	return d.normalized() if d.length() > 0.05 else -e.global_basis.z
 
 
-func _face(p: Player) -> void:
-	var d := p.global_position - e.global_position
-	d.y = 0
-	if d.length() > 0.05:
-		e.rotation.y = atan2(-d.x, -d.z)
-
-
 ## 벽에 막히지 않으면 움직이고 true, 막히면 제자리 false
 func _move(v: Vector3, dt: float) -> bool:
 	if v.length() < 0.001:

@@ -184,6 +184,9 @@ func _update_fight(dt: float, player: Player) -> void:
 			weak = false
 			bar.weak = false
 	if not player.alive or Main.inst.state != Main.State.PLAY:
+		# 패턴 도중 플레이어가 쓰러지면 빔·카메라 떨림·어두운 조명·경고가 남지 않게 한 번 정리한다
+		if pat != "" or not _markers.is_empty():
+			_abort_pattern()
 		return
 	if pat == "":
 		rest -= dt
@@ -362,7 +365,8 @@ func _flat(p: Vector3) -> Vector3:
 	return Vector3(p.x, 0, p.z)
 
 
-func _hurt(from: Vector3, extra := 0) -> void:
+## 플레이어 피격 (Enemy._hurt 는 이 보스가 맞는 쪽이라 이름을 따로 쓴다)
+func _hurt_player(from: Vector3, extra := 0) -> void:
 	var pl := Main.inst.player
 	if pl.take_hit(from) and extra > 0:
 		pl.hp -= extra
@@ -486,7 +490,7 @@ func _cone(_dt: float, player: Player, dual: bool) -> bool:
 			_cone_fx(a.tip, dv, half, l - AIM < 0.02)
 			if not ps.hit and player.alive and _in_fan(player, apex, dir_a, half, reach):
 				ps.hit = true
-				_hurt(apex)
+				_hurt_player(apex)
 	if l >= AIM and not ps.fired:
 		ps.fired = true
 		Sfx.play("elaser", 0.05, 0.0)
@@ -598,7 +602,7 @@ func _slam_impact(p: Vector3, ring: int, pool_life: float, player: Player) -> vo
 	Main.inst.shake(0.55)
 	Main.inst.hitstop(0.04)
 	if player.alive and _in_circle(player, p, SLAM_R):
-		_hurt(p)
+		_hurt_player(p)
 	var off := randf() * TAU
 	for i in ring:
 		var a := off + TAU * i / ring
@@ -717,7 +721,7 @@ func _slag_impact(p: Vector3, r: float) -> void:
 	Main.inst.shake(0.18)
 	var pl := Main.inst.player
 	if pl.alive and _in_circle(pl, p, r):
-		_hurt(p)
+		_hurt_player(p)
 	_add_puddle(p, 1.6, 2.6 if phase == 1 else 3.2)
 
 
@@ -828,7 +832,7 @@ func _p_breath(dt: float, player: Player) -> bool:
 					DangerFX.evaded(player, origin + dir * along)
 				else:
 					ps.hit = true
-					_hurt(origin, 1)
+					_hurt_player(origin, 1)
 		return false
 	# 과열: 약점 노출, 두 팔이 발판에 늘어진다
 	if not ps.get("vent", false):
@@ -943,7 +947,7 @@ func _p_eruption(dt: float, player: Player) -> bool:
 					var idx := posmod(int(round(atan2(p.x, p.z) / (PI / 4.0))), 8)
 					hurt = (ps.hit as Array).has(idx)
 				if hurt:
-					_hurt(p - p.normalized() * 0.5 if p.length() > 0.6 else p + Vector3(0, 0, -1))
+					_hurt_player(p - p.normalized() * 0.5 if p.length() > 0.6 else p + Vector3(0, 0, -1))
 		# 사이사이 눈에서 느린 조준탄
 		var sc: float = ps.get("sc", 0.4) - dt
 		if sc <= 0.0:
@@ -990,7 +994,7 @@ func _update_puddles(dt: float, player: Player) -> void:
 			puddles.remove_at(i)
 			continue
 		if float(pd.t) > 0.3 and player.alive and player.dash_t <= 0.0 and _in_circle(player, pd.pos, float(pd.r) * 0.8):
-			_hurt(pd.pos)
+			_hurt_player(pd.pos)
 
 
 # ── 경고 표시 ───────────────────────────────────────────
@@ -1226,6 +1230,8 @@ func _begin_dying() -> void:
 	ps = {"cd": 0.0, "step": 0}
 	alive = false
 	remove_from_group("enemies")
+	# 웅덩이 판정도 끝낸다 (표시는 stage.pool 이 스스로 식어 사라진다)
+	puddles.clear()
 	for a in arms:
 		var ad: Dictionary = a
 		ad.busy = true

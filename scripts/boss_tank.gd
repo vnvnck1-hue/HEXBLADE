@@ -77,6 +77,12 @@ static func _inst(parent: Node3D, mesh: Mesh, pos: Vector3, c: Color, rot := Vec
 	return mi
 
 
+## 무작위 크기의 파편·그을음은 이 격자(m)로 맞춰 넘긴다. 메시 캐시(_meshes) 키가 크기별로 쌓이므로
+## 연속값을 그대로 넘기면 캐시가 끝없이 늘고 매번 둥근 박스를 새로 만들어 프레임이 튄다.
+static func snap_size(size: Vector3, step := 0.15) -> Vector3:
+	return Vector3(maxf(step, snappedf(size.x, step)), maxf(step, snappedf(size.y, step)), maxf(step, snappedf(size.z, step)))
+
+
 static func rbox(parent: Node3D, size: Vector3, r: float, pos: Vector3, c: Color, rot := Vector3.ZERO) -> MeshInstance3D:
 	var m := _mesh("r%s_%s" % [size, r], func(): return _rounded_mesh(size, r))
 	return _inst(parent, m, pos, c, rot)
@@ -115,12 +121,14 @@ static func glow(parent: Node3D, size: Vector3, pos: Vector3, c: Color, energy :
 
 
 static func glow_ball(parent: Node3D, r: float, pos: Vector3, c: Color, energy := 1.8) -> MeshInstance3D:
-	var s := SphereMesh.new()
-	s.radius = r
-	s.height = r * 2.0
-	s.radial_segments = 16
-	s.rings = 8
-	var mi := Pal.flat_mesh(s, c, energy)
+	var m := _mesh("gb%s" % r, func():
+		var s := SphereMesh.new()
+		s.radius = r
+		s.height = r * 2.0
+		s.radial_segments = 16
+		s.rings = 8
+		return s)
+	var mi := Pal.flat_mesh(m, c, energy)
 	mi.position = pos
 	parent.add_child(mi)
 	return mi

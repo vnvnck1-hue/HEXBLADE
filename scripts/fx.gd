@@ -29,6 +29,9 @@ const BILLBOARD := """
 
 static func setup(parent: Node3D) -> void:
 	root = parent
+	# 공용 메시·셰이더는 한 번만 만든다 (씬을 다시 불러올 때마다 셰이더를 새로 컴파일하지 않게)
+	if _ring_mat != null:
+		return
 	_sphere = SphereMesh.new()
 	_sphere.radius = 0.5
 	_sphere.height = 1.0
@@ -83,9 +86,9 @@ void fragment() {
 	ss.code = """
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never;
-uniform float progress = 0.0;
-uniform vec3 deep = vec3(0.78, 0.06, 0.1);
-uniform vec3 light = vec3(1.0, 0.72, 0.55);
+instance uniform float progress = 0.0;
+instance uniform vec3 deep = vec3(0.78, 0.06, 0.1);
+instance uniform vec3 light = vec3(1.0, 0.72, 0.55);
 void fragment() {
 	float u = UV.x;
 	float v = UV.y;
@@ -220,7 +223,32 @@ static func sparks(pos: Vector3, count: int, colors: Array[Color], speed := 6.0,
 	# 흐르는 씬에서는 운반 노드와 함께 흐르도록 로컬 좌표로 시뮬레이션한다
 	p.local_coords = WorldFlow.active()
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var pm := ParticleProcessMaterial.new()
+	p.process_material = _spark_pm(colors, speed, gravity, box)
+	p.draw_pass_1 = _spark_mesh
+	_add(p, pos, WorldFlow.AIR)
+	p.emitting = true
+	p.get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
+
+
+static var _spark_pms := {}
+static var _ramps := {}
+static var _fade_curve: CurveTexture
+
+
+## 불꽃 파티클 머티리얼은 설정(색·속도·중력·크기)이 같으면 공유한다.
+## 호출마다 새로 만들면 커브·그라디언트 텍스처를 매번 GPU 로 다시 올린다 (미사일 연기·지속 레이저는 초당 수십 번)
+static func _spark_pm(colors: Array[Color], speed: float, gravity: float, box: float) -> ParticleProcessMaterial:
+	# 계산된 값(세기에 비례한 속도 등)도 들어오므로 눈에 띄지 않는 단위로 묶어 같은 머티리얼을 쓰게 한다
+	speed = snappedf(speed, 0.5)
+	gravity = snappedf(gravity, 0.5)
+	box = maxf(snappedf(box, 0.005), 0.005)
+	var key := "%s|%.1f|%.1f|%.3f" % [_colors_key(colors), speed, gravity, box]
+	var pm: ParticleProcessMaterial = _spark_pms.get(key)
+	if pm:
+		return pm
+	if _spark_pms.size() >= 256:
+		_spark_pms.clear()      # 계산된 값이 키로 들어와도 무한히 쌓이지 않게. 쓰이는 중인 머티리얼은 파티클이 붙잡고 있다
+	pm = ParticleProcessMaterial.new()
 	pm.direction = Vector3(0, 1, 0)
 	pm.spread = 180.0
 	pm.initial_velocity_min = speed * 0.4
@@ -232,27 +260,58 @@ static func sparks(pos: Vector3, count: int, colors: Array[Color], speed := 6.0,
 	pm.scale_max = box / 0.09 * 1.4
 	pm.angle_min = -180.0
 	pm.angle_max = 180.0
-	var curve := CurveTexture.new()
-	var cv := Curve.new()
-	cv.add_point(Vector2(0, 1))
-	cv.add_point(Vector2(0.7, 0.8))
-	cv.add_point(Vector2(1, 0))
-	curve.curve = cv
-	pm.scale_curve = curve
+	pm.scale_curve = fade_curve()
+	pm.color_initial_ramp = color_ramp(colors)
+	_spark_pms[key] = pm
+	return pm
+
+
+## 색을 채널당 1/32 단위로 묶는다 (불꽃·불티 색에서는 구분되지 않는 차이). HDR(1 초과) 값도 그대로 둔다
+static func _q(c: Color) -> Color:
+	return Color(snappedf(c.r, 1.0 / 32.0), snappedf(c.g, 1.0 / 32.0), snappedf(c.b, 1.0 / 32.0), snappedf(c.a, 1.0 / 32.0))
+
+
+static func _colors_key(colors: Array[Color]) -> String:
+	var k := ""
+	for c in colors:
+		var q := _q(c)
+		k += "%d,%d,%d,%d;" % [roundi(q.r * 32.0), roundi(q.g * 32.0), roundi(q.b * 32.0), roundi(q.a * 32.0)]
+	return k
+
+
+## 크기가 끝에서 0 으로 줄어드는 공용 커브 (불꽃 파티클들이 함께 쓴다)
+static func fade_curve() -> CurveTexture:
+	if _fade_curve == null:
+		var cv := Curve.new()
+		cv.add_point(Vector2(0, 1))
+		cv.add_point(Vector2(0.7, 0.8))
+		cv.add_point(Vector2(1, 0))
+		_fade_curve = CurveTexture.new()
+		_fade_curve.curve = cv
+	return _fade_curve
+
+
+## 색 목록을 고르게 펼친 1차원 그라디언트 텍스처. 같은 색 목록이면 공유한다
+static func color_ramp(colors: Array[Color]) -> GradientTexture1D:
+	var key := _colors_key(colors)
+	var gt: GradientTexture1D = _ramps.get(key)
+	if gt:
+		return gt
+	if _ramps.size() >= 128:
+		_ramps.clear()
 	var grad := Gradient.new()
 	var offs := PackedFloat32Array()
 	for i in colors.size():
 		offs.append(float(i) / max(1, colors.size() - 1))
 	grad.offsets = offs
-	grad.colors = PackedColorArray(colors)
-	var gt := GradientTexture1D.new()
+	var qc := PackedColorArray()
+	for c in colors:
+		qc.append(_q(c))
+	grad.colors = qc
+	gt = GradientTexture1D.new()
 	gt.gradient = grad
-	pm.color_initial_ramp = gt
-	p.process_material = pm
-	p.draw_pass_1 = _spark_mesh
-	_add(p, pos, WorldFlow.AIR)
-	p.emitting = true
-	p.get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
+	_ramps[key] = gt
+	return gt
 
 
 static func flash(pos: Vector3, c: Color, size := 0.6, dur := 0.08, flow := WorldFlow.AIR) -> void:
@@ -318,23 +377,23 @@ static func victory(pos: Vector3) -> void:
 	for i in 10:
 		var a := TAU * i / 10.0
 		var d := Vector3(cos(a), 0, sin(a))
-		var bar := BoxMesh.new()
-		bar.size = Vector3(0.12, 0.12, 0.45)
-		var mi := Pal.flat_mesh(bar, Color("7cf0b0"), 1.2)
+		var mi := Pal.flat_mesh(_unit_box(), Color("7cf0b0"), 1.2)
 		_add(mi, pos + d * 1.8 + Vector3(0, 0.9, 0))
 		mi.look_at(mi.global_position + d, Vector3.UP)
+		mi.scale = Vector3(0.12, 0.12, 0.45)
 		var tw := mi.create_tween()
 		tw.tween_property(mi, "global_position", mi.global_position + d * 1.4, 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
-		tw.parallel().tween_property(mi, "scale", Vector3(0.1, 0.1, 0.1), 0.6).set_delay(0.25)
+		tw.parallel().tween_property(mi, "scale", Vector3(0.012, 0.012, 0.045), 0.6).set_delay(0.25)
 		tw.tween_callback(mi.queue_free)
 
 
 static func spawn_marker(pos: Vector3, dur: float) -> void:
-	var t := TorusMesh.new()
-	t.inner_radius = 0.7
-	t.outer_radius = 0.82
-	t.rings = 24
-	var mi := Pal.flat_mesh(t, Pal.E_RED, 1.2)
+	if _marker_torus == null:
+		_marker_torus = TorusMesh.new()
+		_marker_torus.inner_radius = 0.7
+		_marker_torus.outer_radius = 0.82
+		_marker_torus.rings = 24
+	var mi := Pal.flat_mesh(_marker_torus, Pal.E_RED, 1.2)
 	mi.scale = Vector3(1.6, 0.06, 1.6)
 	_add(mi, Vector3(pos.x, Main.gy(pos) + 0.03, pos.z))
 	var tw := mi.create_tween()
@@ -367,18 +426,19 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 		_:
 			_slash_arc(pos, up, 0.05)
 	# 바닥의 옅은 붉은 원 (GIF 36 프레임)
-	var disc := CylinderMesh.new()
-	disc.top_radius = 1.9
-	disc.bottom_radius = 1.9
-	disc.height = 0.01
-	disc.radial_segments = 32
+	if _disc == null:
+		_disc = CylinderMesh.new()
+		_disc.top_radius = 1.9
+		_disc.bottom_radius = 1.9
+		_disc.height = 0.01
+		_disc.radial_segments = 32
 	var gm := StandardMaterial3D.new()
 	gm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	gm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	gm.albedo_color = Color(0.95, 0.25, 0.22, 0.12)
-	disc.material = gm
 	var dm := MeshInstance3D.new()
-	dm.mesh = disc
+	dm.mesh = _disc
+	dm.material_override = gm
 	dm.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_add(dm, Vector3(owner.global_position.x, Main.gy(owner.global_position) + 0.02, owner.global_position.z))
 	var tw2 := dm.create_tween()
@@ -389,18 +449,18 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 static func _slash_arc(pos: Vector3, b: Basis, swing: float, delay := 0.0) -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = _slash_mesh
-	var mat := _slash_mat.duplicate() as ShaderMaterial
-	mat.set_shader_parameter("progress", 0.0)
-	mi.material_override = mat
+	mi.material_override = _slash_mat
+	mi.set_instance_shader_parameter("progress", 0.0)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_add(mi, pos)
 	mi.basis = b
+	var set_p := func(v: float): mi.set_instance_shader_parameter("progress", v)
 	var tw := mi.create_tween()
 	if delay > 0.0:
 		tw.tween_interval(delay)
 	# swing 초 만에 호가 완성되고, 짧게 잔광이 남았다 사라진다
-	tw.tween_property(mat, "shader_parameter/progress", 0.72, swing)
-	tw.tween_property(mat, "shader_parameter/progress", 1.0, 0.4).set_ease(Tween.EASE_OUT)
+	tw.tween_method(set_p, 0.0, 0.72, swing)
+	tw.tween_method(set_p, 0.72, 1.0, 0.4).set_ease(Tween.EASE_OUT)
 	tw.tween_callback(mi.queue_free)
 
 
@@ -409,17 +469,17 @@ static func _slash_arc(pos: Vector3, b: Basis, swing: float, delay := 0.0) -> vo
 static func crescent(pos: Vector3, b: Basis, swing := 0.035, life := 0.11) -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = _slash_mesh
-	var mat := _slash_mat.duplicate() as ShaderMaterial
-	mat.set_shader_parameter("progress", 0.0)
-	mat.set_shader_parameter("deep", Vector3(0.42, 0.12, 0.95))
-	mat.set_shader_parameter("light", Vector3(1.0, 0.82, 0.95))
-	mi.material_override = mat
+	mi.material_override = _slash_mat
+	mi.set_instance_shader_parameter("progress", 0.0)
+	mi.set_instance_shader_parameter("deep", Vector3(0.42, 0.12, 0.95))
+	mi.set_instance_shader_parameter("light", Vector3(1.0, 0.82, 0.95))
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_add(mi, pos)
 	mi.basis = b
+	var set_p := func(v: float): mi.set_instance_shader_parameter("progress", v)
 	var tw := mi.create_tween()
-	tw.tween_property(mat, "shader_parameter/progress", 0.72, swing).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
-	tw.tween_property(mat, "shader_parameter/progress", 1.0, life).set_ease(Tween.EASE_IN)
+	tw.tween_method(set_p, 0.0, 0.72, swing).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO)
+	tw.tween_method(set_p, 0.72, 1.0, life).set_ease(Tween.EASE_IN)
 	tw.tween_callback(mi.queue_free)
 
 
@@ -433,8 +493,7 @@ static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 	var dir := d / length
 	var mid := Vector3(from.x, Main.gy(from) + 0.95, from.z) + dir * length * 0.5
 	var b := Basis.looking_at(dir, Vector3.UP)
-	var line := BoxMesh.new()
-	line.size = Vector3(1, 1, 1)
+	var line := _unit_box()
 	for L in [[Color(1.0, 0.45, 0.35), 2.2, 0.22, 0.08], [Color.WHITE, 3.2, 0.07, 0.035]]:
 		var mi := Pal.flat_mesh(line, L[0], L[1])
 		_add(mi, mid)
@@ -447,11 +506,9 @@ static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 		tw.tween_method(func(v: float): mi.basis = b * Basis.from_scale(Vector3(maxf(w * v, 0.001), maxf(h * v, 0.001), length + 1.2)), 1.0, 0.0, 0.22).set_ease(Tween.EASE_IN)
 		tw.tween_callback(mi.queue_free)
 	# 바닥에 남는 칼자국
-	var scar := BoxMesh.new()
-	scar.size = Vector3(0.18, 0.01, length)
-	var sm := Pal.flat_mesh(scar, tint, 1.6)
+	var sm := Pal.flat_mesh(_unit_box(), tint, 1.6)
 	_add(sm, Vector3(mid.x, Main.gy(mid) + 0.03, mid.z))
-	sm.basis = b
+	sm.basis = b * Basis.from_scale(Vector3(0.18, 0.01, length))
 	var stw := sm.create_tween()
 	stw.tween_method(func(v: Color): sm.set_instance_shader_parameter("tint", v), tint, Color(0.09, 0.08, 0.16), 0.8).set_ease(Tween.EASE_OUT)
 	stw.tween_callback(sm.queue_free)
@@ -469,9 +526,8 @@ static func afterimage(visual: Node3D, tint := GHOST, life := 0.0) -> void:
 	root.add_child(holder)
 	var mat := _ghost_mat.duplicate() as StandardMaterial3D
 	mat.albedo_color = tint
-	for mi in visual.find_children("*", "MeshInstance3D", true, false):
-		var m := mi as MeshInstance3D
-		if not m.is_visible_in_tree() or m.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
+	for m: MeshInstance3D in mesh_parts(visual):
+		if not is_instance_valid(m) or not m.is_visible_in_tree() or m.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
 			continue
 		var g := MeshInstance3D.new()
 		g.mesh = m.mesh
@@ -486,10 +542,39 @@ static func afterimage(visual: Node3D, tint := GHOST, life := 0.0) -> void:
 	tw.tween_callback(holder.queue_free)
 
 
+## visual 아래 메시 파츠 목록 (잔상·피격 섬광용). 물리 틱마다 불리므로 트리 탐색 결과를 visual 에 잠시 기억해 둔다.
+## 파츠가 떨어져 나가거나(무효) 0.5초가 지나면 다시 찾는다 (새로 붙은 파츠도 곧 잔상에 들어간다).
+static func mesh_parts(visual: Node3D) -> Array:
+	var now := Time.get_ticks_msec()
+	if visual.has_meta("_ghost_parts") and now - int(visual.get_meta("_ghost_t", 0)) < 500:
+		var parts: Array = visual.get_meta("_ghost_parts")
+		var ok := true
+		for m in parts:
+			if not is_instance_valid(m):
+				ok = false
+				break
+		if ok:
+			return parts
+	var found := visual.find_children("*", "MeshInstance3D", true, false)
+	visual.set_meta("_ghost_parts", found)
+	visual.set_meta("_ghost_t", now)
+	return found
+
+
 # ── 레이저 · 부스터 · 대시 · 파괴 ───────────────────────
 
 static var _cyl: CylinderMesh
 static var _torus: TorusMesh
+static var _box1: BoxMesh
+static var _disc: CylinderMesh
+static var _marker_torus: TorusMesh
+
+
+## 1m 정육면체. 크기는 노드 scale / basis 로 준다 (호출마다 메시를 새로 만들지 않게)
+static func _unit_box() -> BoxMesh:
+	if _box1 == null:
+		_box1 = BoxMesh.new()
+	return _box1
 
 
 static func _cylinder() -> CylinderMesh:

@@ -51,7 +51,6 @@ var beam_bias := Vector3.ZERO
 var ult_on := false
 var ult_k := 0.0          # 락온 시야 전환 정도 (0~1)
 var ult_look := Vector3.ZERO
-var ult_prev_ptr := Vector2.ZERO
 var noise := FastNoiseLite.new()
 var t := 0.0
 # 패링 줌: 플레이어와 적 사이로 시선을 조금 당기며 적당히 줌인했다가 곧 돌아온다 (실제 시간으로 진행)
@@ -152,6 +151,8 @@ const ULT_K_IN := 6.5
 const ULT_K_OUT := 3.0
 ## 락온 중 시선이 조준점 쪽으로 옮겨 가는 비율 (1 = 조준점이 정확히 화면 가운데)과 따라가는 속도
 const ULT_FOCUS := 0.88
+## 시선이 플레이어에게서 벗어날 수 있는 최대 거리 (m). 아주 먼 조준점에서도 플레이어가 화면에 남는다.
+const ULT_LOOK_MAX := 7.5
 const ULT_FOLLOW := 7.0
 
 
@@ -197,7 +198,7 @@ func _ult_aim_shift(dt: float, player: Player) -> Vector3:
 	if (ult_on or player.ult_winding()) and player.alive:
 		want = player.ult_aim_w - player.global_position
 		want.y = 0.0
-		want *= ULT_FOCUS
+		want = (want * ULT_FOCUS).limit_length(ULT_LOOK_MAX)
 	ult_shift = ult_shift.lerp(want, 1.0 - exp(-ULT_FOLLOW * dt))
 	return ult_shift * ult_k
 
@@ -236,10 +237,6 @@ func parry_cine(player: Player, foe: Node3D, foe_pos: Vector3) -> void:
 	trauma = minf(trauma, 0.3)
 
 
-func cine_active() -> bool:
-	return cine_start >= 0
-
-
 func set_beam(on: bool, dir := Vector3.ZERO) -> void:
 	beam_on = on
 	if on:
@@ -275,14 +272,12 @@ func update(dt: float, player: Player) -> void:
 	# 조준점은 마우스 이동량으로 움직이는 월드 좌표라 카메라가 따라가도 끌려가지 않는다.
 	ult_k = move_toward(ult_k, 1.0 if ult_on else 0.0, dt * (ULT_K_IN if ult_on else ULT_K_OUT))
 	var look_target := Vector3.ZERO
-	var roll_add := 0.0
 	var follow := float(p.follow)
 	if ult_on or player.ult_winding():
 		var aim := player.ult_aim_w - player.global_position
 		aim.y = 0.0
-		look_target = aim * ULT_FOCUS
+		look_target = (aim * ULT_FOCUS).limit_length(ULT_LOOK_MAX)
 		follow = maxf(follow, ULT_FOLLOW)
-	ult_prev_ptr = player.ult_ptr
 	ult_look = ult_look.lerp(look_target, 1.0 - exp(-ULT_FOLLOW * dt))
 	target = target.lerp(player.global_position + lead, ult_k)
 	target += ult_look * ult_k
@@ -303,7 +298,7 @@ func update(dt: float, player: Player) -> void:
 
 	# 좌우 이동에 따른 기울기 + 시네마틱 흔들림
 	var roll_target := -hv.x * float(p.roll) * 0.1
-	roll = lerpf(roll, roll_target, 1.0 - exp(-5.0 * dt)) + roll_add
+	roll = lerpf(roll, roll_target, 1.0 - exp(-5.0 * dt))
 
 	trauma = maxf(0.0, trauma - dt * 1.8)
 	if beam_on:

@@ -17,6 +17,11 @@ var regen := 0.0              # 다음 칸 재충전 진행도 (0~1)
 var _pop: PackedFloat32Array  # 칸마다 획득 연출 남은 시간
 var _burn: PackedFloat32Array # 칸마다 소모 연출 남은 시간
 var _deny_t := 0.0
+# 마지막으로 그린 값 (가만히 있을 땐 다시 그리지 않는다)
+var _drawn_count := -1
+var _drawn_pending := -1
+var _drawn_regen := -1.0
+var _was_anim := false
 
 
 func setup(k: String, n: int, c: Color, sz: Vector2) -> void:
@@ -57,7 +62,25 @@ func _process(_dt: float) -> void:
 		_pop[i] = maxf(0.0, _pop[i] - rdt)
 		_burn[i] = maxf(0.0, _burn[i] - rdt)
 	_deny_t = maxf(0.0, _deny_t - rdt)
-	queue_redraw()
+	# 움직이는 연출(획득·소모·거부·깜빡임)이 있거나 값이 바뀐 프레임만 다시 그린다.
+	# 연출이 끝난 다음 한 프레임은 마지막 모습을 그리려고 한 번 더 그린다
+	var anim := _deny_t > 0.0 or (pending > 0 and count > 0)
+	if not anim:
+		for i in max_count:
+			if _pop[i] > 0.0 or _burn[i] > 0.0:
+				anim = true
+				break
+	if anim or _was_anim or count != _drawn_count or pending != _drawn_pending or regen != _drawn_regen:
+		_drawn_count = count
+		_drawn_pending = pending
+		_drawn_regen = regen
+		queue_redraw()
+	_was_anim = anim
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_VISIBILITY_CHANGED:
+		queue_redraw()
 
 
 func _draw() -> void:

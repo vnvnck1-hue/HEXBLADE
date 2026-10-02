@@ -10,6 +10,8 @@ static var inst: ParryFX
 static var _glint_mat: ShaderMaterial
 static var _star_mat: ShaderMaterial
 static var _quad: QuadMesh
+static var _box: BoxMesh        # 반격 빛줄기 (단위 상자, 크기는 scale 로)
+static var _prism: PrismMesh    # 경직 별 조각
 
 const GOLD := Color(1.0, 0.78, 0.18)
 const HOT := Color(1.0, 0.96, 0.82)
@@ -346,9 +348,10 @@ static func burst(pos: Vector3, dir: Vector3, kind: String) -> void:
 	# 반격 궤적: 접촉점을 가로지르는 날카로운 빛줄기
 	var side := Vector3(-dir.z, 0, dir.x)
 	for i in 2:
-		var bm := BoxMesh.new()
-		bm.size = Vector3(1.0, 1.0, 1.0)
-		var mi := Pal.flat_mesh(bm, HOT if i == 0 else GOLD, 3.2)
+		if _box == null:
+			_box = BoxMesh.new()
+			_box.size = Vector3(1.0, 1.0, 1.0)
+		var mi := Pal.flat_mesh(_box, HOT if i == 0 else GOLD, 3.2)
 		FX.root.add_child(mi)
 		var tilt := Basis(dir, (0.55 if kind == "melee" else -0.35) + i * 0.25)
 		var b := tilt * Basis(side, Vector3.UP, -dir)
@@ -374,8 +377,10 @@ static func burst(pos: Vector3, dir: Vector3, kind: String) -> void:
 static func stun_halo(parent: Node3D) -> Node3D:
 	var h := Node3D.new()
 	parent.add_child(h)
-	var pm := PrismMesh.new()
-	pm.size = Vector3(0.16, 0.2, 0.05)
+	if _prism == null:
+		_prism = PrismMesh.new()
+		_prism.size = Vector3(0.16, 0.2, 0.05)
+	var pm := _prism
 	for i in 4:
 		var a := TAU * i / 4.0
 		var mi := Pal.flat_mesh(pm, GOLD if i % 2 == 0 else HOT, 2.2)

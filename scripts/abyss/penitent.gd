@@ -147,7 +147,7 @@ func _update_entry(dt: float) -> void:
 		Main.inst.shake(0.4)
 		FX.shockwave(global_position + Vector3(0, 0.1, 0), Color(1.0, 0.5, 0.5), 3.2, 0.3, 0.08)
 		FX.land_dust(global_position)
-		AbyssFX.splat(global_position, 2.2, 0.4)
+		AbyssFX.splat(global_position, 2.2)
 		AbyssFX.light_flash(global_position + Vector3(0, 0.5, 0), AbyssFX.ICHOR_HOT, 3.0, 6.0, 0.3)
 		Sfx.play("boom", 0.1, -6.0)
 
@@ -279,7 +279,7 @@ func _slam_impact() -> void:
 	Main.inst.shake(0.45)
 	FX.shockwave(Vector3(c.x, 0.08, c.z), AbyssFX.ICHOR_HOT, SLAM_R * 2.0, 0.3, 0.1)
 	FX.sparks(c + Vector3(0, 0.2, 0), 20, [Color(1.0, 0.8, 0.7), AbyssFX.ICHOR_HOT, Color(0.4, 0.35, 0.35)], 9.0, 0.5, -14.0, 0.1)
-	AbyssFX.splat(c, 2.0, 0.3)
+	AbyssFX.splat(c, 2.0)
 	AbyssFX.light_flash(c + Vector3(0, 0.6, 0), Color(1.0, 0.3, 0.25), 5.0, 7.0, 0.3)
 	Sfx.play("boom", 0.1, -3.0)
 	# 충격파를 따라 퍼지는 초승달 고리
@@ -338,13 +338,16 @@ func _hurt(dir: Vector3, dmg: int) -> void:
 # ── 파열 ────────────────────────────────────────────────
 
 func _begin_death() -> void:
-	if is_instance_valid(warn):
-		warn.queue_free()
-	if is_instance_valid(line):
-		line.queue_free()
+	_clear_fx()
 	_rupture_warn = AbyssFX.warn_disc(global_position, RUPTURE_HURT_R, Color(1.0, 0.45, 0.2))
 	Sfx.play("overload", 0.05, -2.0)
 	FX.flash((j.core as Node3D).global_position, Color.WHITE, 1.0, 0.08)
+
+
+func _clear_fx() -> void:
+	for n in [warn, line, _rupture_warn]:
+		if is_instance_valid(n):
+			(n as Node).queue_free()
 
 
 func _death_tick(dt: float) -> void:

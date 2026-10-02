@@ -19,7 +19,6 @@ const FOV := 34.0
 var rect: ColorRect
 var mat: ShaderMaterial
 var _start := -1
-var _boss: Node3D
 var _focus := Vector3.ZERO
 var _dist := 11.0
 var _from := Vector3.FORWARD      # 보스 → 카메라 수평 방향
@@ -98,10 +97,9 @@ func _ready() -> void:
 	visible = false
 
 
-func _play(boss: Node3D, focus: Vector3, dist: float, text: String, small: String, accent: Color) -> void:
+func _play(_boss: Node3D, focus: Vector3, dist: float, text: String, small: String, accent: Color) -> void:
 	var main := Main.inst
 	_start = Parry.now_ms()
-	_boss = boss
 	_focus = focus
 	_dist = dist
 	_cut = false

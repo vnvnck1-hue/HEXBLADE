@@ -23,6 +23,10 @@ var speed_fx: SpeedFX
 var boss_spawned := false
 var jet_t := 0.0
 var bot_side := 1.0
+## 검증용 실행 인자 (매 프레임 다시 읽지 않게 _ready 에서 한 번만 읽는다)
+var arg_godmode := false
+var arg_fastp2 := false
+var arg_hug := false
 
 
 func _ready() -> void:
@@ -31,6 +35,10 @@ func _ready() -> void:
 	Engine.physics_ticks_per_second = 60
 	randomize()
 	_parse_args()
+	var args := OS.get_cmdline_user_args()
+	arg_godmode = args.has("--godmode")
+	arg_fastp2 = args.has("--fastp2")
+	arg_hug = args.has("--hug")
 	_setup_input()
 	world = Node3D.new()
 	add_child(world)
@@ -146,12 +154,12 @@ func _physics_process(dt: float) -> void:
 			combo = 0
 	if not boss_spawned and time >= BOSS_DELAY:
 		_spawn_boss()
-	if OS.get_cmdline_user_args().has("--godmode"):
+	if arg_godmode:
 		player.invuln = 999.0
 	if boss and boss.alive:
 		boss_loot(boss, boss.boss_hp / BossEnemy.MAX_HP)
 	# 검증용: --fastp2 는 6초 뒤 2페이즈 직전까지 깎는다
-	if OS.get_cmdline_user_args().has("--fastp2") and boss and boss.phase == 1 and boss.st == BossEnemy.St.FIGHT and time > 6.0:
+	if arg_fastp2 and boss and boss.phase == 1 and boss.st == BossEnemy.St.FIGHT and time > 6.0:
 		boss.take_hit(20, Vector3.FORWARD, boss.global_position, "missile")
 		boss.boss_hp = minf(boss.boss_hp, BossEnemy.MAX_HP * BossEnemy.PHASE2_AT + 1.0)
 	_fast_kill(boss, boss != null and boss.phase == 2 and boss.st == BossEnemy.St.FIGHT)
@@ -204,6 +212,8 @@ func _win() -> void:
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		FX.flash(b.position, Pal.E_BULLETS[2], 0.4, 0.1)
 		b.queue_free()
+	for b in get_tree().get_nodes_in_group("parry_orbs"):
+		b.queue_free()
 	bar.hide_bar()
 	var tw := create_tween()
 	tw.tween_property(stage, "speed", 10.0, 2.5).set_ease(Tween.EASE_OUT)
@@ -227,7 +237,7 @@ func bot_input(p: Player) -> Dictionary:
 		return out
 	var bp := boss.global_position
 	out.aim = bp + Vector3(0, 0.95, 0)
-	if OS.get_cmdline_user_args().has("--hug"):
+	if arg_hug:
 		# 근접 견제 검증: 보스에 붙어서 검만 휘두른다 (회피 없음)
 		var hug := Vector3(bp.x, 0, bp.z + MIN_GAP + 0.5) - p.global_position
 		hug.y = 0

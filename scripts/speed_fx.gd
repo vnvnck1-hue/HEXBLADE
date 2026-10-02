@@ -10,7 +10,7 @@ var focus := Vector2(0.5, 0.1)
 
 const SHADER := """
 shader_type canvas_item;
-uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
+uniform sampler2D screen_tex : hint_screen_texture, filter_linear;  // 밉맵은 쓰지 않는다 (매 프레임 화면 밉맵 생성 비용)
 uniform float intensity = 1.0;
 uniform vec2 focus = vec2(0.5, 0.1);
 uniform float aspect = 1.6;
@@ -25,16 +25,22 @@ void fragment() {
 	float ce = length(cv);
 	float edge = smoothstep(0.34, 0.75, ce);
 	float amt = 0.055 * intensity * edge;
-	vec3 acc = vec3(0.0);
-	float wsum = 0.0;
-	for (int i = 0; i < 10; i++) {
-		float k = float(i) / 9.0;
-		float w = 1.0 - k * 0.6;
-		vec2 suv = uv - d * amt * k;
-		acc += texture(screen_tex, suv).rgb * w;
-		wsum += w;
+	vec3 col;
+	if (amt <= 0.0) {
+		// 번짐이 없는 가운데: 10번 같은 곳을 읽는 것과 같으므로 한 번만 읽는다
+		col = texture(screen_tex, uv).rgb;
+	} else {
+		vec3 acc = vec3(0.0);
+		float wsum = 0.0;
+		for (int i = 0; i < 10; i++) {
+			float k = float(i) / 9.0;
+			float w = 1.0 - k * 0.6;
+			vec2 suv = uv - d * amt * k;
+			acc += texture(screen_tex, suv).rgb * w;
+			wsum += w;
+		}
+		col = acc / wsum;
 	}
-	vec3 col = acc / wsum;
 	// 색수차: 가장자리에서 R·B 를 반대로 밀어낸다
 	float ca = 0.004 * intensity * edge;
 	col.r = mix(col.r, texture(screen_tex, uv + d * ca).r, 0.6);

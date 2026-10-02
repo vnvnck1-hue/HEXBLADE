@@ -172,6 +172,11 @@ static func _host() -> GustFX:
 	return inst
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 ## 부채꼴 격자: UV.x = 각도(0~1), UV.y = 반지름(0~1). 실제 자리는 셰이더가 벌어진 각에 맞춰 잡는다.
 static func _build_mesh() -> ArrayMesh:
 	var st := SurfaceTool.new()
@@ -353,7 +358,7 @@ static func dash_burst(pos: Vector3, dir: Vector3, tint: Color) -> void:
 	_seq_k = 1.0
 	var f := _flat(dir)
 	var back := -f
-	var base := Vector3(pos.x, 0.08, pos.z)
+	var base := Vector3(pos.x, Main.gy(pos) + 0.08, pos.z)   # 높은 바닥 위에서도 발밑에 깔린다
 	# 뒤로 낮게 넓게 펼쳐지는 주 부채꼴 (짙은 뒷겹 + 밝은 앞겹)
 	g._fan(base - Vector3(0, 0.03, 0), _lift(back, 0.18), Vector3.UP, 2.4, 0.5, 2.5, 0.22, SPIKY,
 		back * 2.0, tint, 0.5, 1.0)
@@ -384,14 +389,14 @@ static func dash_trail(from: Vector3, to: Vector3, tint: Color, k := 1.0) -> voi
 	_side_flip = -_side_flip
 	var sgn := _side_flip
 	var out := (-f).rotated(Vector3.UP, sgn * randf_range(0.5, 1.0))
-	var p := Vector3(to.x, 0.1, to.z) - f * 0.25
+	var p := Vector3(to.x, Main.gy(to) + 0.1, to.z) - f * 0.25
 	g._fan(p, _lift(out, randf_range(0.2, 0.5)), _roll(out, sgn * randf_range(0.2, 0.6)),
 		randf_range(0.9, 1.4), 0.3, randf_range(1.0, 1.5) * k, randf_range(0.12, 0.16),
 		SPIKY if randf() < 0.55 else CLOUD, -f * 3.0 + Vector3.UP.cross(f) * sgn * 1.5, tint, 0.6,
 		randf() * 0.6)
 	# 지나온 자리에 낮게 남는 구름 부채꼴
 	if randf() < 0.5:
-		g._fan(Vector3(from.x, 0.05, from.z), _lift(-f, 0.12), Vector3.UP, randf_range(1.6, 2.2), 0.4,
+		g._fan(Vector3(from.x, Main.gy(from) + 0.05, from.z), _lift(-f, 0.12), Vector3.UP, randf_range(1.6, 2.2), 0.4,
 			randf_range(1.1, 1.5) * k, 0.14, CLOUD, -f * 1.5, tint, 0.3, 0.7)
 
 
@@ -402,7 +407,7 @@ static func dash_stop(pos: Vector3, dir: Vector3) -> void:
 		return
 	_seq_k = 0.5
 	var f := _flat(dir)
-	var base := Vector3(pos.x, 0.06, pos.z)
+	var base := Vector3(pos.x, Main.gy(pos) + 0.06, pos.z)
 	g._fan(base, _lift(f, 0.2), Vector3.UP, 2.0, 0.35, 1.5, 0.18, CLOUD, f * 2.5, Color.WHITE, 0.0, 0.6)
 	g._fan(base + f * 0.15, _lift(f, 0.35), _roll(f, randf_range(-0.3, 0.3)), 1.6, 0.3, 1.3, 0.16, CLOUD, f * 3.0)
 
@@ -417,10 +422,11 @@ static func boost_burst(pos: Vector3, dir: Vector3) -> void:
 	_boost_t0 = _clock
 	_seq_k = 1.0
 	var off := randf() * TAU
+	var gy := Main.gy(pos)
 	for i in 5:
 		var a := off + TAU * i / 5.0
 		var d := Vector3(sin(a), 0, cos(a))
-		var p := Vector3(pos.x, 0.05, pos.z) + d * 0.15
+		var p := Vector3(pos.x, gy + 0.05, pos.z) + d * 0.15
 		g._fan(p, _lift(d, randf_range(0.12, 0.3)), Vector3.UP, 1.5, 0.4, randf_range(1.6, 2.1), randf_range(0.18, 0.22),
 			SPIKY if i % 2 == 0 else CLOUD, d * 3.0, Pal.JET, 0.9, 0.3 if i % 2 else 0.0)
 
@@ -436,7 +442,7 @@ static func boost_wash(jet_pos: Vector3, carrier: Vector3) -> void:
 	var sp := Vector3(carrier.x, 0, carrier.z)
 	var back := _flat(-sp, Vector3.FORWARD.rotated(Vector3.UP, randf() * TAU))
 	var d := back.rotated(Vector3.UP, randf_range(-0.8, 0.8))
-	var p := Vector3(jet_pos.x, 0.06, jet_pos.z)
+	var p := Vector3(jet_pos.x, Main.gy(jet_pos) + 0.06, jet_pos.z)
 	var hot := Pal.JET.lerp(Pal.JET_CORE, randf() * 0.4)
 	g._fan(p, _lift(d, randf_range(0.1, 0.35)), _roll(d, randf_range(-0.4, 0.4)), randf_range(0.9, 1.4), 0.25,
 		randf_range(0.8, 1.2), randf_range(0.1, 0.14), SPIKY if randf() < 0.5 else CLOUD,

@@ -55,11 +55,18 @@ static func setup() -> void:
 		_box.size = Vector3.ONE
 		_quad = QuadMesh.new()
 		_quad.orientation = PlaneMesh.FACE_Y
+		sphere()
+
+
+## 공용 저해상도 구 (지름 1, 기본 SphereMesh 와 같은 크기) — 촛불·불씨처럼 작고 많은 구에 쓴다
+static func sphere() -> SphereMesh:
+	if _sphere == null:
 		_sphere = SphereMesh.new()
 		_sphere.radius = 0.5
 		_sphere.height = 1.0
 		_sphere.radial_segments = 10
 		_sphere.rings = 5
+	return _sphere
 
 
 ## 흩뿌린 얼룩 한 장: 큰 덩어리 몇 개 + 바깥으로 튄 방울 + 가장자리 번짐
@@ -90,7 +97,7 @@ static func _make_splat(rng: RandomNumberGenerator, sz: int) -> ImageTexture:
 # ── 체액 얼룩 ───────────────────────────────────────────
 
 ## 바닥 얼룩. size = 지름(m). 판이 가라앉으면 투영 범위를 벗어나 자연히 보이지 않는다.
-static func splat(pos: Vector3, size: float, glow := 0.0) -> void:
+static func splat(pos: Vector3, size: float) -> void:
 	if FX.root == null or _splat_tex.is_empty():
 		return
 	var d := Decal.new()
@@ -127,8 +134,8 @@ static func ichor_burst(pos: Vector3, dir: Vector3, k := 1.0) -> void:
 	FX.sparks(pos, int(10 * k) + 4, [Color(1.0, 0.3, 0.32), ICHOR_HOT, ICHOR], 7.0 * sqrt(k), 0.5, -16.0, 0.1 * sqrt(k))
 	for i in int(2 + 3 * k):
 		var p := pos + d * randf_range(0.3, 1.8) * k + Vector3(randf_range(-0.6, 0.6), 0, randf_range(-0.6, 0.6)) * k
-		splat(p, randf_range(0.7, 1.6) * sqrt(k), 0.6)
-	splat(pos, 1.2 * k + 0.6, 1.0)
+		splat(p, randf_range(0.7, 1.6) * sqrt(k))
+	splat(pos, 1.2 * k + 0.6)
 
 
 ## 파열: 크게 부풀었던 살덩이가 터진다 (주변을 해치는 판정은 호출한 쪽이 처리)
@@ -144,8 +151,8 @@ static func rupture(pos: Vector3, r: float) -> void:
 	Distortion.burst(pos, r * 2.4, 0.45, 1.3, 1.0)
 	for i in 8:
 		var a := TAU * i / 8.0 + randf() * 0.5
-		splat(g + Vector3(cos(a), 0, sin(a)) * randf_range(0.4, r), randf_range(1.0, 2.2), 0.8)
-	splat(g, r * 1.6, 1.6)
+		splat(g + Vector3(cos(a), 0, sin(a)) * randf_range(0.4, r), randf_range(1.0, 2.2))
+	splat(g, r * 1.6)
 	light_flash(pos + Vector3(0, 1.0, 0), ICHOR_HOT, 9.0, r * 4.0, 0.45)
 
 

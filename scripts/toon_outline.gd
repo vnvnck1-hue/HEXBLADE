@@ -79,6 +79,11 @@ static func attach(cam: Camera3D) -> ToonOutline:
 	return o
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 func _ready() -> void:
 	inst = self
 	var q := QuadMesh.new()

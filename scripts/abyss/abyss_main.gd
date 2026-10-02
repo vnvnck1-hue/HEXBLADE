@@ -66,6 +66,10 @@ var shards_got := 0
 var bot_orbit := 1.0
 var start_phase := 0
 var _dbg_f := 0
+var _arg_godmode := false         # 실행 인자는 _ready 에서 한 번만 읽는다
+var _arg_dbg := false
+var _arg_perflog := false
+var _left_t := 0.0                # 남은 적 표시 갱신 간격
 
 
 func _ready() -> void:
@@ -74,9 +78,13 @@ func _ready() -> void:
 	Engine.physics_ticks_per_second = 60
 	randomize()
 	_parse_args()
-	for a in OS.get_cmdline_user_args():
+	var user_args := OS.get_cmdline_user_args()
+	for a in user_args:
 		if a.begins_with("--phase="):
 			start_phase = clampi(int(a.substr(8)) - 1, 0, PHASE_COUNT - 1)
+	_arg_godmode = user_args.has("--godmode")
+	_arg_dbg = user_args.has("--dbg")
+	_arg_perflog = user_args.has("--perflog")
 	_setup_input()
 	world = Node3D.new()
 	add_child(world)
@@ -179,7 +187,7 @@ func _abyss_lighting() -> void:
 	env.volumetric_fog_length = 80.0
 	env.volumetric_fog_detail_spread = 2.0
 	env.volumetric_fog_ambient_inject = 0.0
-	# 안개 격자를 촘촘히: 바닥 근처에서 계단 무늬가 드러나지 않게
+	# 안개 격자를 촘촘히: 바닥 근처에서 계단 무늬가 드러나지 않게 (전역 설정이라 _exit_tree 에서 되돌린다)
 	RenderingServer.environment_set_volumetric_fog_volume_size(160, 128)
 	env.ssr_enabled = true
 	env.ssr_max_steps = 48
@@ -234,6 +242,14 @@ func _abyss_lighting() -> void:
 
 
 # ── 판정 보조 ───────────────────────────────────────────
+
+func _exit_tree() -> void:
+	super._exit_tree()
+	# 안개 격자 크기는 렌더링 서버 전역 값: 다음 씬이 이 촘촘한 격자를 물려받지 않게 프로젝트 기본값으로 되돌린다
+	RenderingServer.environment_set_volumetric_fog_volume_size(
+		ProjectSettings.get_setting("rendering/environment/volumetric_fog/volume_size", 64),
+		ProjectSettings.get_setting("rendering/environment/volumetric_fog/volume_depth", 64))
+
 
 ## 탄을 막는 것: 솟은 기둥과 아주 먼 경계뿐 (심연 위로는 탄이 날아가 수명으로 사라진다)
 func is_blocked(p: Vector3) -> bool:
@@ -304,7 +320,7 @@ func _begin_phase() -> void:
 		plan.append(["penitent", 1])
 		var esc := mini(3, husks)
 		if esc > 0:
-			plan.append(["husk", esc])
+			plan.append(["husk", esc, "escort"])
 			husks -= esc
 	for i in int(q.get("lament", 0)):
 		plan.append(["lament", 1])
@@ -312,6 +328,9 @@ func _begin_phase() -> void:
 		var n := mini(husks, randi_range(3, 5))
 		plan.append(["husk", n])
 		husks -= n
+	# 호위는 섞기 전에 따로 빼 두었다가 참회자 뒤에 다시 붙인다
+	var escorts: Array = plan.filter(func(g): return g.size() > 2)
+	plan = plan.filter(func(g): return g.size() <= 2)
 	plan.shuffle()
 	# 첫 묶음은 언제나 허스크 (페이즈 시작을 바로 몰아친다)
 	for i in plan.size():
@@ -324,6 +343,9 @@ func _begin_phase() -> void:
 	var fixed: Array = []
 	for g in plan:
 		fixed.append(g)
+		if g[0] == "penitent" and not escorts.is_empty():
+			fixed.append(escorts.pop_front())
+	fixed.append_array(escorts)
 	plan = fixed
 	group_t = 0.4
 	hazards.set_vents(pd.vents)
@@ -432,6 +454,7 @@ func spawn_group(kind: String, n: int) -> void:
 		"husk":
 			var spots := stage.edge_spots()
 			if spots.is_empty():
+				phase_total -= n          # 못 나온 만큼 목표에서 빼야 페이즈가 끝난다
 				return
 			# 플레이어에게서 너무 가깝지 않은 가장자리 한 곳을 고르고, 그 이웃 가장자리에서 나온다
 			spots.shuffle()
@@ -469,7 +492,11 @@ func _delayed_husk(sp: Dictionary, delay: float) -> void:
 		FX.sparks(edge + Vector3(0, -0.4, 0), 3, [AbyssFX.ICHOR_HOT, Color(0.4, 0.3, 0.3)], 2.0, 0.3, -6.0, 0.05))
 	get_tree().create_timer(delay + 0.35, false).timeout.connect(func():
 		spawning -= 1
-		if state == State.LOSE or not stage.walkable(sp.cell):
+		if state == State.LOSE:
+			return
+		if not stage.walkable(sp.cell):
+			# 그 사이 판이 가라앉았다: 이 허스크는 나오지 않으니 목표 수에서 뺀다 (안 빼면 페이즈가 끝나지 않는다)
+			phase_total -= 1
 			return
 		var h := Husk.new()
 		h.spawn_info = sp
@@ -614,21 +641,25 @@ func _physics_process(dt: float) -> void:
 		combo_t -= dt
 		if combo_t <= 0.0:
 			combo = 0
-	if OS.get_cmdline_user_args().has("--godmode"):
+	if _arg_godmode:
 		player.invuln = 999.0
 	if state == State.PLAY:
 		_update_phase(dt)
-	ahud.left = enemies_left() + spawning + _plan_left() if phase_state == "fight" else 0
+	# 남은 적 표시는 0.1초마다만 센다 (그룹 조회를 매 프레임 하지 않게)
+	_left_t -= dt
+	if _left_t <= 0.0:
+		_left_t = 0.1
+		ahud.left = enemies_left() + spawning + _plan_left() if phase_state == "fight" else 0
 	if player.alive:
 		player.global_position = stage.push_out(player.global_position, 0.4)
 	player_light.global_position = player.global_position + Vector3(0, 2.6, 0.6)
 	_dbg_f += 1
-	if OS.get_cmdline_user_args().has("--dbg") and _dbg_f % 180 == 0:
+	if _arg_dbg and _dbg_f % 180 == 0:
 		var names := []
 		for e in get_tree().get_nodes_in_group("enemies"):
 			names.append("%s@%s%s" % [(e as Node).get_script().resource_path.get_file().get_basename(), str(Vector2i((e as Node3D).global_position.x, (e as Node3D).global_position.z)), "" if (e as Enemy).landed else "(air)"])
 		print("DBG t=%.1f ts=%.2f ult=%s st=%s kills=%d/%d spawning=%d plan=%d enemies=%s" % [time, Engine.time_scale, player.ult_aiming, phase_state, phase_kills, phase_total, spawning, plan.size(), names])
-	if OS.get_cmdline_user_args().has("--perflog") and fmod(time, 10.0) < dt:
+	if _arg_perflog and fmod(time, 10.0) < dt:
 		print("PERF t=%.0f fps=%d nodes=%d objs=%d orphans=%d mem=%.1fMB bullets=%d draw=%d" % [time,
 			Performance.get_monitor(Performance.TIME_FPS), Performance.get_monitor(Performance.OBJECT_NODE_COUNT),
 			Performance.get_monitor(Performance.OBJECT_COUNT), Performance.get_monitor(Performance.OBJECT_ORPHAN_NODE_COUNT),

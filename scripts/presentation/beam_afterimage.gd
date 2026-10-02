@@ -28,12 +28,18 @@ var wave_ph := Vector2.ZERO
 var wmul: PackedFloat32Array = []    # 점별 굵기 배율 (뭉친 덩어리 느낌)
 var segs: Array = []                 # 끊긴 뒤 조각들 (Dictionary)
 var broken := false
-var _mesh := ImmediateMesh.new()
+var _mesh := ArrayMesh.new()
 var _mi := MeshInstance3D.new()
 var _jit_t := 0.0
 var _jit_seed := 0
 var _verts: PackedVector3Array = []
 var _cols: PackedColorArray = []
+# 매 프레임 다시 쓰는 작업용 배열 (새로 만들지 않는다)
+var _rng := RandomNumberGenerator.new()
+var _line: PackedVector3Array = []
+var _ws: PackedFloat32Array = []
+var _live := PackedByteArray()
+var _arrays := []
 
 static var _shader: Shader
 
@@ -144,15 +150,18 @@ func _process(dt: float) -> void:
 	_verts.clear()
 	_cols.clear()
 	if not broken:
-		var line: PackedVector3Array = []
-		var ws: PackedFloat32Array = []
-		for i in base.size():
-			line.append(_wave(i, age))
-			ws.append(lerpf(1.0, wmul[i], clampf((age - HOLD) / WAVE_TIME, 0.0, 1.0)))
-		_ribbon(line, ws, PackedByteArray(), 1.0, view)
+		var n := base.size()
+		_line.resize(n)
+		_ws.resize(n)
+		_live.clear()
+		var wk := clampf((age - HOLD) / WAVE_TIME, 0.0, 1.0)
+		for i in n:
+			_line[i] = _wave(i, age)
+			_ws[i] = lerpf(1.0, wmul[i], wk)
+		_ribbon(_line, _ws, _live, 1.0, view)
 	else:
 		var st := age - BREAK_AT
-		var rng := RandomNumberGenerator.new()
+		var rng := _rng
 		rng.seed = _jit_seed
 		var alive := 0
 		for sg in segs:
@@ -166,26 +175,29 @@ func _process(dt: float) -> void:
 			var drift: Vector3 = sg.vel * (st - st * st * 0.6)
 			var c: Vector3 = sg.c
 			var pts: PackedVector3Array = sg.pts
-			var line: PackedVector3Array = []
-			var live := PackedByteArray()
-			for k in pts.size():
+			var deaths: PackedFloat32Array = sg.deaths
+			var n := pts.size()
+			_line.resize(n)
+			_live.resize(n)
+			for k in n:
 				var local := (pts[k] - c) * sq
 				# 부서지는 조각의 지글거림 (저프레임으로 튄다)
 				var jit := Vector3(rng.randf_range(-1, 1), rng.randf_range(-1, 1), rng.randf_range(-1, 1)) * 0.035 * r
-				line.append(c + local + drift + jit)
-				live.append(1 if f < sg.deaths[k] else 0)
+				_line[k] = c + local + drift + jit
+				_live[k] = 1 if f < deaths[k] else 0
 			var a := 1.0 - smoothstep(0.7, 1.0, f)
-			_ribbon(line, sg.ws, live, a, view)
+			_ribbon(_line, sg.ws, _live, a, view)
 		if alive == 0:
 			queue_free()
 			return
 	if _verts.is_empty():
 		return
-	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
-	for i in _verts.size():
-		_mesh.surface_set_color(_cols[i])
-		_mesh.surface_add_vertex(_verts[i])
-	_mesh.surface_end()
+	# 정점·색 배열을 한 번에 넘긴다 (정점마다 부르는 ImmediateMesh 보다 싸다)
+	if _arrays.is_empty():
+		_arrays.resize(Mesh.ARRAY_MAX)
+	_arrays[Mesh.ARRAY_VERTEX] = _verts
+	_arrays[Mesh.ARRAY_COLOR] = _cols
+	_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, _arrays)
 
 
 ## 카메라를 향한 띠. live 가 비면 전부 이어 그리고, 끊긴 점은 작은 사각 점으로 남긴다
@@ -214,6 +226,7 @@ func _ribbon(line: PackedVector3Array, ws: PackedFloat32Array, live: PackedByteA
 
 
 func _quad(l0: Vector3, r0: Vector3, l1: Vector3, r1: Vector3, c: Color) -> void:
-	_verts.append_array([l0, r0, r1, l0, r1, l1])
+	_verts.append(l0); _verts.append(r0); _verts.append(r1)
+	_verts.append(l0); _verts.append(r1); _verts.append(l1)
 	for i in 6:
 		_cols.append(c)

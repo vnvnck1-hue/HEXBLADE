@@ -56,13 +56,6 @@ static func holder(a := AIR) -> Node3D:
 	return c
 
 
-## 이미 만들어진 연출 노드를 흐르게 한다 (전역 변환 유지)
-static func carry(n: Node3D, a := AIR) -> void:
-	if not active() or n == null or not n.is_inside_tree():
-		return
-	n.reparent(holder(a), true)
-
-
 func _ready() -> void:
 	inst = self
 

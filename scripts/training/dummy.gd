@@ -76,7 +76,6 @@ func _build(v: Node3D) -> Dictionary:
 	body.add_child(core)
 	jd.core = core
 	jd.core_mat = cm
-	jd.cube = torso
 	return jd
 
 

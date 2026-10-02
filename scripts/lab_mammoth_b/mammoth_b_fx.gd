@@ -117,7 +117,9 @@ func _process(dt: float) -> void:
 		_mm.set_instance_color(k, c)
 		_mm.set_instance_custom_data(k, Color(lerpf(6.0, 1.6, u) * (0.6 + 0.4 * hot), 0, 0, 0))
 	_mm.visible_instance_count = n
-	_update_marks(dt)
+	# 불꽃도 긁힘 자국도 다 사라지면 쉰다 (spark · scratch 가 다시 깨운다)
+	if not _update_marks(dt) and n == 0:
+		set_process(false)
 
 
 func _kill(i: int) -> void:
@@ -141,6 +143,7 @@ func _kill(i: int) -> void:
 func spark(pos: Vector3, vel: Vector3, life := 0.35, len_k := 1.0, heat := 1.0) -> void:
 	if budget < 1.0 and randf() > budget:
 		return
+	set_process(true)
 	if _p.size() >= MAX_SPARKS:
 		# 가득 차면 오래된 자리부터 덮어쓴다
 		_roll_i = (_roll_i + 1) % MAX_SPARKS
@@ -176,9 +179,11 @@ func spark_burst(pos: Vector3, count: int, speed: float, road: float) -> void:
 		spark(pos, d * speed * randf_range(0.3, 1.0) + Vector3(0, 2.0, road * 0.3), randf_range(0.25, 0.8), randf_range(0.8, 1.4), randf())
 
 
-func _update_marks(dt: float) -> void:
+## 보이는 긁힘 자국이 남아 있으면 true
+func _update_marks(dt: float) -> bool:
 	# 긁힘 자국: 도로 좌표(z - scroll)에 붙여 도로와 함께 흐르게 한다
 	var scroll := stage.scroll if stage else 0.0
+	var any := false
 	for m in _marks:
 		var mi: MeshInstance3D = m[0]
 		if not mi.visible:
@@ -188,6 +193,7 @@ func _update_marks(dt: float) -> void:
 		if u >= 1.0:
 			mi.visible = false
 			continue
+		any = true
 		var a: Vector3 = m[1] + Vector3(0, 0, scroll)
 		var b: Vector3 = m[2] + Vector3(0, 0, scroll)
 		var d := b - a
@@ -201,6 +207,7 @@ func _update_marks(dt: float) -> void:
 		var hot := clampf(m[3] / 0.2, 0.0, 1.0)
 		mi.set_instance_shader_parameter("tint", HOT.lerp(MID, hot * 0.6).lerp(SCORCH, clampf((m[3] - 0.14) / 0.35, 0.0, 1.0)))
 		mi.set_instance_shader_parameter("energy", lerpf(4.0, 1.0, hot))
+	return any
 
 
 ## 도로에 긁힌 자국 한 토막 (월드 좌표 두 점)
@@ -214,6 +221,7 @@ func scratch(a: Vector3, b: Vector3, width := 0.22, life := 0.9) -> void:
 	m[4] = life
 	m[5] = width
 	(m[0] as MeshInstance3D).visible = true
+	set_process(true)
 
 
 ## 떨어져 나가는 궤도 덩어리: 벨트 한 토막 + 바퀴 하나. 도로에 튕기며 뒤로 흘러간다
@@ -246,7 +254,8 @@ func chunk(pos: Vector3, vel: Vector3, big := false) -> void:
 	var holder := Node3D.new()
 	stage.add_child(holder)
 	var k := 1.7 if big else 1.0
-	var sz := Vector3(randf_range(0.4, 1.1), randf_range(0.2, 0.5), randf_range(0.4, 1.1)) * k
+	# 크기는 격자에 맞춘다 (BossTank 메시 캐시가 끝없이 늘지 않게)
+	var sz := BossTank.snap_size(Vector3(randf_range(0.4, 1.1), randf_range(0.2, 0.5), randf_range(0.4, 1.1)) * k)
 	BossTank.rbox(holder, sz, 0.1, Vector3.ZERO, c)
 	holder.global_position = pos
 	stage.drift(holder, vel, Vector3(randf(), randf(), randf()).normalized() * randf_range(6, 14), true, 3.5)

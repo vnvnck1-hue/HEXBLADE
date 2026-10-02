@@ -115,10 +115,7 @@ static func scrape(from: Vector3, to: Vector3, k := 1.0) -> void:
 	p.lifetime = 0.34
 	p.local_coords = false
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var pm := _spark_pm.duplicate() as ParticleProcessMaterial
-	pm.emission_box_extents = Vector3(0.05, 0.02, l * 0.5)
-	pm.initial_velocity_max = 15.0 * clampf(k, 0.6, 1.4)
-	p.process_material = pm
+	p.process_material = _scrape_pm(l, k)
 	p.draw_pass_1 = _spark_mesh
 	FX.root.add_child(p)
 	var mid := (from + to) * 0.5
@@ -177,13 +174,14 @@ static func brake(pos: Vector3, dir: Vector3) -> void:
 	p.lifetime = 0.4
 	p.local_coords = false
 	p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var pm := _spark_pm.duplicate() as ParticleProcessMaterial
-	pm.emission_box_extents = Vector3(0.25, 0.02, 0.1)
-	pm.direction = Vector3(0, 0.55, -1)          # 앞으로 (관성)
-	pm.spread = 38.0
-	pm.initial_velocity_min = 5.0
-	pm.initial_velocity_max = 13.0
-	p.process_material = pm
+	if _brake_pm == null:
+		_brake_pm = _spark_pm.duplicate() as ParticleProcessMaterial
+		_brake_pm.emission_box_extents = Vector3(0.25, 0.02, 0.1)
+		_brake_pm.direction = Vector3(0, 0.55, -1)          # 앞으로 (관성)
+		_brake_pm.spread = 38.0
+		_brake_pm.initial_velocity_min = 5.0
+		_brake_pm.initial_velocity_max = 13.0
+	p.process_material = _brake_pm
 	p.draw_pass_1 = _spark_mesh
 	FX.root.add_child(p)
 	p.global_transform = Transform3D(Basis.looking_at(d, Vector3.UP), Vector3(pos.x, Main.gy(pos) + 0.06, pos.z) + d * 0.3)
@@ -191,3 +189,23 @@ static func brake(pos: Vector3, dir: Vector3) -> void:
 	p.get_tree().create_timer(0.8).timeout.connect(p.queue_free)
 	FX.flash(Vector3(pos.x, Main.gy(pos) + 0.12, pos.z) + d * 0.3, Color(1.0, 0.75, 0.4), 0.55, 0.05)
 	Sfx.play("clank", 0.1, -12.0)
+
+
+static var _brake_pm: ParticleProcessMaterial
+static var _scrape_pms := {}
+
+
+## 긁힘 불꽃 머티리얼: 구간 길이 0.1m · 세기 0.1 단위로 묶어 공유한다 (돌진 틱마다 머티리얼을 복제하지 않게)
+static func _scrape_pm(l: float, k: float) -> ParticleProcessMaterial:
+	var lq := snappedf(l, 0.1)
+	var kq := snappedf(clampf(k, 0.6, 1.4), 0.1)
+	var key := Vector2(lq, kq)
+	var pm: ParticleProcessMaterial = _scrape_pms.get(key)
+	if pm == null:
+		if _scrape_pms.size() >= 128:
+			_scrape_pms.clear()
+		pm = _spark_pm.duplicate() as ParticleProcessMaterial
+		pm.emission_box_extents = Vector3(0.05, 0.02, maxf(lq, 0.05) * 0.5)
+		pm.initial_velocity_max = 15.0 * kq
+		_scrape_pms[key] = pm
+	return pm

@@ -1,0 +1,67 @@
+model: bug_pillbug
+size (m)  x 1.075  y(fwd) 2.674  z(up) 0.626
+bounds    min (-0.537, -1.123, -0.007)  max (0.537, 1.552, 0.619)
+triangles 13312
+parts:
+  seg_0                      2492 tris  parent=seg_1  origin=(0.00, 0.60, 0.26)
+  seg_1                       876 tris  parent=seg_2  origin=(0.00, 0.40, 0.26)
+  seg_2                       876 tris  parent=seg_3  origin=(0.00, 0.20, 0.26)
+  seg_3                       876 tris  parent=-  origin=(0.00, 0.10, 0.00)
+  seg_4                       876 tris  parent=seg_3  origin=(0.00, 0.00, 0.26)
+  seg_5                       876 tris  parent=seg_4  origin=(0.00, -0.20, 0.26)
+  seg_6                       876 tris  parent=seg_5  origin=(0.00, -0.40, 0.26)
+  seg_7                       876 tris  parent=seg_6  origin=(0.00, -0.60, 0.26)
+  antenna_l_1                 364 tris  parent=seg_0  origin=(-0.14, 0.91, 0.24)
+  antenna_l_2                 284 tris  parent=antenna_l_1  origin=(-0.30, 1.10, 0.24)
+  antenna_l_3                 312 tris  parent=antenna_l_2  origin=(-0.42, 1.32, 0.17)
+  antenna_r_1                 364 tris  parent=seg_0  origin=(0.14, 0.91, 0.24)
+  antenna_r_2                 284 tris  parent=antenna_r_1  origin=(0.30, 1.10, 0.24)
+  antenna_r_3                 312 tris  parent=antenna_r_2  origin=(0.42, 1.32, 0.17)
+  tail_l_1                     92 tris  parent=seg_7  origin=(-0.13, -0.74, 0.20)
+  tail_l_2                    188 tris  parent=tail_l_1  origin=(-0.20, -0.92, 0.16)
+  tail_r_1                     92 tris  parent=seg_7  origin=(0.13, -0.74, 0.20)
+  tail_r_2                    188 tris  parent=tail_r_1  origin=(0.20, -0.92, 0.16)
+  leg_1_l_1                    92 tris  parent=seg_1  origin=(-0.24, 0.50, 0.20)
+  leg_1_l_2                    92 tris  parent=leg_1_l_1  origin=(-0.47, 0.44, 0.17)
+  leg_1_r_1                    92 tris  parent=seg_1  origin=(0.24, 0.50, 0.20)
+  leg_1_r_2                    92 tris  parent=leg_1_r_1  origin=(0.47, 0.44, 0.17)
+  leg_2_l_1                    92 tris  parent=seg_2  origin=(-0.24, 0.30, 0.20)
+  leg_2_l_2                    92 tris  parent=leg_2_l_1  origin=(-0.47, 0.26, 0.17)
+  leg_2_r_1                    92 tris  parent=seg_2  origin=(0.24, 0.30, 0.20)
+  leg_2_r_2                    92 tris  parent=leg_2_r_1  origin=(0.47, 0.26, 0.17)
+  leg_3_l_1                    92 tris  parent=seg_3  origin=(-0.24, 0.10, 0.20)
+  leg_3_l_2                    92 tris  parent=leg_3_l_1  origin=(-0.47, 0.09, 0.17)
+  leg_3_r_1                    92 tris  parent=seg_3  origin=(0.24, 0.10, 0.20)
+  leg_3_r_2                    92 tris  parent=leg_3_r_1  origin=(0.47, 0.09, 0.17)
+  leg_4_l_1                    92 tris  parent=seg_4  origin=(-0.24, -0.10, 0.20)
+  leg_4_l_2                    92 tris  parent=leg_4_l_1  origin=(-0.47, -0.09, 0.17)
+  leg_4_r_1                    92 tris  parent=seg_4  origin=(0.24, -0.10, 0.20)
+  leg_4_r_2                    92 tris  parent=leg_4_r_1  origin=(0.47, -0.09, 0.17)
+  leg_5_l_1                    92 tris  parent=seg_5  origin=(-0.24, -0.30, 0.20)
+  leg_5_l_2                    92 tris  parent=leg_5_l_1  origin=(-0.47, -0.26, 0.17)
+  leg_5_r_1                    92 tris  parent=seg_5  origin=(0.24, -0.30, 0.20)
+  leg_5_r_2                    92 tris  parent=leg_5_r_1  origin=(0.47, -0.26, 0.17)
+  leg_6_l_1                    92 tris  parent=seg_6  origin=(-0.24, -0.50, 0.20)
+  leg_6_l_2                    92 tris  parent=leg_6_l_1  origin=(-0.47, -0.44, 0.17)
+  leg_6_r_1                    92 tris  parent=seg_6  origin=(0.24, -0.50, 0.20)
+  leg_6_r_2                    92 tris  parent=leg_6_r_1  origin=(0.47, -0.44, 0.17)
+attachment points:
+  pt_ball_center           (0.00, 0.10, 0.02)  parent=seg_3
+  pt_eye_l                 (-0.22, 0.93, 0.30)  parent=seg_0
+  pt_eye_r                 (0.22, 0.93, 0.30)  parent=seg_0
+  pt_mouth                 (0.00, 0.98, 0.12)  parent=seg_0
+  pt_antenna_tip_l         (-0.48, 1.54, 0.07)  parent=antenna_l_3
+  pt_antenna_tip_r         (0.48, 1.54, 0.07)  parent=antenna_r_3
+  pt_foot_1_l              (-0.53, 0.36, 0.00)  parent=leg_1_l_2
+  pt_foot_1_r              (0.53, 0.36, 0.00)  parent=leg_1_r_2
+  pt_foot_2_l              (-0.53, 0.22, 0.00)  parent=leg_2_l_2
+  pt_foot_2_r              (0.53, 0.22, 0.00)  parent=leg_2_r_2
+  pt_foot_3_l              (-0.53, 0.07, 0.00)  parent=leg_3_l_2
+  pt_foot_3_r              (0.53, 0.07, 0.00)  parent=leg_3_r_2
+  pt_foot_4_l              (-0.53, -0.07, 0.00)  parent=leg_4_l_2
+  pt_foot_4_r              (0.53, -0.07, 0.00)  parent=leg_4_r_2
+  pt_foot_5_l              (-0.53, -0.22, 0.00)  parent=leg_5_l_2
+  pt_foot_5_r              (0.53, -0.22, 0.00)  parent=leg_5_r_2
+  pt_foot_6_l              (-0.53, -0.36, 0.00)  parent=leg_6_l_2
+  pt_foot_6_r              (0.53, -0.36, 0.00)  parent=leg_6_r_2
+glb: assets\models\bug_pillbug.glb

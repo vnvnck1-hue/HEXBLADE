@@ -169,12 +169,12 @@ func _ai(dt: float) -> void:
 	to_p.y = 0
 	var dist := to_p.length()
 	var dir := to_p / maxf(dist, 0.001)
-	var active := player.alive and Main.inst.state == Main.State.PLAY
+	var active := player.alive and not player.hidden and Main.inst.state == Main.State.PLAY
 	match state:
 		S.IDLE:
 			vel = vel.move_toward(Vector3.ZERO, 30.0 * dt)
 			_move_ball(dt)
-			if st_t > 0.35:
+			if st_t > 0.35 and not player.hidden:
 				_begin_windup(dist)
 		S.WINDUP:
 			_windup(dt)
@@ -352,7 +352,9 @@ func _contact(player: Player) -> void:
 
 ## 다른 적과도 당구공처럼 부딪힌다 (상대는 밀려난다)
 func _bump_enemies() -> void:
-	for o in get_tree().get_nodes_in_group("enemies"):
+	for o in Enemy.live(get_tree()):
+		if not is_instance_valid(o):
+			continue
 		var en := o as Enemy
 		if en == self or not en.landed:
 			continue

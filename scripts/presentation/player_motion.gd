@@ -21,6 +21,7 @@ const F := 1.0 / 60.0
 var p: Player
 var gun: Node3D                     # 사격 팔 끝 총 부분 (재장전 때 돈다)
 var _applied: Array = []            # [노드, 속성 경로, 더한 값]
+var _o := {}                        # 이번 틱 오프셋 합 (매 틱 비워 다시 쓴다)
 
 # 재장전
 var _rl_ev := 0
@@ -53,6 +54,9 @@ func _init(owner: Player) -> void:
 
 ## 사격 팔(ArmL)의 총 부분을 별도 축 노드로 옮긴다. 재장전 때 그 축을 돌려 리볼버처럼 회전시킨다.
 func rig() -> void:
+	if p.j.has("gun"):
+		gun = p.j.gun              # 새 메카: 총 피벗이 따로 있다 (팔 부품을 위치로 골라 옮기지 않는다)
+		return
 	var arm: Node3D = p.j.arm_l
 	gun = Node3D.new()
 	gun.name = "GunSpin"
@@ -212,6 +216,16 @@ const WINDUP_KEYS := [
 ]
 
 
+# 레이저 반동 (k=1 기준, 세기 k 와 진행 w 를 곱한다)
+const LASER_KICK := {"ax": 1.15, "az": -0.35, "tx": -0.55, "ty": -0.3, "hl": -0.75, "hr": 0.65,
+	"kl": -0.5, "kr": -0.85, "lift": -0.1, "ar": 0.65, "arz": 0.4}
+# 미사일 락온 준비 자세 (가중치 1 기준)
+const AIM_POSE := {"hl": -0.35, "hr": 0.4, "kl": -0.6, "kr": -0.7, "lift": -0.1, "tx": 0.18, "arz": 0.5, "az": -0.3, "ax": 0.2}
+# 일제 사격 뛰어오름 · 착지 자세
+const SALVO_UP := {"lift": 0.95, "tx": -0.6, "az": -1.15, "arz": 1.15, "ax": 0.5, "hl": 0.9, "hr": 0.75, "kl": -1.5, "kr": -1.3}
+const SALVO_LAND := {"lift": -0.18, "tx": 0.3, "az": -0.35, "arz": 0.35, "hl": -0.65, "hr": 0.75, "kl": -1.15, "kr": -1.25}
+
+
 func post(dt: float) -> void:
 	var j := p.j
 	var arm_l: Node3D = j.arm_l
@@ -220,7 +234,8 @@ func post(dt: float) -> void:
 	var now := Time.get_ticks_msec()
 	var real_dt := clampf((now - _last_ms) / 1000.0, 0.0, 0.1)
 	_last_ms = now
-	var o := {}   # 이번 틱 오프셋 합
+	var o := _o   # 이번 틱 오프셋 합
+	o.clear()
 	var t := now * 0.001
 
 	# ── 재장전 ──
@@ -258,15 +273,14 @@ func post(dt: float) -> void:
 	_pulse = maxf(0.0, _pulse - dt * 8.0)
 	if _cw > 0.01 or _pulse > 0.0:
 		var c := _cw
-		_add_all(o, {"hl": -0.38 * c, "hr": 0.42 * c, "kl": -0.6 * c, "kr": -0.7 * c, "lift": -0.11 * c - 0.04 * _pulse,
-			"ar": 0.75 * c, "arx": 0.25 * c, "ax": 0.35 * _pulse * _pulse, "tx": -0.08 * _pulse})
+		_acc(o, "hl", -0.38 * c); _acc(o, "hr", 0.42 * c); _acc(o, "kl", -0.6 * c); _acc(o, "kr", -0.7 * c)
+		_acc(o, "lift", -0.11 * c - 0.04 * _pulse)
+		_acc(o, "ar", 0.75 * c); _acc(o, "arx", 0.25 * c); _acc(o, "ax", 0.35 * _pulse * _pulse); _acc(o, "tx", -0.08 * _pulse)
 
 	# ── 레이저 반동 ──
 	if _las >= 0.0:
 		_las += dt
 		var k := _las_k
-		var kick := {"ax": 1.15 * k, "az": -0.35 * k, "tx": -0.55 * k, "ty": -0.3 * k, "hl": -0.75 * k, "hr": 0.65 * k,
-			"kl": -0.5 * k, "kr": -0.85 * k, "lift": -0.1 * k, "ar": 0.65 * k, "arz": 0.4 * k}
 		var w := 0.0
 		if _las < 2.0 * F:
 			w = _expo(_las / (2.0 * F))
@@ -276,24 +290,24 @@ func post(dt: float) -> void:
 			w = 1.0 - _back((_las - 0.12) / 0.33)
 		else:
 			_las = -1.0
-		var kd := {}
-		for key in kick:
-			kd[key] = float(kick[key]) * w
-		_add_all(o, kd)
+		var kw := k * w
+		for key in LASER_KICK:
+			_acc(o, key, float(LASER_KICK[key]) * kw)
 
 	# ── 지속 레이저 ──
 	_mw = lerpf(_mw, 1.0 if p.mega_t > 0.0 else 0.0, 1.0 - exp(-18.0 * dt))
 	if _mw > 0.01:
 		var m := _mw
-		_add_all(o, {"hl": -0.62 * m, "hr": 0.72 * m, "kl": -0.95 * m, "kr": -1.05 * m, "lift": -0.17 * m,
-			"ar": 1.0 * m, "arx": 0.3 * m, "az": -0.12 * m, "ax": sin(t * 90.0) * 0.04 * m, "ty": sin(t * 70.0) * 0.03 * m})
+		_acc(o, "hl", -0.62 * m); _acc(o, "hr", 0.72 * m); _acc(o, "kl", -0.95 * m); _acc(o, "kr", -1.05 * m)
+		_acc(o, "lift", -0.17 * m); _acc(o, "ar", 1.0 * m); _acc(o, "arx", 0.3 * m); _acc(o, "az", -0.12 * m)
+		_acc(o, "ax", sin(t * 90.0) * 0.04 * m); _acc(o, "ty", sin(t * 70.0) * 0.03 * m)
 
 	# ── 미사일 락온 준비 (슬로우모션 중이라 실제 시간으로 붙는다) ──
 	_aw = lerpf(_aw, 1.0 if p.ult_aiming else 0.0, 1.0 - exp(-12.0 * real_dt))
 	if _aw > 0.01:
 		var a := _aw
-		_add_all(o, {"hl": -0.35 * a, "hr": 0.4 * a, "kl": -0.6 * a, "kr": -0.7 * a, "lift": -0.1 * a, "tx": 0.18 * a,
-			"arz": 0.5 * a, "az": -0.3 * a, "ax": 0.2 * a})
+		for key in AIM_POSE:
+			_acc(o, key, float(AIM_POSE[key]) * a)
 
 	# ── 미사일 준비동작 (실제 시간 진행도) ──
 	if p.ult_winding():
@@ -317,8 +331,8 @@ func post(dt: float) -> void:
 	if _salvo_ph > 0:
 		_salvo += dt
 		_shudder = maxf(0.0, _shudder - dt * 18.0)
-		var up := {"lift": 0.95, "tx": -0.6, "az": -1.15, "arz": 1.15, "ax": 0.5, "hl": 0.9, "hr": 0.75, "kl": -1.5, "kr": -1.3}
-		var land := {"lift": -0.18, "tx": 0.3, "az": -0.35, "arz": 0.35, "hl": -0.65, "hr": 0.75, "kl": -1.15, "kr": -1.25}
+		var up := SALVO_UP
+		var land := SALVO_LAND
 		var pose := {}
 		match _salvo_ph:
 			1:
@@ -349,6 +363,10 @@ func post(dt: float) -> void:
 		_add_all(o, pose)
 
 	_apply(o, arm_l, arm_r, torso)
+
+
+func _acc(o: Dictionary, key: String, v: float) -> void:
+	o[key] = float(o.get(key, 0.0)) + v
 
 
 func _add_all(o: Dictionary, d: Dictionary) -> void:
@@ -419,15 +437,16 @@ func _cock() -> void:
 ## 빈 탄창: 회전하며 튀어 바닥에서 한 번 튀고 사라진다
 func _spawn_mag(pos: Vector3, v0: Vector3) -> void:
 	var mi := MeshInstance3D.new()
-	var bm := BoxMesh.new()
-	bm.size = Vector3(0.09, 0.2, 0.13)
-	mi.mesh = bm
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = Pal.P_DARK
-	mat.emission_enabled = true
-	mat.emission = Pal.CYAN
-	mat.emission_energy_multiplier = 0.35
-	mi.material_override = mat
+	if _mag_mesh == null:
+		_mag_mesh = BoxMesh.new()
+		_mag_mesh.size = Vector3(0.09, 0.2, 0.13)
+		_mag_mat = StandardMaterial3D.new()
+		_mag_mat.albedo_color = Pal.P_DARK
+		_mag_mat.emission_enabled = true
+		_mag_mat.emission = Pal.CYAN
+		_mag_mat.emission_energy_multiplier = 0.35
+	mi.mesh = _mag_mesh
+	mi.material_override = _mag_mat
 	FX.root.add_child(mi)
 	mi.global_position = pos
 	var gy := Main.gy(pos)
@@ -507,6 +526,8 @@ func _jet_glow(k: float) -> void:
 static var _ring: TorusMesh
 static var _streak: BoxMesh
 static var _ball: SphereMesh
+static var _mag_mesh: BoxMesh             # 빈 탄창 (모든 탄창이 같이 쓴다)
+static var _mag_mat: StandardMaterial3D
 
 
 static func _ring_mesh() -> TorusMesh:

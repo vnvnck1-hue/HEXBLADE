@@ -18,6 +18,7 @@ const DAMAGE := 6
 const SPLASH := 1.6
 const SIZE := 1.8              # 모델 배율 (예전 대비)
 const PUFF_GAP := 0.14         # 연기 덩어리 간격 (m) — 빨라져도 끊기지 않게 거리로 뿌린다
+const PUFF_GAP_FAST := 0.26    # 최고속일 때 간격. 덩어리 지름(0.5~0.85m)보다 충분히 촘촘해 궤적은 이어지고, 노드 수는 절반 가까이 준다
 const SMOKE := [Color("eaf8ff"), Color("a8dcff"), Color("6ab8ff"), Color("3a8cff")]
 const SMOKE_END := Color("0e2260")
 const CORE := Color("dff6ff")
@@ -165,8 +166,9 @@ func _smoke_along(from: Vector3, to: Vector3, dt: float) -> void:
 	trail_d += seg
 	trail_t -= dt
 	var n := 0
-	while trail_d >= PUFF_GAP and n < 14:
-		trail_d -= PUFF_GAP
+	var gap := lerpf(PUFF_GAP, PUFF_GAP_FAST, sk)
+	while trail_d >= gap and n < 14:
+		trail_d -= gap
 		var k := minf(trail_d / seg, 1.0) if seg > 0.001 else 0.0
 		var p := to.lerp(from, k) + nozzle
 		_billow(p, -dir * randf_range(1.0, 3.0) * (0.4 + sk), 1.0)

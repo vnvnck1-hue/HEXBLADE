@@ -18,7 +18,12 @@ const BREAK_DIST := 2.5    # 한 프레임에 이보다 멀리 튀면 선을 끊
 var strands: Array = []    # Array[Array[[Vector3 pos, float birth]]]
 var t := 0.0
 var ending := false
-var _mesh := ImmediateMesh.new()
+var _mesh := ArrayMesh.new()
+# 매 프레임 다시 채우는 정점 배열 (정점마다 부르는 ImmediateMesh 대신 한 번에 넘긴다)
+var _verts := PackedVector3Array()
+var _cols := PackedColorArray()
+var _uvs := PackedVector2Array()
+var _arrays := []
 var _mi := MeshInstance3D.new()
 var _last := Vector3.INF
 
@@ -96,13 +101,20 @@ func _rebuild() -> void:
 			break
 	if not any:
 		return
-	_mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	_verts.clear()
+	_cols.clear()
+	_uvs.clear()
 	for s in strands:
 		if (s as Array).size() < 2:
 			continue
 		_strip(s, GLOW_WIDTH, glow_color, 0.35)
 		_strip(s, WIDTH, core_color, 1.0)
-	_mesh.surface_end()
+	if _arrays.is_empty():
+		_arrays.resize(Mesh.ARRAY_MAX)
+	_arrays[Mesh.ARRAY_VERTEX] = _verts
+	_arrays[Mesh.ARRAY_COLOR] = _cols
+	_arrays[Mesh.ARRAY_TEX_UV] = _uvs
+	_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, _arrays)
 
 
 ## 한 가닥을 바닥에 눕힌 띠로 그린다. 나이에 따라 가늘어지고 흐려진다
@@ -136,6 +148,6 @@ func _quad(l0: Vector3, r0: Vector3, l1: Vector3, r1: Vector3, c0: Color, c1: Co
 
 
 func _v(p: Vector3, u: float, c: Color) -> void:
-	_mesh.surface_set_color(c)
-	_mesh.surface_set_uv(Vector2(u, 0.0))
-	_mesh.surface_add_vertex(p)
+	_verts.append(p)
+	_cols.append(c)
+	_uvs.append(Vector2(u, 0.0))

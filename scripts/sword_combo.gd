@@ -456,6 +456,9 @@ func _blink(deg: float) -> void:
 		snd.pitch_scale = randf_range(1.3, 1.6)
 
 
+static var _line: BoxMesh   # 빛줄기가 함께 쓰는 단위 상자
+
+
 ## 순간이동 경로에 1~2프레임 남는 가는 빛줄기
 func _streak(a: Vector3, b: Vector3) -> void:
 	var d := b - a
@@ -465,8 +468,10 @@ func _streak(a: Vector3, b: Vector3) -> void:
 		return
 	var mid := (a + b) * 0.5 + Vector3(0, 0.95, 0)
 	var basis := Basis.looking_at(d / l, Vector3.UP)
-	var line := BoxMesh.new()
-	line.size = Vector3.ONE
+	if _line == null:
+		_line = BoxMesh.new()
+		_line.size = Vector3.ONE
+	var line := _line
 	for L in [[Color(1.0, 0.5, 0.9), 2.0, 0.09], [Color.WHITE, 3.0, 0.03]]:
 		var mi := Pal.flat_mesh(line, L[0], L[1])
 		FX.root.add_child(mi)
@@ -887,10 +892,15 @@ func _phase_k(k: float) -> Dictionary:
 			base = "out"
 		Ph.LUNGE:
 			base = "out"
-	var out := {}
+	# 틱마다 최대 13번 불리므로 결과 사전을 새로 만들지 않고 다시 쓴다 (바로 _blend 가 읽는다)
+	var out := _ks
+	var kb := _ease(k, base)
 	for key in NEUTRAL:
-		out[key] = _ease(k, ease_over.get(key, base))
+		out[key] = _ease(k, ease_over[key]) if ease_over.has(key) else kb
 	return out
+
+
+var _ks := {}
 
 
 func _blend(ks: Dictionary) -> void:

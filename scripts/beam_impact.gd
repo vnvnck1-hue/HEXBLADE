@@ -15,6 +15,9 @@ static var _glow_mat: ShaderMaterial     # 부드러운 광채 구 (가산)
 static var _ball: SphereMesh
 static var _streak: BoxMesh
 static var _flare: BoxMesh
+# 지속 레이저는 칼날·물보라를 초당 수백 개 만든다. 다 쓴 조각은 지우지 않고 숨겨 두었다가 다시 쓴다
+static var _pool_blade: Array = []
+static var _pool_spray: Array = []
 
 var dir := Vector3.FORWARD
 var active_t := 0.0
@@ -293,9 +296,13 @@ static func _splash_dir(d: Vector3) -> Vector3:
 static func _blade(pos: Vector3, d: Vector3, pw: float, life: float) -> void:
 	_res()
 	var s := _splash_dir(d)
-	var mi := _blade_mesh()
+	var mi := _take(_pool_blade)
+	if mi == null:
+		mi = _blade_mesh()
+		FX.root.add_child(mi)
+	else:
+		mi.set_instance_shader_parameter("fade", 1.0)
 	mi.set_instance_shader_parameter("tint", CYAN if randf() < 0.7 else BLUE)
-	FX.root.add_child(mi)
 	# 쏜 방향 기준 왼쪽으로 튀면 왼쪽으로, 오른쪽이면 오른쪽으로 휜다
 	var side := -signf((-d).cross(s).y + 0.0001)
 	var L := randf_range(1.8, 3.4) * pw
@@ -305,7 +312,7 @@ static func _blade(pos: Vector3, d: Vector3, pw: float, life: float) -> void:
 	tw.tween_property(mi, "global_position", pos + s * randf_range(0.6, 1.4) * pw, life).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.tween_property(mi, "scale", end_scale, life * 0.6).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.tween_method(func(v: float): mi.set_instance_shader_parameter("fade", v), 1.0, 0.0, life).set_ease(Tween.EASE_IN)
-	tw.chain().tween_callback(mi.queue_free)
+	tw.chain().tween_callback(func() -> void: _give(_pool_blade, mi))
 
 
 ## 물보라 줄기: 가늘고 긴 빛줄기가 빠르게 튀어 나간다
@@ -313,8 +320,13 @@ static func _spray(pos: Vector3, d: Vector3, pw: float) -> void:
 	_res()
 	var s := _splash_dir(d)
 	s = (s + Vector3(randf_range(-0.2, 0.2), randf_range(-0.1, 0.3), randf_range(-0.2, 0.2))).normalized()
-	var mi := Pal.flat_mesh(_streak, WHITE if randf() < 0.45 else CYAN, 2.6)
-	FX.root.add_child(mi)
+	var c := WHITE if randf() < 0.45 else CYAN
+	var mi := _take(_pool_spray)
+	if mi == null:
+		mi = Pal.flat_mesh(_streak, c, 2.6)
+		FX.root.add_child(mi)
+	else:
+		mi.set_instance_shader_parameter("tint", c)
 	var l := randf_range(0.8, 1.8) * pw
 	var up := Vector3.UP if absf(s.y) < 0.95 else Vector3.RIGHT
 	mi.global_transform = Transform3D(Basis.looking_at(s, up), pos + s * (0.3 + l * 0.5))
@@ -324,7 +336,23 @@ static func _spray(pos: Vector3, d: Vector3, pw: float) -> void:
 	var tw := mi.create_tween().set_parallel(true)
 	tw.tween_property(mi, "global_position", pos + s * (dist + l * 0.5), life).set_ease(Tween.EASE_OUT)
 	tw.tween_property(mi, "scale", Vector3(0.2, 0.2, l * 0.4), life).set_ease(Tween.EASE_IN)
-	tw.chain().tween_callback(mi.queue_free)
+	tw.chain().tween_callback(func() -> void: _give(_pool_spray, mi))
+
+
+## 숨겨 둔 조각 하나를 꺼낸다 (FX.root 가 바뀌어 지워진 것은 버린다). 없으면 null
+static func _take(pool: Array) -> MeshInstance3D:
+	while not pool.is_empty():
+		var n = pool.pop_back()
+		if is_instance_valid(n) and n.get_parent() == FX.root:
+			var mi := n as MeshInstance3D
+			mi.visible = true
+			return mi
+	return null
+
+
+static func _give(pool: Array, mi: MeshInstance3D) -> void:
+	mi.visible = false
+	pool.append(mi)
 
 
 ## 빔에 수직으로 퍼지는 충격파 고리

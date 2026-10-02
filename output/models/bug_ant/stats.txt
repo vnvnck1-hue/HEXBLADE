@@ -1,0 +1,44 @@
+model: bug_ant
+size (m)  x 0.883  y(fwd) 1.889  z(up) 1.765
+bounds    min (-0.442, -0.926, -0.003)  max (0.442, 0.964, 1.762)
+triangles 11268
+parts:
+  pelvis                      544 tris  parent=-  origin=(0.00, -0.02, 0.66)
+  thorax                     1144 tris  parent=pelvis  origin=(0.00, 0.00, 0.72)
+  head                       2104 tris  parent=thorax  origin=(0.00, 0.13, 1.13)
+  mandible_l                  400 tris  parent=head  origin=(-0.10, 0.52, 1.10)
+  mandible_r                  400 tris  parent=head  origin=(0.10, 0.52, 1.10)
+  antenna_l_1                  92 tris  parent=head  origin=(-0.08, 0.50, 1.35)
+  antenna_l_2                 492 tris  parent=antenna_l_1  origin=(-0.20, 0.44, 1.66)
+  antenna_l_3                 120 tris  parent=antenna_l_2  origin=(-0.32, 0.70, 1.74)
+  antenna_r_1                  92 tris  parent=head  origin=(0.08, 0.50, 1.35)
+  antenna_r_2                 492 tris  parent=antenna_r_1  origin=(0.20, 0.44, 1.66)
+  antenna_r_3                 120 tris  parent=antenna_r_2  origin=(0.32, 0.70, 1.74)
+  arm_l_upper                 172 tris  parent=thorax  origin=(-0.14, 0.13, 1.02)
+  arm_l_fore                  292 tris  parent=arm_l_upper  origin=(-0.27, 0.17, 0.80)
+  arm_l_claw                  120 tris  parent=arm_l_fore  origin=(-0.25, 0.38, 0.84)
+  mid_l_upper                  92 tris  parent=thorax  origin=(-0.13, 0.02, 0.82)
+  mid_l_lower                  92 tris  parent=mid_l_upper  origin=(-0.32, 0.02, 0.80)
+  arm_r_upper                 172 tris  parent=thorax  origin=(0.14, 0.13, 1.02)
+  arm_r_fore                  292 tris  parent=arm_r_upper  origin=(0.27, 0.17, 0.80)
+  arm_r_claw                  120 tris  parent=arm_r_fore  origin=(0.25, 0.38, 0.84)
+  mid_r_upper                  92 tris  parent=thorax  origin=(0.13, 0.02, 0.82)
+  mid_r_lower                  92 tris  parent=mid_r_upper  origin=(0.32, 0.02, 0.80)
+  gaster_1                    944 tris  parent=pelvis  origin=(0.00, -0.12, 0.67)
+  gaster_2                   1172 tris  parent=gaster_1  origin=(0.00, -0.42, 0.76)
+  leg_l_thigh                 316 tris  parent=pelvis  origin=(-0.12, -0.03, 0.62)
+  leg_l_shin                  372 tris  parent=leg_l_thigh  origin=(-0.20, 0.14, 0.36)
+  leg_l_foot                  120 tris  parent=leg_l_shin  origin=(-0.21, -0.04, 0.10)
+  leg_r_thigh                 316 tris  parent=pelvis  origin=(0.12, -0.03, 0.62)
+  leg_r_shin                  372 tris  parent=leg_r_thigh  origin=(0.20, 0.14, 0.36)
+  leg_r_foot                  120 tris  parent=leg_r_shin  origin=(0.21, -0.04, 0.10)
+attachment points:
+  pt_eye_l                 (-0.18, 0.42, 1.28)  parent=head
+  pt_eye_r                 (0.18, 0.42, 1.28)  parent=head
+  pt_mouth                 (0.00, 0.66, 1.06)  parent=head
+  pt_antenna_tip_l         (-0.38, 0.95, 1.67)  parent=antenna_l_3
+  pt_antenna_tip_r         (0.38, 0.95, 1.67)  parent=antenna_r_3
+  pt_stinger               (0.00, -0.93, 0.63)  parent=gaster_2
+  pt_foot_l                (-0.21, 0.04, 0.00)  parent=leg_l_foot
+  pt_foot_r                (0.21, 0.04, 0.00)  parent=leg_r_foot
+glb: assets\models\bug_ant.glb

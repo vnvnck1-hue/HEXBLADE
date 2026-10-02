@@ -192,7 +192,7 @@ func _ai(dt: float) -> void:
 			if k >= 1.0:
 				set_tele(false)
 				FX.land_dust(global_position)
-				AbyssFX.splat(global_position, 0.6, 0.2)
+				AbyssFX.splat(global_position, 0.6)
 				go(S.RECOVER)
 		S.RECOVER:
 			var k := clampf(st_t / RECOVER_T, 0.0, 1.0)

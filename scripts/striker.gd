@@ -90,7 +90,7 @@ func _ai(dt: float) -> void:
 	to_p.y = 0
 	var dist := to_p.length()
 	var dir := to_p / maxf(dist, 0.001)
-	var active := player.alive and Main.inst.state == Main.State.PLAY
+	var active := player.alive and not player.hidden and Main.inst.state == Main.State.PLAY
 
 	match state:
 		S.MOVE:
@@ -422,7 +422,8 @@ func _alert_lunge() -> void:
 	lunge_max = (gap + LUNGE_OVERSHOOT) / lunge_speed
 	charge_t = hold
 	_warn(_nose(), "melee")
-	Parry.inst.register(self)
+	if Parry.inst:
+		Parry.inst.register(self)
 	if hold > 0.0:
 		state = S.LUNGE_HOLD
 	else:

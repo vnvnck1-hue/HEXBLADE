@@ -254,6 +254,7 @@ func _panel_text() -> String:
 		"8  관통 일격 장전",
 		"",
 		"좌클릭 길게 → 기 모으기 돌진 (최대: TEMPEST)",
+		"E 누르고 조준 → 떼면 돌진 스킬 (쿨 3초 · 처치 시 1.5초)",
 		"콤보 중 좌+우클릭 → 회피 레이저",
 	]
 	return "\n".join(lines)
@@ -320,7 +321,7 @@ func bot_input(p: Player) -> Dictionary:
 	out.aim = best.global_position + Vector3(0, 0.95, 0)
 	var to := best.global_position - p.global_position
 	to.y = 0
-	if OS.get_cmdline_user_args().has("--techshow"):
+	if Main.cmd_args.has("--techshow"):
 		return _tech_bot(p, best, to, bd, out)
 	var cyc := fmod(time, 12.0)
 	if cyc < 5.0:

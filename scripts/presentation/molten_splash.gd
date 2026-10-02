@@ -467,8 +467,10 @@ func _step_drops(dt: float) -> void:
 		var w := minf(_dr[j], _dr[q]) * 2.0 * lerpf(0.28, 0.95, sqrt(thin))
 		_put(n, (a + b) * 0.5, ab / ln, w, ln + w * 0.3, (_dh[j] + _dh[q]) * 0.5)
 		n += 1
-	_drop_mm.buffer = _drop_buf
-	_drop_mm.visible_instance_count = n
+	# 아무것도 없고 지난 프레임에도 없었으면 버퍼(수백 KB)를 다시 올리지 않는다
+	if n > 0 or _drop_mm.visible_instance_count > 0:
+		_drop_mm.buffer = _drop_buf
+		_drop_mm.visible_instance_count = n
 
 
 ## y 축을 dir 로 세운 타원체 하나를 버퍼 n 번째에 기록한다
@@ -539,8 +541,9 @@ func _step_splats(dt: float) -> void:
 		_splat_buf[o + 13] = _sk[j]
 		_splat_buf[o + 14] = clampf(_sl[j] / minf(1.1, _sL[j]), 0.0, 1.0)
 		_splat_buf[o + 15] = 0.0
-	_splat_mm.buffer = _splat_buf
-	_splat_mm.visible_instance_count = _sn
+	if _sn > 0 or _splat_mm.visible_instance_count > 0:
+		_splat_mm.buffer = _splat_buf
+		_splat_mm.visible_instance_count = _sn
 
 
 func _splat_remove(i: int) -> void:

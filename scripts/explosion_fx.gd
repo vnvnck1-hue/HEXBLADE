@@ -11,6 +11,7 @@ extends Node3D
 const BASE_R := 1.6
 const MAX_PUFFS := 320
 const EMBER := 1
+const SCORCH_END := 3.05   # 그을음 시작 0.05 + 길이 3.0
 
 static var _puff_mesh: SphereMesh
 static var _fire_mat: ShaderMaterial
@@ -447,7 +448,8 @@ func _process(dt: float) -> void:
 					_trail(p, u)
 		i += 1
 	_draw_puffs()
-	if t > 0.5 and puffs.is_empty() and t > 2.6:
+	# 그을음(0.05초부터 3초)이 다 옅어진 뒤에 지운다 (예전 2.6초는 26% 남은 그을음을 뚝 끊었다)
+	if puffs.is_empty() and t > SCORCH_END:
 		queue_free()
 
 
@@ -534,3 +536,5 @@ func _update_layers() -> void:
 	# 조명
 	var lt := clampf(t / 0.7, 0.0, 1.0)
 	light.light_energy = 9.0 * pow(1.0 - lt, 2.2) * minf(1.0, t * 40.0)
+	# 0.7초에 이미 꺼진 조명은 숨겨서 조명 목록에서 뺀다
+	light.visible = lt < 1.0

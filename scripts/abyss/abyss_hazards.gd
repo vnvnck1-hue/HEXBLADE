@@ -21,6 +21,7 @@ var towers_on := false
 var vents: Dictionary = {}       # Vector2i → {t, state, hit}
 var towers: Array = []           # {node, eye_mat, pos, base_a, state, t, a, a0, a1, beam, rise, hit_t}
 var t := 0.0
+var _vent_rev := -1              # 마지막으로 맞춘 분출구 목록 판 (stage.vent_rev)
 
 
 func _ready() -> void:
@@ -93,6 +94,7 @@ func set_vents(on: bool) -> void:
 		for c in vents:
 			_vent_param(c, 0.0)
 		vents.clear()
+		_vent_rev = -1
 
 
 func _vent_param(c: Vector2i, charge: float) -> void:
@@ -136,18 +138,20 @@ func _update_vents(dt: float) -> void:
 		return
 	# 지금 배치의 분출구를 등록한다 (판이 바뀌면 사라진 것은 지운다)
 	var live := stage.vent_cells()
-	for c in live:
-		if not vents.has(c):
-			vents[c] = {"t": randf_range(1.5, 4.5), "state": 0, "hit": false}
-	for c in vents.keys():
-		if not live.has(c):
-			vents.erase(c)
+	if stage.vent_rev != _vent_rev:
+		_vent_rev = stage.vent_rev
+		for c in live:
+			if not vents.has(c):
+				vents[c] = {"t": randf_range(1.5, 4.5), "state": 0, "hit": false}
+				_vent_param(c, 0.0)
+		for c in vents.keys():
+			if not live.has(c):
+				vents.erase(c)
 	for c in vents:
 		var v: Dictionary = vents[c]
 		v.t -= dt
 		match int(v.state):
 			0:
-				_vent_param(c, 0.0)
 				if v.t <= 0.0:
 					v.state = 1
 					v.t = VENT_CHARGE
@@ -161,11 +165,11 @@ func _update_vents(dt: float) -> void:
 					v.state = 2
 					v.t = VENT_BLAST
 					v.hit = false
+					_vent_param(c, 1.0)
 					AbyssFX.geyser(Stage.cell_center(c), 1.6, stage)
 					Sfx.play("launch", 0.2, -6.0)
 					Main.inst.shake(0.12)
 			2:
-				_vent_param(c, 1.0)
 				var cc := Stage.cell_center(c)
 				if randf() < 0.6:
 					stage.dust(cc + Vector3(randf_range(-0.4, 0.4), 0.3, randf_range(-0.4, 0.4)), randf_range(0.6, 1.0), Color(1.0, 0.08, 0.13, 0.8), true, Vector3(0, randf_range(5.0, 8.0), 0), 0.4)
@@ -173,7 +177,8 @@ func _update_vents(dt: float) -> void:
 				if v.t <= 0.0:
 					v.state = 0
 					v.t = randf_range(3.2, 6.0)
-					AbyssFX.splat(cc, 1.4, 0.8)
+					_vent_param(c, 0.0)
+					AbyssFX.splat(cc, 1.4)
 
 
 func _hurt_circle(c: Vector3, r: float, v: Dictionary) -> void:

@@ -21,6 +21,7 @@ var flash := 0.0
 var weak := false
 var t := 0.0
 var font: SystemFont
+var _hide_tw: Tween
 
 
 func _ready() -> void:
@@ -57,6 +58,9 @@ func _label(text: String, size: int, c: Color) -> Label:
 
 
 func appear() -> void:
+	if _hide_tw:
+		_hide_tw.kill()
+		_hide_tw = null
 	root.visible = true
 	fill_in = 0.0
 	root.modulate.a = 0.0
@@ -64,10 +68,14 @@ func appear() -> void:
 	tw.tween_property(root, "modulate:a", 1.0, 0.3)
 
 
+## 서서히 사라진 뒤 root 를 숨긴다 (숨긴 동안에는 _process · 다시 그리기를 하지 않는다). appear() 가 다시 보인다
 func hide_bar() -> void:
-	var tw := root.create_tween()
-	tw.tween_interval(1.2)
-	tw.tween_property(root, "modulate:a", 0.0, 0.6)
+	if _hide_tw:
+		_hide_tw.kill()
+	_hide_tw = root.create_tween()
+	_hide_tw.tween_interval(1.2)
+	_hide_tw.tween_property(root, "modulate:a", 0.0, 0.6)
+	_hide_tw.tween_callback(root.hide)
 
 
 func set_hp(k: float, big := false) -> void:

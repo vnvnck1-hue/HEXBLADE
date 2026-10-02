@@ -53,6 +53,8 @@ func _count_painted(n: Node) -> int:
 
 func _run() -> void:
 	PaintedLook.game_preset = PaintedLook.NONE
+	# 칠 머티리얼은 코드로 만든 단색 파츠용이다. 새 메카(텍스처 원본)는 바꾸지 않으므로 예전 로봇으로 확인한다
+	MechPlayer._choice = "robot"
 	var scene: PackedScene = load("res://scenes/main.tscn")
 	main = scene.instantiate()
 	root.add_child(main)

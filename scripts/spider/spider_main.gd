@@ -27,6 +27,9 @@ var web_label: Label
 var _was_dashing := false
 var _dbg_f := 0
 var bot_orbit := 1.0
+var _arg_godmode := false      # 실행 인자는 _ready 에서 한 번만 읽는다
+var _arg_dbg := false
+var _arg_perflog := false
 
 
 func _ready() -> void:
@@ -35,6 +38,10 @@ func _ready() -> void:
 	Engine.physics_ticks_per_second = 60
 	randomize()
 	_parse_args()
+	var user_args := OS.get_cmdline_user_args()
+	_arg_godmode = user_args.has("--godmode")
+	_arg_dbg = user_args.has("--dbg")
+	_arg_perflog = user_args.has("--perflog")
 	_setup_input()
 	world = Node3D.new()
 	add_child(world)
@@ -115,6 +122,10 @@ func _shaft_lighting() -> void:
 	env.volumetric_fog_length = 70.0
 	env.volumetric_fog_detail_spread = 2.0
 	env.volumetric_fog_ambient_inject = 0.0
+	# 안개 격자 크기는 전역 값이라 앞 씬(심연 성소의 촘촘한 격자)이 남긴 값을 프로젝트 기본값으로 맞춘다
+	RenderingServer.environment_set_volumetric_fog_volume_size(
+		ProjectSettings.get_setting("rendering/environment/volumetric_fog/volume_size", 64),
+		ProjectSettings.get_setting("rendering/environment/volumetric_fog/volume_depth", 64))
 	env.ssao_intensity = 2.0
 	env.ssr_enabled = true
 	env.ssr_max_steps = 40
@@ -317,7 +328,7 @@ func _physics_process(dt: float) -> void:
 		combo_t -= dt
 		if combo_t <= 0.0:
 			combo = 0
-	if OS.get_cmdline_user_args().has("--godmode"):
+	if _arg_godmode:
 		player.invuln = 999.0
 	if boss and boss.alive:
 		boss_loot(boss, boss.boss_hp / Boss.MAX_HP)
@@ -332,9 +343,9 @@ func _physics_process(dt: float) -> void:
 			var a := time * 2.4 + i * 1.6
 			s.look_at(s.global_position + Vector3(cos(a), -0.8, sin(a)), Vector3.UP)
 	_dbg_f += 1
-	if OS.get_cmdline_user_args().has("--dbg") and _dbg_f % 120 == 0:
+	if _arg_dbg and _dbg_f % 120 == 0:
 		print("DBG t=%.1f st=%d pat=%s loc=%s c=%s hidden=%s landed=%s hp=%.0f route=%d enemies=%d webs=%d slow=%.2f" % [time, boss.st, boss.pat, boss.loc.get("s", "?"), str(boss.cur_c.snapped(Vector3.ONE * 0.1)), boss.hidden, boss.landed, boss.boss_hp, boss.route.size(), enemies_left(), stage.webs.size(), player.slow_mul])
-	if OS.get_cmdline_user_args().has("--perflog") and fmod(time, 5.0) < dt:
+	if _arg_perflog and fmod(time, 5.0) < dt:
 		print("PERF t=%.0f fps=%d nodes=%d draw=%d" % [time, Performance.get_monitor(Performance.TIME_FPS), Performance.get_monitor(Performance.OBJECT_NODE_COUNT), Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)])
 
 
@@ -376,10 +387,6 @@ func _process(dt: float) -> void:
 	super._process(dt)
 	if stage:
 		stage.update(dt, camera, player.global_position)
-
-
-func on_enemy_killed(e: Enemy) -> void:
-	super.on_enemy_killed(e)
 
 
 func _drop_loot(e: Enemy) -> void:

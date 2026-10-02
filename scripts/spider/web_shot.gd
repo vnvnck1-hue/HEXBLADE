@@ -8,7 +8,6 @@ var to_p := Vector3.ZERO
 var flight := 0.9
 var height := 4.0
 var patch_r := 2.2
-var strong := 1.0               # 직격 속박 세기
 var glob: MeshInstance3D
 var mark: MeshInstance3D
 var _trail_t := 0.0
@@ -35,7 +34,7 @@ static func make_web(from: Vector3, to: Vector3, flight_t: float, h: float, r :=
 		_mark_mat = StandardMaterial3D.new()
 		_mark_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		_mark_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		_mark_mat.albedo_color = Color(0.7, 0.92, 1.0, 0.0)
+		_mark_mat.albedo_color = Color(0.7, 0.92, 1.0, 1.0)   # 표식마다 진하기는 GeometryInstance3D.transparency 로 (머티리얼 공유)
 		_mark_mat.no_depth_test = false
 		_mark_mesh = QuadMesh.new()
 		_mark_mesh.orientation = PlaneMesh.FACE_Y
@@ -61,13 +60,18 @@ static func make_web(from: Vector3, to: Vector3, flight_t: float, h: float, r :=
 
 
 func _ready() -> void:
-	var m := _mark_mat.duplicate() as StandardMaterial3D
 	mark = MeshInstance3D.new()
 	mark.mesh = _mark_mesh
-	mark.material_override = m
+	mark.material_override = _mark_mat
+	mark.transparency = 1.0
 	mark.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	get_parent().add_child.call_deferred(mark)
 	mark.position = to_p + Vector3(0, 0.06, 0)
+	# 같은 프레임에 덩이가 사라지면 표식은 이미 지워졌을 수 있다 → 붙이기 전에 확인
+	var parent := get_parent()
+	var mk := mark
+	(func():
+		if is_instance_valid(mk) and not mk.is_queued_for_deletion() and is_instance_valid(parent) and parent.is_inside_tree():
+			parent.add_child(mk)).call_deferred()
 
 
 func _physics_process(dt: float) -> void:
@@ -87,7 +91,7 @@ func _physics_process(dt: float) -> void:
 		_trail_t = 0.03
 		FX.sparks(global_position, 1, [Color(0.85, 0.95, 1.0), Color(0.6, 0.75, 0.85)], 0.6, 0.35, -2.0, 0.04)
 	if is_instance_valid(mark):
-		(mark.material_override as StandardMaterial3D).albedo_color.a = 0.08 + k * 0.32
+		mark.transparency = 1.0 - (0.08 + k * 0.32)
 		mark.scale = Vector3.ONE * patch_r * 2.0 * lerpf(0.35, 0.9, k)
 	# 직격: 내려오는 중 플레이어 높이에서 닿으면 감긴다
 	var p := Main.inst.player
@@ -105,7 +109,7 @@ func _land(direct: bool) -> void:
 	if direct:
 		at = Vector3(main.player.global_position.x, 0, main.player.global_position.z)
 		if main.has_method("web_player"):
-			main.call("web_player", strong)
+			main.call("web_player", 1.0)
 	if main.has_method("web_patch") and not main.is_blocked(at + Vector3(0, 0.5, 0)):
 		main.call("web_patch", at, patch_r)
 	FX.flash(at + Vector3(0, 0.3, 0), Color(0.85, 1.0, 1.0), 0.8, 0.07)

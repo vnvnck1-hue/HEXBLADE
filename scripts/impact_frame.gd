@@ -60,6 +60,11 @@ void fragment() {
 """
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 func _ready() -> void:
 	inst = self
 	layer = 9

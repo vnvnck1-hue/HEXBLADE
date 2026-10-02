@@ -98,6 +98,7 @@ func lock() -> void:
 		s.set_instance_shader_parameter("energy", 0.7)
 	var tw := create_tween()
 	tw.tween_property(_light, "light_energy", 0.0, 0.4)
+	tw.tween_callback(_light.hide)        # 꺼진 조명이 장면에 남아 광원 수를 늘리지 않게
 
 
 ## 포탑이 부서짐: 테두리가 꺼진다
@@ -106,3 +107,4 @@ func shut_down() -> void:
 		s.set_instance_shader_parameter("tint", DEAD)
 		s.set_instance_shader_parameter("energy", 0.8)
 	_light.light_energy = 0.0
+	_light.hide()

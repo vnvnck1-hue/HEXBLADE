@@ -12,7 +12,7 @@ const DeathDirector := preload("res://scripts/lab_mammoth_b/mammoth_b_director.g
 signal phase_changed(phase: int)
 signal defeated
 
-enum St { ENTER, FIGHT, TRANSITION, DYING, DEAD }
+enum St { ENTER, FIGHT, TRANSITION, DEAD }
 
 const MAX_HP := 800.0
 const PHASE2_AT := 0.4
@@ -139,8 +139,6 @@ func _physics_process(dt: float) -> void:
 			_update_fight(dt, player)
 		St.TRANSITION:
 			_update_transition(dt)
-		St.DYING:
-			_update_dying(dt)
 	_update_body(dt, player)
 
 
@@ -164,6 +162,9 @@ func _update_fight(dt: float, player: Player) -> void:
 			weak = false
 			bar.weak = false
 	if not player.alive or Main.inst.state != Main.State.PLAY:
+		# 패턴 도중 플레이어가 쓰러지면 경고·어두운 조명·충전 불빛이 남지 않게 한 번 정리한다
+		if pat != "" or shock_t >= 0.0 or not _markers.is_empty():
+			_abort_pattern()
 		return
 	_update_close(dt, player)
 	if pat == "":
@@ -210,31 +211,29 @@ func _update_body(dt: float, player: Player) -> void:
 	wob2_v += (-wob2 * 60.0 - wob2_v * 7.0) * dt
 	wob2 += wob2_v * dt
 	var rumble := sin(t * 37.0) * 0.012 + sin(t * 23.0) * 0.01
-	visual.position.y = absf(sin(t * 18.0)) * 0.05
-	visual.rotation = Vector3(wob2.x + rumble, 0, wob2.y + rumble * 0.6)
-	_update_lift(dt)
+	# 기본 자세는 매 프레임 처음부터 만든다 (들림 변환이 위치를 누적시키지 않게)
+	var base := Transform3D(Basis.from_euler(Vector3(wob2.x + rumble, 0, wob2.y + rumble * 0.6)), Vector3(0, absf(sin(t * 18.0)) * 0.05, 0))
+	_update_lift(dt, base)
 	punch = move_toward(punch, 0.0, dt * 5.0)
 	model.scale = Vector3(1.0 + punch * 0.03, 1.0 - punch * 0.025, 1.0 + punch * 0.03)
 
 	# 포탑은 기본적으로 플레이어를 노린다 (나선·차선 패턴 중에는 느리게)
-	if player and player.alive and st != St.DYING:
+	if player and player.alive:
 		var to := player.global_position - global_position
 		var want := atan2(-to.x, -to.z)
 		var rate := 1.2 if pat in ["spiral", "lanes"] else 3.0
 		if pat == "mega" and ps.get("locked", false):
 			rate = 0.0
 		turret_yaw = lerp_angle(turret_yaw, want, 1.0 - exp(-rate * dt))
-	# 부품이 떨어져 나가는 중(격파)에는 조준·반동을 멈춘다
-	if st != St.DYING:
-		(tank.turret as Node3D).rotation.y = turret_yaw - PI
-		for i in 2:
-			if spons_alive[i]:
-				(tank.sponsons[i] as Node3D).rotation.y = spons_yaw[i] - PI
-				if pat != "gatling":
-					spons_yaw[i] = lerp_angle(spons_yaw[i], turret_yaw, 1.0 - exp(-2.0 * dt))
-		for i in 2:
-			recoil[i] = move_toward(recoil[i], 0.0, dt * 2.5)
-			(tank.cannons[i].pivot as Node3D).position.z = -2.25 + recoil[i] * 0.6
+	(tank.turret as Node3D).rotation.y = turret_yaw - PI
+	for i in 2:
+		if spons_alive[i]:
+			(tank.sponsons[i] as Node3D).rotation.y = spons_yaw[i] - PI
+			if pat != "gatling":
+				spons_yaw[i] = lerp_angle(spons_yaw[i], turret_yaw, 1.0 - exp(-2.0 * dt))
+	for i in 2:
+		recoil[i] = move_toward(recoil[i], 0.0, dt * 2.5)
+		(tank.cannons[i].pivot as Node3D).position.z = -2.25 + recoil[i] * 0.6
 
 	# 배기 연기와 궤도 흙먼지: 도로 속도로 뒤(+Z)로 날려 속도감을 만든다
 	fx_cd -= dt
@@ -665,7 +664,7 @@ func _marker(p: Vector3, r: float, fuse: float) -> void:
 	stage.add_child(mi)
 	mi.global_position = Vector3(p.x, 0.05, p.z)
 	var info := {"type": "circle", "pos": mi.global_position, "r": r}
-	var holder := {"node": mi, "info": info}
+	var holder := {"node": mi, "info": info, "drop": null}
 	_markers.append(holder)
 	var tw := mi.create_tween()
 	tw.tween_method(func(v: float): mi.set_instance_shader_parameter("progress", v), 0.0, 1.0, fuse)
@@ -675,6 +674,7 @@ func _marker(p: Vector3, r: float, fuse: float) -> void:
 		_impact(mi.global_position, r)
 		mi.queue_free())
 	var drop := Pal.flat_mesh(_drop_mesh(), Color("ffb060"), 2.2)
+	holder.drop = drop
 	stage.add_child(drop)
 	drop.global_position = Vector3(p.x, 9.0, p.z)
 	drop.visible = false
@@ -683,6 +683,10 @@ func _marker(p: Vector3, r: float, fuse: float) -> void:
 	dtw.tween_callback(func(): drop.visible = true)
 	dtw.tween_property(drop, "global_position:y", 0.6, 0.18).set_ease(Tween.EASE_IN)
 	dtw.tween_callback(drop.queue_free)
+
+
+## 반지름별 경고 원 메시 (미사일 경고 2.1 · 충격파 9.0 두 가지뿐이라 공유한다)
+static var _ring_quads := {}
 
 
 ## 바닥 원형 경고 메시 (반지름 r). progress 로 안쪽이 차오르고, 3/4 이후 깜빡인다
@@ -706,11 +710,13 @@ void fragment() {
 """
 		_marker_mat = ShaderMaterial.new()
 		_marker_mat.shader = sh
-	var q := QuadMesh.new()
-	q.orientation = PlaneMesh.FACE_Y
-	q.size = Vector2(r * 2.0, r * 2.0)
+	if not _ring_quads.has(r):
+		var q := QuadMesh.new()
+		q.orientation = PlaneMesh.FACE_Y
+		q.size = Vector2(r * 2.0, r * 2.0)
+		_ring_quads[r] = q
 	var mi := MeshInstance3D.new()
-	mi.mesh = q
+	mi.mesh = _ring_quads[r]
 	mi.material_override = _marker_mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.set_instance_shader_parameter("col", col)
@@ -756,7 +762,7 @@ func _guard_burst(player: Player) -> void:
 		FX.flash(p, Color("8ad8ff"), 0.7, 0.25)
 	Sfx.play("echarge", 0.1, -10.0)
 	get_tree().create_timer(0.25, false).timeout.connect(func():
-		if not is_instance_valid(self) or st != St.FIGHT:
+		if not is_instance_valid(self) or st != St.FIGHT or not player.alive or Main.inst.state != Main.State.PLAY:
 			return
 		for i in spots.size():
 			var p: Vector3 = spots[i]
@@ -931,6 +937,13 @@ func _abort_pattern() -> void:
 	_cancel_shock()
 	for g in muzzle_glow:
 		(g as Node3D).scale = Vector3.ONE * 0.01
+	# 떨어지기 전인 미사일: 경고 원과 낙하 줄기를 함께 지운다 (트윈도 노드와 함께 사라져 착탄 판정이 남지 않는다)
+	for h in _markers:
+		if is_instance_valid(h.node):
+			(h.node as Node).queue_free()
+		if is_instance_valid(h.drop):
+			(h.drop as Node).queue_free()
+	_markers.clear()
 
 
 func _clear_bullets() -> void:
@@ -1018,7 +1031,7 @@ func _chunk() -> void:
 	var c: Color = [BossTank.STEEL, BossTank.STEEL_MID, BossTank.STEEL_DARK][randi() % 3]
 	var holder := Node3D.new()
 	stage.add_child(holder)
-	var sz := Vector3(randf_range(0.5, 1.3), randf_range(0.25, 0.6), randf_range(0.5, 1.3))
+	var sz := BossTank.snap_size(Vector3(randf_range(0.5, 1.3), randf_range(0.25, 0.6), randf_range(0.5, 1.3)))
 	BossTank.rbox(holder, sz, 0.12, Vector3.ZERO, c)
 	holder.global_position = model.to_global(Vector3(randf_range(-2.2, 2.2), randf_range(2.2, 3.4), randf_range(-3, 3)))
 	stage.drift(holder, Vector3(randf_range(-7, 7), randf_range(6, 12), randf_range(6, 16)), Vector3(randf(), randf(), randf()).normalized() * randf_range(6, 12), true, 3.5)
@@ -1043,8 +1056,9 @@ func _scorch() -> void:
 	var dark := Color("26222c")
 	var spots := [Vector3(1.2, 2.93, 0.8), Vector3(-0.8, 2.93, 1.9), Vector3(1.5, 2.2, -3.2), Vector3(-1.4, 1.6, -3.55)]
 	for p in spots:
-		BossTank.rbox(tank.hull, Vector3(randf_range(0.7, 1.2), 0.08, randf_range(0.6, 1.1)), 0.04, p, dark)
-		BossTank.glow(tank.hull, Vector3(randf_range(0.3, 0.6), 0.1, 0.06), p + Vector3(0, 0.04, 0), Color("ff7a30"), 2.0, Vector3(0, randf_range(0, 180), 0))
+		# 크기는 0.1m 격자로 맞춘다 (BossTank 메시 캐시 키가 무한히 늘지 않게)
+		BossTank.rbox(tank.hull, Vector3(snappedf(randf_range(0.7, 1.2), 0.1), 0.08, snappedf(randf_range(0.6, 1.1), 0.1)), 0.04, p, dark)
+		BossTank.glow(tank.hull, Vector3(snappedf(randf_range(0.3, 0.6), 0.1), 0.1, 0.06), p + Vector3(0, 0.04, 0), Color("ff7a30"), 2.0, Vector3(0, randf_range(0, 180), 0))
 	for p in [Vector3(-1.2, 1.2, -0.6), Vector3(0.9, 1.5, 0.9)]:
 		BossTank.rbox(tank.turret, Vector3(0.9, 0.5, 0.08), 0.04, p + Vector3(0, 0, -1.95), dark)
 
@@ -1055,7 +1069,7 @@ func _begin_dying() -> void:
 	_abort_pattern()
 	_clear_bullets()
 	# 판정 기준 격파는 여기서 끝난다. 남은 화면은 죽음 연출(B안 궤도 파손과 전복) 감독이 소유하고,
-	# 감독이 끝나면 defeated 를 보낸다. 예전 연쇄 폭발(_update_dying · _final_blast)은 쓰지 않는다.
+	# 감독이 끝나면 defeated 를 보낸다.
 	st = St.DEAD
 	st_t = 0.0
 	alive = false
@@ -1081,63 +1095,6 @@ func _begin_dying() -> void:
 ## 죽음 연출이 시작됐는가 (진행 중이거나 끝남). boss_main.gd 가 입력 잠금 · 전장 경계에 쓴다
 func death_started() -> bool:
 	return death_fx != null and is_instance_valid(death_fx) and (death_fx.active or death_fx.done)
-
-
-## 예전 격파 연출 (연쇄 폭발 3초 → 대폭발). 죽음 연출 감독으로 바뀌어 지금은 쓰지 않는다
-func _update_dying(dt: float) -> void:
-	ps.cd = float(ps.cd) - dt
-	var k := clampf(st_t / 3.0, 0.0, 1.0)
-	if ps.cd <= 0.0 and st_t < 3.0:
-		ps.cd = lerpf(0.22, 0.06, k)
-		var p := model.to_global(Vector3(randf_range(-3, 3), randf_range(0.8, 4.5), randf_range(-3.5, 3.5)))
-		FX.enemy_explosion(p, randf_range(0.9, 1.6))
-		Sfx.play("boom", 0.2, -2.0)
-		Main.inst.shake(0.3)
-		wob2_v += Vector2(randf_range(-1, 1), randf_range(-1, 1)) * 1.5
-		if randf() < 0.5:
-			_chunk()
-	# 속도를 잃고 조금씩 뒤로 처진다 (플레이어 쪽으로 밀려옴)
-	global_position.z = lerpf(global_position.z, BASE_Z + 1.5, 1.0 - exp(-0.8 * dt))
-	visual.position.y -= k * 0.4 * dt
-	var s: int = ps.step
-	var marks := [0.8, 1.6, 2.3]
-	if s < marks.size() and st_t >= marks[s]:
-		ps.step = s + 1
-		match s:
-			0:
-				if spons_alive[1]:
-					_break_off(tank.sponsons[1], Vector3(6, 9, 14))
-					spons_alive[1] = false
-			1:
-				_break_off(tank.missile_pods[0], Vector3(-5, 10, 12))
-			2:
-				for i in 2:
-					_break_off(tank.cannons[i].pivot, Vector3(randf_range(-6, 6), 10, 16))
-	if st_t >= 3.0 and st == St.DYING:
-		st = St.DEAD
-		_final_blast()
-
-
-func _final_blast() -> void:
-	var c := model.to_global(Vector3(0, 2.2, 0))
-	for i in 5:
-		var off := Vector3(randf_range(-2.5, 2.5), randf_range(0, 2), randf_range(-2.5, 2.5))
-		FX.enemy_explosion(c + off, 3.0)
-	FX.ring(Vector3(c.x, 0.3, c.z), 22.0, Pal.RING_ORANGE, 0.8)
-	FX.shockwave(Vector3(c.x, 0.2, c.z), Color("ffd060"), 18.0, 0.6, 0.2)
-	Main.inst.hud.screen_flash(Color.WHITE, 1.0)
-	Main.inst.hitstop(0.25)
-	Main.inst.shake(1.0)
-	Sfx.play("boom", 0.0, 6.0)
-	# 포탑과 궤도가 사방으로 튀고 나머지는 사라진다
-	_break_off(tank.turret, Vector3(0, 16, 10))
-	for tr in tank.treads:
-		_break_off(tr, Vector3(signf((tr as Node3D).global_position.x) * 8, 7, 18))
-	for i in 10:
-		_chunk()
-	visual.visible = false
-	shadow.visible = false
-	defeated.emit()
 
 
 # ── 연출: 착탄 위치 · 레이저 피격 들림 ─────────────────
@@ -1196,12 +1153,13 @@ func _laser_lift(dmg: int, dir: Vector3) -> void:
 		Sfx.play("clank", 0.1, -4.0 + 4.0 * k)
 
 
-func _update_lift(dt: float) -> void:
-	var landed: Variant = lift.step(dt)
-	visual.transform = lift.compose() * visual.transform
-	if landed != null and stage:
+## base: 이번 프레임의 기본 흔들림 자세. 들림 변환은 그 위에 한 번만 곱한다
+func _update_lift(dt: float, base: Transform3D) -> void:
+	var touch: Variant = lift.step(dt)
+	visual.transform = lift.compose() * base
+	if touch != null and stage:
 		# 들렸던 모서리가 도로를 다시 찍는다
-		var e: Vector2 = landed
+		var e: Vector2 = touch
 		var p := to_global(Vector3(e.x, 0.15, e.y))
 		FX.sparks(p, 16, [Color.WHITE, Color("ffd060"), Color("ff7a30")], 9.0, 0.3, -14.0, 0.08)
 		for i in 3:

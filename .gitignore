@@ -22,3 +22,12 @@ output/models/*/compare_colour.png
 # Python 캐시 (Blender 빌드가 tools/blender 모듈을 불러올 때 생김)
 __pycache__/
 *.pyc
+
+# 필드 기믹 캡처 프레임 덤프
+output/gimmicks-20261002/frames/
+
+# 벌레 적 애니메이션 캡처 프레임 (최종 시트/GIF만 보존)
+output/insects-20261002/*_frames/
+
+# 메카 플레이어 동작 캡처 프레임 (show_*.png 만 보존)
+output/mech-player-20261002/act/

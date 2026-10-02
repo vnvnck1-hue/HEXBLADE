@@ -170,7 +170,7 @@ func _update_drifters(dt: float) -> void:
 		var e: Array = drifters[i]
 		var n: Node3D = e[0]
 		if not is_instance_valid(n):
-			drifters.remove_at(i)
+			_swap_remove(drifters, i)
 			continue
 		var v: Vector3 = e[1]
 		if e[3]:
@@ -191,7 +191,16 @@ func _update_drifters(dt: float) -> void:
 		e[4] -= dt
 		if e[4] <= 0.0 or n.global_position.z > NEAR_Z + 10.0:
 			n.queue_free()
-			drifters.remove_at(i)
+			_swap_remove(drifters, i)
+
+
+## 순서가 상관없는 목록에서 i 번째를 마지막 원소로 덮어 지운다 (remove_at 의 당김 비용 없이).
+## 뒤에서 앞으로 도는 반복 안에서만 쓴다: 옮겨 오는 마지막 원소는 이미 이번 프레임에 처리됐다.
+static func _swap_remove(arr: Array, i: int) -> void:
+	var last := arr.size() - 1
+	if i != last:
+		arr[i] = arr[last]
+	arr.resize(last)
 
 
 ## 도로 속도로 뒤로 날리는 연기 (가장자리가 부드러운 반투명 구체, 점점 옅어지며 사라진다)

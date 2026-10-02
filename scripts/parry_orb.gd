@@ -72,7 +72,8 @@ func _ready() -> void:
 	light.light_energy = 1.6
 	light.omni_range = 3.2
 	add_child(light)
-	Parry.inst.register(self)
+	if Parry.inst:
+		Parry.inst.register(self)
 
 
 func _exit_tree() -> void:
@@ -182,7 +183,8 @@ func parry_window_open() -> void:
 func parry_hit(p: Player) -> void:
 	reflected = true
 	life = 2.5
-	Parry.inst.unregister(self)
+	if Parry.inst:
+		Parry.inst.unregister(self)
 	remove_from_group("parry_orbs")
 	var target := _target()
 	var d: Vector3

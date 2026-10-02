@@ -46,10 +46,6 @@ const CR_METAL_DARK := Color("2a2b32")
 const CR_EYE := Color("3d8cff")
 
 const E_BULLETS:Array[Color] = [Color("ff2a1c"), Color("ff6a12"), Color("ffae10"), Color("ffe83a")]
-const P_BULLET := Color("d8fbff")
-## 소총 예광탄: 흰 노랑 심 · 주황 광채
-const TRACER_CORE := Color("fff6c0")
-const TRACER_GLOW := Color("ffae1e")
 
 const RING_ORANGE: Array[Color] = [Color("ff8a2a"), Color("f0601c"), Color("ffe21a")]
 const RING_PINK: Array[Color] = [Color("ff3a8c"), Color("d81a6a"), Color("ff1030")]

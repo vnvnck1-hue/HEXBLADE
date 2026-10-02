@@ -2,7 +2,8 @@ class_name MegaBeam
 extends Node3D
 ## 최대 충전 지속 레이저 연출. 매 프레임 set_beam(origin, dir, length) 로 갱신한다.
 ## 초고속으로 흐르는 줄무늬 빔 + 빔을 따라 쏜살같이 지나가는 속도선 + 총구 역풍 줄기
-## + 빔 경로를 따라 놓인 강한 조명(총구 조명은 그림자). 판정과 무관.
+## + 빔 경로를 따라 놓인 강한 조명. 판정과 무관.
+## 속도선·역풍 줄기·링은 노드를 지우지 않고 숨겨 두었다가 다시 쓴다 (초당 수백 개라 생성 비용이 크다).
 
 const W := 1.15
 const STREAK_SPEED := 110.0
@@ -25,6 +26,10 @@ var streak_t := 0.0
 var gust_t := 0.0
 var flowing: Array = []   # [node, dist, speed]
 var streaks: Array = []   # [node, dist, radius, angle]
+var gusts: Array = []     # [node, from, to, scale, age]
+var _pool_streak: Array[MeshInstance3D] = []
+var _pool_ring: Array[MeshInstance3D] = []
+var _pool_gust: Array[MeshInstance3D] = []   # 기울어진 basis 를 가지므로 속도선과 따로 둔다
 var snd: AudioStreamPlayer
 var trail: BeamTrail   # 끝점이 지나간 바닥 궤적 잔상 (빔보다 오래 남는다)
 
@@ -96,13 +101,12 @@ void fragment() {
 	add_child(tip)
 	muzzle_orb = Pal.flat_mesh(_sphere, Color(0.8, 1.0, 1.0), 2.8)
 	add_child(muzzle_orb)
-	# 총구 조명: 그림자를 드리워 주변 사물이 빔에 비친다
+	# 총구 조명 (매 프레임 움직이는 점광원 그림자는 6면을 다시 그려서 비싸 그림자는 끈다)
 	light = OmniLight3D.new()
 	light.light_color = Color(0.45, 0.9, 1.0)
 	light.light_energy = 14.0
 	light.omni_range = 11.0
 	light.omni_attenuation = 1.2
-	light.shadow_enabled = true
 	add_child(light)
 	for i in 3:
 		var l := OmniLight3D.new()
@@ -123,7 +127,7 @@ void fragment() {
 			trail.finish())
 	snd = AudioStreamPlayer.new()
 	add_child(snd)
-	if not Sfx.inst.muted:
+	if is_instance_valid(Sfx.inst) and not Sfx.inst.muted:
 		snd.stream = Sfx.inst.streams.beam
 		snd.volume_db = -4.0
 		snd.play()
@@ -164,7 +168,7 @@ func _process(dt: float) -> void:
 		mi.scale = Vector3(w, length, w)
 		mi.position = Vector3(0, 0, -length * 0.5)
 		(mi.material_override as ShaderMaterial).set_shader_parameter("reps", length / 1.6)
-	floor_glow.position = Vector3(0, 0.03 - global_position.y, -length * 0.5)
+	floor_glow.position = Vector3(0, Main.gy(global_position) + 0.03 - global_position.y, -length * 0.5)
 	floor_glow.scale = Vector3(W * 1.6 * fade, 1, length)
 	tip.position = Vector3(0, 0, -length)
 	tip.scale = Vector3.ONE * (1.7 + sin(t * 60.0) * 0.35) * fade
@@ -177,6 +181,7 @@ func _process(dt: float) -> void:
 		path_lights[i].light_energy = 7.0 * fade * flick
 	tip_light.position = tip.position
 	tip_light.light_energy = 12.0 * fade * flick
+	_update_gusts(dt)
 	if ending:
 		return
 	var end := global_position + dir * length
@@ -190,8 +195,7 @@ func _process(dt: float) -> void:
 	streak_t -= dt
 	while streak_t <= 0.0:
 		streak_t += 0.008
-		var s := Pal.flat_mesh(_streak, Color.WHITE if randf() < 0.6 else Color("9af4ff"), 2.4)
-		add_child(s)
+		var s := _take(_pool_streak, _streak, Color.WHITE if randf() < 0.6 else Color("9af4ff"), 2.4)
 		var ang := randf() * TAU
 		var rad := W * randf_range(0.35, 0.95)
 		streaks.append([s, randf_range(0.0, 1.5), rad, ang, randf_range(1.5, 4.5)])
@@ -201,7 +205,7 @@ func _process(dt: float) -> void:
 		var node := st[0] as MeshInstance3D
 		st[1] += STREAK_SPEED * dt
 		if st[1] - st[4] > length:
-			node.queue_free()
+			_give(_pool_streak, node)
 			streaks.remove_at(i)
 		else:
 			var a: float = st[3]
@@ -216,23 +220,18 @@ func _process(dt: float) -> void:
 	if gust_t <= 0.0:
 		gust_t = 0.03
 		for k in 2:
-			var g := Pal.flat_mesh(_streak, Color(0.8, 1.0, 1.0), 1.8)
-			add_child(g)
+			var g := _take(_pool_gust, _streak, Color(0.8, 1.0, 1.0), 1.8)
 			var ga := randf() * TAU
 			var off := Vector3(cos(ga), sin(ga) * 0.6, 0) * randf_range(0.5, 1.2)
 			g.position = off + Vector3(0, 0, 0.3)
 			g.basis = Basis.looking_at(Vector3(off.x * 0.6, off.y * 0.6, 1.0).normalized(), Vector3.UP)
 			g.scale = Vector3(1, 1, randf_range(0.8, 1.6))
-			var tw := g.create_tween()
-			tw.tween_property(g, "position", g.position + Vector3(off.x * 1.5, off.y * 1.5, 3.5), 0.12)
-			tw.parallel().tween_property(g, "scale", Vector3(0.2, 0.2, 0.1), 0.12)
-			tw.tween_callback(g.queue_free)
+			gusts.append([g, g.position, g.position + Vector3(off.x * 1.5, off.y * 1.5, 3.5), g.scale, 0.0])
 	# 빔을 따라 바깥으로 흘러가는 링 (고속)
 	ring_t -= dt
 	if ring_t <= 0.0:
 		ring_t = 0.045
-		var ring := Pal.flat_mesh(_torus, Pal.CYAN if randf() < 0.6 else Color("b8a0ff"), 1.8)
-		add_child(ring)
+		var ring := _take(_pool_ring, _torus, Pal.CYAN if randf() < 0.6 else Color("b8a0ff"), 1.8)
 		flowing.append([ring, 0.4])
 	i = flowing.size() - 1
 	while i >= 0:
@@ -240,7 +239,7 @@ func _process(dt: float) -> void:
 		var ring := f[0] as MeshInstance3D
 		f[1] += dt * 60.0
 		if f[1] > length:
-			ring.queue_free()
+			_give(_pool_ring, ring)
 			flowing.remove_at(i)
 		else:
 			ring.position = Vector3(0, 0, -f[1])
@@ -249,3 +248,38 @@ func _process(dt: float) -> void:
 		i -= 1
 	if fmod(t, 0.25) < dt:
 		FX.shockwave(global_position, Pal.CYAN, 2.0, 0.22, 0.05)
+
+
+## 역풍 줄기: 0.12초 동안 밖으로 밀려나며 줄어든다 (예전 Tween 과 같은 선형 보간, 끝나는 중에도 마저 움직인다)
+func _update_gusts(dt: float) -> void:
+	var i := gusts.size() - 1
+	while i >= 0:
+		var gu: Array = gusts[i]
+		var g := gu[0] as MeshInstance3D
+		gu[4] += dt / 0.12
+		if gu[4] >= 1.0:
+			_give(_pool_gust, g)
+			gusts.remove_at(i)
+		else:
+			var gk: float = gu[4]
+			g.position = (gu[1] as Vector3).lerp(gu[2], gk)
+			g.scale = (gu[3] as Vector3).lerp(Vector3(0.2, 0.2, 0.1), gk)
+		i -= 1
+
+
+## 숨겨 둔 노드를 꺼내 색을 다시 칠한다 (없으면 새로 만든다)
+func _take(pool: Array[MeshInstance3D], mesh: Mesh, c: Color, energy: float) -> MeshInstance3D:
+	if pool.is_empty():
+		var mi := Pal.flat_mesh(mesh, c, energy)
+		add_child(mi)
+		return mi
+	var n: MeshInstance3D = pool.pop_back()
+	n.set_instance_shader_parameter("tint", c)
+	n.set_instance_shader_parameter("energy", energy)
+	n.visible = true
+	return n
+
+
+func _give(pool: Array[MeshInstance3D], n: MeshInstance3D) -> void:
+	n.visible = false
+	pool.append(n)

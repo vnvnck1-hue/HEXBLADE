@@ -147,6 +147,9 @@ var tile_mat: ShaderMaterial
 var void_mat: ShaderMaterial
 var props: Node3D
 var t := 0.0
+var vent_rev := 0                    # 분출구 목록이 바뀔 때마다 1씩 오른다 (함정 쪽이 다시 읽을지 판단)
+var _vent_cache: Array[Vector2i] = []
+var _vent_dirty := true              # 판이 움직이는 동안만 분출구 목록을 다시 센다
 var shift_t := 0.0                    # 지금 진행 중인 전장 변화의 남은 시간
 var _box: BoxMesh
 var _rubble: Array = []               # [node, vel, spin, life]
@@ -545,21 +548,18 @@ func edge_spots() -> Array:
 	return out
 
 
+## 지금 디딜 수 있는 분출구 칸 (읽기 전용 — 판이 움직일 때만 다시 센다)
 func vent_cells() -> Array[Vector2i]:
-	var out: Array[Vector2i] = []
-	for tl in tiles:
-		if tl.kind == K.VENT and tl.walk:
-			out.append(Vector2i(tl.i, tl.j))
-	return out
-
-
-## 전장의 바깥 경계 반경 (칸 중심 기준 최대 거리 + 반 칸)
-func extent() -> float:
-	var m := 0.0
-	for tl in tiles:
-		if tl.walk:
-			m = maxf(m, cell_center(Vector2i(tl.i, tl.j)).length())
-	return m + TILE * 0.5
+	if _vent_dirty:
+		_vent_dirty = false
+		var out: Array[Vector2i] = []
+		for tl in tiles:
+			if tl.kind == K.VENT and tl.walk:
+				out.append(Vector2i(tl.i, tl.j))
+		if out != _vent_cache:
+			_vent_cache = out
+			vent_rev += 1
+	return _vent_cache
 
 
 # ── 전장 변화 ───────────────────────────────────────────
@@ -576,6 +576,7 @@ static func _kind_of(ch: String) -> int:
 ## 새로 생길 판은 심연에서 가운데부터 바깥으로 차례로 솟아오른다. instant 면 곧바로 놓는다.
 func apply_layout(name: String, warn_time := 1.3, instant := false) -> float:
 	layout = name
+	_vent_dirty = true
 	var rows: Array = LAYOUTS[name]
 	var longest := 0.0
 	for tl in tiles:
@@ -654,6 +655,7 @@ func _update_tiles(dt: float) -> void:
 	for tl in tiles:
 		if not tl.moving:
 			continue
+		_vent_dirty = true
 		var node := tl.node as Node3D
 		var mi := tl.mi as MeshInstance3D
 		var target: float = tl.target

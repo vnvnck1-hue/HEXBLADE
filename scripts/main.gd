@@ -27,6 +27,8 @@ const DROP_ENERGY := 0.18
 const BOSS_LOOT_STEP := 0.1      # 보스 체력이 이만큼 깎일 때마다 미사일 하나를 흘린다
 
 static var inst: Main
+## 실행 인자는 바뀌지 않으므로 한 번만 읽어 둔다 (OS.get_cmdline_user_args 는 부를 때마다 배열을 새로 만든다)
+static var cmd_args := OS.get_cmdline_user_args()
 
 var state := State.PLAY
 var player: Player
@@ -58,7 +60,6 @@ var best_combo := 0
 var score := 0
 var slowmo := 1.0
 var _cam_us := 0
-var bot_lock_t := 0.0
 var kills := 0
 var time := 0.0
 var hitstop_until := 0
@@ -101,6 +102,11 @@ var _show_step := 0
 var _show_aim := Vector3(2.2, 0.95, 0.4)
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 func _ready() -> void:
 	inst = self
 	Engine.time_scale = 1.0
@@ -137,6 +143,7 @@ func _ready() -> void:
 
 	hud = Hud.new()
 	add_child(hud)
+	Gimmicks.attach(self)          # 필드 기믹: 연기 구역 · 레일 · 가스통 · 수리키트 해치
 	var impact := ImpactFrame.new()
 	impact.enabled = not OS.get_cmdline_user_args().has("--noimpact")
 	add_child(impact)
@@ -195,7 +202,7 @@ func _setup_input() -> void:
 	var keys := {
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
-		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_E, KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "reload": [KEY_T], "camera": [KEY_C], "cam_preset": [KEY_V],
+		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_F], "rush_skill": [KEY_E], "interact": [KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "reload": [KEY_T], "camera": [KEY_C], "cam_preset": [KEY_V],
 		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I], "toon": [KEY_O], "lens": [KEY_L],
 	}
 	for action in keys:
@@ -647,7 +654,10 @@ func _physics_process(dt: float) -> void:
 			map.rooms[rid].visited = true
 	if state == State.PLAY and active_room >= 0 and spawn_queue.size() > 0:
 		spawn_timer -= dt
-		var alive := get_tree().get_nodes_in_group("enemies").size() + pending_spawns
+		var alive := pending_spawns
+		for e in get_tree().get_nodes_in_group("enemies"):
+			if not e.get("prop"):
+				alive += 1
 		if spawn_timer <= 0.0 and alive < max_alive():
 			spawn_timer = 0.5
 			_spawn(spawn_queue.pop_front())
@@ -753,7 +763,7 @@ var _p2_at := -1.0
 func _fast_kill(boss_node: Node, in_p2: bool) -> void:
 	if boss_node == null or not in_p2:
 		return
-	for a in OS.get_cmdline_user_args():
+	for a in cmd_args:
 		if a.begins_with("--fastkill="):
 			if _p2_at < 0.0:
 				_p2_at = time
@@ -882,7 +892,7 @@ func _process(dt: float) -> void:
 func _update_camera(dt: float) -> void:
 	if camera == null:
 		return
-	if OS.get_cmdline_user_args().has("--overview"):
+	if cmd_args.has("--overview"):
 		# 검증용: 맵 전체를 위에서 비스듬히 내려다본다
 		camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 		camera.size = 118.0
@@ -901,7 +911,7 @@ func _update_camera(dt: float) -> void:
 
 func _capture() -> void:
 	capture_frame += 1
-	if OS.get_cmdline_user_args().has("--camlog"):
+	if cmd_args.has("--camlog"):
 		print("CAM %.4f %.4f %.4f %.3f" % [camera.global_position.x, camera.global_position.y, camera.global_position.z, Engine.time_scale])
 	if capture_dir != "" and capture_frame % capture_every == 0 and time > 0.3:
 		if crawler_show and is_instance_valid(_show_crawler):
@@ -974,7 +984,7 @@ func bot_input(p: Player) -> Dictionary:
 			if dd < bd2:
 				bd2 = dd
 				out.aim = (e as Node3D).global_position + Vector3(0, 0.95, 0)
-		var th := Parry.inst.best_threat()
+		var th: Object = Parry.inst.best_threat() if Parry.inst else null
 		out.dash = th != null and th.parry_eta() < Parry.EARLY * 0.5
 		return out
 	if rush_show:
@@ -1063,7 +1073,7 @@ func bot_input(p: Player) -> Dictionary:
 	var bd := 1e9
 	for e in get_tree().get_nodes_in_group("enemies"):
 		var en := e as Enemy
-		if not en.landed:
+		if not en.landed or en.prop:
 			continue
 		var d := en.global_position.distance_to(p.global_position)
 		if d < bd:
@@ -1180,7 +1190,7 @@ func _bot_explore(p: Player, out: Dictionary) -> Vector3:
 		bot_path.clear()
 		if target >= 0:
 			bot_path = map.find_path(p.global_position, map.room_center_world(target))
-	if OS.get_cmdline_user_args().has("--dbg") and fmod(time, 1.0) < 0.02:
+	if cmd_args.has("--dbg") and fmod(time, 1.0) < 0.02:
 		var rr := map.room_at(p.global_position)
 		print("DBG t=%.1f pos=%s path=%d room=%d state=%s act=%d gs=%d" % [time, p.global_position, bot_path.size(), rr, map.rooms[rr].state if rr >= 0 else "-", active_room, state])
 	# 가까운 경유점은 건너뛴다

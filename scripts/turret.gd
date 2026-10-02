@@ -114,7 +114,7 @@ func _ai(dt: float) -> void:
 	to_p.y = 0
 	var dist := to_p.length()
 	var dir := to_p / maxf(dist, 0.001)
-	var active := player.alive and Main.inst.state == Main.State.PLAY
+	var active := player.alive and not player.hidden and Main.inst.state == Main.State.PLAY
 
 	# 포탑은 밀려나지 않는다 (피격 반동은 흔들림으로만)
 	knock = Vector3.ZERO

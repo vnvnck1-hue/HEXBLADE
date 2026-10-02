@@ -7,7 +7,6 @@ const HUG := 0.45
 const HIT_DY := 1.35
 
 static var _e_mesh: SphereMesh
-static var _e_core: SphereMesh
 
 var vel := Vector3.ZERO
 var life := 2.0
@@ -117,7 +116,9 @@ func _physics_process(dt: float) -> void:
 			return
 		var best: Enemy = null
 		var best_t := 1e9
-		for e in get_tree().get_nodes_in_group("enemies"):
+		for e in Enemy.live(get_tree()):
+			if not is_instance_valid(e):
+				continue
 			var en := e as Enemy
 			if not en.alive or not en.landed:
 				continue

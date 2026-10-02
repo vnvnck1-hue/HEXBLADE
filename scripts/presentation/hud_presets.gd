@@ -49,6 +49,8 @@ var msl_pop := 0.0
 var mag_prev := -1
 var dash_ready_pop := 0.0
 var dash_was_ready := true
+var skill_ready_pop := 0.0
+var skill_was_ready := true
 var cockpit_a := {"hp": 0.4, "boost": 0.0, "dash": 0.0, "en": 0.4}
 
 
@@ -92,6 +94,11 @@ func _process(dt: float) -> void:
 		dash_ready_pop = 1.0
 	dash_was_ready = ready
 	dash_ready_pop = maxf(0.0, dash_ready_pop - rdt * 3.5)
+	var sready := p.tech == null or p.tech.skill_ready()
+	if sready and not skill_was_ready:
+		skill_ready_pop = 1.0
+	skill_was_ready = sready
+	skill_ready_pop = maxf(0.0, skill_ready_pop - rdt * 3.5)
 	_cockpit_fade(p, rdt)
 	queue_redraw()
 
@@ -302,6 +309,12 @@ func _draw_striker(m: Main, p: Player) -> void:
 	_dash_icon(dc, Pal.CYAN if ready else Color(0.4, 0.5, 0.7))
 	_keycap(dc + Vector2(-22, 26), "Space")
 
+	# 돌진 스킬 E (쿨다운 부채꼴 · 남은 초)
+	if p.tech:
+		var skc := base + Vector2(-152, -58)
+		_rush_skill(skc, 28, p)
+		_keycap(skc + Vector2(-8, 22), "E")
+
 	# 충전 레이저 (에너지 칸 = 둘레 호 3조각, 충전 중이면 안쪽에 단계 색)
 	var lc := base + Vector2(-70, -94)
 	_skill_energy(lc, 34, p)
@@ -321,6 +334,28 @@ func _draw_striker(m: Main, p: Player) -> void:
 
 	# 기본 총: 탄창 막대 (회피 버튼 왼쪽)
 	_ammo_strip(Vector2(base.x - 330, base.y + 34), 170, p, true)
+
+
+func _rush_skill(c: Vector2, r: float, p: Player) -> void:
+	var col := BladeTech.SKILL_COL
+	var cd := p.tech.skill_cd
+	var ready := cd <= 0.0
+	draw_circle(c, r, Color(0.03, 0.03, 0.1, 0.78))
+	if not ready:
+		_pie(c, r - 2, 1.0 - cd / BladeTech.SKILL_CD, Color(col, 0.25))
+	var aiming := p.tech.skill_aiming()
+	draw_arc(c, r + skill_ready_pop * 8.0, 0, TAU, 40, Color(col, 0.9 if ready else 0.3), 2.5 + skill_ready_pop * 2.0, true)
+	if aiming:
+		draw_arc(c, r + 6, 0, TAU, 40, Color(col, 0.6 + 0.4 * sin(t * 20.0)), 2.0, true)
+	# 아이콘: 앞으로 찌르는 화살 + 뒤로 끌리는 속도선
+	var ic := col if ready else Color(0.35, 0.5, 0.5)
+	draw_line(c + Vector2(-12, 0), c + Vector2(10, 0), ic, 4.0, true)
+	draw_colored_polygon(PackedVector2Array([c + Vector2(16, 0), c + Vector2(6, -8), c + Vector2(6, 8)]), ic)
+	for i in 2:
+		var y := -7.0 + i * 14.0
+		draw_line(c + Vector2(-16, y), c + Vector2(-6, y), Color(ic, 0.6), 2.0, true)
+	if not ready:
+		_txt(c + Vector2(0, 6), "%.1f" % cd, 15, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 4, 0)
 
 
 func _skill_energy(c: Vector2, r: float, p: Player) -> void:

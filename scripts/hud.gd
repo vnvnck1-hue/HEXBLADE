@@ -30,7 +30,6 @@ var combo_sub: Label
 var combo_bar: ProgressBar
 var score_label: Label
 var gain_label: Label
-var combo_shown := 0
 var ult_overlay: ColorRect
 var ult_header: Label
 var ult_timer: ProgressBar
@@ -423,7 +422,10 @@ func _draw_minimap() -> void:
 		var c := Vector2(p.x / ArenaMap.CELL + ArenaMap.W * 0.5, p.z / ArenaMap.CELL + ArenaMap.H * 0.5)
 		return c * k
 	for e in get_tree().get_nodes_in_group("enemies"):
-		minimap.draw_circle(to_map.call((e as Node3D).global_position), 2.2, Color(1, 0.35, 0.45))
+		if e.get("prop"):
+			minimap.draw_circle(to_map.call((e as Node3D).global_position), 1.6, Color(1, 0.65, 0.2))
+		else:
+			minimap.draw_circle(to_map.call((e as Node3D).global_position), 2.2, Color(1, 0.35, 0.45))
 	if m.player:
 		var pp: Vector2 = to_map.call(m.player.global_position)
 		var ad := Vector2(m.player.aim_dir.x, m.player.aim_dir.z)
@@ -449,44 +451,45 @@ func _process(_dt: float) -> void:
 	if m == null or m.player == null:
 		return
 	var p := m.player
-	if hp_shown != p.hp:
-		hp_shown = p.hp
-		for c in hp_box.get_children():
-			c.queue_free()
-		for i in Player.MAX_HP:
-			var r := ColorRect.new()
-			r.custom_minimum_size = Vector2(26, 12)
-			r.color = Pal.P_LIGHT if i < p.hp else Color(0.18, 0.16, 0.3)
-			hp_box.add_child(r)
-	dash_bar.value = 1.0 - p.dash_cd / Player.DASH_CD
-	(dash_bar.get_theme_stylebox("fill") as StyleBoxFlat).bg_color = Pal.CYAN if p.dash_cd <= 0.0 else Color(0.3, 0.45, 0.7)
-	boost_bar.value = p.boost
-	var bf := boost_bar.get_theme_stylebox("fill") as StyleBoxFlat
-	if p.overheated:
-		bf.bg_color = Color("ff3a5a") if fmod(m.time, 0.3) < 0.15 else Color("802040")
-		boost_label.text = "BOOST  OVERHEAT"
-	else:
-		bf.bg_color = Color("ffd060") if p.boosting else Color("ffb040")
-		boost_label.text = "BOOST  [Shift]"
-	if p.reload_t > 0.0:
-		ammo_bar.value = p.reload_k()
-		ammo_label.text = "AMMO  RELOADING…"
-		ammo_label.modulate = Color("ffd070") if fmod(m.time, 0.3) < 0.15 else Color.WHITE
-	else:
-		ammo_bar.value = float(p.mag) / Player.MAG_SIZE
-		ammo_label.text = "AMMO  %d / %d  [T]" % [p.mag, Player.MAG_SIZE]
-		ammo_label.modulate = Color("ff8a8a") if p.mag <= 5 else Color.WHITE
-	(ammo_bar.get_theme_stylebox("fill") as StyleBoxFlat).bg_color = Color("ffa040") if p.reload_t > 0.0 else Color("ffe070")
-	laser_bar.value = p.charge if p.charging else (0.0 if p.laser_cd > 0.0 else 1.0)
-	var stage_c: Color = ChargeFX.STAGE_COLORS[mini(p.charge_stage, 3)]
-	(laser_bar.get_theme_stylebox("fill") as StyleBoxFlat).bg_color = stage_c if p.charging else Color(0.4, 0.5, 0.8)
+	# 기존 세로 나열은 LEGACY 에서만 보인다 (다른 프리셋에서는 투명이라 갱신하지 않는다. 돌아오면 그 프레임에 바로 채운다)
+	if HudPresets.current == HudPresets.LEGACY:
+		if hp_shown != p.hp:
+			hp_shown = p.hp
+			for c in hp_box.get_children():
+				c.queue_free()
+			for i in Player.MAX_HP:
+				var r := ColorRect.new()
+				r.custom_minimum_size = Vector2(26, 12)
+				r.color = Pal.P_LIGHT if i < p.hp else Color(0.18, 0.16, 0.3)
+				hp_box.add_child(r)
+		dash_bar.value = 1.0 - p.dash_cd / Player.DASH_CD
+		_fill(dash_bar, Pal.CYAN if p.dash_cd <= 0.0 else Color(0.3, 0.45, 0.7))
+		boost_bar.value = p.boost
+		if p.overheated:
+			_fill(boost_bar, Color("ff3a5a") if fmod(m.time, 0.3) < 0.15 else Color("802040"))
+			boost_label.text = "BOOST  OVERHEAT"
+		else:
+			_fill(boost_bar, Color("ffd060") if p.boosting else Color("ffb040"))
+			boost_label.text = "BOOST  [Shift]"
+		if p.reload_t > 0.0:
+			ammo_bar.value = p.reload_k()
+			ammo_label.text = "AMMO  RELOADING…"
+			ammo_label.modulate = Color("ffd070") if fmod(m.time, 0.3) < 0.15 else Color.WHITE
+		else:
+			ammo_bar.value = float(p.mag) / Player.MAG_SIZE
+			ammo_label.text = "AMMO  %d / %d  [T]" % [p.mag, Player.MAG_SIZE]
+			ammo_label.modulate = Color("ff8a8a") if p.mag <= 5 else Color.WHITE
+		_fill(ammo_bar, Color("ffa040") if p.reload_t > 0.0 else Color("ffe070"))
+		laser_bar.value = p.charge if p.charging else (0.0 if p.laser_cd > 0.0 else 1.0)
+		var stage_c: Color = ChargeFX.STAGE_COLORS[mini(p.charge_stage, 3)]
+		_fill(laser_bar, stage_c if p.charging else Color(0.4, 0.5, 0.8))
+		ult_label.text = ("MISSILE  %d / %d  [R]" % [p.missiles, Player.MISSILE_MAX]) if p.missiles > 0 else "MISSILE  — 적이 떨어뜨린 탄을 주우세요"
+		ult_label.modulate = Color("ffd070") if p.missiles > 0 and fmod(m.time, 0.8) < 0.4 else Color.WHITE
 	energy_icons.set_count(p.energy)
 	energy_icons.pending = Player.laser_cost(p.charge) if p.charging and p.charge >= Player.CHARGE_MIN else 0
 	energy_icons.regen = p.energy_regen_k()
 	missile_icons.set_count(_shown(p, "missile"))
 	missile_icons.pending = p.ult_shot_count() if p.ult_aiming else 0
-	ult_label.text = ("MISSILE  %d / %d  [R]" % [p.missiles, Player.MISSILE_MAX]) if p.missiles > 0 else "MISSILE  — 적이 떨어뜨린 탄을 주우세요"
-	ult_label.modulate = Color("ffd070") if p.missiles > 0 and fmod(m.time, 0.8) < 0.4 else Color.WHITE
 	wave_label.text = "ROOMS  %d / %d" % [m.rooms_cleared, m.combat_rooms()]
 	if m.wave > 0:
 		count_label.text = "WAVE %d / %d  ·  ENEMIES  %d" % [m.wave, ArenaMap.WAVES, m.enemies_left()]
@@ -501,6 +504,13 @@ func _process(_dt: float) -> void:
 		# 프리셋은 버튼마다 키가 붙어 있으므로 안내 줄을 끝까지 걷어 낸다
 		var hint_a := 0.35 if HudPresets.current == HudPresets.LEGACY else 0.0
 		hint.modulate.a = move_toward(hint.modulate.a, hint_a, _dt)
+
+
+## 막대 채움 색: 바뀔 때만 넣는다 (StyleBox 는 같은 값이어도 changed 를 내 다시 그린다)
+func _fill(bar: ProgressBar, c: Color) -> void:
+	var sb := bar.get_theme_stylebox("fill") as StyleBoxFlat
+	if sb.bg_color != c:
+		sb.bg_color = c
 
 
 var _ctw: Tween
@@ -559,7 +569,6 @@ func _update_combo(m: Main) -> void:
 		combo_label.text = ""
 		combo_sub.text = ""
 		combo_bar.value = 0.0
-	combo_shown = m.combo
 
 
 func combo_pop(pts: int, source: String) -> void:

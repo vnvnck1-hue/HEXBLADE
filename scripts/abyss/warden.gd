@@ -357,7 +357,6 @@ func _physics_process(dt: float) -> void:
 	_update_body(dt, player)
 	_update_arms(dt)
 	_update_tendrils()
-	_update_storm(dt)
 	_update_falling(dt)
 	for w in _warns:
 		if is_instance_valid(w.mi):
@@ -726,7 +725,7 @@ func _slam_impact(c: Vector3, player: Player) -> void:
 	FX.ring(Vector3(c.x, 0.3, c.z), SLAM_R * 1.6, [CRIMSON, Color(0.6, 0.02, 0.08), PALE], 0.4)
 	FX.sparks(c + Vector3(0, 0.3, 0), 30, [Color.WHITE, Color(1.0, 0.5, 0.5), CRIMSON, Color(0.3, 0.28, 0.3)], 12.0, 0.6, -16.0, 0.12)
 	AbyssFX.geyser(c, 1.2, stage)
-	AbyssFX.splat(c, 3.2, 1.2)
+	AbyssFX.splat(c, 3.2)
 	AbyssFX.light_flash(c + Vector3(0, 1.0, 0), CRIMSON, 9.0, 12.0, 0.5)
 	Distortion.burst(c + Vector3(0, 0.5, 0), 5.0, 0.4, 1.2, 0.6)
 	Sfx.play("boom", 0.05, 0.0)
@@ -808,10 +807,6 @@ func _p_storm(dt: float, player: Player) -> bool:
 			b.visible = true
 		return true
 	return false
-
-
-func _update_storm(_dt: float) -> void:
-	pass
 
 
 # ── 패턴: 멸각의 시선 (2페이즈) ─────────────────────────

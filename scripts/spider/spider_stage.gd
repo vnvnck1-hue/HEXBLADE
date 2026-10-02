@@ -44,12 +44,14 @@ const STEEL_DARK := Color(0.07, 0.075, 0.085)
 const HAZARD := Color(0.95, 0.7, 0.12)
 const CYAN := Color(0.35, 0.95, 1.0)
 const DANGER := Color(1.0, 0.16, 0.12)
+const PROJECT_WALLS := ["N", "E", "W"]  # 발을 붙일 수 있는 벽 (남쪽은 카메라 쪽 난간)
 
 var webs: Array = []                 # 바닥 거미줄 판 {mi, pos, r, life, max}
 var occl_mat: ShaderMaterial         # 기둥 셰이더 (플레이어 가림 구멍)
 var wall_mat: ShaderMaterial
 var hole_glows: Array = []           # 구멍마다 안쪽 눈빛 {node, mats, k, target}
 var beacons: Array = []              # 기둥 신호등 (2페이즈에 붉게 깜빡인다)
+var _beacon_alarm := -1.0            # 신호등 색을 마지막으로 칠한 경보 세기 (바뀔 때만 색을 다시 쓴다)
 var alarm := 0.0                     # 0~1, 2페이즈 경보 조명
 var _dust: Array = []                # [mi, vel, life, max, size]
 var _dust_mesh: QuadMesh
@@ -198,7 +200,7 @@ func project(q: Vector3) -> Dictionary:
 			best_p = Vector3(q.x, hy, q.z)
 			best_n = Vector3.UP
 	# 벽
-	for w in ["N", "E", "W"]:
+	for w in PROJECT_WALLS:
 		var uv := wall_uv(w, q)
 		var u := clampf(uv.x, -wall_half(w), wall_half(w))
 		var y := clampf(q.y, 0.0, WALL_H)
@@ -544,12 +546,15 @@ func update(dt: float, cam: Camera3D, player_pos: Vector3) -> void:
 	for s in _strands:
 		var n := s[0] as Node3D
 		n.rotation = Vector3(sin(_t * 0.4 + float(s[1])) * 0.012, 0, cos(_t * 0.33 + float(s[1])) * 0.012)
+	var recolor := alarm != _beacon_alarm
+	_beacon_alarm = alarm
+	var c := CYAN.lerp(DANGER, alarm)
 	for b in beacons:
 		var mat := b[0] as StandardMaterial3D
 		var on := 0.5 + 0.5 * sin(_t * 2.2 + float(b[1]))
-		var c := CYAN.lerp(DANGER, alarm)
-		mat.emission = c
-		mat.albedo_color = c
+		if recolor:
+			mat.emission = c
+			mat.albedo_color = c
 		mat.emission_energy_multiplier = lerpf(2.2, 3.5 * (1.0 if fmod(_t * 1.6 + float(b[1]), 1.0) < 0.5 else 0.2), alarm) * (0.7 + 0.3 * on)
 
 

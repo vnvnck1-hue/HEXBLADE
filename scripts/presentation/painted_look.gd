@@ -107,7 +107,6 @@ void light() {
 }
 """
 
-static var preset := NONE
 static var _shaders := {}
 static var _mats := {}
 static var _post: Array[Node] = []
@@ -242,7 +241,16 @@ static func convert_one(mi: MeshInstance3D, p: int) -> void:
 
 ## 맵 바닥(ArenaMap 의 격자 셰이더)은 무늬를 살리고 바탕색만 따뜻하게 옮긴다
 static func _is_map_floor(m: ShaderMaterial) -> bool:
-	return m.shader != null and m.shader.code.contains("line_col") and m.shader.code.contains("grid(")
+	if m.shader == null:
+		return false
+	# 셰이더 원문 검색은 비싸서 셰이더마다 한 번만 하고 결과를 기억한다
+	var id := m.shader.get_instance_id()
+	if not _floor_shader.has(id):
+		_floor_shader[id] = m.shader.code.contains("line_col") and m.shader.code.contains("grid(")
+	return _floor_shader[id]
+
+
+static var _floor_shader := {}   # 셰이더 instance id → 맵 바닥 격자 셰이더인가
 
 
 static func _warm_floor(m: ShaderMaterial, on: bool) -> void:
@@ -306,6 +314,9 @@ class Watcher extends Node:
 
 	func _on_added(n: Node) -> void:
 		if PaintedLook.game_preset != PaintedLook.NONE and n is MeshInstance3D:
+			# 연출 조각(초당 수백 개)은 조명 무시 단색 공용 머티리얼이라 바꿀 것이 없다
+			if (n as MeshInstance3D).material_override == Pal.flat():
+				return
 			# 머티리얼을 add_child 뒤에 넣는 코드도 있으니 한 박자 늦게
 			_late.call_deferred(n)
 
@@ -335,7 +346,6 @@ static func set_post(cam: Camera3D, p: int) -> void:
 
 
 static func set_preset(root: Node, cam: Camera3D, p: int) -> void:
-	preset = p
 	apply(root, p)
 	set_post(cam, p)
 

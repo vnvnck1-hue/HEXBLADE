@@ -38,6 +38,9 @@ var eye_mat: StandardMaterial3D
 var tele_on := false
 var _snd := 0.0
 var _move := Vector3.ZERO
+var _flash_meshes: Array = []    # 덮개를 씌울 메시 (처음 한 번만 찾는다)
+var _flash_cur: Material = null
+var _flash_set := false
 
 
 func _ready() -> void:
@@ -114,8 +117,6 @@ func _build(v: Node3D) -> Dictionary:
 			Build.bevel(lo, Vector3(0.05, 0.05, L2), Vector3(0, 0, -L2 * 0.5), METAL, 0.015, Vector3.ZERO, 0.7)
 			var grp := (k + (0 if s < 0 else 1)) % 2
 			legs.append({"hip": hip, "rest": rest, "up": up_n, "lo": lo, "foot": Vector3.ZERO, "from": Vector3.ZERO, "to": Vector3.ZERO, "t": -1.0, "g": grp, "side": s})
-	var cm := StandardMaterial3D.new()
-	cm.albedo_color = Pal.E_RED
 	return {"body": body, "core": core, "core_mat": eye_mat}
 
 
@@ -225,8 +226,17 @@ func _set_tele(on: bool) -> void:
 
 func _set_flash(on: bool) -> void:
 	var rest: Material = Pal.lock_hatch() if locked else (Pal.flash() if tele_on and fmod(t * 14.0, 1.0) < 0.5 else null)
-	for mi in visual.find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).material_overlay = Pal.flash() if on else rest
+	var m: Material = Pal.flash() if on else rest
+	# 예고 중에는 매 프레임 불리므로 덮개가 바뀔 때만 메시를 건드린다
+	if _flash_set and m == _flash_cur:
+		return
+	_flash_set = true
+	_flash_cur = m
+	if _flash_meshes.is_empty():
+		_flash_meshes = visual.find_children("*", "MeshInstance3D", true, false)
+	for mi in _flash_meshes:
+		if is_instance_valid(mi):
+			(mi as MeshInstance3D).material_overlay = m
 
 
 func _ai(dt: float) -> void:

@@ -9,6 +9,8 @@ const DEATH_TEST_SCENE := "res://scenes/mammoth_death_lab.tscn"
 const TEST_SCENES := [
 	{"title": "방 탐색 아레나", "desc": "전투방 9곳을 통로로 이은 기존 절차 생성 맵", "scene": "res://scenes/main.tscn"},
 	{"title": "전투 테스트 · 허수아비", "desc": "넓은 홀에서 허수아비로 콤보·무기·패링을 자유롭게 시험 · 피해 숫자·DPS 표시", "scene": "res://scenes/training.tscn"},
+	{"title": "필드 기믹", "desc": "연기 구역(은신) · 레일 · 가스통 폭발 · 수리키트 해치(F 연타) 를 한 홀에서 시험", "scene": "res://scenes/gimmicks.tscn"},
+	{"title": "벌레 괴생명체 · 개미 병정 · 공벌레", "desc": "땅에서 기어 나오는 개미 병정(산 발사·물기)과 몸을 말아 구르는 공벌레 · 4 키 애니메이션 전시", "scene": "res://scenes/bugs.tscn"},
 	{"title": "MAMMOTH 추격전", "desc": "도로 위 전차 보스 단독 실행", "scene": "res://scenes/boss.tscn"},
 	{"title": "VULCAN 용광로", "desc": "좁아지는 용암 아레나 보스 단독 실행", "scene": "res://scenes/forge.tscn"},
 	{"title": "LAYER 01 · 심연 성소", "desc": "어두운 부유 아레나 · 페이즈마다 땅이 솟고 꺼짐 · 함정 · 중간보스 HALO WARDEN", "scene": "res://scenes/abyss.tscn"},

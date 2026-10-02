@@ -533,7 +533,6 @@ static func drone(visual: Node3D) -> Dictionary:
 	body.add_child(core)
 	j.core = core
 	j.core_mat = cm
-	j.cube = cube
 	return j
 
 
@@ -568,7 +567,6 @@ static func turret(visual: Node3D) -> Dictionary:
 	shell.height = 0.2
 	shell.radial_segments = 8
 	shell.rings = 1
-	j.shell_mesh = shell
 	j.shell_mat = Pal.lit(Pal.T_SHELL, 0.35)
 	for s in [[Vector3(0.02, 0.48, 0.02), Vector3(0, 20, 90)], [Vector3(0.48, 0.06, 0.12), Vector3(90, 30, 0)],
 			[Vector3(0.4, 0.06, -0.3), Vector3(90, -50, 0)], [Vector3(0.55, 0.1, -0.08), Vector3.ZERO]]:
@@ -607,7 +605,6 @@ static func turret(visual: Node3D) -> Dictionary:
 	head.add_child(core)
 	j.core = core
 	j.core_mat = cm
-	j.cube = core
 	# 포신 받침과 위아래 두 포신 (각 포신은 z 축으로 돌고, 쏠 때 뒤로 밀린다)
 	box(head, Vector3(0.22, 0.46, 0.3), Vector3(-0.24, 0.4, -0.14), Pal.T_DARK)
 	var barrels: Array = []
@@ -683,7 +680,6 @@ static func striker(visual: Node3D) -> Dictionary:
 	body.add_child(core)
 	j.core = core
 	j.core_mat = cm
-	j.cube = hull
 	return j
 
 
@@ -867,7 +863,6 @@ static func crawler(visual: Node3D) -> Dictionary:
 		wm.rotation_degrees.x = 90.0
 		legs.append({"hip": hip, "thigh": thigh, "knee": knee, "out": out, "a": a})
 	j.legs = legs
-	j.cube = shell
 	return j
 
 

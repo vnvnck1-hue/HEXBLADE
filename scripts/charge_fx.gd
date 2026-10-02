@@ -4,6 +4,7 @@ extends Node3D
 ## set_charge(k) 로 0~1 충전량을 받는다. 판정과 무관.
 
 static var _ring_shader: Shader
+static var _ring_mat: ShaderMaterial
 static var _sphere: SphereMesh
 static var _bit: BoxMesh
 static var _quad: QuadMesh
@@ -115,9 +116,10 @@ func set_charge(v: float, dt: float) -> void:
 func _spawn_ring() -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = _quad
-	var m := ShaderMaterial.new()
-	m.shader = _ring_shader
-	mi.material_override = m
+	if _ring_mat == null:
+		_ring_mat = ShaderMaterial.new()      # 매개변수는 모두 인스턴스 값이라 머티리얼 하나를 함께 쓴다
+		_ring_mat.shader = _ring_shader
+	mi.material_override = _ring_mat
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	mi.set_meta("fx_bit", true)
 	mi.scale = Vector3.ONE * (2.2 + k * 1.2)

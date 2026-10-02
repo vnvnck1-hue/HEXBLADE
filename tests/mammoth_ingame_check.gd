@@ -3,7 +3,8 @@ extends SceneTree
 ## 본선 MAMMOTH 추격전(boss.tscn)에서 확인한다.
 ##  1. 기본총 착탄 연출 위치(fx_point)가 차체 안에 묻히지 않고 겉면 밖으로 나온다.
 ##  2. 보스전 총 연출 배율(ToonGunFX.view_k)이 걸린다.
-##  3. 왼쪽에서 충전 레이저를 맞으면 왼쪽이 들리고 오른쪽 모서리는 도로에 붙어 있다. 잠시 뒤 다시 내려앉는다.
+##  3. 왼쪽에서 충전 레이저를 맞으면 왼쪽이 들리고 오른쪽 모서리는 도로에 붙어 있다. 잠시 뒤 다시 내려앉고,
+##     모델(visual)이 판정 위치에서 옆으로 밀려나 있지 않다.
 ##  4. 격파하면 죽음 연출(B안 궤도 파손과 전복) 감독이 시작되고, 연출 카메라로 바뀌며 입력이 잠긴다.
 ##  5. 연출이 끝나면 보스전 카메라로 돌아오고 바로 WIN 이 된다. 포탑이 뜯겨 나가고 잔해는 멀어진다.
 
@@ -78,6 +79,8 @@ func _run() -> void:
 	_check(right_y < 0.25, "들리는 동안 반대쪽(오른쪽) 모서리는 도로에 남는다 (%.2fm)" % right_y)
 	await _frames(150)
 	_check(boss.lift.lifted() < 0.03, "잠시 뒤 다시 내려앉는다 (기울기 %.3f rad)" % boss.lift.lifted())
+	var vp := boss.visual.position
+	_check(absf(vp.x) < 0.01 and absf(vp.z) < 0.01, "내려앉은 뒤 모델이 판정 위치에서 밀려나지 않는다 (x %.3f, z %.3f)" % [vp.x, vp.z])
 	# 오른쪽(+X)에서 맞으면 반대로
 	pl.global_position = bp + Vector3(7.0, 0, 6.0)
 	dir = (bp - pl.global_position)
@@ -89,6 +92,8 @@ func _run() -> void:
 		best_r = maxf(best_r, boss.visual.to_global(Vector3(3.3, 0, 0)).y - boss.global_position.y)
 	_check(best_r > 0.6, "오른쪽에서 맞으면 오른쪽이 들린다 (최대 %.2fm)" % best_r)
 	await _frames(150)
+	vp = boss.visual.position
+	_check(absf(vp.x) < 0.01 and absf(vp.z) < 0.01, "두 번 맞아도 모델 위치가 누적되지 않는다 (x %.3f, z %.3f)" % [vp.x, vp.z])
 
 	# 4. 격파 → 죽음 연출
 	pl.global_position = bp + Vector3(0, 0, 8.0)

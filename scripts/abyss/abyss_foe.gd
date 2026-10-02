@@ -21,6 +21,9 @@ var st := 0                      # 하위 기체 상태
 var st_t := 0.0
 var spawn_info: Dictionary = {}  # 등장 방식 (기어오를 가장자리 등)
 var _splat_cd := 0.0
+var _flash_meshes: Array = []    # 덮개를 씌울 몸체 메시 (처음 한 번만 찾는다)
+var _flash_cur: Material = null  # 지금 씌워 둔 덮개 (같으면 다시 쓰지 않는다)
+var _flash_set := false
 
 
 func _ready() -> void:
@@ -72,8 +75,16 @@ func _set_flash(on: bool) -> void:
 		rest = Pal.parry_flash()
 	if not is_instance_valid(j.get("body")):
 		return
-	for mi in (j.body as Node3D).find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).material_overlay = Pal.flash() if on else rest
+	var m: Material = Pal.flash() if on else rest
+	if _flash_set and m == _flash_cur:
+		return
+	_flash_set = true
+	_flash_cur = m
+	if _flash_meshes.is_empty():
+		_flash_meshes = (j.body as Node3D).find_children("*", "MeshInstance3D", true, false)
+	for mi in _flash_meshes:
+		if is_instance_valid(mi):
+			(mi as MeshInstance3D).material_overlay = m
 
 
 func _physics_process(dt: float) -> void:
@@ -173,7 +184,7 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 		var c := (j.body as Node3D).global_position
 		FX.sparks(c, 5, [Color(1.0, 0.4, 0.4), AbyssFX.ICHOR_HOT, AbyssFX.ICHOR], 5.0, 0.35, -14.0, 0.07)
 		if randf() < 0.4:
-			AbyssFX.splat(global_position + Vector3(dir.x, 0, dir.z).normalized() * randf_range(0.4, 1.2), randf_range(0.5, 1.0), 0.5)
+			AbyssFX.splat(global_position + Vector3(dir.x, 0, dir.z).normalized() * randf_range(0.4, 1.2), randf_range(0.5, 1.0))
 
 
 ## 맞으면 진행 중이던 공격 예고를 끈다
@@ -186,6 +197,7 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 		return
 	if source == "slash" or source == "phantom":
 		set_tele(false)
+		_clear_fx()
 		super.die(dir, source)
 		AbyssFX.ichor_burst((j.body as Node3D).global_position, dir, slice_size.length() * 0.9)
 		return
@@ -234,3 +246,12 @@ func _begin_death() -> void:
 
 func _death_tick(_dt: float) -> void:
 	pass
+
+
+## 전장(FX.root)에 따로 띄워 둔 예고 원·선 정리. 검 처치는 _begin_death 를 거치지 않으므로 여기서도 부른다.
+func _clear_fx() -> void:
+	pass
+
+
+func _exit_tree() -> void:
+	_clear_fx()

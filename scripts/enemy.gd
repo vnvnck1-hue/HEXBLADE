@@ -42,6 +42,8 @@ var locked := false
 var kill_source := ""
 ## 보스(와 그 피격 부위): 궁극기 미사일이 한 발이 아니라 남은 미사일을 모두 받는다 (player.gd 가 읽음)
 var is_boss := false
+## 판정만 빌려 쓰는 소품 (가스통 등): 처치 수·방 진행·소환 상한에 세지 않는다
+var prop := false
 var lock_marker: Node3D            # 락온 표식 (presentation/lock_marker.gd)
 ## 광선검 절단 조각의 크기(폭, 높이, 깊이)와 색. 몸체가 다른 기체는 덮어쓴다.
 var slice_size := Vector3(0.78, 0.74, 0.78)
@@ -77,6 +79,7 @@ var hp_bar_y := 2.05          # 바 높이 (기체 원점 기준)
 var hp_bar_w := 1.1
 var _bar_chip := 1.0          # 깎인 뒤 천천히 따라 내려오는 잔상 비율
 var _bar_hit := 0.0
+var _bar_sent := Vector4(-1, -1, -1, -1)   # 마지막으로 셰이더에 보낸 체력바 값
 
 ## 일반 적 체력 배율 (기체마다 정한 기본 체력에 곱한다)
 const HP_SCALE := 2.5
@@ -84,6 +87,18 @@ const DROP_TIME := 0.45
 
 static var _bar_mat: ShaderMaterial
 static var _bar_mesh: QuadMesh
+static var _live: Array = []
+static var _live_key := Vector2i(-1, -1)
+
+
+## 지금 프레임의 "enemies" 그룹. 총알·적 분리처럼 물리 틱마다 여러 번 도는 곳에서 그룹 조회(배열 생성)를 한 번만 하게 한다.
+## 같은 프레임 안에서 지워진 적이 섞일 수 있으니 쓰는 쪽에서 is_instance_valid 로 거른다.
+static func live(tree: SceneTree) -> Array:
+	var key := Vector2i(Engine.get_process_frames(), Engine.get_physics_frames())
+	if key != _live_key:
+		_live_key = key
+		_live = tree.get_nodes_in_group("enemies")
+	return _live
 const TELEGRAPH := 0.5
 const ORB_CD := 3.2
 ## 패링 탄 준비동작 길이: 크게 뒤로 젖혀 웅크리며 코어를 부풀린다. 끝나는 순간 알림과 함께 발사.
@@ -187,8 +202,8 @@ func _ai(dt: float) -> void:
 	elif dist < desired - 0.8:
 		move -= dir
 	move += Vector3(-dir.z, 0, dir.x) * strafe * 0.6
-	for o in get_tree().get_nodes_in_group("enemies"):
-		if o == self:
+	for o in live(get_tree()):
+		if o == self or not is_instance_valid(o):
 			continue
 		var d: Vector3 = global_position - (o as Node3D).global_position
 		d.y = 0
@@ -219,7 +234,7 @@ func _ai(dt: float) -> void:
 	var core: MeshInstance3D = j.core
 	var cm: StandardMaterial3D = j.core_mat
 	orb_cd -= dt
-	if player.alive and Main.inst.state == Main.State.PLAY:
+	if player.alive and not player.hidden and Main.inst.state == Main.State.PLAY:
 		var was := fire_timer
 		fire_timer -= dt
 		# 준비동작 길이만큼 앞서 다음 공격을 정한다: 패링 탄이면 과장된 준비동작에 들어간다 (알림은 준비동작 끝에)
@@ -810,8 +825,9 @@ func _set_flash(on: bool) -> void:
 	var rest: Material = Pal.lock_hatch() if locked else (Pal.parry_glow() if warn_glow else null)
 	if glow_t > 0.0:
 		rest = Pal.parry_flash()
-	for mi in (j.body as Node3D).find_children("*", "MeshInstance3D", true, false):
-		(mi as MeshInstance3D).material_overlay = Pal.flash() if on else rest
+	var m: Material = Pal.flash() if on else rest
+	for mi: MeshInstance3D in FX.mesh_parts(j.body as Node3D):
+		mi.material_overlay = m
 
 
 ## 궁극기 락온: 몸체 전체에 붉은 빗금을 덮는다
@@ -868,10 +884,15 @@ func _update_hp_bar(dt: float) -> void:
 		_bar_chip = k
 	_bar_hit = maxf(0.0, _bar_hit - dt * 2.5)
 	hp_bar.visible = landed
-	hp_bar.set_instance_shader_parameter("fill", k)
-	hp_bar.set_instance_shader_parameter("chip", _bar_chip)
-	hp_bar.set_instance_shader_parameter("hit", _bar_hit)
-	hp_bar.set_instance_shader_parameter("full", 1.0 if k >= 0.999 else 0.0)
+	# 바뀐 값만 렌더링 서버로 보낸다 (적마다 물리 틱마다 불린다)
+	var v := Vector4(k, _bar_chip, _bar_hit, 1.0 if k >= 0.999 else 0.0)
+	if v == _bar_sent:
+		return
+	_bar_sent = v
+	hp_bar.set_instance_shader_parameter("fill", v.x)
+	hp_bar.set_instance_shader_parameter("chip", v.y)
+	hp_bar.set_instance_shader_parameter("hit", v.z)
+	hp_bar.set_instance_shader_parameter("full", v.w)
 
 
 const HP_BAR_SHADER := """

@@ -12,6 +12,11 @@ static var _sub_boxes := {}
 var pieces: Array = []   # {node, vel, ang, half, life, max_life}
 
 
+func _exit_tree() -> void:
+	if inst == self:
+		inst = null
+
+
 func _ready() -> void:
 	inst = self
 
@@ -60,6 +65,7 @@ static func toss(mesh: Mesh, mat: Material, xf: Transform3D, vel: Vector3, life 
 	var mi := MeshInstance3D.new()
 	mi.mesh = mesh
 	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	inst.add_child(mi)
 	mi.global_transform = xf
 	var ang := Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * randf_range(10.0, 18.0)
@@ -82,6 +88,7 @@ func _add_piece(mesh: Mesh, mat: Material, xf: Transform3D, center: Vector3, pow
 	var mi := MeshInstance3D.new()
 	mi.mesh = mesh
 	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF   # 최대 220조각: 그림자 패스 부담을 피한다
 	add_child(mi)
 	mi.global_transform = xf
 	var out := xf.origin - center

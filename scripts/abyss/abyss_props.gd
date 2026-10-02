@@ -433,7 +433,7 @@ func _cage() -> Node3D:
 	c.add_child(top)
 	top.position = Vector3(0, h * 0.5 + 0.4, 0)
 	# 우리 안의 혼불 (생체 조직에 갇힌 붉은 빛)
-	var soul := Pal.flat_mesh(SphereMesh.new(), Color(1.0, 0.25, 0.3), 3.0)
+	var soul := Pal.flat_mesh(AbyssFX.sphere(), Color(1.0, 0.25, 0.3), 3.0)
 	soul.scale = Vector3.ONE * 0.55
 	c.add_child(soul)
 	_souls.append([soul, randf() * TAU])
@@ -473,7 +473,7 @@ func _lanterns_ring() -> void:
 		cap.material_override = iron_mat
 		n.add_child(cap)
 		cap.position = Vector3(0, 0.62, 0)
-		var core := Pal.flat_mesh(SphereMesh.new(), Color(1.0, 0.3, 0.2), 4.0)
+		var core := Pal.flat_mesh(AbyssFX.sphere(), Color(1.0, 0.3, 0.2), 4.0)
 		core.scale = Vector3(0.24, 0.42, 0.24)
 		n.add_child(core)
 		var l := OmniLight3D.new()
@@ -511,7 +511,7 @@ func brazier(parent: Node3D) -> Node3D:
 		n.add_child(leg)
 		leg.position = Vector3(cos(a) * 0.4, 0.15, sin(a) * 0.4)
 		leg.rotation = Vector3(sin(a) * 0.3, 0, -cos(a) * 0.3)
-	var ember := Pal.flat_mesh(SphereMesh.new(), Color(0.85, 0.16, 0.06), 1.0)
+	var ember := Pal.flat_mesh(AbyssFX.sphere(), Color(0.85, 0.16, 0.06), 1.0)
 	ember.scale = Vector3(0.6, 0.12, 0.6)
 	n.add_child(ember)
 	ember.position = Vector3(0, 0.45, 0)
@@ -522,7 +522,8 @@ func brazier(parent: Node3D) -> Node3D:
 	l.light_color = Color(1.0, 0.3, 0.12)
 	l.light_energy = 2.4
 	l.omni_range = 8.5
-	l.shadow_enabled = true
+	# 화로가 많아(열주 배치 8개) 전방향 그림자는 너무 비싸다 — 그림자 없이 빛만
+	l.shadow_enabled = false
 	n.add_child(l)
 	l.position = Vector3(0, 1.2, 0)
 	stage.call("add_brazier_light", l, 2.4)
@@ -552,7 +553,7 @@ func floor_decor(parent: Node3D, kind: int, out: Vector3) -> Node3D:
 				n.add_child(c)
 				var off := Vector3(randf_range(-0.3, 0.3), cm.height * 0.5, randf_range(-0.3, 0.3))
 				c.position = off
-				var fl := Pal.flat_mesh(SphereMesh.new(), Color(1.0, 0.55, 0.3), 3.0)
+				var fl := Pal.flat_mesh(AbyssFX.sphere(), Color(1.0, 0.55, 0.3), 3.0)
 				fl.scale = Vector3(0.06, 0.12, 0.06)
 				n.add_child(fl)
 				fl.position = off + Vector3(0, cm.height * 0.5 + 0.06, 0)
@@ -567,7 +568,7 @@ func floor_decor(parent: Node3D, kind: int, out: Vector3) -> Node3D:
 			n.position = out * 0.4 + side * randf_range(-0.4, 0.4)
 			for i in randi_range(2, 4):
 				var b := MeshInstance3D.new()
-				b.mesh = Build.bevel_mesh(Vector3(0.07, 0.07, randf_range(0.35, 0.7)), 0.02)
+				b.mesh = Build.bevel_mesh(Vector3(0.07, 0.07, snappedf(randf_range(0.35, 0.7), 0.05)), 0.02)  # 길이를 끊어야 메시 캐시가 안 늘어난다
 				b.material_override = bone_mat
 				n.add_child(b)
 				b.position = Vector3(randf_range(-0.4, 0.4), 0.04, randf_range(-0.4, 0.4))
