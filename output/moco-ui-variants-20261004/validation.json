@@ -1,0 +1,49 @@
+{
+    "date":  "2026-10-04",
+    "requested_additional_designs":  3,
+    "delivered_final_designs":  3,
+    "mode":  "built-in imagegen",
+    "files":  [
+                  {
+                      "file":  "01_pop_sticker.png",
+                      "generated_original":  "exec-f59c9e08-57e3-40a1-a4ef-8a46e1a88b9a.png",
+                      "width":  1951,
+                      "height":  806,
+                      "sha256":  "5ee9e6deac786c8c2bd04d1d53fadd4a57af96f527e10d033d7c8076ba603fe9",
+                      "matches_generated_original":  true,
+                      "enemy_health_bars_visually_verified":  2
+                  },
+                  {
+                      "file":  "02_soft_capsule.png",
+                      "generated_original":  "exec-a50c4144-a41d-4f35-9c07-5884fa7c9925.png",
+                      "width":  1951,
+                      "height":  806,
+                      "sha256":  "a34d372abb5e5772b62044a2d6e3c42d5a5bcfd54cecf430d8fabaaa50cff7d8",
+                      "matches_generated_original":  true,
+                      "enemy_health_bars_visually_verified":  2
+                  },
+                  {
+                      "file":  "03_minimal_editorial.png",
+                      "generated_original":  "exec-cc05cc27-332f-4ce7-9b29-3669d1d261d6.png",
+                      "width":  1951,
+                      "height":  806,
+                      "sha256":  "8d9c2aae683c7e6824690f91ad2730f1789eda9b7067b916878c12c0d8b9f0f1",
+                      "matches_generated_original":  true,
+                      "enemy_health_bars_visually_verified":  2
+                  }
+              ],
+    "visual_review":  "All three generated final images inspected, saved copies hash-verified",
+    "common_checks":  [
+                          "Two actual cube enemies with one red/coral health bar above each",
+                          "Player, companion drone, two cubes, two barrels and original room framing visible",
+                          "Support0/100, disabled Q/X and active Z maintained",
+                          "No enemy health bar added to barrels or companion",
+                          "Three distinct treatments: graphic sticker, soft capsule, minimal horizontal dock"
+                      ],
+    "scene_preservation":  "Major composition retained; generation resize/local redraw means no pixel-identical guarantee",
+    "enemy_fill_is_illustrative":  true,
+    "game_code_changed":  false,
+    "engine_run":  false,
+    "committed":  false,
+    "pushed":  false
+}

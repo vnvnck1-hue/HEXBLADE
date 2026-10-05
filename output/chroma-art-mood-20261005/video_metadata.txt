@@ -1,0 +1,27 @@
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from 'C:\Users\vnvnc\Downloads\chroma-inventory-2160p.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf58.20.100
+  Duration: 00:00:04.00, start: 0.000000, bitrate: 1215 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuv420p(progressive), 1920x1080 [SAR 1:1 DAR 16:9], 1211 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+      Metadata:
+        handler_name    : Vimeo Artax Video Handler
+        vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 -> #0:0 (h264 (native) -> rawvideo (native))
+Press [q] to stop, [?] for help
+Output #0, rawvideo, to 'pipe:':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf61.7.100
+  Stream #0:0(und): Video: rawvideo (RGB[24] / 0x18424752), rgb24(pc, gbr/unknown/unknown, progressive), 640x360 [SAR 1:1 DAR 16:9], q=2-31, 165888 kb/s, 30 fps, 30 tbn (default)
+      Metadata:
+        handler_name    : Vimeo Artax Video Handler
+        vendor_id       : [0][0][0][0]
+        encoder         : Lavc61.19.100 rawvideo
+[out#0/rawvideo @ 00000211115f0680] video:81000KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.000000%
+frame=  120 fps=0.0 q=-0.0 Lsize=   81000KiB time=00:00:04.00 bitrate=165888.0kbits/s speed=11.2x    

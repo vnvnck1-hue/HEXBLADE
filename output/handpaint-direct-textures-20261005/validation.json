@@ -1,0 +1,60 @@
+{
+    "date":  "2026-10-05",
+    "engine":  "4.7.2-stable Forward+",
+    "generator":  "built-in imagegen",
+    "approval":  "pending",
+    "production_changed":  false,
+    "image_redraw_after_generation":  false,
+    "files":  [
+                  {
+                      "file":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-direct-textures-20261005\\01_floor_albedo.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "a86ebb687a35325c88f4efe4c087b1af5213f05be3f2da7adcb3f1b9d82ab659",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "file":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-direct-textures-20261005\\02_tall_wall_albedo.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "ca12fa2f8ef0f25c004a5de7f8991692290b04fdc625424556779568a37871ac",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "file":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-direct-textures-20261005\\03_low_wall_albedo.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "9df5790865c208a87d26b37c9bd4471bb35a392625bdd118758579185fe4662a",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "file":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-direct-textures-20261005\\04_direct_uv_preview.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "c753a2e55950dd40f914a4d0086e19bfb6e44e9e61b80248aa8eed48bb975c0a"
+                  },
+                  {
+                      "file":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-direct-textures-20261005\\05_neutral_light_preview.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "823b6bbb8c4c7220edac76530f5b72c688a623f855aea59220601aebabbe15b8"
+                  }
+              ],
+    "actual_meshes":  [
+                          "bg_claude_f01.glb",
+                          "bg_claude_w01.glb",
+                          "bg_claude_block_wall.glb"
+                      ],
+    "direct_color_preview":  "04_direct_uv_preview.png",
+    "neutral_light_preview":  "05_neutral_light_preview.png",
+    "shader_recolor":  false,
+    "procedural_wear":  false,
+    "brush_blending":  false,
+    "render_exit_code":  0,
+    "error_lines":  [
+
+                    ],
+    "capture_complete":  true,
+    "exact_uv_pixel_fit_guaranteed":  false,
+    "remaining":  "User art approval; final UV padding/small islands/repeat edge and in-game lighting checks; additional role atlases for half/cover/pillar/jamb."
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "variant": 1,
+    "prompt": "Edit this comic HUD screenshot, keep its current background, actors, effects, camera, ALL panel positions, inked mech/drone illustrations, jagged brushwork, palette and every correct text/icon absolutely unchanged. Only clean these issues: (1) In top-left statuspanel fix typo BOST to the exact word BOOST in same cream italic font. Keep the orange boostline; add a small neat row of exactly THREE lit turquoise energyticks adjacent to that line inside the statuspanel, no extra caption or extra floating energy. Health remains5/5 with allfivegreen. (2) Remove the obsolete TAN horizontal bar near normalized x.215,y.390, below the flash-affected cube and above the front-left cube's new RED bar. This tan line is the duplicate old enemy HP overlay, reconstruct arena under it. Keep ALL THREE new red enemybars unchanged. (3) Bottom-right rocket has count0: make its illustration/key/tile contents muted GRAY, retaining visible0 andR; other actions remain vivid cyan/red. Keep all labels safely in frame, move the smallSHIFTBOOST tab slightly left if its border clips. No other changes."
+  },
+  {
+    "variant": 2,
+    "prompt": "Edit this comic HUD screenshot with ONE precise overlay cleanup only. Remove the obsolete TAN horizontal bar around normalized x.23,y.391, below the whiteflash-affected left cube and above the front-left cube's new RED healthbar. This tan line is a duplicate original enemy HP overlay. Reconstruct the underlying arena, leaving the enemies and effects untouched. Preserve ALL THREE new RED healthbars and every other HUD panel, text, value, artwork, inkbrush edge, color, camera, actor, prop, bright current floor/walls/facility panels/smoke/explosion exactly as is. Do not redesign or relayout anything."
+  },
+  {
+    "variant": 3,
+    "prompt": "Edit this comic HUD screenshot with exactly TWO small corrections; everything else unchanged. 1) Bottom-left TRIAD action currently says G DOCK. Current game's key is Q, so replace ONLY G in that gray keybox with a perfectly readable capital Q (Q DOCK), same font/color/size. X SHIELD andZ CLEAN stay. 2) Remove the old TAN horizontal line near normalized x.23,y.391 between the flash-affected left cube and the front-left cube's new RED bar. It is a duplicate old HP overlay. Restore the tiny background underneath. Keep ALL THREE new RED enemybars unchanged. Absolutely preserve all world actors/effects/camera/bright latest background, panel/icon/portrait art, handwritten cream labels, jagged black/red plates, values, controls and overall layout."
+  }
+]

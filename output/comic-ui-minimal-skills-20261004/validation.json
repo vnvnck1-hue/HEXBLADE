@@ -1,0 +1,27 @@
+{
+    "date":  "2026-10-04",
+    "method":  "built-in imagegen",
+    "source":  "source_selected_style.png",
+    "source_origin":  "output/comic-ui-calm-20261004/03_calm_horizontal.png",
+    "selected_base_inferred_from_last_recommendation":  true,
+    "file":  "minimal_skill_dock.png",
+    "width":  1942,
+    "height":  809,
+    "sha256":  "BFEFE35C3D8C7E5FD808B1FB8D5E7D7F3CA72C466E394506858C360421CE4BF5",
+    "generated_original":  "C:/Users/vnvnc/.codex/generated_images/01a10584-b9c4-7bd1-bc09-10c589ad66c4/exec-8d9fcdf5-9c82-4a4d-9dbd-6e71acf58cd3.png",
+    "copy_verified":  true,
+    "visually_reviewed":  true,
+    "intended_edit_region":  "lower-right skill dock only",
+    "changes":  [
+                    "Six simplified silhouettes",
+                    "Single low navy backing strip",
+                    "Long action names removed",
+                    "PC keys, ammo14/30, rocket0 and SHIFTBOOST retained"
+                ],
+    "major_other_hud_and_scene_visually_preserved":  true,
+    "pixel_identical":  false,
+    "game_code_changed":  false,
+    "engine_run":  false,
+    "committed":  false,
+    "pushed":  false
+}

@@ -1,0 +1,20 @@
+{
+  "first_A": "Use case: precise-object-edit. Edit the attached concept sheet. Correct ONLY the human scale comparison beside the large left hero mech. This is an important scale diagram error: robot is 2.2m and human is 1.7m, so human must be 77.3% of robot's soles-to-helmet height. Currently human is less than half as tall. Enlarge the standing dark-coverall human to approximately 620 pixels tall in the 1536x1024 layout, with soles near y=920 and head near y=300; he should reach roughly robot shoulder level. Move him a little right if necessary, allow narrow overlap against blank gap and hero silhouette, but maintain readable composition. Redraw the corresponding '사람 1.7m' dimension arrow spanning his full height, putting its label legibly in nearby blank space. Keep the hero mech itself, its 2.2m label, all cream armor, orange visor, sword, title, center orthographic and details, all right cutaway views, colors and layout unchanged. No tiny comparison person left over. This is a concept diagram and correct relative standing height is the whole purpose.",
+  "final": [
+    {
+      "key": "01_final",
+      "path": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-6d454664-3e57-4146-a38f-e5e6af537bd8.png",
+      "prompt": "Precise localized edit: correct only the human height comparison figure between the large left mech and center diagrams. Human is still too short. Enlarge that standing person approximately 15 percent, keeping soles at same ground y=920, move head up to y=320 (currently about y=410) in this 1536x1024 sheet. Total drawn human height around 600px compared to hero helmet-top-to-sole about 780px: 1.7/2.2=0.773. Make the human's crown align about level with mech's mid upper chest, rather than its waist. Corresponding 1.7m dimension arrow must span new height. Can overlap narrow blank gap slightly. Everything else unchanged: mech, palette, hero, orthographic figures, panels, callouts, typography and cutaway. Do not merely change numbers; resize the person."
+    },
+    {
+      "key": "02_final",
+      "path": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-5987b4e1-e475-4f35-befc-1b937e5ad2d4.png",
+      "prompt": "Precise localized edit: correct ONLY the small human height comparison standing at far lower left beside hero mech sword, and its dimension arrow. He is 1.7m next to 3.6m mech, so must be 47.2% of hero soles-to-helmet height. Enlarge this figure to approximately 300px tall (currently about 240px) on this 1536x1024 sheet. Keep feet on y=768 ground baseline, put top of human head near y=468. Do not resize hero. Redraw his 1.7m dimension correctly beside his new height. Keep EVERYTHING ELSE exactly including B title, original cream orange visor mech, center orthographic, all right side cutaway (standing pilot with feet within robot thighs) and callouts, palette, layouts and bottom sequence. No new miniature people or large new diagram."
+    },
+    {
+      "key": "03_final",
+      "path": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-f48e6fc2-6175-4e30-9deb-dfab5339b52c.png",
+      "prompt": "Precise localized edit: at bottom left beside hero there are TWO standing comparison humans of inconsistent sizes. REMOVE ONLY the smaller duplicate human at x=74, y=700..813, leaving warm paper background. KEEP the larger standing human at x=145 y=636..813. Add a simple correct vertical dimension bracket near that larger person from soles y=813 to crown y=636 and relocate existing \"사람 1.7m\" label next to this bracket. The larger comparison person is the chosen reference. Keep EVERY OTHER part exactly: hero height6m, cream mech and red sword, title, top front/rear views, right seated chest cockpit and details, bottom sequence. No other edits, no new human."
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+model: bg_claude_block_pillar
+size (m)  x 1.008  y(fwd) 1.008  z(up) 1.900
+bounds    min (-0.504, -0.504, -0.400)  max (0.504, 0.504, 1.500)
+triangles 1268
+parts:
+  wall                       1268 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_claude_block_pillar.glb

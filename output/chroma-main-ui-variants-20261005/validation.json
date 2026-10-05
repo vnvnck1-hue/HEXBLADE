@@ -1,0 +1,72 @@
+{
+  "creation_mode": "built-in imagegen",
+  "deliverables": 4,
+  "items": [
+    {
+      "file": "01_corner_panels.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc\\exec-fb76f139-046c-4131-9355-80e6a7bc551b.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1908347,
+      "sha256": "3d7e43edec953ebb9193c2228effbf3a8389a9fa57e5321cfc6507bf65f4c01c",
+      "copy_hash_match": true
+    },
+    {
+      "file": "02_equipment_cards.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc\\exec-119bd1f6-8566-4d22-8e28-6f5509fc7aa3.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1994685,
+      "sha256": "6b2c0dd78d7959ea20a15e34ea3f01a1d281f992f7490dbe8c700536812ac06b",
+      "copy_hash_match": true
+    },
+    {
+      "file": "03_bottom_console.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc\\exec-a2606bde-2b01-42cf-a16b-c82590760807.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1910184,
+      "sha256": "09e2a06cf9b91d9aee677827d464ed8ed0bcae8bfb6930c58e226895578c2108",
+      "copy_hash_match": true
+    },
+    {
+      "file": "04_minimal_hex.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc\\exec-465703cf-a609-4560-b882-36e79d2c8769.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1886978,
+      "sha256": "54759a3dfd35d38d959fad7c2d8dd81ad5f352383fd40ebcdce7c8386225f84e",
+      "copy_hash_match": true
+    },
+    {
+      "file": "source_styled.png",
+      "source": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\chroma-major-screens-20261005\\03_combat_cleanup.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 1929253,
+      "sha256": "596ed429e3e51552b0ecf2c608269adae5978046cf4bee1c29c8bdf167d4f4f0",
+      "copy_hash_match": true
+    },
+    {
+      "file": "source_actual.png",
+      "source": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\chroma-major-screens-20261005\\sources\\03_combat_action.png",
+      "width": 1920,
+      "height": 1080,
+      "bytes": 1150216,
+      "sha256": "4dbcbb6cd2cc2e168fb101332ead98c3d7057890e325d0abc3d1351fa8ee68c9",
+      "copy_hash_match": true
+    }
+  ],
+  "visual_review": {
+    "all_four_inspected": true,
+    "minimal_hex_stray_10_removed": true,
+    "limitations": [
+      "Concept images, not runtime implementation",
+      "Gauge proportions and auxiliary pips are approximate",
+      "Generated minimap geometry is illustrative",
+      "Local re-rendering may affect source scene pixels"
+    ]
+  },
+  "game_code_modified": false,
+  "engine_run_this_request": false
+}

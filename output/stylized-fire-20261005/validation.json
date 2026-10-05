@@ -1,0 +1,226 @@
+﻿{
+    "method":  "RGBA frame checks, GIF re-decoding/timing/loop metadata, forward silhouette delta including seam; no optical-flow claim",
+    "pass":  true,
+    "alpha_check":  {
+                        "frames":  [
+                                       {
+                                           "index":  0,
+                                           "bbox_alpha128":  [
+                                                                 103,
+                                                                 103,
+                                                                 315,
+                                                                 465
+                                                             ],
+                                           "opaque_pixels":  26714,
+                                           "soft_alpha_pixels":  30825,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  1,
+                                           "bbox_alpha128":  [
+                                                                 95,
+                                                                 94,
+                                                                 307,
+                                                                 465
+                                                             ],
+                                           "opaque_pixels":  28275,
+                                           "soft_alpha_pixels":  32961,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  2,
+                                           "bbox_alpha128":  [
+                                                                 86,
+                                                                 94,
+                                                                 285,
+                                                                 465
+                                                             ],
+                                           "opaque_pixels":  29516,
+                                           "soft_alpha_pixels":  36787,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  3,
+                                           "bbox_alpha128":  [
+                                                                 78,
+                                                                 88,
+                                                                 285,
+                                                                 465
+                                                             ],
+                                           "opaque_pixels":  25892,
+                                           "soft_alpha_pixels":  30449,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  4,
+                                           "bbox_alpha128":  [
+                                                                 66,
+                                                                 147,
+                                                                 272,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  35463,
+                                           "soft_alpha_pixels":  39964,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  5,
+                                           "bbox_alpha128":  [
+                                                                 66,
+                                                                 167,
+                                                                 278,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  28139,
+                                           "soft_alpha_pixels":  33546,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  6,
+                                           "bbox_alpha128":  [
+                                                                 83,
+                                                                 120,
+                                                                 287,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  26109,
+                                           "soft_alpha_pixels":  31324,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  7,
+                                           "bbox_alpha128":  [
+                                                                 109,
+                                                                 126,
+                                                                 292,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  24047,
+                                           "soft_alpha_pixels":  29080,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  8,
+                                           "bbox_alpha128":  [
+                                                                 105,
+                                                                 129,
+                                                                 304,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  27591,
+                                           "soft_alpha_pixels":  32981,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  9,
+                                           "bbox_alpha128":  [
+                                                                 97,
+                                                                 140,
+                                                                 306,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  27169,
+                                           "soft_alpha_pixels":  32644,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  10,
+                                           "bbox_alpha128":  [
+                                                                 100,
+                                                                 110,
+                                                                 296,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  26539,
+                                           "soft_alpha_pixels":  31711,
+                                           "edge_pixels":  0
+                                       },
+                                       {
+                                           "index":  11,
+                                           "bbox_alpha128":  [
+                                                                 100,
+                                                                 128,
+                                                                 302,
+                                                                 464
+                                                             ],
+                                           "opaque_pixels":  25644,
+                                           "soft_alpha_pixels":  31942,
+                                           "edge_pixels":  0
+                                       }
+                                   ],
+                        "silhouette_delta":  [
+                                                 0.353622754491018,
+                                                 0.42303599203209,
+                                                 0.289982099870378,
+                                                 0.589086142666605,
+                                                 0.495446265938069,
+                                                 0.505647071786678,
+                                                 0.391095143388721,
+                                                 0.554245877313324,
+                                                 0.1531820174699,
+                                                 0.474247890684924,
+                                                 0.269105744991376,
+                                                 0.227075714479209
+                                             ],
+                        "seam_delta":  0.227075714479209,
+                        "mean_interior_delta":  0.408972454603008,
+                        "max_interior_delta":  0.589086142666605
+                    },
+    "gifs":  [
+                 {
+                     "size":  [
+                                  384,
+                                  512
+                              ],
+                     "total_ms":  960,
+                     "loop_count":  0,
+                     "sha256":  "771C0EAF0B0AEEC2CCAD85628AA2B25B435518BD5AF488BD5466B4CC600DFD7E",
+                     "frames":  12,
+                     "durations_ms":  [
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80
+                                      ],
+                     "file":  "fire_loop.gif"
+                 },
+                 {
+                     "size":  [
+                                  384,
+                                  512
+                              ],
+                     "total_ms":  960,
+                     "loop_count":  0,
+                     "sha256":  "CA4F1E5D33D06E21D140A7BD35D992D4397FC376836A9C7ABBFB75F4E8E00FF9",
+                     "frames":  12,
+                     "durations_ms":  [
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80,
+                                          80
+                                      ],
+                     "file":  "fire_preview.gif"
+                 }
+             ],
+    "atlas_canvas":  [
+                         1536,
+                         1536
+                     ],
+    "root_transform_max_error_px":  9.999999999999999E-14
+}

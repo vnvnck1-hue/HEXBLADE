@@ -1,0 +1,51 @@
+{
+  "parts": {
+    "body": {
+      "before": 394,
+      "after": 157
+    },
+    "shell": {
+      "before": 1116,
+      "after": 467
+    },
+    "brow": {
+      "before": 548,
+      "after": 262
+    },
+    "jaw": {
+      "before": 796,
+      "after": 382
+    },
+    "leg_0_l": {
+      "before": 184,
+      "after": 109
+    },
+    "leg_0_r": {
+      "before": 184,
+      "after": 110
+    },
+    "leg_1_l": {
+      "before": 186,
+      "after": 111
+    },
+    "leg_1_r": {
+      "before": 186,
+      "after": 111
+    },
+    "leg_2_l": {
+      "before": 182,
+      "after": 108
+    },
+    "leg_2_r": {
+      "before": 182,
+      "after": 108
+    }
+  },
+  "source_revision": "v10: rooted curled shell flap; lightly rounded scallops; deeper visor; short splayed puffy boots with reference hip height; asymmetric cream brush stroke without dark tip paint",
+  "triangles": 1925,
+  "bounds_scale_correction": [
+    0.9983957409858704,
+    0.9971518516540527,
+    1.0015519857406616
+  ]
+}

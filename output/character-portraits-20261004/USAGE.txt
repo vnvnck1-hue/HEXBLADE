@@ -1,0 +1,7 @@
+대화용 원화 2장: assets/portraits/purple_worker/purple-worker-neutral.png, purple-worker-cheerful.png
+실제 PNG 1254x1254, 투명 알파 확인(validation.json). 내장 imagegen 사용.
+DialoguePortrait는 정사각형 텍스처를 화면 높이의 .88(.76 후열) 정사각형으로 그리며, 하단 244px 대화창이 그림 아래쪽을 덮는다. 얼굴과 주요 엄지척을 상단에 둠.
+기본 설명 / 밝은 자신감. 생성 이미지이므로 픽셀 단위 눈높이/얼굴 정렬은 동일하지 않다.
+DialogueCast 등록/대사 연결은 하지 않음. 현재 DialogueCast.DIR는 output/character-dialogue-20261001/ 공통 경로이므로 신규 assets/portraits 경로 연결 시 경로 처리 변경 또는 표정 리소스 명시가 필요하다.
+공구 파우치 비대칭이므로 연결 시 좌우 반전 여부 검토. 캐릭터 이름/ID는 아직 미확정.
+게임 코드 변경/엔진 실행/커밋/푸시 없음.

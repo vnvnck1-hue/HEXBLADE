@@ -1,0 +1,182 @@
+{
+    "date":  "2026-10-04",
+    "zip":  "claude_handoff_bundle.zip",
+    "bytes":  15819430,
+    "sha256":  "a362e4d8c23562644855373dafe9397eedc7779062be8ee7652f0071777f4db5",
+    "entry_count":  34,
+    "all_entries_hash_verified":  true,
+    "all_document_local_links_included":  true,
+    "relative_paths_preserved":  true,
+    "entries":  [
+                    {
+                        "path":  "docs/moco-vfx-claude-handoff.md",
+                        "bytes":  28277,
+                        "sha256":  "b093ad1e0cebfcd67aa0c3b14fa7497816ae3993888c55656b97d4b5cffbe37b"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/.gdignore",
+                        "bytes":  1,
+                        "sha256":  "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/01_vfx_shapes_colors.png",
+                        "bytes":  1618170,
+                        "sha256":  "39426ad5bf9cb186971dbc158649fcb93c2a393533dc97cb0d18cf0726e58f50"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/02_vfx_timing_placement.png",
+                        "bytes":  1632732,
+                        "sha256":  "6904525562c0bac9b5a2f74afbafe840d95ea5ad662ca868d40aab7e7c8bad31"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/code_baseline.json",
+                        "bytes":  3660,
+                        "sha256":  "8512a61acb0a953556d8f569aa40cba64097108b32aff498b5eb4575c6ff5932"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/exact_palette.svg",
+                        "bytes":  3107,
+                        "sha256":  "ca3e81949a63a88b49ae30c5058d3e6303ad0f7bff0104d6df0636400fc67bcd"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/NOTES.txt",
+                        "bytes":  2511,
+                        "sha256":  "82f6c277275fd56b3afc18a245b7862d1b899115aa43c197ed70bca255b8253e"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/palette_and_presets.json",
+                        "bytes":  9817,
+                        "sha256":  "1d3bc53ea05154ae8028fd16e8498c781512d4810fd94fd7d2d3b91228ed9883"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/prompts.txt",
+                        "bytes":  6935,
+                        "sha256":  "77869caa4937a53f4ca2fcffc191468a74a14c6715f81d0e4bd2b64b8ab481d3"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/README.txt",
+                        "bytes":  758,
+                        "sha256":  "e7eaaea89d1532ed72bec756891ad726669b27df10c0285c08be26379a795e21"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/references.json",
+                        "bytes":  1095,
+                        "sha256":  "282359b08f243224894d6a00abb6961c4f9ce8123d89755e1c285e164d35c47b"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/texture_measurements.json",
+                        "bytes":  1137,
+                        "sha256":  "a56af284b376faacc99f5e9e162b81f8cf9afa6c73fa0699555d1a8dfe1b5e87"
+                    },
+                    {
+                        "path":  "output/moco-vfx-handoff-20261004/validation.json",
+                        "bytes":  3441,
+                        "sha256":  "45f1bd361dee80bfbdc433eae941a07c297148db277da1e30c75f9d5346ed1a6"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/.gdignore",
+                        "bytes":  0,
+                        "sha256":  "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/01_moco_balanced_combat.png",
+                        "bytes":  1597084,
+                        "sha256":  "0fcc3f8f85f48e5f6bf19d0e8b5b4011c6f3d4139edad1f288b14f4946713df5"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/02_moco_heavy_hit.png",
+                        "bytes":  1624499,
+                        "sha256":  "b4d6320a8e8dc30930669b451b1c9b278d3f9f1bbd92244f7c59f7e95d4c00e0"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/02_moco_heavy_hit_draft.png",
+                        "bytes":  1589354,
+                        "sha256":  "ca2c048e65187f7b1b8769fe7aee28ac3adc0a991eec02da059b0d2dd959bcee"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/03_moco_drone_support.png",
+                        "bytes":  1621295,
+                        "sha256":  "a8819eec04d405242c18ea814edc5d4c6c4e65d4a7376eab73713ce5dec103bf"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/NOTES.txt",
+                        "bytes":  1414,
+                        "sha256":  "0db485622192ccc3bd509156f716428add496a36a19f845abd2cd59bc40dc6b3"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/prompts.txt",
+                        "bytes":  12077,
+                        "sha256":  "bacd5ec8d73b17cd3eef55df0cb990daaddd158013bb659d237edd7fd6d429a0"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references.json",
+                        "bytes":  3533,
+                        "sha256":  "f12ea63c1aebc126b02214dce35032fcc04c9c05d138cb31360c3c7c1731f1ca"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/research.txt",
+                        "bytes":  11597,
+                        "sha256":  "446a7ccf57ebf9d99a2b091fd9b8b2c3a5b4f98654d7d2fc0687c8d215cb82f2"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/source_screenshot.png",
+                        "bytes":  4425954,
+                        "sha256":  "2881eb27196c598aa70b42e1c655ff74835f51637134e2dd3daf4a51ad5b6d77"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/validation.json",
+                        "bytes":  1759,
+                        "sha256":  "4908e4ab89baf19e8824195fad8f6fdaeddd583d3881f6b755efd08d46155702"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_bug_dasher.png",
+                        "bytes":  391394,
+                        "sha256":  "59cb8b6c7d941722501306f0b33fca071693e11e2f27fda4e0364b75b8ebcac9"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_jax_keyart.png",
+                        "bytes":  93182,
+                        "sha256":  "e7b07b7391d570cd609b2a0d5a8bfb3677e2e20672918884602e47a8fc16a6b8"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_laughing_emoji.png",
+                        "bytes":  17344,
+                        "sha256":  "1b016438a66246936beb90907bfc47fd5db11ece51daf292356c3af520ebe3de"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_store_02.webp",
+                        "bytes":  198973,
+                        "sha256":  "20464031c338bca89f87c924933db29b7bf8f87772e56aadd8c25c2da677c211"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_store_03.webp",
+                        "bytes":  209785,
+                        "sha256":  "f7a087559991e107f8204bf8a1e5ffed92a4e893ff81e63e9b26320a26976568"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_store_04.webp",
+                        "bytes":  149354,
+                        "sha256":  "05222fced212bc49cfed67d151fbfbbf44bfe328f7e68f5f712be9540f7c8bc5"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_store_05.webp",
+                        "bytes":  173375,
+                        "sha256":  "8281d44b7f0642ac9239c85bb2934ffcee3f6b80eb257b2842c538b5784b2640"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_trailer_10s.jpg",
+                        "bytes":  34779,
+                        "sha256":  "abecdb05f50813e8fb006991e2a2102c28eca644070f0b411eaf6104e92d508e"
+                    },
+                    {
+                        "path":  "output/moco-art-mood-20261004/references/moco_world_throne_room.png",
+                        "bytes":  769346,
+                        "sha256":  "967f27bd32b203b04ed81c1d7a298e201ccf4fe0358d4d0c124a11c537a86f2c"
+                    },
+                    {
+                        "path":  "README.txt",
+                        "bytes":  758,
+                        "sha256":  "e7eaaea89d1532ed72bec756891ad726669b27df10c0285c08be26379a795e21"
+                    }
+                ]
+}

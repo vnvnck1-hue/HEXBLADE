@@ -1,0 +1,11 @@
+[
+  {
+    "variant": 2,
+    "prompt": "Edit ONLY a missing keyboard legend. In the upper-left playerstatuspanel, change the orange word BOOST to the exact label SHIFT BOOST with a small cream SHIFT keycap immediately before BOOST. It can be slightly smaller to fit its row, and orange meter shortened by a fewpixels if needed. This single compact caption indicates the boost action's Shift key, which is missing. Keep existing orange boostcells and exactly3teal energycells. All other labels, keys, fivegreenhealthcells, portraits, controlrack, orderly calmercolor style, all world/actors/effects/camera/framing unchanged. Do not relocate HUD or replace top-row SPACE/E/R keys."
+  },
+  {
+    "variant": 3,
+    "prompt": "Image1 is the DIRECT EDIT TARGET, the finished calmer orderly HUD concept. Image2 is the ORIGINAL GAME SCENE reference ONLY for restoring one accidentally lost enemy. Make exactly two corrections, NO other redesign/recolor/relayout:\n1) Restore the flash-affected whitecubeenemy at normalized x.21,y.27, directly under the redhealthbar at x.205,y.23, left of the smoke between front-left cube and top-left block. It was accidentally erased. Restore its visible stretched white impactflash/body and nearby original small particles exactly as Image2. Keep the existing correct redhealthbar at that location. Do not add new enemies elsewhere, do not change other worldcontent.\n2) Upper-left life strip has onlyFOUR green cells although text5/5. Make FIVE distinct equal green cells WITH FOUR narrow black divisiongaps in the SAME existing strip totalwidth. Count: ONE TWO THREE FOUR FIVE. All five completely filled green, each equalwidth; keep text5/5 unchanged. Preserve3teal energycells andorangeboostrow below. All other panels, illustrated portraits/icons, keycaptions/values, subduednavycolorpalette and current actual arena camera/scene/effects unchanged.",
+    "additional_reference": "source_current_game.png"
+  }
+]

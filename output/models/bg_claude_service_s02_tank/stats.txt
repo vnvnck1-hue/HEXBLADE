@@ -1,0 +1,9 @@
+model: bg_claude_service_s02_tank
+size (m)  x 1.200  y(fwd) 1.412  z(up) 1.650
+bounds    min (-0.600, -0.600, 0.000)  max (0.600, 0.812, 1.650)
+triangles 2612
+parts:
+  tank                       2612 tris  parent=-  origin=(0.00, 0.00, 0.00)
+attachment points:
+  pt_port                  (0.00, 0.80, 0.30)  parent=-
+glb: assets\models\bg_claude_service_s02_tank.glb

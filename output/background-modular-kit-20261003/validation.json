@@ -1,0 +1,629 @@
+{
+  "scope": "Numeric design contract only. No mesh, UV seam, texture baking or engine test.",
+  "pass": true,
+  "checks": [
+    {
+      "name": "42 unique parts",
+      "pass": true,
+      "detail": 42
+    },
+    {
+      "name": "F01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/F01.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "F02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/F02.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "F03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/F03.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "F04 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/F04_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "F05 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/F05.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "D01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/D01.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "D02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/D02_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "D03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/D03.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W01.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W02_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W03.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W04 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W04_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W05 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W05.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W06 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W06.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "W07 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/W07.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "P01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/P01_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "P02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/P02.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "P03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/P03.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "P04 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/P04.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "P05 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/P05.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "R01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/R01.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "R02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/R02_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "R03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/R03_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A01.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A02_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A03.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A04 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A04_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A05 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A05.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A06 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A06.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A07 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A07.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A08 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A08.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A09 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A09.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A10 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A10.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A11 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A11.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A12 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A12.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "A13 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/A13.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "I01 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/I01_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "I02 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/I02_v2.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "I03 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/I03_v3.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "I04 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/I04.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "I05 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/I05.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "I06 PNG",
+      "pass": true,
+      "detail": {
+        "file": "sheets/I06.png",
+        "width": 1536,
+        "height": 1024
+      }
+    },
+    {
+      "name": "8x8 floor exact coverage",
+      "pass": true,
+      "detail": {
+        "tiles": 30,
+        "area_m2": 64,
+        "overlap_m2": 0,
+        "uncovered_m2": 0
+      }
+    },
+    {
+      "name": "floor top/thickness",
+      "pass": true,
+      "detail": {
+        "top_y": 0,
+        "bottom_y": -0.2,
+        "stud_relief": 0.02
+      }
+    },
+    {
+      "name": "closed door clearances",
+      "pass": true,
+      "detail": {
+        "opening": [
+          3.5,
+          2.5
+        ],
+        "center_gap": 0.01,
+        "side_gap": 0.005
+      }
+    },
+    {
+      "name": "door open and inside side pockets",
+      "pass": true,
+      "detail": {
+        "left": [
+          -1.495,
+          0.2450000000000001
+        ],
+        "right": [
+          3.755,
+          5.495
+        ]
+      }
+    },
+    {
+      "name": "door depth inside pocket and wall",
+      "pass": true,
+      "detail": {
+        "front_clearance": 0.019999999999999997,
+        "rear_clearance": 0.020000000000000018,
+        "jamb_slit_required": true
+      }
+    },
+    {
+      "name": "socket pair 1 P01/P02",
+      "pass": true,
+      "detail": {
+        "position": [
+          2,
+          0,
+          0
+        ],
+        "normal_a": [
+          1,
+          0,
+          0
+        ],
+        "normal_b": [
+          -1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "socket pair 2 P02/P01",
+      "pass": true,
+      "detail": {
+        "position": [
+          2.5,
+          0,
+          -0.5
+        ],
+        "normal_a": [
+          0,
+          0,
+          -1
+        ],
+        "normal_b": [
+          6.123233995736766e-17,
+          0,
+          1
+        ]
+      }
+    },
+    {
+      "name": "socket pair 3 P01/P03",
+      "pass": true,
+      "detail": {
+        "position": [
+          2,
+          0,
+          0
+        ],
+        "normal_a": [
+          1,
+          0,
+          0
+        ],
+        "normal_b": [
+          -1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "socket pair 4 I01/I02",
+      "pass": true,
+      "detail": {
+        "position": [
+          1,
+          0.06,
+          0
+        ],
+        "normal_a": [
+          1,
+          0,
+          0
+        ],
+        "normal_b": [
+          -1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "socket pair 5 I01/I03",
+      "pass": true,
+      "detail": {
+        "position": [
+          1,
+          0.06,
+          0
+        ],
+        "normal_a": [
+          1,
+          0,
+          0
+        ],
+        "normal_b": [
+          -1,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "socket pair 6 I03/I06",
+      "pass": true,
+      "detail": {
+        "position": [
+          1.5,
+          0.06,
+          0.4
+        ],
+        "normal_a": [
+          0,
+          0,
+          1
+        ],
+        "normal_b": [
+          -6.123233995736766e-17,
+          0,
+          -1
+        ]
+      }
+    },
+    {
+      "name": "pipe bore and wall clearance",
+      "pass": true,
+      "detail": {
+        "radial_fit": 0.0010000000000000009,
+        "wall_clearance": 0.07500000000000001
+      }
+    },
+    {
+      "name": "pipe dimensions match connectors",
+      "pass": true,
+      "detail": {
+        "diameter": 0.25
+      }
+    },
+    {
+      "name": "rail shared posts / vertical span",
+      "pass": true,
+      "detail": {
+        "three_spans": 3,
+        "posts": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "heights": [
+          0.25,
+          0.95
+        ],
+        "corner_straight_variant": 1.75
+      }
+    },
+    {
+      "name": "organic neck fits height",
+      "pass": true,
+      "detail": {
+        "neck": 0.12
+      }
+    },
+    {
+      "name": "wall cap clearance",
+      "pass": true,
+      "detail": {
+        "overhang": 0.05
+      }
+    },
+    {
+      "name": "texture period / trim sum",
+      "pass": true,
+      "detail": {
+        "trim_pixels": [
+          128,
+          256,
+          128,
+          512,
+          1024
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+2026-10-03 | 내장 image_gen 편집 | TFT 재질 표현 5차
+사용자 레퍼런스: https://www.artstation.com/phillipzhang
+직접 확인한 작품:
+https://phillipzhang.artstation.com/projects/2xP11a
+https://phillipzhang.artstation.com/projects/qQAEwP
+Odyssey 중앙 바닥 텍스처·완성 아레나, Jinx & Vi 프랍 시트를 브라우저로 관찰하고 기본 배경 생성의 스타일 참고 이미지로 사용.
+관찰/수정 방향: 부드러운 넓은 색 그라디언트, 칠한 부피감, 모서리에 집중된 마모·빛, 조용한 바닥 중앙. 기존 v4의 전면적인 거친 붓자국과 반복 볼트를 줄임. 사용자 저채도·저명도 방향 유지. 기존 레벨/코드 적용 없음.
+결과: 01_base_v5_tft.png / 03_infected_v5_tft.png
+
+BASE PROMPT
+Use case: style-transfer.
+FOUR reference images are provided, in order:
+1: Phillip Zhang TFT Odyssey center-board texture shown in a browser screenshot — primary painted surface reference.
+2: TFT Odyssey arena screenshot — environment texture finish and value hierarchy reference.
+3: Phillip Zhang TFT Jinx & Vi prop sheet — painted volumes and edge treatment reference.
+4: OUR industrial maintenance room concept sheet — edit target. Preserve this room's identity, general quarter-view layout, open center, workbench, cabinets, pipes, right-hand material swatches.
+User: "Like Phillip Zhang's work; the background texturing feel of TFT."
+Substantially repaint image 4 toward the finish of the first three references. They are style/material references only; do not copy their arenas, logos, lettering, props or browser interface.
+
+CRUCIAL CORRECTION: the current target has too many coarse scratchy opaque strokes everywhere and resembles rough painted illustration. Produce POLISHED GAME HAND-PAINTED DIFFUSE TEXTURING, as in Phillip Zhang's Teamfight Tactics environments: broad very soft blended color transitions forming round solid volume, selective hard plane breaks, understated localized brush traces, no all-over brush streak pattern. Painted light is shaped around each form, not a filter. No thick black drawn cartoon outline. Soft colored crevice occlusion and occasional sharp thin edge glints define the shapes.
+
+Floor: large calm dusky teal-blue/slate painted metal slabs. Broad subtle center-to-edge and warm-to-cool gradients; quiet playable center; only a FEW art-directed bevel chips and understated scratches near edges. Remove 85% of dense all-over painted scuffing from the input. Remove most repetitive visible bolts from the central floor; retain a few chunky bolts around the edges. Industrial plate thickness and bevels remain readable, not stone blocks.
+Cabinets/walls/pipes: sculpted, slightly inflated sturdy rounded forms, simplified broad chamfers, selective soft diffuse painted highlights, rich colored shadows; matte turquoise and warm gray-ivory coatings, dull ochre safety paint. Taper shape silhouettes gently where useful for stylized appeal.
+Retain the user's previously requested subdued saturation and lowered overall brightness. Do not brighten everything, flood with neon, turn photographic, or add shiny PBR reflections. Use a little localized warm work-lamp glow contrasted against cool bluish ambience. Colored shadows are blue/plum, not black mud.
+Material swatches should make the polished restrained hand-painted finish obvious, not a canvas of broken mosaic strokes.
+Clean normal UNINFECTED room. No creatures, no biological growth, no character, no text/logo/watermark. Landscape 3:2, production quality game environment art study. It should feel like a usable TFT game environment with beautiful artist-painted textures, not an oil painting, generic cel illustration, or realistic industrial render.
+
+INFECTED PROMPT
+Use case: precise-object-edit.
+Image 1 is the newly repainted normal room. It establishes the EXACT desired finish: Phillip Zhang / Teamfight Tactics polished hand-painted environment texturing, soft blended large gradients, restrained edge wear, clean playable center, muted dark palette, matte surfaces, soft painted volume, no rough all-over gouache streaks.
+Image 2 is the older infected room. Use it ONLY for the locations and types of infestation; its coarse heavy brush texture is obsolete.
+Make an INFECTED version of image 1, maintaining its identical camera, lighting, same room and floor plate arrangement, and its soft refined texturing style. Add thick plum organic cables following wall pipes and floor seams, muted olive membrane pillows and rounded ivory shell bridges in the peripheral areas shown in image 2. Keep center floor uncluttered and most of the calm blue/teal floor visible. Biological additions also have smooth artist-painted light/shadow gradients, softly sculpted cartoon volume, selective narrow highlights and subtly colored occlusion, not gritty strokes, not wet realistic flesh. No black comic ink outlines. Do not make it horror or gory.
+Update the five right-hand swatches to floor with one purple tendril, plum tendrils, ivory shell with olive pockets, olive membrane, teal residue on slate-blue plate. Match scene paint finish and restrained saturation. Preserve lowered overall brightness and subdued palette, warm small work lights versus cool ambient. No copied TFT logos, no text, no characters, no new unrelated objects. Landscape 3:2.

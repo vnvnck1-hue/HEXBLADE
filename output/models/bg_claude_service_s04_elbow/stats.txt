@@ -1,0 +1,10 @@
+model: bg_claude_service_s04_elbow
+size (m)  x 1.050  y(fwd) 1.050  z(up) 0.600
+bounds    min (-0.753, -0.753, 0.000)  max (0.297, 0.297, 0.600)
+triangles 1432
+parts:
+  elbow                      1432 tris  parent=-  origin=(0.00, 0.00, 0.00)
+attachment points:
+  pt_end_a                 (-0.75, 0.00, 0.30)  parent=-
+  pt_end_b                 (0.00, -0.75, 0.30)  parent=-
+glb: assets\models\bg_claude_service_s04_elbow.glb

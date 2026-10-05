@@ -1,0 +1,11 @@
+실제 게임 재촬영 — 2026-10-05
+Godot 4.7.2 Forward+, tools/godot.ps1 경유, main.tscn 실제 자동 전투(--bot --dronebot --seed=4).
+기존 cockpit_ingame_play_capture.gd는 관찰/저장만 수행. 게이지·합체 상태·컷인 시계 변경 없음. 무적 옵션 없음.
+약 35.1초, 청소 5회, 게이지 58.72에서 합체 시작. DOCKED 후 게이지 28.37. 컷인 13프레임 저장.
+01_docking_impact.png = cutin_004.png, 02_cutin_whirl.png = cutin_006.png.
+둘 다 1920×800 원본 PNG 복사, SHA256 동일. 합성/리사이즈/보정 없음.
+원본 프레임: _capture/cockpit_live_20261005/ (기존 git 제외 경로).
+캡처 완료 로그: GAMEPLAY_CAPTURE_RESULT cutin_frames=13. SCRIPT ERROR 없음.
+시작 시 sandbox 환경의 user:// 로그 파일 열기 오류 2개와 시스템 인증서 읽기 오류 1개 발생. 렌더와 플레이 및 PNG 저장은 완료됨. 실행 래퍼 exit=1이므로 무오류 실행으로 주장하지 않음.
+PNG 저장 지연은 실제 프레임 간격에 영향을 줄 수 있음. 정지 화면 확인용이며 애니메이션 타이밍 성능 측정용 아님.
+게임 코드 수정·커밋·푸시 없음. 다른 작업 보존.

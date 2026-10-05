@@ -1,0 +1,54 @@
+{
+  "selected_reference": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-a46a2b44-bfff-486f-b12b-6bd00e60d07c.png",
+  "local_reference": "selected_reference.png",
+  "intent": "사용자가 선택한 캐주얼 A 형태를 같은 참조와 착용 규모, 평면 만화 스타일로 확장한 실루엣 6안.",
+  "generator": "Built-in imagegen",
+  "image_calls": 6,
+  "nominal_suit_height_m": 2.2,
+  "outputs": [
+    {
+      "file": "01_block_frame.png",
+      "title": "01 · 블록 프레임",
+      "shape": "낮은 가로 바이저·가로 박스 어깨·단일 사다리꼴 흉갑",
+      "detail": "Variant 01 / BLOCK FRAME: fresh modular square-framed utility suit. DIFFERENT FROM REFERENCE: a low wide wedge helmet with a single broad horizontal orange viewing SLOT under a flat overhanging brow, no source's big triangular amber cheek opening; one short folded rear antenna. Shoulder caps are wide horizontal clipped-corner rectangular boxes with a thick graphite lower rim, straight upper edge and mild bevel, not upright original pentagon shields. Chest is ONE broad inverted trapezoid cream shell with a rectangular cyan power tile low at sternum, rather than source two angled separate breast plates. Compact waist is one dark flexible belt with wide lateral sage hip blocks. Upper arms slim square armor tubes, forearms broader block cuffs, thighs medium-sturdy, shins are a wide single flat sage front plate with a horizontal cream ankle cuff, squared wedge toe boots. Crisp orthogonal clean-line silhouette, industrial construction toy appeal without looking like a toy model. Magnified detail shows plug-in rectangular shoulder block and a single large hinge pin. Two action thumbnails: crouched sword ready and broad horizontal slash. Text exact: \"01 · 블록 프레임\", detail \"모듈 어깨\".",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-4fbc4b45-fc96-4ce2-9fbe-eb1f20076347.png"
+    },
+    {
+      "file": "02_slim_wedge.png",
+      "title": "02 · 경량 웨지",
+      "shape": "긴 이마 쐐기·좁고 기울어진 어깨·분할 경사 흉갑",
+      "detail": "Variant 02 / LIGHT WEDGE: agile member of same angular boxy family. DISTINCT SILHOUETTE: helmet has a longer forward wedge forehead and slim orange chevron across lower front; single small side-mounted fin follows helmet backward. Shoulder caps are NARROW clipped rectangles angled gently down and out with a sharp cut rear corner; no rounded/feather shapes. Chest uses TWO long diagonal cream collar plates meeting near sternum in a narrow V with sage central torso shell, protected graphite short midriff. Thigh and shin shells taper more strongly and have one diagonal cream band on outer shin, boots remain substantial wedge toes but slimmer than other designs. External hinges simple and slightly more exposed at elbows/knees. Leaner upper body and wider knee mobility gap, still large stylized gloves and 5.5-6-head proportions, NEVER long 8-head realistic runner or spindly exoskeleton. One simple red straight blade a little narrower; no second sword. Flat small rectangular low back pack. Detail is pivoting narrow shoulder plate freeing upper-arm movement. Two thumbnails: low accelerating dash with sword back, low diagonal sweeping cut. Text exact: \"02 · 경량 웨지\", detail \"가동 어깨\".",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-0d894113-6b70-411a-9808-a735cef2ecea.png"
+    },
+    {
+      "file": "03_guard_block.png",
+      "title": "03 · 방호 블록",
+      "shape": "넓은 보호 목깃·낮고 넓은 머리·큰 일체형 흉갑·커다란 전완",
+      "detail": "Variant 03 / GUARD BLOCK: defensive bulky front-armor suit, distinctly BROAD UPPER BODY while same wearable height. Helmet is short and wide with squared sloping brow and broad amber visor protected by two blunt cheek plates. A U-shaped segmented cream NECK GUARD rises around helmet sides but leaves front optics exposed, not a giant fake head. Squared shoulder caps are thick tall trapezoid shields and front chest is a broad cream angular pentagonal slab with sage edge trim, wider than utility variant. Forearms are large rectangular integrated protective shells around HUMAN gloves, NOT separate giant handheld shield and not robot hands disconnected from adult hands. Forearm front has one big flat cream plate; simple graphite wrist visible. Hips relatively narrow, strong straight thighs, shins short broad rectangular sage plates with cream knee blocks, wide clean boots. One red straight sword in hand held lowered in neutral hero. Rear uses two flat heat-exchanger blocks. Detail = opening forearm protective shell and simple wrist ring. Two thumbnails: raised forearm guard with sword and strong counter slash. Text exact: \"03 · 방호 블록\", detail \"전완 방호판\".",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-ffc27d88-a27e-448e-8342-7464dc28cd31.png"
+    },
+    {
+      "file": "04_offset_rebuild.png",
+      "title": "04 · 비대칭 개수형",
+      "shape": "좌우 다른 어깨·치우친 흉갑·교체 부품·오프셋 센서",
+      "detail": "Variant 04 / OFFSET REBUILD: visibly ASYMMETRIC field-modified suit without dirty realism. Helmet has a central cream brow wedge plus a small rectangular cyan sensor block OFFSET on wearer's LEFT temple and an orange narrow face slot. Shoulder on wearer's LEFT is a BIG cream rectangular flat modular cap with one diagonal clipped corner; right shoulder cap is SMALLER sage angular cap revealing a dark hinge. IMPORTANT: maintain left/right asymmetry consistently in front/back/side/action views. Chest = two overlapping unequal cream slabs offset from center with a sage central spine stripe and small off-center amber status square. Left forearm a broader cream block cuff, right forearm slimmer sage cuff; both real human gloves. One knee cap has cream replacement plate, opposite is sage; thighs otherwise balanced and keep both boot size equal. Underlying human shoulder/elbow/knee lengths are still symmetric. Flat hinged patch plates, ZERO scratches/chipping/rust, not junkyard cables. Compact short rear antenna and power battery on opposite side of larger shoulder to balance silhouette. One red straight sword in RIGHT hand, left armored glove free. Detail is mismatched replaceable shoulder caps side by side with clear single pins. Two thumbnails: low ready and two-handed diagonal cut. Text exact: \"04 · 비대칭 개수형\", detail \"교체 장갑\".",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-864a0658-cce8-4837-bfe6-dc9f287555c8.png"
+    },
+    {
+      "file": "05_layer_shell.png",
+      "title": "05 · 겹장갑 셸",
+      "shape": "겹친 두 장 어깨·층진 흉갑·연동 무릎·허리 가동 판",
+      "detail": "Variant 05 / LAYER SHELL: a sword-action suit with TWO BROAD OVERLAPPING PLATES per armor group, no excessive micro layers. Helmet is split into a big cream central slanted wedge roof and a graphite jaw cup around a single compact amber trapezoid visor. Shoulder caps consist of a cream upper clipped box plate overlapping a shorter sage lower rectangle with visible simple gap, a unique stepped silhouette. Chest has one broad cream top trapezoid over a shorter wide sage lower chest plate, which transitions into TWO large graphite flexible abdomen segments. Thigh armor broad cream OUTER shell with sage inner face, knee is cream flat cap floating just above wide sage shin plate; boots broad low wedge with cream single upper toe flap. Plates overlap like sliding covers while human joints stay in place; do not make samurai skirt scales or knight pauldrons. Palette slightly more cream on limbs but same muted olive foundation. One red straight sword, prominent upper body twisting mobility. Detail = two plate shoulder cap sliding clear of simple hinge, not a chain of tiny plates. Two thumbnails: two-handed raised sword and torso-twist rotational strike. Text exact: \"05 · 겹장갑 셸\", detail \"슬라이드 장갑\".",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-757aa032-d662-463a-a64a-61334911db32.png"
+    },
+    {
+      "file": "06_compact_heavy.png",
+      "title": "06 · 컴팩트 중장갑형",
+      "shape": "짧고 넓은 몸통·두꺼운 허벅지·짧은 종아리·큰 사각 부츠",
+      "detail": "Variant 06 / COMPACT HEAVY: most squat POWERFUL adult wearable exosuit, about 5.5-heads tall, NOT 3-head mascot or huge robot cockpit. DISTINCT PROPORTION: shorter broader torso and calves, thick sage upper thighs, LARGE box gauntlets and largest wide truncated wedge boots; adult's stylized body must be adapted to same compact limb proportions in cutaway. Helmet is broad and low with a big cream angular brow, short flat central top ridge and recessed amber visor, no antenna. Shoulder caps are stout cream CUBOID blocks with bevelled top corners, tilted slightly inward; chest a wide blocky cream shell with shallow central recessed orange square and flat graphite side braces. Broad sage pelvis belt with small cream center plate, exposed simple large knee hinge circles; shin armor extremely simple short thick sage block with cream front toe/ankle. Large integrated forearm flat shells and visibly human-fitting glove. Compact low twin back battery, no backpack above head. Single RED-EDGED straight blade slightly wider than others, no axe or huge oversized arm. Detail is broad toe plate and one folding HEEL ground support, only one simple hinge. Two thumbnails: braced heavy guard and overhead forceful chop. Text exact: \"06 · 컴팩트 중장갑형\", detail \"접이식 지지대\".",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-b7bbaedc-a71e-4a0b-ac6e-a350b9ca8ff7.png"
+    }
+  ],
+  "limitations": "Concept art. Dimensions, cutaway anatomy and consistency across views are approximate.",
+  "game_applied": false
+}

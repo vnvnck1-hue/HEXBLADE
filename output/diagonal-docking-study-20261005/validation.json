@@ -1,0 +1,42 @@
+{
+    "Width":  3415,
+    "Height":  1432,
+    "Frames":  5,
+    "DurationsMs":  [
+                        100,
+                        100,
+                        200,
+                        500,
+                        100
+                    ],
+    "ConceptWidth":  1935,
+    "ConceptHeight":  812,
+    "LocalLinks":  [
+                       {
+                           "Target":  "../output/diagonal-docking-study-20261005/reference.gif",
+                           "Exists":  true
+                       },
+                       {
+                           "Target":  "../output/diagonal-docking-study-20261005/reference_hold.png",
+                           "Exists":  true
+                       },
+                       {
+                           "Target":  "../output/diagonal-docking-study-20261005/reference_enter.png",
+                           "Exists":  true
+                       },
+                       {
+                           "Target":  "../output/diagonal-docking-study-20261005/reference_exit.png",
+                           "Exists":  true
+                       },
+                       {
+                           "Target":  "../output/diagonal-docking-study-20261005/apricot_mechanic_docking.png",
+                           "Exists":  true
+                       },
+                       {
+                           "Target":  "../output/diagonal-docking-study-20261005/prompt.txt",
+                           "Exists":  true
+                       }
+                   ],
+    "ReferenceSha256":  "D77A3ACB4E89D02EC59A2000A5D894DA8565D056F1B0318252B5A99EDC3DA0FC",
+    "ConceptSha256":  "E92E72B3D69F4FE4B78FDC8BF5ACF2B4245C75EB7CC66872D0AF45B35D8794FE"
+}

@@ -1,0 +1,33 @@
+2026-10-04 · TRIAD 정보 UI 실제 적용
+
+최신 사용자 지시: 드론 UI는 우측 하단 보존 범위에 포함하지 않는다. 제안했던 드론 정보 UI로 실제 게임에 적용한다.
+적용 범위: 기본 STRIKER의 드론 정보 패널을 좌하단 초상 카드로 변경한다. 상단 HUD와 우측 하단 원형 스킬/수치/배지/리소스는 유지한다.
+
+드론 카드
+- 선택 reference.png의 하단 왼쪽 초상 카드 스타일: 차분한 남색·크림 글자·민트 지원 게이지와 키 배지.
+- 현재 TRIAD 모델의 원형 전면 세 모듈을 유지한 새 투명 초상: assets/ui/calm_hud/triad_portrait.png.
+- Built-in imagegen. 입력1 output/models/partner_drone/preview.png는 드론 외형, 입력2 output/calm-ingame-ui-20261004/reference.png는 UI 그림체 참조. 실제 프롬프트 portrait-prompt.txt.
+- 원본 생성 파일은 C:/Users/vnvnc/.codex/generated_images/01a10584-b9c4-7bd1-bc09-10c589ad66c4/exec-b2e96099-2251-40e7-825d-03f9ce9b4de3.png. 원본 보존, 프로젝트에 복사. 임포트 최대512px·밉맵.
+- 실제 이름/현재 상태/지원 0~100·50 기준선/청소·직접 청소 횟수.
+- Q DOCK↔UNDOCK, X SHIELD↔VORTEX, Z CLEAN과 Space 유지 주변 청소/짧게 회피 안내.
+- 합체 최소 게이지10·스킬 비용50에 따른 키 배지 강조, 직접/자동 청소 중 Z 밑줄.
+- DroneHud.panel_rect: 좌하단 위치와 창 높이 배율. 다른 프리셋/classic은 기존 패널로 복귀.
+- CalmHud의 적 HP바 보호 영역만 새 카드 위치로 연결. 우측 하단 스킬 모듈은 수정하지 않음.
+- 드론/플레이어 입력, 전투/청소 판정, 게이지 비용, 모델은 수정하지 않음.
+
+검증 자료
+- drone_hud.before.gd / calm_hud.before.gd 변경 전 스냅샷.
+- protected-before.json: 원형 스킬 코드 및 모든 기존 아이콘/임포트 SHA256.
+- skills_ready_before/after.png, skills_blocked_before/after.png 동일 상태/배경에서 원형 스킬 영역 픽셀 일치.
+- protected-pixels.json: ready/blocked 모두 PASS.
+- applied_after.png / support_ready.png / docked.png / sweeping.png: 실제 엔진 HUD 렌더.
+- hud-check.log: 실제 창4크기 배치·초상/알파/프리셋 복귀 PASS.
+- 전체 검사 all-tests.log, 최신 배경 Main60초 bot+dronebot main-bot.log와 최종 main-bot-final.log.
+- 첫 전체 검사 중 동시 작업이 CockpitCutin 클래스를 추가했다. 등록 전 input_buffer/mammoth_death_lab/mammoth_ingame/mech_player/missile 다섯 검사에 컴파일 오류가 났다. import-final.log로 등록한 뒤 recheck.log에서 해당5종 모두 PASS/ERROR0. 초기 로그는 그대로 보존한다.
+- 전체 검사 이후 새로 추가된 cockpit_cutin_check는 new-test-check.log에서 별도 검증한다. 전체 항목의 최종 결과는 coverage-final.json에서 원래 검사/재검사/신규검사의 출처와 함께 기록한다.
+- _capture/drone_support_ui_show.gd, 실제 bot 프레임 _capture/drone_support_bot/는 기존 규칙으로 git 제외.
+
+최종 검증: 현재 tests/*.gd 37종 모두 PASS. 전체36종의 처음 실행 중 클래스 등록 전에 실패했던5종은 recheck.log에서 재검사 PASS, 새 cockpit_cutin_check는 new-test-check.log에서 PASS. 후속 신규 검사 WeakRef 타입 추론 경고2곳만 명시 WeakRef 타입으로 보정했으며 원본 cockpit_cutin_check.before.gd 보존.
+coverage-final.json은 현재37개 검사 각각의 최종 로그 출처/오류 수/통과 여부를 기록한다. 최종 각 항목 ERROR/SCRIPT ERROR0; 하나의 전체 실행에서37종 모두 통과했다는 의미는 아니다.
+최종 Main60초 bot+dronebot ERROR/SCRIPT ERROR0, HUD 실제 창4크기 PASS, 기존 스킬14파일 SHA256 동일·2상태 픽셀 SHA256 동일. validation.json에 기록.
+README/docs/hud-presets/docs/partner-drone/AGENTS 갱신. 현재 브랜치 feature/round-skill-hud. 커밋·푸시 없음. 다른 도구의 변경과 미추적 파일은 보존한다.

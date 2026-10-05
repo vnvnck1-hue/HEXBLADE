@@ -1,0 +1,7 @@
+model: bg_claude_jamb
+size (m)  x 0.141  y(fwd) 0.550  z(up) 3.000
+bounds    min (-0.011, -0.550, 0.000)  max (0.131, 0.000, 3.000)
+triangles 804
+parts:
+  wall                        804 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_claude_jamb.glb

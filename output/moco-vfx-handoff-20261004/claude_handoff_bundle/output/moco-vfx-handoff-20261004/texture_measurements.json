@@ -1,0 +1,25 @@
+{
+    "method":  "64x64 regular center samples, unlit sRGB texture decoded to linear Rec709 luminance; not screen capture luminance",
+    "textures":  [
+                     {
+                         "texture":  "assets/models/bg_claude_f01_floor_4m_v3.png",
+                         "width":  2048,
+                         "height":  2048,
+                         "samples":  4096,
+                         "linear_luma_mean":  0.066993916650180743,
+                         "p10":  0.059798509029792647,
+                         "p50":  0.0669794666350113,
+                         "p90":  0.073929529874263683
+                     },
+                     {
+                         "texture":  "assets/models/bg_claude_w01_bg_claude_w01_albedo.png",
+                         "width":  2048,
+                         "height":  2048,
+                         "samples":  4096,
+                         "linear_luma_mean":  0.088755031307978627,
+                         "p10":  0,
+                         "p50":  0.033066921475964919,
+                         "p90":  0.30778137683957379
+                     }
+                 ]
+}

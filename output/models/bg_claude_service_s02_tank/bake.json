@@ -1,0 +1,7 @@
+{
+ "atlas_px": 2048,
+ "px_per_m": 299.3,
+ "samples": 48,
+ "albedo": "output/models/bg_claude_service_s02_tank/bg_claude_service_s02_tank_albedo.png",
+ "uv_fill": 0.314879261524139
+}

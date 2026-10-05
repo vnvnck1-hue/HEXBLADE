@@ -1,0 +1,137 @@
+﻿[
+    {
+        "sha256":  "01BA4719C80B6FE911B091A7C05124B64EEECE964E09C058EF8F9805DACA546B",
+        "file":  ".gdignore",
+        "bytes":  1
+    },
+    {
+        "sha256":  "9A64457E3D7A33FEE0B8C78AFE75836719F23C7291D67C33D3A507394909E504",
+        "file":  ".gitignore",
+        "bytes":  8
+    },
+    {
+        "sha256":  "78B23BB37C6570A44DDA3982E406C5C5BA5F292519F628D24AF080178923B820",
+        "file":  "analysis.txt",
+        "bytes":  2999
+    },
+    {
+        "sha256":  "7BFE45E5C183D24DEF4ED750A1AABDB10781F8E2D4275A96EC90203B8AF9A655",
+        "file":  "analyze_reference.ps1",
+        "bytes":  2424
+    },
+    {
+        "sha256":  "6D655D53782FBE3839416E0046F9F3234D3C5373101B121E37B61F68854C458D",
+        "file":  "animation.json",
+        "bytes":  1000
+    },
+    {
+        "sha256":  "1C78A0248A04FFB846B69186248248F041B6C39FED7A09F83FE1C8AA2013368C",
+        "file":  "assemble.lua",
+        "bytes":  1663
+    },
+    {
+        "sha256":  "DFB6A6FEADDA0391B384180B67A4F9140B5A3B0648F841D55BC1CE656C57CB9D",
+        "file":  "fire_atlas.png",
+        "bytes":  760947
+    },
+    {
+        "sha256":  "E6F4987B8F92A72ECA274FFDFB9C46CDC09349594047B17EB85E1E5EDE9C89EA",
+        "file":  "fire_loop.aseprite",
+        "bytes":  681745
+    },
+    {
+        "sha256":  "771C0EAF0B0AEEC2CCAD85628AA2B25B435518BD5AF488BD5466B4CC600DFD7E",
+        "file":  "fire_loop.gif",
+        "bytes":  124597
+    },
+    {
+        "sha256":  "CA4F1E5D33D06E21D140A7BD35D992D4397FC376836A9C7ABBFB75F4E8E00FF9",
+        "file":  "fire_preview.gif",
+        "bytes":  127427
+    },
+    {
+        "sha256":  "2DD3D479976403B42102410B5473E1C13F3A3427057ECF5BE37E5CA58FA555D6",
+        "file":  "game_asset_pack.zip",
+        "bytes":  2397853
+    },
+    {
+        "sha256":  "ED285DD092A806838F9A4DF1BBC9CB7C0939E9C858A0AACEB24A1F81FC03683A",
+        "file":  "inspect_sheet.ps1",
+        "bytes":  514
+    },
+    {
+        "sha256":  "978ADD8501B38FCB5875F6A9025DD1B6799586EF794BCFD7C7B0A41D6149E38F",
+        "file":  "pack.ps1",
+        "bytes":  2812
+    },
+    {
+        "sha256":  "19A5AF70A0CA48696CB220768F39D8FDFF1B12E204A8CEA22B5AA1498498FDF7",
+        "file":  "prompt.txt",
+        "bytes":  3667
+    },
+    {
+        "sha256":  "8EBF00EC688DD3AB5432B49FB96A46072039B520872D3BB38CD1DC88AB65C0FE",
+        "file":  "README.txt",
+        "bytes":  2777
+    },
+    {
+        "sha256":  "485EC2622036DC4341C15E69821A3B6BBFE53C5CF7858249E400578B2E7CD9F7",
+        "file":  "reference.gif",
+        "bytes":  74184
+    },
+    {
+        "sha256":  "5D9D42E88B705ABC1089B9486EBD08DFFCD9E5AA4EAF0F3481DB0E0D90B03BD6",
+        "file":  "reference_analysis.json",
+        "bytes":  5780
+    },
+    {
+        "sha256":  "9822EF0061E4D5B5BCCED1C11B716C53383E784ABCACB76747A2D9705DB52CA2",
+        "file":  "reference_contact.png",
+        "bytes":  164936
+    },
+    {
+        "sha256":  "F5C15AF8CA942DFC8E3A43715193F3D26EE8B77497DCECD4FB45D6B8ABA4E8E2",
+        "file":  "reference_phase_00.png",
+        "bytes":  9225
+    },
+    {
+        "sha256":  "6CFE8B4EA5E16E61975C146120C83827139993718CD21CBD90950B4D478018D5",
+        "file":  "reference_phase_06.png",
+        "bytes":  9391
+    },
+    {
+        "sha256":  "1041F5F65824FF7C8F46912A3B20BDE3E1750CB59CF18C3EE7942464C7F52963",
+        "file":  "reference_phase_12.png",
+        "bytes":  8426
+    },
+    {
+        "sha256":  "F4551D812E84C0854AD9E63781C1B19D14C0F9BE8FDC0BA51D52345A760575D7",
+        "file":  "reference_phase_18.png",
+        "bytes":  9106
+    },
+    {
+        "sha256":  "D20BEC12B5A20AF4586E3A82715F7FDE6336E5779AADCCA55D70921C0CA6C474",
+        "file":  "registration.json",
+        "bytes":  1378
+    },
+    {
+        "sha256":  "7EC0E9D94971E4EF42C09B49CE45C48604129329F375187A04793AB6C96E2BC0",
+        "file":  "sheet_v1_dark.png",
+        "bytes":  593550
+    },
+    {
+        "sha256":  "EDF01E1FA688CE92E44CD4D5E183255E97DFB9B59B9D4D42B8AE466E159F5846",
+        "file":  "source_sheet_v1.png",
+        "bytes":  528186
+    },
+    {
+        "sha256":  "1D0E2306EBEBACD1529D972843CED90D8C23C25A16EE614AA670C90F2857F056",
+        "file":  "validate.ps1",
+        "bytes":  4095
+    },
+    {
+        "sha256":  "B88C8D0D632CECE9165AEDB73449E898085F2563028C1DB28F24BCF7560CEE5F",
+        "file":  "validation.json",
+        "bytes":  12895
+    }
+]

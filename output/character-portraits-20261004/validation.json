@@ -1,0 +1,34 @@
+[
+    {
+        "file":  "purple-worker-neutral.png",
+        "width":  1254,
+        "height":  1254,
+        "transparent_pixels":  647233,
+        "opaque_pixels":  1191,
+        "partial_alpha_pixels":  924092,
+        "bounds_alpha_ge_8":  [
+                                  96,
+                                  7,
+                                  1208,
+                                  1253
+                              ],
+        "square":  true,
+        "has_alpha_cutout":  true
+    },
+    {
+        "file":  "purple-worker-cheerful.png",
+        "width":  1254,
+        "height":  1254,
+        "transparent_pixels":  540180,
+        "opaque_pixels":  868,
+        "partial_alpha_pixels":  1031468,
+        "bounds_alpha_ge_8":  [
+                                  27,
+                                  18,
+                                  1244,
+                                  1253
+                              ],
+        "square":  true,
+        "has_alpha_cutout":  true
+    }
+]

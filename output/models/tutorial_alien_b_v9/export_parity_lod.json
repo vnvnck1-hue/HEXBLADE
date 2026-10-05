@@ -1,0 +1,8 @@
+{
+  "glb": "tutorial_alien_b_lod.glb",
+  "comparison": "Same camera/lights/Blender toon shader; fresh GLB geometry/normals/UV/embedded texture",
+  "mean_absolute_rgb_difference": 1.4299159374786541e-05,
+  "fraction_pixels_over_0_05_rgb_difference": 8.985731336805556e-05,
+  "is_godot_toon_validation": false,
+  "pass": true
+}

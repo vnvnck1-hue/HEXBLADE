@@ -1,0 +1,37 @@
+2026-10-04 · 차분한 HUD 실제 게임 적용
+
+사용자 지시: 선택 시안의 나머지 UI를 실제 게임에 적용하고 필요한 리소스를 제작한다.
+보존 지시: 우측 하단 원형 스킬·수치·키 배지와 TRIAD 지원 패널도 현재 그대로 유지한다.
+
+실제 적용
+- scripts/presentation/calm_hud.gd: 차분한 남색 카드, 크림색 글자, 녹색 장갑 5칸/실제 수치, 주황 부스터, 에너지 3칸.
+- 상단 중앙 실제 방 진행·현재 방 적 수·웨이브·락온 수/남은 시간.
+- 우상단 실제 탐색 지도·플레이어/적/방 표시·점수·콤보와 남은 시간.
+- 일반 적 HP와 피격 잔상을 읽는 코랄 화면 공간 바. 기존 일반 3D바 중복 숨김, 보스/소품 자체 표시는 유지.
+- 적 바는 기존 스킬/TRIAD 패널 영역 위에 그리지 않는다.
+- 보스전은 상단 카드가 전용 보스 HP바 아래로 내려간다. 지도 없는 씬은 방 수·빈 지도 프레임을 생략하고 점수만 표시한다.
+- STRIKER 기본 적용, H/Shift+H의 다른 기존 프리셋 유지. --hud-art=classic 비교용.
+
+생성 리소스
+- Built-in imagegen, 참고 reference.png, 실제 프롬프트 portrait-prompt.txt.
+- assets/ui/calm_hud/mecha_bust.png: 1254x1254 투명 메카 초상.
+- Godot .import와 함께 보존; 임포트 최대512px, 밉맵, UI 선형 샘플링.
+- 패널/게이지/문구/지도/HP바는 Godot의 실제 그리기와 게임 값을 사용한다.
+
+검증 자료
+- hud.before.gd / hud_presets.before.gd / drone_hud.before.gd: 변경 직전 스냅샷.
+- protected-before.json / protected-source-audit.json: 보호 코드 2개·기존 스킬 PNG/임포트 12개, 총14개 SHA256 일치.
+- protected_ready_before/after.png, protected_blocked_before/after.png: 동일 배경/상태에서 보호 영역 비교.
+- protected-pixels.json: 스킬/TRIAD 두 영역, 사용 가능/재충전 상태 총4개의 픽셀 SHA256 일치.
+- applied_after.png / low_health.png / lock_combo.png: 실제 렌더.
+- actual_battle.png: 최신 개발 배경의 실제 자동 전투 1920x800.
+- 자동 전투 프레임은 _capture/calm_ui_bot/, _capture/calm_ui_boss/에만 보존하며 git 제외.
+- import.log / hud-check.log / all-tests.log / main-bot.log / boss-bot.log.
+- 테스트 스크립트 초기 적 HPbar 생성 전 접근은 초기화 보정 후 재실행 PASS.
+- 첫 전체 검사 중 청소 장비 Vector3.slerp에서 거의 반대인 수평 방향의 작은 회전축 정규화 오류가 발생했다. scripts/drone/sweep_gear.gd의 수평 방향만 lerp_angle로 보정했다. 기존 파일 스냅샷 sweep_gear.before.gd 보존, 관련 4종 재검사 sweep-recheck.log PASS/ERROR0.
+- 동시 작업으로 FloorVac 신규 클래스가 추가돼 첫 전체 검사의 spider/terrain 및 중간 추가 bot이 임포트 전 컴파일 오류를 기록했다. import-final.log로 등록한 뒤 all-tests-final.log와 main-bot-final.log에서 최종 재검증한다. 초기 로그는 원인과 함께 보존한다.
+
+최종 결과: 고정 Godot 4.7.2-stable, 전체35종 PASS(ALL 35 TESTS PASSED), 최종 전체 검사 ERROR/SCRIPT ERROR0.
+최종 Main 60초 bot+dronebot, 보스8초 bot, HUD 캡처/검사 모두 ERROR/SCRIPT ERROR0. 보호14파일 SHA256 및 보호4영역 픽셀 SHA256 일치. validation.json과 log-audit.json에 저장.
+실제 전투 actual_battle.png, 최종 동행 드론 전투 actual_drone_combat.png, 보스 호환 boss_compat.png 확인.
+README/docs/hud-presets/AGENTS 인수인계 갱신. 현재 브랜치 feature/round-skill-hud. 커밋·푸시 없음. 다른 도구의 기존 변경/미추적 파일은 보존했다.

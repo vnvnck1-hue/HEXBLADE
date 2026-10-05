@@ -1,0 +1,38 @@
+Use case: stylized-concept.
+Deliver ONE complete, beautifully organized original GAME CHARACTER CONCEPT SHEET of the cleaning drone in Image 1. Include consistent multi-angle design, personality/body language, action poses, cleaning abilities and stylized VFX. This is a redesign development sheet for THIS specific round tri-module machine, not the previous oval-legged washer.
+
+INPUT ROLES:
+Image 1 is the PRIMARY EXTERIOR REFERENCE; carefully preserve its recognizable construction and proportions.
+Image 2 (plant character sheet) and Image 3 (game character/VFX board) are information-layout and effect-breakdown references only. Do not copy their creature, humanoid character, facial features, colors, logos, words or powers.
+
+EXTERIOR ANALYSIS TO FOLLOW:
+The central body is a big VERTICALLY STANDING CIRCULAR RIM aimed forward, tilted a little upward/back, NOT a horizontal saucer. Rim is thick rounded pale ice-blue and white armor with shallow depth. Inside the rim is a dark blue-gray recessed cavity holding EXACTLY THREE discrete rounded circular modules arranged in a TRIANGLE: one upper module, one lower-left and one lower-right. Each has a solid pale circular housing and ONE mint-green glowing circular functional core. Curved supporting surfaces between modules give a little turbine-like structure. These are mechanical cleaning modules, NOT digital eyes or a face. No screen/visor/smile.
+The circular body is the dominant shape, not a tall torso and head. On its side one separate round white auxiliary pod is connected by a short dark cylinder; on opposite side a compact U-shaped ring handle. Keep both small, near body. Tiny tabs on top, no big antenna.
+Exactly THREE short legs attached around lower body on short broad articulated stems with one round joint, ending in tapered LEAF / TEARDROP-shaped armored feet with broad roots and narrow points below. Feet are pointy vertical droplet shapes as in Image 1, NOT big rectangular boots, wheels or tracks. Three-foot triangular stance. No long spider limbs.
+Palette white / pale powder blue shell, dark desaturated blue-gray internal support, restrained luminous mint-green cores. Broad chunky soft bevels, compact super-deformed proportions. Big circular body and small short attachments make it adorable like a stylized game character. Preserve reference silhouette instead of inventing fruit bodies, giant petals, humanoid torso or long arms. This is manned by a female partner hidden INSIDE opaque shell; closed rear hatch is a small proposed detail, no visible human/cockpit glass.
+
+PERSONALITY / ACTION LANGUAGE:
+Steady, attentive, brisk. Body swivels slightly to inspect dirt, feet take tiny precise steps, side pod adjusts a little, rim tilts toward cleaning target. Braces three pointed feet before a powerful cleaning pull, small recoil tilt then settles back. No animated face, emoji, eye expressions or speech bubbles. Personality communicated by silhouette and posture.
+
+SHEET PRESENTATION:
+High-resolution LANDSCAPE character-development sheet, ideally 3072 x 2048, clean slate blue-gray background, white and mint VFX highly legible. Three horizontal bands with generous gutters and a clear hierarchy, minimal concise labels. One large hero view, three small orthographic views, three action poses, two ability concepts and VFX breakdown. Every image depicts the SAME ONE drone, same triangular core positions, SAME THREE tapered feet, side pod and loop placement.
+Header exact: "TRIAD / CLEANING DRONE"
+Small subtitle exact: "STEADY · ATTENTIVE · BRISK"
+No additional paragraphs, watermark or external logo.
+
+TOP BAND:
+Left large 3/4 front HERO identity view prominently showcasing standing ring, three green cores in triangle, round side pod, opposite loop, short three legs ending in pointed leaves; small 4-color swatches nearby.
+Right FRONT / SIDE / BACK at same height. Front clearly shows three-module triangle and feet. Side shows shallow thick rounded body depth, circular side pod and forward-upward angle of rim; not spherical body. Back has simple rounded opaque rear cover and small closed hatch, plus short structure supporting 3 legs. Back is a design proposal but consistent with front construction. No rear eye display.
+
+MIDDLE BAND:
+IDLE: rim yawed a little toward one tiny dirt spot, short curved inspection motion mark, feet planted.
+MOVE: one pointed foot lifted a little, tiny quick step, circular body tilted forward, two motion strokes, no hover.
+BRACE: all three feet spread firmly, ring angled down toward dirt, side pod tucked, rear recoil stance before suction. Full bodies clearly readable. Not 3 identical idle clones.
+
+BOTTOM BAND:
+Left "TRIPLE INTAKE": same robot pulls small debris from a dirty floor patch toward its THREE circular modules, with three thin mint-white curved airflow ribbons converging into the triangular cores; no lasers shot out. Gray-brown grit travels toward drone, arrows show inward travel, clean floor appears behind. Leg count remains three.
+Center "VORTEX CLEAN": same robot firmly grounded creates a short WIDE swirling cleaning airflow funnel in front of its vertical ring, three mint crescent flows merge into one translucent coil with a pale white center, lifting a few little grime flakes into intake. A simple inlet whirl with visible opening rather than a giant outward explosion. Keep robot visible beside effect. This is proposed cleaning skill, no damage/cooldown values, no enemy creature.
+Right "VFX BREAKDOWN": clear standalone stages with subtle arrows: small 3-core activation circles; 3 slender curving inward streaks; chunky stylized mint spiral/air crescent with dust flecks; faded soft tiny particles. Exact stage labels: "CHARGE", "PULL", "SWIRL", "FADE". Stage shapes visibly match ability scenes.
+
+STYLE:
+Clean expressive 2D stylized game concept painting, rounded hard mechanical edges, broad pastel color planes, simple shadows, sparse panel seams. Cute strongly SD compressed proportions, no photorealistic grit and no candy-plastic shine. VFX graphic readable crescent shapes and restrained glow, not realistic smoke noise. Maintain primary reference silhouette across every view and pose. No generic rounded-square washer, no ring saucer, no tank or rice cooker. Human pilot stays hidden.

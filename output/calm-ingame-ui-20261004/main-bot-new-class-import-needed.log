@@ -1,0 +1,85 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060
+
+SCRIPT ERROR: Parse Error: Could not find type "FloorVac" in the current scope.
+   at: GDScript::reload (res://scripts/drone/partner_drone.gd:158)
+SCRIPT ERROR: Parse Error: Identifier "FloorVac" not declared in the current scope.
+   at: GDScript::reload (res://scripts/drone/partner_drone.gd:275)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/drone/drone_hud.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/presentation/calm_hud.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/presentation/hud_presets.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/hud.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/presentation/showtime.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/presentation/danger_fx.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/parry_fx.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/enemy.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/beam_impact.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/player.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/main.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/presentation/brawl_look.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/toon_outline.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/pal.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/map.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/sector_graph.gd:0)
+SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+   at: GDScript::reload (res://scripts/run_state.gd:0)
+ERROR: Failed to load script "res://scripts/run_state.gd" with error "Compilation failed".
+   at: load (modules/gdscript/gdscript_resource_format.cpp:46)
+BIG_ROOM id=3 shape=5 scale=2.0 r=18.4 cells=968
+BIG_ROOM id=6 shape=4 scale=2.5 r=29.2 cells=1425
+BIG_ROOM id=9 shape=5 scale=3.0 r=27.2 cells=1908
+SCRIPT ERROR: Invalid call. Nonexistent function 'attach' in base 'GDScript'.
+   at: Main._ready (res://scripts/main.gd:159)
+   GDScript backtrace (most recent call first):
+       [0] _ready (res://scripts/main.gd:159)
+ROOM_ENTER id=1 shape=4 scale=1.0 wave=false t=4.7
+BUG_ROOM level=0 count=3 alive=2
+SCRIPT ERROR: Invalid call. Nonexistent function 'on_kill' in base 'GDScript'.
+   at: Main.on_enemy_killed (res://scripts/main.gd:822)
+   GDScript backtrace (most recent call first):
+       [0] on_enemy_killed (res://scripts/main.gd:822)
+       [1] die (res://scripts/bugs/bug_enemy.gd:221)
+       [2] take_hit (res://scripts/enemy.gd:553)
+       [3] take_hit (res://scripts/bugs/bug_chomper.gd:405)
+       [4] _explode (res://scripts/missile.gd:229)
+       [5] _physics_process (res://scripts/missile.gd:158)
+SCRIPT ERROR: Invalid call. Nonexistent function 'mega' in base 'Nil'.
+   at: Player._start_mega (res://scripts/player.gd:1521)
+   GDScript backtrace (most recent call first):
+       [0] _start_mega (res://scripts/player.gd:1521)
+       [1] _physics_process (res://scripts/player.gd:594)
+SCRIPT ERROR: Invalid call. Nonexistent function 'on_kill' in base 'GDScript'.
+   at: Main.on_enemy_killed (res://scripts/main.gd:822)
+   GDScript backtrace (most recent call first):
+       [0] on_enemy_killed (res://scripts/main.gd:822)
+       [1] die (res://scripts/bugs/bug_enemy.gd:221)
+       [2] die (res://scripts/bugs/bug_grub.gd:115)
+       [3] take_hit (res://scripts/enemy.gd:553)
+       [4] take_hit (res://scripts/bugs/bug_grub.gd:271)
+       [5] _update_mega (res://scripts/player.gd:1582)
+       [6] _physics_process (res://scripts/player.gd:539)
+SCRIPT ERROR: Invalid call. Nonexistent function 'on_kill' in base 'GDScript'.
+   at: Main.on_enemy_killed (res://scripts/main.gd:822)
+   GDScript backtrace (most recent call first):
+       [0] on_enemy_killed (res://scripts/main.gd:822)
+       [1] die (res://scripts/bugs/bug_enemy.gd:221)
+       [2] die (res://scripts/bugs/bug_grub.gd:115)
+       [3] take_hit (res://scripts/enemy.gd:553)
+       [4] take_hit (res://scripts/bugs/bug_grub.gd:271)
+       [5] <anonymous lambda> (res://scripts/player.gd:1121)

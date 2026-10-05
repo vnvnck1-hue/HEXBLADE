@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3060
+
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/vfx/drone_cutin/cockpit_plate_clipped.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _image_tex (res://_capture/drone_cutin_pack_preview.gd:23)
+       [1] _run (res://_capture/drone_cutin_pack_preview.gd:63)
+       [2] _export_panels (res://_capture/drone_cutin_pack_preview.gd:151)
+DRONE_CUTIN_PACK_CHECK issues=0 source=[1254, 1254] previews=3 alpha=checked

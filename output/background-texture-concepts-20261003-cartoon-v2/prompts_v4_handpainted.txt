@@ -1,0 +1,24 @@
+2026-10-03 | 내장 image_gen 편집
+사용자 요청: 더 블리자드식 핸드페인팅 느낌.
+입력: 01_base_cartoon_v3_muted.png, 03_infected_cartoon_v3_muted.png
+출력: 01_base_v4_handpainted.png, 03_infected_v4_handpainted.png
+저채도·낮은 명도 방향을 이어가며 칠한 모서리 빛, 유색 그림자, 형태를 따르는 붓질을 강화한 검토용 원화. 게임 미적용.
+각 입력에 다음 동일 프롬프트 사용:
+
+Use case: style-transfer.
+Edit target: the attached muted cartoon sci-fi environment concept sheet.
+User direction: push this toward Blizzard-style hand-painted environment art, evoking Warcraft / Hearthstone craftsmanship, while RETAINING the already lowered saturation and lowered overall brightness. This remains a worn industrial space-cleanup game environment, not medieval fantasy.
+
+Preserve the scene layout, quarter-view camera, room identity, open central floor, arrangement of workbench/cabinets/pipes, material swatch column and the infection state of the input. If the source is clean, keep it clean. If the source contains purple organic tendrils and ivory shell growth, preserve those same infected areas.
+
+Substantially strengthen deliberate hand-painting:
+- Make surfaces visibly sculpted WITH PAINT: broad expressive opaque brush planes, warm dusty cream light planes, cool plum-blue shadow planes, rich colored creases.
+- Every slab and piece of machinery has a clear top-to-bottom painted value gradient. Broad bold irregular bright edge strokes on upward-facing bevels, deep colored creases on lower edges.
+- Exaggerate broad bevels, big faceted bolts, and slight charming asymmetry. Hand-carved chunky tactile shapes adapted to steel panels and industrial cabinets.
+- Replace uniform cartoon contour outlines with painterly lost-and-found edges: forms defined primarily by light edge strokes and dark painted contact shading.
+- Sparse broad purposeful chips and scuffs, controlled large brush marks with clean resting areas. NO fine random texture speckle.
+- Make navy floor steel feel painted and solid using restrained complementary color shifts within each slab, not realistic metal reflections.
+- Teal machinery is dusty and subdued; cream panels stay muted warm gray-ivory; safety stripes muted ochre. Do NOT restore high saturation or bright exposure.
+- For infected input: paint thick plum tendrils with broad lavender plane highlights and burgundy creases, ivory growth with chunky warm/cool painted planes; retain cartoon stylization and non-gory shapes.
+The image should feel like lovingly hand-painted game diffuse textures on chunky low-poly forms, not generic smooth cel shading, not photorealistic PBR, not shiny plastic, and not an all-over oil painting filter. Brushwork follows the forms. Strong readable large silhouettes at gameplay distance. Soft subtle illumination lets the painted modeling do the work. Apply consistent hand-painted style to all material swatches.
+No new characters, no new props, no lettering, no logos, no medieval wood or fantasy ornament, no photorealism. Landscape concept sheet.

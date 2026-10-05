@@ -1,0 +1,224 @@
+﻿[
+    {
+        "Name":  "abyss_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "ammo_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "blade_tech_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "blender_models_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "brawl_look_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "bug_arena_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "bug_chomper_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "bug_enemies_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "bug_grub_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "claude_background_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "claude_service_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "cockpit_cutin_check",
+        "Log":  "output/drone-support-ui-20261004/new-test-check.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "codex_background_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "combo_presets_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "coworker_dialogue_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "dialogue_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "enemy_wander_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "gimmicks_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "gun_sound_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "hit_react_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "hud_preset_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "input_buffer_check",
+        "Log":  "output/drone-support-ui-20261004/recheck.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "mammoth_death_lab_check",
+        "Log":  "output/drone-support-ui-20261004/recheck.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "mammoth_ingame_check",
+        "Log":  "output/drone-support-ui-20261004/recheck.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "mech_player_check",
+        "Log":  "output/drone-support-ui-20261004/recheck.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "missile_check",
+        "Log":  "output/drone-support-ui-20261004/recheck.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "moco_vfx_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "painted_look_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "parry_commit_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "partner_drone_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "room_wave_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "rush_skill_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "space_sweep_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "spider_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "terrain_jump_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "whirl_pull_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    },
+    {
+        "Name":  "world_flow_check",
+        "Log":  "output/drone-support-ui-20261004/all-tests.log",
+        "Errors":  0,
+        "Passed":  true
+    }
+]

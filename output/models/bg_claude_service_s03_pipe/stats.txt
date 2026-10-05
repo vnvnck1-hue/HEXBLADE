@@ -1,0 +1,10 @@
+model: bg_claude_service_s03_pipe
+size (m)  x 2.006  y(fwd) 0.600  z(up) 0.600
+bounds    min (-1.003, -0.300, -0.000)  max (1.003, 0.300, 0.600)
+triangles 1180
+parts:
+  pipe                       1180 tris  parent=-  origin=(0.00, 0.00, -0.00)
+attachment points:
+  pt_end_a                 (-1.00, 0.00, 0.30)  parent=-
+  pt_end_b                 (1.00, 0.00, 0.30)  parent=-
+glb: assets\models\bg_claude_service_s03_pipe.glb

@@ -1,0 +1,43 @@
+model: bug_chomper
+size (m)  x 0.983  y(fwd) 1.004  z(up) 0.802
+bounds    min (-0.492, -0.579, -0.002)  max (0.492, 0.425, 0.799)
+triangles 15322
+parts:
+  body                       2438 tris  parent=-  origin=(0.00, -0.04, 0.29)
+  head                       1440 tris  parent=body  origin=(0.00, 0.04, 0.43)
+  jaw                        1360 tris  parent=body  origin=(0.00, 0.05, 0.12)
+  tongue                     1252 tris  parent=jaw  origin=(0.00, 0.10, 0.11)
+  shell_1                    1172 tris  parent=body  origin=(0.00, 0.13, 0.59)
+  shell_2                    1048 tris  parent=shell_1  origin=(0.00, -0.20, 0.59)
+  shell_3                     852 tris  parent=shell_2  origin=(0.00, -0.43, 0.42)
+  pad_l                       660 tris  parent=body  origin=(-0.32, -0.13, 0.50)
+  pad_r                       660 tris  parent=body  origin=(0.32, -0.13, 0.50)
+  leg_1_l_1                   436 tris  parent=body  origin=(-0.23, 0.17, 0.15)
+  leg_1_l_2                   304 tris  parent=leg_1_l_1  origin=(-0.36, 0.23, 0.10)
+  leg_1_r_1                   436 tris  parent=body  origin=(0.23, 0.17, 0.15)
+  leg_1_r_2                   304 tris  parent=leg_1_r_1  origin=(0.36, 0.23, 0.10)
+  leg_2_l_1                   436 tris  parent=body  origin=(-0.29, -0.04, 0.15)
+  leg_2_l_2                   304 tris  parent=leg_2_l_1  origin=(-0.42, -0.04, 0.10)
+  leg_2_r_1                   436 tris  parent=body  origin=(0.29, -0.04, 0.15)
+  leg_2_r_2                   304 tris  parent=leg_2_r_1  origin=(0.42, -0.04, 0.10)
+  leg_3_l_1                   436 tris  parent=body  origin=(-0.23, -0.25, 0.15)
+  leg_3_l_2                   304 tris  parent=leg_3_l_1  origin=(-0.36, -0.31, 0.10)
+  leg_3_r_1                   436 tris  parent=body  origin=(0.23, -0.25, 0.15)
+  leg_3_r_2                   304 tris  parent=leg_3_r_1  origin=(0.36, -0.31, 0.10)
+attachment points:
+  pt_mouth                 (0.00, 0.34, 0.25)  parent=head
+  pt_drip_mouth            (-0.00, 0.32, 0.08)  parent=jaw
+  pt_horn                  (0.00, -0.10, 0.80)  parent=shell_1
+  pt_eye_l                 (-0.26, 0.02, 0.62)  parent=shell_1
+  pt_eye_r                 (0.26, 0.02, 0.62)  parent=shell_1
+  pt_drip_tail             (0.00, -0.48, 0.09)  parent=shell_3
+  pt_drip_l                (-0.46, -0.13, 0.24)  parent=pad_l
+  pt_drip_r                (0.46, -0.13, 0.24)  parent=pad_r
+  pt_foot_1_l              (-0.40, 0.27, 0.00)  parent=leg_1_l_2
+  pt_foot_1_r              (0.40, 0.27, 0.00)  parent=leg_1_r_2
+  pt_foot_2_l              (-0.46, -0.04, 0.00)  parent=leg_2_l_2
+  pt_foot_2_r              (0.46, -0.04, 0.00)  parent=leg_2_r_2
+  pt_foot_3_l              (-0.40, -0.35, 0.00)  parent=leg_3_l_2
+  pt_foot_3_r              (0.40, -0.35, 0.00)  parent=leg_3_r_2
+  pt_drip_belly            (0.00, -0.12, 0.03)  parent=body
+glb: assets\models\bug_chomper.glb

@@ -1,0 +1,24 @@
+Built-in image_gen / precise-object-edit / 2026-10-03
+F04
+Use case: precise-object-edit. Image1 is existing orthographic asset sheet. Only change FRONT left view so it has exactly FIVE raised stud bumps, not six. Match the five in RIGHT and the five columns in TOP. All other pixels/content/layout/colors unchanged. Do not redesign.
+
+A02
+Use case: precise-object-edit. Image1 is existing orthographic asset sheet. Only correct TOP right viewport: remove orange handle protruding from RIGHT short edge. Put ONE small orange handle protrusion on BOTTOM LONG EDGE, at 80 percent along that long edge from left, corresponding to FRONT handle at same x. Both front handles at different heights overlap into this ONE handle in top projection. Keep FRONT and RIGHT unchanged. Do not redesign.
+
+A04
+Use case: precise-object-edit. Image1 is existing orthographic asset sheet. Remove the small electrical box with mint light from the left side of the tool board, from ALL THREE projections. Fill freed area with same plain lavender-gray board. Keep exactly three wrenches, their hooks, all frame bolts. Remove box profile protrusion from right view and leftmost box block from top view. All other content unchanged. Do not redesign.
+
+P01
+Use case: precise-object-edit. Image1 is existing orthographic asset sheet. Correct FRONT and TOP long pipe silhouettes to true orthographic: remove all four visible elliptical cut-end holes, replace each end with a straight vertical cut silhouette edge. These two views must be rectangular silhouettes with cylinder shading, not perspective cylinders. RIGHT circular hollow ring unchanged. Preserve dimensions/style/palette/background. All pipe tube lengths and diameter same. Do not redesign.
+
+W04_v2
+Use case: precise-object-edit. Image1 is edit target, existing modeling sheet. Change FRONT doorway only: outside width4m height3m, exact RECTANGULAR clear opening3.5m wide x2.5m tall. Make both jambs thin .25m each (=1/16 total width), header .5m. No chamfer cutting into opening. Keep tiny exterior bevels and violet/coral painted design. Add inner opening 3.5m/2.5m labels. Keep RIGHT and TOP and all layout unchanged. Preserve colors, material, background, titles and all unspecified details.
+
+R03_v2
+Use case: precise-object-edit. Image1 is edit target, existing modeling sheet. Correct the two dimension texts '0.95 m' between lower and upper sockets to '0.70 m'. Preserve bottom height .25m and overall1.1m. In TOP view remove protruding socket pointing DOWN, retain only socket pointing RIGHT. It is one direction socket axis at two heights, not two perpendicular axes. Shorten TOP right socket to end at base plate right boundary, not beyond. Front and right socket style unchanged. Keep other layout. Preserve colors, material, background, titles and all unspecified details.
+
+D02_v2
+Use case: precise-object-edit. Image1 is edit target, existing modeling sheet. Redraw only TOP coral line: dashed square1mx1m, origin bottom-left. Draw ONE continuous exact quarter annulus CENTERED AT BOTTOM-LEFT corner, centerline radius.5m and stripe width.25m. Arc from BOTTOM EDGE midpoint (.5,0) to LEFT EDGE midpoint (0,.5), bulges into bottom-left quadrant of square; leave upper and right area empty. No straight stubs, no breaks, no extension. Flat paint. Label r=.5 and width=.25. Preserve front/right hairlines/layout. Preserve colors, material, background, titles and all unspecified details.
+
+I03_v3
+Use case: precise-object-edit. Image1 is edit target, existing modeling sheet. Correct this organic connector to strict orthographic T-shaped branching with organic middle. TOP view +X right,+Z up: main straight left-right1m with ends at(-.5,0),(.5,0), third branch goes UP to(0,.4). All 3 final necks straight diameter.12, solid fleshy necks NO hardware; no visible elliptical end faces in TOP, just straight silhouette cuts. FRONT view looking+Z: horizontal low1m root, height .16, NO circular mouths visible because branch points away behind it. RIGHT view looking-X: low .5mwide .16mhigh side silhouette with one solid circular .12 neck face at front end. Preserve wine mauve painted texture and sheet layout. NOT a perspective view, not an angled Y connector. Preserve colors, material, background, titles and all unspecified details.

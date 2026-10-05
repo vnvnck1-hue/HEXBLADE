@@ -1,0 +1,29 @@
+{
+  "units": "m",
+  "scope": "design_contract_not_mesh",
+  "floor": {"size": [8,8], "top_y": 0, "bevel": 0.008},
+  "door": {"jamb": 0.25, "header": 0.5, "side_gap": 0.005, "center_gap": 0.01, "vertical_gap": 0.01, "travel": 1.75, "leaf_z": 0.06, "pocket_z": [0.04,0.20]},
+  "pipe": {"outer": 0.25, "inner": 0.21, "bore": 0.252, "wall_offset": 0.25},
+  "rail": {"heights": [0.25,0.95], "diameter": 0.08, "corner_radius": 0.25, "post_local_axis": "Z"},
+  "organic": {"neck_diameter": 0.12, "neck_y": 0.06, "constant_neck_length": 0.08},
+  "decal": {"width": 0.25, "radius": 0.5},
+  "texture": {"density_px_m": 512, "resolution": 2048, "period_m": 4, "trim_widths_m": [0.25,0.5,0.25,1,2], "padding_px": 16},
+  "palette": ["#56438A", "#423665", "#6E4382", "#CE5F54", "#AC41A6", "#5C857C"],
+  "sockets": {
+    "P01": [{"p":[0,0,0],"n":[-1,0,0]}, {"p":[2,0,0],"n":[1,0,0]}],
+    "P02": [{"p":[0.5,0,0],"n":[0,0,-1]}, {"p":[0,0,0.5],"n":[-1,0,0]}],
+    "P03": [{"p":[-0.5,0,0],"n":[-1,0,0]}, {"p":[0.5,0,0],"n":[1,0,0]}, {"p":[0,0,0.5],"n":[0,0,1]}],
+    "I01": [{"p":[0,0.06,0],"n":[-1,0,0]}, {"p":[1,0.06,0],"n":[1,0,0]}],
+    "I02": [{"p":[0.25,0.06,0],"n":[0,0,-1]}, {"p":[0,0.06,0.25],"n":[-1,0,0]}],
+    "I03": [{"p":[-0.5,0.06,0],"n":[-1,0,0]}, {"p":[0.5,0.06,0],"n":[1,0,0]}, {"p":[0,0.06,0.4],"n":[0,0,1]}],
+    "I06": [{"p":[0,0.06,0],"n":[-1,0,0]}]
+  },
+  "connections": [
+    {"a":"P01","a_socket":1,"a_pos":[0,0,0],"a_yaw":0,"b":"P02","b_socket":1,"b_pos":[2,0,-0.5],"b_yaw":0},
+    {"a":"P02","a_socket":0,"a_pos":[2,0,-0.5],"a_yaw":0,"b":"P01","b_socket":1,"b_pos":[2.5,0,-2.5],"b_yaw":-90},
+    {"a":"P01","a_socket":1,"a_pos":[0,0,0],"a_yaw":0,"b":"P03","b_socket":0,"b_pos":[2.5,0,0],"b_yaw":0},
+    {"a":"I01","a_socket":1,"a_pos":[0,0,0],"a_yaw":0,"b":"I02","b_socket":1,"b_pos":[1,0,-0.25],"b_yaw":0},
+    {"a":"I01","a_socket":1,"a_pos":[0,0,0],"a_yaw":0,"b":"I03","b_socket":0,"b_pos":[1.5,0,0],"b_yaw":0},
+    {"a":"I03","a_socket":2,"a_pos":[1.5,0,0],"a_yaw":0,"b":"I06","b_socket":0,"b_pos":[1.5,0,0.4],"b_yaw":-90}
+  ]
+}

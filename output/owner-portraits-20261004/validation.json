@@ -1,0 +1,32 @@
+[
+    {
+        "file":  "owner-briefing.png",
+        "width":  1254,
+        "height":  1254,
+        "transparent_pixels":  697720,
+        "opaque_pixels":  2083,
+        "partial_pixels":  872713,
+        "square":  true,
+        "alpha_cutout":  true
+    },
+    {
+        "file":  "owner-encouragement.png",
+        "width":  1254,
+        "height":  1254,
+        "transparent_pixels":  642235,
+        "opaque_pixels":  2082,
+        "partial_pixels":  928199,
+        "square":  true,
+        "alpha_cutout":  true
+    },
+    {
+        "file":  "owner-welcome.png",
+        "width":  1254,
+        "height":  1254,
+        "transparent_pixels":  641433,
+        "opaque_pixels":  1835,
+        "partial_pixels":  929248,
+        "square":  true,
+        "alpha_cutout":  true
+    }
+]

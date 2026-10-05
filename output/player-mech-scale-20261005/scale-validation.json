@@ -1,0 +1,11 @@
+{
+  "method": "Node vm DOM stub, actual HTML script evaluated; not browser screenshot validation",
+  "widths": [320, 736],
+  "heights_m": [1.7, 2.2, 3.6, 6, 18],
+  "same_pixel_per_meter": 15.333333333333334,
+  "height_marks": "PASS",
+  "all_four_selection_buttons_and_saved_state": "PASS",
+  "original_image_dimensions": [1536, 1024],
+  "image_review": "all four final tool images visually inspected; illustration proportions approximate",
+  "game_model_applied": false
+}

@@ -1,0 +1,7 @@
+{
+ "atlas_px": 2048,
+ "px_per_m": 512.0,
+ "samples": 48,
+ "albedo": "output/models/bg_claude_service_s04_elbow/bg_claude_service_s04_elbow_albedo.png",
+ "uv_fill": 0.2589032572367618
+}

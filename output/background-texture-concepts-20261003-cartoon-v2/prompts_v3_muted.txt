@@ -1,0 +1,11 @@
+2026-10-03 | 내장 image_gen 편집
+사용자 요청: 카툰 2차 원화 두 장의 채도와 명도를 더 낮춤.
+결과: 01_base_cartoon_v3_muted.png, 03_infected_cartoon_v3_muted.png
+각 v2 이미지를 독립 입력으로 아래 동일 프롬프트 사용. 수치는 시각적 목표이며 측정된 보정값 아님.
+
+Use case: precise-object-edit, color grading only.
+Edit the referenced cartoon hand-painted science-fiction environment concept sheet.
+The user requests lower saturation AND lower brightness. Make both changes clearly visible: aim visually for roughly 25-30 percent less saturation and 15-20 percent lower midtone brightness, with a muted dusky palette. These are approximate visual grading targets, not requirements for exact numeric pixel transforms.
+Preserve the exact scene, composition, camera, objects, geometry, panel layout, painted brush strokes, dark outlines, material swatches, and all details. Preserve the casual cartoon style and existing readable value separation. Do not add, remove, redesign, or relocate anything.
+Tone down yellow/amber lamps and safety stripes along with the rest of the palette; teal machinery should become dusty desaturated teal, blue floor subdued slate-periwinkle. If purple organic infection is present, mute it to dusky plum and keep it distinct from the floor. Gently lower highlights as well as midtones without crushing dark outlines or turning the image murky. Keep warm versus cool relationships. No new light sources, no increased realism, no glossy PBR, no added texture, no text.
+Apply the same color-grading strength uniformly to the main scene and the swatches.

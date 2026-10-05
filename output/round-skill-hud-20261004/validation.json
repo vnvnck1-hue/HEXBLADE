@@ -1,0 +1,49 @@
+﻿{
+    "engine":  "4.7.2-stable",
+    "branch":  "feature/round-skill-hud",
+    "full_tests":  "ALL 34 TESTS PASSED",
+    "log_status":  [
+                       {
+                           "log":  "all-tests.log",
+                           "error_lines":  0
+                       },
+                       {
+                           "log":  "capture-final.log",
+                           "error_lines":  0
+                       },
+                       {
+                           "log":  "bot.log",
+                           "error_lines":  0
+                       },
+                       {
+                           "log":  "bot-final.log",
+                           "error_lines":  0
+                       }
+                   ],
+    "source_sha256":  [
+                          {
+                              "path":  "scripts/presentation/round_skill_dock.gd",
+                              "sha256":  "4BC91F6C95728B92C2AE60732A2293C4D3E7547A9871757270B73CD669D0301C"
+                          },
+                          {
+                              "path":  "scripts/presentation/round_skill_dock.gd.uid",
+                              "sha256":  "453098C4245669291FB4066426B10A19501EFD976AC48336095DB84B2A59FB1E"
+                          },
+                          {
+                              "path":  "scripts/presentation/hud_presets.gd",
+                              "sha256":  "A4EEAEB41403C52C377F9299C0AE8348F722D452FD675B8EC5AC27E122995788"
+                          },
+                          {
+                              "path":  "scripts/drone/drone_hud.gd",
+                              "sha256":  "FADA3E9104E38622C0150F3AF926DC5EF3D9EBFC8379E2170EF5403C138A8FE3"
+                          },
+                          {
+                              "path":  "tests/hud_preset_check.gd",
+                              "sha256":  "302A89611C2A09890D94656E7C5253EFE5AB9CFB72F301B5EF949126016E6956"
+                          },
+                          {
+                              "path":  "docs/hud-presets.md",
+                              "sha256":  "36B342245DAB65E780EDF26286FA6E86A1733D9F84170085F08B8EF7F38686B3"
+                          }
+                      ]
+}

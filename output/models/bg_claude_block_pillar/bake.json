@@ -1,0 +1,7 @@
+{
+ "atlas_px": 2048,
+ "px_per_m": 296.0,
+ "samples": 48,
+ "albedo": "output/models/bg_claude_block_pillar/bg_claude_block_pillar_albedo.png",
+ "uv_fill": 0.31076492291332364
+}

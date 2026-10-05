@@ -1,0 +1,37 @@
+﻿[
+    {
+        "Name":  "04_top_horizontal.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "4A1DDD244AEBD688258EC93F09D45B72795C601AF3D1569B909B4F3BEF4ED81D"
+    },
+    {
+        "Name":  "05_right_vertical.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "5E052E11C5D4F0A5005303FF43B57FDB460BA8D32065DD28E01E505B04AE7355"
+    },
+    {
+        "Name":  "06_center_iris.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "173EA43C068F9DF50294119C4312759594903181E8963999D33CE30E66E08890"
+    },
+    {
+        "Name":  "07_bottom_pov.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "0F46E0FB1659354C5E6075FEFB113E3D31FF1539CD639039E8ABEFFCD02AB6D5"
+    },
+    {
+        "Name":  "08_fragment_montage.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "5B2176C4EF4DAC6A8A7486D4C74013DEE91B57D284ED9EDFCE724A283ACCC35B"
+    }
+]

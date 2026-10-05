@@ -1,0 +1,221 @@
+{
+  "assets": [
+    {
+      "key": "f01",
+      "meshes": [
+        {
+          "bounds_position": [
+            0.0,
+            -0.200000002980232,
+            0.0
+          ],
+          "bounds_size": [
+            2.0,
+            0.200000002980232,
+            2.0
+          ],
+          "name": "floor",
+          "surfaces": [
+            {
+              "indices": 324,
+              "texture": "res://assets/models/bg_claude_f01_floor_4m_v3.png",
+              "texture_size": "(2048.0, 2048.0)",
+              "uv_count": 111,
+              "vertices": 111
+            }
+          ]
+        }
+      ],
+      "path": "res://assets/models/bg_claude_f01.glb"
+    },
+    {
+      "key": "w01",
+      "meshes": [
+        {
+          "bounds_position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bounds_size": [
+            2.0,
+            3.0,
+            0.25
+          ],
+          "name": "wall",
+          "surfaces": [
+            {
+              "indices": 10608,
+              "texture": "res://assets/models/bg_claude_w01_bg_claude_w01_albedo.png",
+              "texture_size": "(2048.0, 2048.0)",
+              "uv_count": 3529,
+              "vertices": 3529
+            }
+          ]
+        }
+      ],
+      "path": "res://assets/models/bg_claude_w01.glb"
+    },
+    {
+      "key": "half",
+      "meshes": [
+        {
+          "bounds_position": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bounds_size": [
+            1.0,
+            3.0,
+            0.25
+          ],
+          "name": "wall",
+          "surfaces": [
+            {
+              "indices": 10416,
+              "texture": "res://assets/models/bg_claude_w01_half_bg_claude_w01_half_albedo.png",
+              "texture_size": "(2048.0, 2048.0)",
+              "uv_count": 3533,
+              "vertices": 3533
+            }
+          ]
+        }
+      ],
+      "path": "res://assets/models/bg_claude_w01_half.glb"
+    },
+    {
+      "key": "wall",
+      "meshes": [
+        {
+          "bounds_position": [
+            -0.504000008106232,
+            -1.0,
+            -0.504000008106232
+          ],
+          "bounds_size": [
+            1.00800001621246,
+            1.79999995231628,
+            1.00800001621246
+          ],
+          "name": "wall",
+          "surfaces": [
+            {
+              "indices": 3804,
+              "texture": "res://assets/models/bg_claude_block_wall_bg_claude_block_wall_albedo.png",
+              "texture_size": "(2048.0, 2048.0)",
+              "uv_count": 1821,
+              "vertices": 1821
+            }
+          ]
+        }
+      ],
+      "path": "res://assets/models/bg_claude_block_wall.glb"
+    },
+    {
+      "key": "cover",
+      "meshes": [
+        {
+          "bounds_position": [
+            -0.504000008106232,
+            -0.399999976158142,
+            -0.504000008106232
+          ],
+          "bounds_size": [
+            1.00800001621246,
+            1.09999990463257,
+            1.00800001621246
+          ],
+          "name": "wall",
+          "surfaces": [
+            {
+              "indices": 3804,
+              "texture": "res://assets/models/bg_claude_block_cover_bg_claude_block_cover_albedo.png",
+              "texture_size": "(2048.0, 2048.0)",
+              "uv_count": 1800,
+              "vertices": 1800
+            }
+          ]
+        }
+      ],
+      "path": "res://assets/models/bg_claude_block_cover.glb"
+    },
+    {
+      "key": "pillar",
+      "meshes": [
+        {
+          "bounds_position": [
+            -0.504000008106232,
+            -0.400000035762787,
+            -0.504000008106232
+          ],
+          "bounds_size": [
+            1.00800001621246,
+            1.90000009536743,
+            1.00800001621246
+          ],
+          "name": "wall",
+          "surfaces": [
+            {
+              "indices": 3804,
+              "texture": "res://assets/models/bg_claude_block_pillar_bg_claude_block_pillar_albedo.png",
+              "texture_size": "(2048.0, 2048.0)",
+              "uv_count": 1822,
+              "vertices": 1822
+            }
+          ]
+        }
+      ],
+      "path": "res://assets/models/bg_claude_block_pillar.glb"
+    }
+  ],
+  "captures": [
+    {
+      "height": 1080,
+      "name": "01_training_current",
+      "save_error": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "name": "06_training_floor_wall",
+      "save_error": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "name": "02_training_wall_current",
+      "save_error": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "name": "03_main_current",
+      "save_error": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "name": "04_actual_modules_material",
+      "save_error": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "name": "05_actual_modules_clay",
+      "save_error": 0,
+      "width": 1920
+    }
+  ],
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  }
+}

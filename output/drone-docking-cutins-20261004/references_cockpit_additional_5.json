@@ -1,0 +1,37 @@
+{
+  "edit_target": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10579-0511-7910-be7d-3cb7451e04a2\\exec-ba9df456-56c7-482e-ab51-57682ef9b9b2.png",
+  "gameplay_reference": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\drone-docking-cutins-20261004\\source_screenshot.png",
+  "style_anchors": [
+    "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\캐릭터\\ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png",
+    "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\캐릭터\\ChatGPT 이미지 2026년 10월 3일 오후 11_28_38.png",
+    "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\캐릭터\\ChatGPT 이미지 2026년 10월 3일 오후 11_28_43.png"
+  ],
+  "outputs": [
+    {
+      "name": "18_cockpit_lower_wide",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10579-0511-7910-be7d-3cb7451e04a2\\exec-cf453859-312a-4200-b87c-5d39b302b539.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\drone-docking-cutins-20261004\\18_cockpit_lower_wide.png"
+    },
+    {
+      "name": "19_cockpit_right_vertical",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10579-0511-7910-be7d-3cb7451e04a2\\exec-c52293c5-2125-463a-b0be-b84aba46ca16.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\drone-docking-cutins-20261004\\19_cockpit_right_vertical.png"
+    },
+    {
+      "name": "20_cockpit_round_balloon",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10579-0511-7910-be7d-3cb7451e04a2\\exec-6ede52ed-9650-436d-a259-107434572a53.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\drone-docking-cutins-20261004\\20_cockpit_round_balloon.png"
+    },
+    {
+      "name": "21_cockpit_top_strip",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10579-0511-7910-be7d-3cb7451e04a2\\exec-d0231c11-37dd-46d5-aeb8-d01bf048501e.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\drone-docking-cutins-20261004\\21_cockpit_top_strip.png"
+    },
+    {
+      "name": "22_cockpit_split_reaction",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10579-0511-7910-be7d-3cb7451e04a2\\exec-da5e6071-7934-48a7-9cec-9b0a8060b6f3.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\drone-docking-cutins-20261004\\22_cockpit_split_reaction.png"
+    }
+  ],
+  "correction": "21 top strip uses gameplay reference first, selected character target second; original style anchors unchanged."
+}

@@ -1,0 +1,7 @@
+model: bg_codex_wall_w01
+size (m)  x 2.000  y(fwd) 0.250  z(up) 3.000
+bounds    min (0.000, -0.250, 0.000)  max (2.000, 0.000, 3.000)
+triangles 1392
+parts:
+  wall                       1392 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_codex_wall_w01.glb

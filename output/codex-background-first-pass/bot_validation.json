@@ -1,0 +1,65 @@
+{
+	"combat_damage": 637,
+	"combat_hits": 292,
+	"floor_error_m": 0.0,
+	"min_clearance_m": 0.420000076293945,
+	"ok": true,
+	"probes": [
+		{
+			"case": "seam_walk",
+			"ok": true,
+			"position": [
+				2.7817816734314,
+				0.0,
+				1.48055589199066
+			]
+		},
+		{
+			"case": "seam_dash",
+			"ok": true,
+			"position": [
+				2.78119683265686,
+				0.0,
+				-1.64949250221252
+			]
+		},
+		{
+			"case": "west_wall",
+			"ok": true,
+			"position": [
+				-3.573157787323,
+				0.0,
+				0.381799161434174
+			]
+		},
+		{
+			"case": "bench",
+			"ok": true,
+			"position": [
+				-1.53489255905151,
+				0.0,
+				-2.77166604995728
+			]
+		},
+		{
+			"case": "locker",
+			"ok": true,
+			"position": [
+				1.21311521530151,
+				0.0,
+				-3.02906203269959
+			]
+		},
+		{
+			"case": "north_wall",
+			"ok": true,
+			"position": [
+				3.0,
+				0.0,
+				-3.56499862670898
+			]
+		}
+	],
+	"review_images": 0,
+	"time": 60.0043333333266
+}

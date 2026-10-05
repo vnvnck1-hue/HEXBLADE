@@ -1,0 +1,74 @@
+{
+    "date":  "2026-10-04",
+    "purpose":  "Read-only code evidence for implementation locations; source files may change concurrently; not runtime validation",
+    "files":  [
+                  {
+                      "path":  "godot-version.txt",
+                      "sha256":  "ec40acfe3b12ec237a09085f158684204730460a3fa5c4a8b68c0fe1931cae81"
+                  },
+                  {
+                      "path":  "scripts/presentation/brawl_look.gd",
+                      "sha256":  "9b6aa25007b49b3b3fec1b665b6a0d73e3a6a8a9fb148487b1c231984de3f6d1"
+                  },
+                  {
+                      "path":  "scripts/presentation/hit_spark.gd",
+                      "sha256":  "7c2c8c9c4e93d4e830d04b7f4bbeb2f2543f34b5a34ba5dc455fca342375d48e"
+                  },
+                  {
+                      "path":  "scripts/claude_background/claude_bg_dress.gd",
+                      "sha256":  "e2db4fd54e2dbde5f046f560e344cec0d25da88a421ba2c87aef7f75f32cf1e5"
+                  },
+                  {
+                      "path":  "scripts/claude_background/claude_service_dress.gd",
+                      "sha256":  "d64b63e8fc8be0b7335702dd56db2b92805f4abf24944f7080e446e795ef861b"
+                  },
+                  {
+                      "path":  "scripts/claude_background/bg_floor.gdshader",
+                      "sha256":  "44d1093f9da507b46e1a44a0fe158e86e8ab269f2cf30c04b5df71afbf5a9dce"
+                  },
+                  {
+                      "path":  "scripts/claude_background/service_floor.gdshader",
+                      "sha256":  "d4b9ea62185c23a00f83f2493d28aab0dcfbf891f6f9c4e5ded98ed021c5b187"
+                  },
+                  {
+                      "path":  "scripts/toon_outline.gd",
+                      "sha256":  "dcb90066397b4704866dbcea850e46c5e4fad8dd06049d0dae3891d7bd3059eb"
+                  },
+                  {
+                      "path":  "scripts/camera_rig.gd",
+                      "sha256":  "4594053d7c2b42d04b55c618990d2466a3ac9ec7050c027e31a9972228ad37a8"
+                  },
+                  {
+                      "path":  "scripts/main.gd",
+                      "sha256":  "1c9756fad908966ef5f6495709a71358b2b1311f7dc7890b896a3ff3e330331d"
+                  },
+                  {
+                      "path":  "scripts/enemy.gd",
+                      "sha256":  "99a6542d5f8019c44a000ebf3f9b263d0dabf54017ff32133f9658365fb0ff52"
+                  },
+                  {
+                      "path":  "scripts/pal.gd",
+                      "sha256":  "2c274eedce6157f6239ec70bc0610846a189d269e7ebf7ee7acce42c16997754"
+                  },
+                  {
+                      "path":  "scripts/fx.gd",
+                      "sha256":  "8219e6aa937e5218307904960c3a87092d652ca5d4cecce75e1f223df530d295"
+                  },
+                  {
+                      "path":  "scripts/drone/drone_fx.gd",
+                      "sha256":  "a5c2e3dfdcb29a5799d406f029c89b393f506cb49e15726fc8c106b2d543f1ac"
+                  },
+                  {
+                      "path":  "scripts/drone/partner_drone.gd",
+                      "sha256":  "31f6a4e8e965e8612088fc1c302d0d01fd6ca66209aabbbefbe863e3f6f120be"
+                  },
+                  {
+                      "path":  "scripts/training/training_main.gd",
+                      "sha256":  "b54b12cb1dede820ccdae70dcb07310526c89468ea357729d483cf1fb1767612"
+                  },
+                  {
+                      "path":  "scripts/hud.gd",
+                      "sha256":  "61d453fd79d6b7a705767b40b92582c9cd9f35859347da7eff5eac4c1b5dff28"
+                  }
+              ]
+}

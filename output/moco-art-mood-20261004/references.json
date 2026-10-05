@@ -1,0 +1,84 @@
+{
+  "date": "2026-10-04",
+  "mode": "built-in imagegen",
+  "edit_target": "source_screenshot.png",
+  "direct_style_inputs": [
+    "references/moco_store_03.webp",
+    "references/moco_store_04.webp"
+  ],
+  "generation_calls": [
+    {
+      "variant": "01",
+      "inputs": [
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/source_screenshot.png",
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/references/moco_store_03.webp",
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/references/moco_store_04.webp"
+      ],
+      "output": "01_moco_balanced_combat.png"
+    },
+    {
+      "variant": "02 draft",
+      "inputs": [
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/source_screenshot.png",
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/references/moco_store_03.webp",
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/references/moco_store_04.webp"
+      ],
+      "output": "02_moco_heavy_hit_draft.png"
+    },
+    {
+      "variant": "02 final correction",
+      "inputs": [
+        "02_moco_heavy_hit_draft.png"
+      ],
+      "output": "02_moco_heavy_hit.png"
+    },
+    {
+      "variant": "03",
+      "inputs": [
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/source_screenshot.png",
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/references/moco_store_03.webp",
+        "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/moco-art-mood-20261004/references/moco_store_04.webp"
+      ],
+      "output": "03_moco_drone_support.png"
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://mo.co/ko/creative-hub/",
+      "role": "official art source, viewed supporting backgrounds and key art; not a direct generation input",
+      "files": [
+        "references/moco_jax_keyart.png",
+        "references/moco_world_throne_room.png"
+      ]
+    },
+    {
+      "url": "https://play.google.com/store/apps/details?id=com.supercell.moco",
+      "role": "official store images, direct visual references",
+      "files": [
+        "references/moco_store_02.webp",
+        "references/moco_store_03.webp",
+        "references/moco_store_04.webp",
+        "references/moco_store_05.webp"
+      ]
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=ndPtTapR7z4",
+      "role": "official trailer, combat FX observation; illustrative cropped 10s frame from earlier research",
+      "files": [
+        "references/moco_trailer_10s.jpg"
+      ]
+    },
+    {
+      "url": "https://mo.co/en/news/release-notes/we-are-so-back/",
+      "role": "official mechanics and version distinctions"
+    },
+    {
+      "url": "https://mo.co/en/news/release-notes/xp-improvements/",
+      "role": "official red damage-flash adjustment, dated June 26 2025"
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=PkS8S1XtCQ4",
+      "role": "Farmito raw gameplay footage, older combat HUD only; not a direct generation input"
+    }
+  ]
+}

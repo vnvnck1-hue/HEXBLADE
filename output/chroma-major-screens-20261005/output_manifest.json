@@ -1,0 +1,37 @@
+[
+  {
+    "key": "01_lobby",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-51a852bd-327f-4846-8817-80d2feafbe5f.png",
+    "file": "01_lobby.png"
+  },
+  {
+    "key": "02_sector_map",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-f87a7aab-27cb-4e0f-8d6a-fc6fc6958a8d.png",
+    "file": "02_sector_map.png"
+  },
+  {
+    "key": "03_combat_cleanup",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-dd3010b9-5066-4937-8a87-874375d86119.png",
+    "file": "03_combat_cleanup.png"
+  },
+  {
+    "key": "04_dialogue",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-b1f04564-65a8-4216-81f8-8b179db96252.png",
+    "file": "04_dialogue.png"
+  },
+  {
+    "key": "05_docking",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-f4a4a9ab-8142-40d1-8e07-3d07666f7495.png",
+    "file": "05_docking.png"
+  },
+  {
+    "key": "06_vulcan",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-03622826-db98-4d8f-b7bd-954115c1e8ad.png",
+    "file": "06_vulcan.png"
+  },
+  {
+    "key": "07_shipwright",
+    "source": "C:/Users/vnvnc/.codex/generated_images/01a10ae6-d7e8-7f80-bc83-c2c82b6e87bc/exec-19754505-9329-413e-862f-42a79e411db6.png",
+    "file": "07_shipwright.png"
+  }
+]

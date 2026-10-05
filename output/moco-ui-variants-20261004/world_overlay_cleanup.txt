@@ -1,0 +1,3 @@
+Before placing ANY new world HUD, completely ERASE the ORIGINAL three energy pips left of player near normalized(x=.383,y=.383), any original dark circular player gauge, and the OLD tiny beige enemy HP line above the lower-left cube near(x=.228,y=.633). These are stale old HUD, not scenery. Reconstruct floor there. The lower-left cube must have exactly ONE health bar, the new coral one, never a second beige line. Upper cube also exactly one bar. Display player energy only in the designated new status HUD, not at its old world location. No residual old-world HUD.
+
+This instruction was appended to the actual generation prompts for variants 02 and 03, after inspecting variant 01.

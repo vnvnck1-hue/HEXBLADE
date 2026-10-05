@@ -1,0 +1,30 @@
+﻿[
+    {
+        "File":  "01_exosuit_2_2m.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "D4DCB2EA208465774F817E7530C9A9BDB4A385D77B90ED834927037CD2BC4EB9",
+        "CopyIdentical":  true
+    },
+    {
+        "File":  "02_motion_frame_3_6m.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "9DE80AFD267AA995259AFACEC69898E691F8B62284607E9D15A9C747945CF20B",
+        "CopyIdentical":  true
+    },
+    {
+        "File":  "03_cockpit_6m.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "CB5D70A031F5EE2E38328C2FD074850F925E818841C391960C6D6006906CDFE9",
+        "CopyIdentical":  true
+    },
+    {
+        "File":  "04_giant_18m.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "7631D3AB632AF620A704492A54EF6FB636A17679E381BB866DEFB36F2434D04A",
+        "CopyIdentical":  true
+    }
+]

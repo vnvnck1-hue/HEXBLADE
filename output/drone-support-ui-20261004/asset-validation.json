@@ -1,0 +1,11 @@
+﻿{
+    "mode":  "built-in imagegen",
+    "asset":  "assets/ui/calm_hud/triad_portrait.png",
+    "prompt":  "output/drone-support-ui-20261004/portrait-prompt.txt",
+    "sha256":  "E4641E4CA65FD0ADD35BB2B56F2AFFEBF1E8C1390674718B179481A03EE904F4",
+    "original_copy_same":  true,
+    "size_limit":  512,
+    "mipmaps":  true,
+    "transparent":  true,
+    "protected_files_same":  true
+}

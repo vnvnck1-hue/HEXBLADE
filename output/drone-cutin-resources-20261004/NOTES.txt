@@ -1,0 +1,29 @@
+선택된 정면 조종석 합체 컷인 리소스 / 2026-10-04
+
+사용자 요청: 실제 합체 연출에 쓸 리소스 제작, 게임 연결은 Claude, 인수인계 MD 작성.
+문서: docs/drone-cockpit-cutin-claude-handoff.md
+패키지: assets/vfx/drone_cutin/ (15개 원본/설정 + PNG/SVG .import 11개 + 셰이더 .uid 1개 = 27개)
+권장: cockpit_plate_clipped.png + panel_glow.svg + panel_frame.svg. 모든 패널은 공통 정사각형 변환.
+간단 대체: cockpit_cutin_ready.png 하나. 프레임 중복 없음.
+별도 효과: lock_ring / dock_flash / sync_streak / triangle_shard / bashful_ticks.
+layout.json: 폴리곤, 배치, 이벤트 기반 타이밍, 효과 수량, 기존 합성 음향 재사용.
+원화는 내장 imagegen으로 제작. 선택 첨부는 동일 인물 편집 대상, 최초 캐릭터25/38/43은 그림체 기준. 실제 art_prompt.txt / references.json 보존.
+선택 원화 보존본은 사용자 첨부와 SHA256 동일. 새 원화에는 생성 재표현이 있으며 원본의 픽셀 추출본은 아니다.
+
+최종 검증:
+- Godot 4.7.2-stable, tools/godot.ps1 사용.
+- Compatibility와 Forward+ 모두 독립 프리뷰 issues=0. 최종 PNG/프리뷰는 Forward+ 결과.
+- 투명 PNG1024x1024, 원본1254x1254. 바깥 alpha0 / 얼굴 alpha1.
+- 8px 격자 마스크 alpha 불일치0. 불투명 영역11,092개 샘플에서 원화 RGB 최대 차이1/255.
+- 세 해상도1953x805 / 1280x800 / 1280x720 육안 확인. 좁은 프리뷰의 배경은 최초 스크린샷 비율 유지 레터박스이며 실제 게임 해상도 캡처가 아님.
+- 최종 엔진 프리뷰/임포트 ERROR 및 SCRIPT ERROR0. 원화 색을 이중으로 곱하던 초기 셰이더를 수정한 뒤 재생성/재임포트 완료.
+- 전체35종 PASS, ERROR/SCRIPT ERROR0: regression_final.log (UTF-16LE).
+- 최초 regression.log에서 FloorVac 클래스 로드 문제로 mammoth 두 항목 실패 및 combo 검사 축 정규화 오류. 게임 코드 수정 없이 임포트 후 mammoth 두 항목 재검사 PASS, 최종 전체 검사35종 PASS/오류0. 초기 로그 보존.
+- 최초 일반 권한 엔진 실행의 인증서/캐시 오류 로그도 보존. 최종 검증은 정상 접근 권한으로 실행.
+- 프리뷰 경고1개: 새 PNG를 Image.load_from_file로 직접 읽는 도구 전용 코드. 본편 export에는 Texture2D preload/load를 사용하도록 문서 명시.
+- 원본/임포트 SHA256 asset_manifest.json, 엔진 검사 engine_validation.json.
+- _capture는 .gdignore로 편집기 스캔에서 제외되어 preview.gd의 자동 .uid는 생성되지 않음. 본편용 셰이더 .uid는 포함.
+
+게임용 컨트롤러/합체 이벤트 연결 미구현: 사용자 지시대로 Claude 담당.
+문서는 현재 Q 키/합체0.22초/게이지비용30/원화 표시약0.67초, 실제 완료 이벤트/취소/중복 방지/기존 음향/HUD층/후속 검증을 설명.
+기존 본편 스크립트 수정/씬 등록/커밋/푸시 없음. 동시 작업 파일 및 이전 컨셉들 보존.

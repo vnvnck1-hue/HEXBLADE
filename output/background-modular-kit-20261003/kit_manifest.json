@@ -1,0 +1,642 @@
+{
+  "version": 3,
+  "units": "meters",
+  "reference": "v6 approved violet/coral",
+  "axes": "+Y up, front -Z",
+  "grid_m": 0.25,
+  "floor_pitch_m": 2,
+  "wall_height_m": 3,
+  "parts": [
+    {
+      "id": "F01",
+      "name": "기본 바닥",
+      "group": "floor",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.2,
+        "z": 2
+      },
+      "design": "Square violet beveled steel floor slab. Quiet uninterrupted top, sparse selective edge wear; no stripes, bolts or holes. Top at Y=0, bottom -0.20.",
+      "pivot": "floor",
+      "sheet": "sheets/F01.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "F02",
+      "name": "반폭 바닥",
+      "group": "floor",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.2,
+        "z": 1
+      },
+      "design": "Half-depth rectangular violet slab, same thickness and bevel as F01. Quiet top.",
+      "pivot": "floor",
+      "sheet": "sheets/F02.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "F03",
+      "name": "배수 그레이팅",
+      "group": "floor",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.2,
+        "z": 0.5
+      },
+      "design": "Long narrow inset dark plum drain grate, recessed slats running across short depth, violet frame flush with floor top; open slots, no pipes below.",
+      "pivot": "floor",
+      "sheet": "sheets/F03.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "슬롯은 평면에서만 보임. 측벽은 매립/평면 처리."
+    },
+    {
+      "id": "F04",
+      "name": "미끄럼 방지판",
+      "group": "floor",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.2,
+        "z": 1
+      },
+      "design": "Square dark plum floor slab with orderly chunky raised round anti-slip studs, 5 by 5, within 20mm surface relief; same edge system.",
+      "pivot": "floor",
+      "sheet": "sheets/F04_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "5×5 돌기. 상면 돌출 20mm, 충돌은 Y=0."
+    },
+    {
+      "id": "F05",
+      "name": "바닥 외곽 마감",
+      "group": "floor",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.2,
+        "z": 0.25
+      },
+      "design": "Narrow violet floor-edge fascia strip, coral-painted outer vertical face, small soft bevel, no railing attached.",
+      "pivot": "floor",
+      "sheet": "sheets/F05.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "D01",
+      "name": "직선 안전선",
+      "group": "decal",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.002,
+        "z": 1
+      },
+      "design": "Thin flat overlay carrier, invisible except coral safety stripe width 0.25 centered along X, from x0 to2 at z0.5. Show visible stripe and dotted rectangular carrier boundary, edge-on views intentionally hairline, NOT a solid slab.",
+      "pivot": "decal",
+      "sheet": "sheets/D01.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "투명 캐리어. 실제 안전선 폭 .25m."
+    },
+    {
+      "id": "D02",
+      "name": "90도 안전선",
+      "group": "decal",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.002,
+        "z": 1
+      },
+      "design": "Thin flat overlay with coral 90-degree curved stripe, width .25, centerline radius .5 about corner x0,z0; connects (x.5,z0) to(x0,z.5). Dashed carrier outline. Hairline edge-on projections, not a solid slab.",
+      "pivot": "decal",
+      "sheet": "sheets/D02_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "원점 중심 r=.5m. 그림의 반경 화살표보다 보조도 좌표 우선."
+    },
+    {
+      "id": "D03",
+      "name": "안전선 끝단",
+      "group": "decal",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.002,
+        "z": 0.5
+      },
+      "design": "Thin flat overlay coral stripe .25 wide along X ending in a blunt rounded cap. Dashed square carrier outline, hairline side and front projections.",
+      "pivot": "decal",
+      "sheet": "sheets/D03.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "얇은 데칼. 두께는 띄움 거리."
+    },
+    {
+      "id": "W01",
+      "name": "벽 패널",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 2,
+        "y": 3,
+        "z": 0.25
+      },
+      "design": "Single tall cool lavender-gray industrial wall panel, dark violet perimeter bevel, subtle recessed central face. Bare panel with no pipes, lights or props.",
+      "pivot": "wall",
+      "sheet": "sheets/W01.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "W02",
+      "name": "벽 이음 덮개",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 0.25,
+        "y": 3,
+        "z": 0.12
+      },
+      "design": "Narrow vertical dark violet seam-cover pilaster, small bevel, two chunky inset fasteners. Applied over joint of two W01 walls, not a structural replacement.",
+      "pivot": "wall",
+      "sheet": "sheets/W02_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "벽 이음에 덧씌움; 건축 폭에 더하지 않음."
+    },
+    {
+      "id": "W03",
+      "name": "벽 모서리 덮개",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 0.35,
+        "y": 3,
+        "z": 0.35
+      },
+      "design": "Vertical L-section corner cover, two equal perpendicular wings .35 wide, .08 material thickness; dark violet with restrained coral edge chips. Hollow L plan, NOT a solid square pillar.",
+      "pivot": "wall",
+      "sheet": "sheets/W03.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "L 단면 .08m. 코너 이중 벽 제거."
+    },
+    {
+      "id": "W04",
+      "name": "문틀",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 4,
+        "y": 3,
+        "z": 0.5
+      },
+      "design": "Industrial violet U-shaped portal frame only, no leaves. Outer width4 height3 depth.5, clear rectangular opening width3.5 height2.5, jambs each .25, header .5. Chunky bolts on jambs, restrained coral trim. Open bottom, no threshold obstruction.",
+      "pivot": "wall",
+      "sheet": "sheets/W04_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "개구부 3.5×2.5m. PNG 비율 아닌 보조도 치수 사용. 기둥 내부 문 이동 슬릿 필수."
+    },
+    {
+      "id": "W05",
+      "name": "미닫이 문짝",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 1.74,
+        "y": 2.48,
+        "z": 0.12
+      },
+      "design": "One rectangular left-hand sliding door leaf, violet plate, thick diagonal dark brace and short dusty coral diagonal warning panels. Single leaf only, flat back; derive an opposite-handed leaf with the same front face; no frame.",
+      "pivot": "prop",
+      "sheet": "sheets/W05.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "2장 조립. 반대손 파생형을 제작하고 음수 스케일 금지."
+    },
+    {
+      "id": "W06",
+      "name": "벽 하단 몰딩",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.25,
+        "z": 0.1
+      },
+      "design": "Horizontal wall skirting strip dark violet, narrow coral top bevel, no pipes. Straight flat cut ends with identical profile.",
+      "pivot": "wall",
+      "sheet": "sheets/W06.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "W07",
+      "name": "벽 상단 캡",
+      "group": "wall",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.12,
+        "z": 0.35
+      },
+      "design": "Horizontal top-wall cap, inverted shallow U cross-section straddling .25 thick wall, .35 outer depth, .05 wings. Violet metal with selected coral wear.",
+      "pivot": "wall",
+      "sheet": "sheets/W07.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "내부 폭 .25m, 날개 .05m."
+    },
+    {
+      "id": "P01",
+      "name": "직선 배관",
+      "group": "pipe",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.25,
+        "z": 0.25
+      },
+      "design": "Straight horizontal dark indigo industrial pipe along X, external diameter .25, circular hollow cut ends. No collars attached, exactly constant diameter at ends.",
+      "pivot": "pipe",
+      "sheet": "sheets/P01_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "직선 길이2m, 외경 .25m. FRONT/TOP 직각 투영 교정."
+    },
+    {
+      "id": "P02",
+      "name": "90도 배관",
+      "group": "pipe",
+      "dimensions_m": {
+        "x": 0.625,
+        "y": 0.25,
+        "z": 0.625
+      },
+      "design": "Quarter-circle hollow pipe in XZ plane, centerline bend radius .5, diameter .25. Two perpendicular open end faces; no collars.",
+      "pivot": "pipe",
+      "sheet": "sheets/P02.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "중심선 r=.5m. 곡선 접점/법선은 보조도 우선."
+    },
+    {
+      "id": "P03",
+      "name": "T 배관",
+      "group": "pipe",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.25,
+        "z": 0.625
+      },
+      "design": "Hollow T fitting in XZ plane: straight X centerline 1m, branch towards +Z .5m, diameter .25; 3 circular open mouths. No collars.",
+      "pivot": "pipe",
+      "sheet": "sheets/P03.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "±X와 +Z 세 소켓. 원형 단면 .25m."
+    },
+    {
+      "id": "P04",
+      "name": "배관 연결 링",
+      "group": "pipe",
+      "dimensions_m": {
+        "x": 0.12,
+        "y": 0.35,
+        "z": 0.35
+      },
+      "design": "Short coral cylindrical coupling sleeve along X, outside diameter .35, bore .252, length .12. Clear through hole, octagonal outer silhouette, no pipe included.",
+      "pivot": "pipe",
+      "sheet": "sheets/P04.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "관통 내경 .252m, 연결부당 하나."
+    },
+    {
+      "id": "P05",
+      "name": "배관 끝마개",
+      "group": "pipe",
+      "dimensions_m": {
+        "x": 0.08,
+        "y": 0.25,
+        "z": 0.25
+      },
+      "design": "Closed dark-violet cylindrical pipe end cap along X, .25 diameter, .08 length; coral narrow rim. One flat circular closed face.",
+      "pivot": "pipe",
+      "sheet": "sheets/P05.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "막힌 끝에만 배치."
+    },
+    {
+      "id": "R01",
+      "name": "직선 난간 바",
+      "group": "rail",
+      "dimensions_m": {
+        "x": 2,
+        "y": 0.78,
+        "z": 0.08
+      },
+      "design": "Two separate horizontal coral cylindrical rails along X, diameter .08; centers Y=.25 and .95 above conceptual floor. Combined vertical extent .78, show two bars only, NO posts, no feet. End planes x0 and2.",
+      "pivot": "rail",
+      "sheet": "sheets/R01.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "높이 .25/.95m. 기둥 별도."
+    },
+    {
+      "id": "R02",
+      "name": "코너 난간 바",
+      "group": "rail",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.78,
+        "z": 0.5
+      },
+      "design": "Pair of coral 90-degree horizontal rail bends, diameter .08, centerline radius .25, identical bends at Y=.25 and .95. Only bars, no posts or bases.",
+      "pivot": "rail",
+      "sheet": "sheets/R02_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": ".5×.5m는 예약 공간, 실제 곡선 범위 .29m."
+    },
+    {
+      "id": "R03",
+      "name": "난간 기둥",
+      "group": "rail",
+      "dimensions_m": {
+        "x": 0.25,
+        "y": 1.1,
+        "z": 0.25
+      },
+      "design": "Single dark-violet floor pedestal .25 square, coral upright post .1 thick height1.1. Two horizontal socket levels .25 and .95 for rail bars, diameter .08. Four base bolts.",
+      "pivot": "prop",
+      "sheet": "sheets/R03_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "높이차 .70m. 로컬 Z 소켓, X 난간에는 90도 회전. 중간 기둥은 관통형 파생."
+    },
+    {
+      "id": "A01",
+      "name": "작업대",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 2,
+        "y": 1,
+        "z": 0.75
+      },
+      "design": "Work bench from reference, coral woodlike painted metal countertop, violet two drawer pedestals, open central knee space, chunky beveled edges. Empty top; no tools cup cloth.",
+      "pivot": "prop",
+      "sheet": "sheets/A01.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A02",
+      "name": "수납장",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 1,
+        "y": 2,
+        "z": 0.5
+      },
+      "design": "Tall violet utility locker, two unequal front inset cabinet doors, short coral handles, two low feet; flat back. No electrical lamp attached.",
+      "pivot": "prop",
+      "sheet": "sheets/A02_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "평면 손잡이를 정면과 같은 면으로 교정."
+    },
+    {
+      "id": "A03",
+      "name": "전기함",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 1,
+        "y": 1.5,
+        "z": 0.35
+      },
+      "design": "Wall-mounted lavender-gray chunky electrical cabinet, big recessed rectangular door, four large corner bolts, bottom cable entry holes; no attached lamp or conduits.",
+      "pivot": "mount",
+      "sheet": "sheets/A03.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A04",
+      "name": "공구 걸이판 세트",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 1.5,
+        "y": 0.75,
+        "z": 0.12
+      },
+      "design": "Wall-mounted lavender-gray tool board assembly carrying exactly three chunky dark metal spanners of different sizes on simple hooks. Board and removable wrench silhouettes clear. No hose attached.",
+      "pivot": "mount",
+      "sheet": "sheets/A04_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "판/훅/공구3개 하위 메시. 별도 전기함 제거."
+    },
+    {
+      "id": "A05",
+      "name": "공구 상자",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.3,
+        "z": 0.25
+      },
+      "design": "Small violet toolbox, beveled lid, coral carry handle lying down, coral front latch, no text.",
+      "pivot": "prop",
+      "sheet": "sheets/A05.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A06",
+      "name": "소형 약품통",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.25,
+        "y": 0.5,
+        "z": 0.25
+      },
+      "design": "Small rectangular coral cleaning-fluid jerrycan, recessed grip on top, short dark cap, vertical violet inset on front, no label text.",
+      "pivot": "prop",
+      "sheet": "sheets/A06.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A07",
+      "name": "빗자루",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.35,
+        "y": 1.5,
+        "z": 0.12
+      },
+      "design": "Coral handled broom with wide trapezoidal dusty-coral bristles; straight upright for orthographic views, no leaning or perspective. Handle diameter .04.",
+      "pivot": "prop",
+      "sheet": "sheets/A07.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A08",
+      "name": "머그컵",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.18,
+        "y": 0.15,
+        "z": 0.12
+      },
+      "design": "Small plain lavender-gray work mug, cylindrical body diameter .12 height .15, one handle on +X giving width .18, hollow open top.",
+      "pivot": "prop",
+      "sheet": "sheets/A08.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A09",
+      "name": "작업대 천",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.4,
+        "z": 0.5
+      },
+      "design": "Single lavender-gray cleaning cloth draped over a right-angle workbench edge; two broad soft folds, top .5x.5 and hanging flap .4 high. Show cloth alone, ghost dotted bench edge for support only, no solid bench.",
+      "pivot": "prop",
+      "sheet": "sheets/A09.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "피벗 예외: 천이 접히는 선의 중앙."
+    },
+    {
+      "id": "A10",
+      "name": "가로 튜브등",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.15,
+        "z": 0.15
+      },
+      "design": "Horizontal enclosed magenta work strip light, dark-violet frame, rounded rectangular luminous core, wall mounting brackets at rear. Subdued glow does not obscure silhouette.",
+      "pivot": "mount",
+      "sheet": "sheets/A10.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A11",
+      "name": "세로 표시등",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.2,
+        "y": 0.5,
+        "z": 0.2
+      },
+      "design": "Vertical short capsule magenta indicator lamp, deep-violet top and bottom caps, flat wall-mount back. Emissive core restrained and shapes readable.",
+      "pivot": "mount",
+      "sheet": "sheets/A11.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A12",
+      "name": "케이블 도관",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0.1
+      },
+      "design": "Dark-violet bent rigid cable conduit in an S stepped route, diameter .08, two parallel open ends, two small wall saddle clips. No electrical box included.",
+      "pivot": "mount",
+      "sheet": "sheets/A12.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "A13",
+      "name": "걸이 호스",
+      "group": "prop",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.6,
+        "z": 0.15
+      },
+      "design": "Looped dark-violet rubber hose hung as one oval coil on a simple small wall hook, two short free ends with muted coral connectors; no tool board behind it.",
+      "pivot": "mount",
+      "sheet": "sheets/A13.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "I01",
+      "name": "감염 직선 줄기",
+      "group": "infection",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.14,
+        "z": 0.22
+      },
+      "design": "Independent wine-purple fleshy tendril lying along X on invisible flat substrate; organic asymmetry through middle but both end necks circular diameter .12, tangents exactly along X. No floor included.",
+      "pivot": "organic",
+      "sheet": "sheets/I01_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "금속 연결구 없음. 양끝 목 Ø.12m."
+    },
+    {
+      "id": "I02",
+      "name": "감염 코너 줄기",
+      "group": "infection",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.14,
+        "z": 0.5
+      },
+      "design": "Wine-purple fleshy quarter-turn tendril on invisible flat substrate, centerline radius .25, circular neck diameter .12 at both ends, tangents perpendicular. No substrate included.",
+      "pivot": "organic",
+      "sheet": "sheets/I02_v2.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": ".5×.5m 예약 공간. 목 Ø.12m/중심선 r=.25m는 보조도 우선."
+    },
+    {
+      "id": "I03",
+      "name": "감염 분기 줄기",
+      "group": "infection",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.16,
+        "z": 0.5
+      },
+      "design": "Organic T-branch: sockets (-.5,.06,0),(.5,.06,0),(0,.06,.4), diameter .12. Wine-purple painted flesh; no hardware.",
+      "pivot": "organic",
+      "sheet": "sheets/I03_v3.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "±X/+Z T분기. 양끝 .08m 구간은 Ø.12m 고정. 그림의 목 굵기를 역측정하지 않음."
+    },
+    {
+      "id": "I04",
+      "name": "감염 연결막",
+      "group": "infection",
+      "dimensions_m": {
+        "x": 1,
+        "y": 0.08,
+        "z": 1
+      },
+      "design": "Separate pale gray-lavender organic web membrane for laying over wall or floor; irregular four-lobed roughly square patch with three asymmetrical holes, thin raised ridges, feathered irregular edge. No tendrils, sacs or substrate included.",
+      "pivot": "organic",
+      "sheet": "sheets/I04.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "표면에 5–15mm 띄워 밀착. 반복 기본 재질과 분리."
+    },
+    {
+      "id": "I05",
+      "name": "감염 포낭",
+      "group": "infection",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.3,
+        "z": 0.5
+      },
+      "design": "Single flattened mauve fleshy ovoid sac, subdued wine skin, soft rose patches, broad flat attachment underside, .5 square footprint .3 tall. No substrate or tendrils included.",
+      "pivot": "organic",
+      "sheet": "sheets/I05.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "컬러 외관 가이드. 피벗/실측 규격은 DESIGN.txt 참조."
+    },
+    {
+      "id": "I06",
+      "name": "감염 줄기 끝단",
+      "group": "infection",
+      "dimensions_m": {
+        "x": 0.5,
+        "y": 0.14,
+        "z": 0.22
+      },
+      "design": "Wine-purple organic tendril terminal along X, one circular connector neck diameter .12 at x0, taper gradually to flattened ragged sealed tip at x.5. No substrate.",
+      "pivot": "organic",
+      "sheet": "sheets/I06.png",
+      "status": "concept_reviewed_with_numeric_contract",
+      "modeling_note": "X=0 연결목 / X=.5 봉합된 끝. 목쪽 단면은 보조도 우선."
+    }
+  ],
+  "delivery": "42 color three-view sheets + dimensional assembly contract; not CAD or game meshes"
+}

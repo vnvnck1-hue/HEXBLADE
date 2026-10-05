@@ -1,0 +1,50 @@
+{
+    "ReferenceSHA256":  "7EB5B0EE73EEC53BA08DAD9B7BCAE6C787F5B0CAC6B34188D63215A4E2F3ECA1",
+    "ReferenceCopyIdentical":  true,
+    "FinalCount":  6,
+    "Finals":  [
+                   {
+                       "File":  "01_block_frame.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "5A54AA302FB7A683DCBE2590B1585001C3F74449FEAD8E5FB3B5401A20D8E093",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "02_slim_wedge.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "0A50E3D8DD8D70AB44BA8DA2B9FD04AB7EBCE9607E548B54C2EA4428F4A3B623",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "03_guard_block.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "C849C28B9AD89964DC974255FDEE51AE424F79DBDB9090197AFF1F3B16F1B1E0",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "04_offset_rebuild.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "FC7D8971C496801D99F8DE5D2F76F292B01BB807251BCDC91D6653DFAF742DC7",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "05_layer_shell.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "083C50166EE719EC9E3B55B356A9BCAD78E4F93B7A52E9E8CF557D6A50519FD3",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "06_compact_heavy.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "C21B8A026FCA869AE5D0E0B09808B05CDE1CC4266AF5B3DB51F06EE12BB55193",
+                       "CopyIdentical":  true
+                   }
+               ],
+    "VisualReview":  "Six images inspected; design silhouettes and full sheet panels checked. Concept proportions and cutaways are approximate."
+}

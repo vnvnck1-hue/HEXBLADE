@@ -1,0 +1,52 @@
+{
+ "bg_claude_w01": {
+  "atlas_px": 2048,
+  "px_per_m": 350.1,
+  "samples": 48,
+  "albedo": "output/models/bg_claude_w01/bg_claude_w01_albedo.png",
+  "uv_fill": 0.32797304653754644,
+  "stats": [
+   "model: bg_claude_w01",
+   "size (m)  x 2.000  y(fwd) 0.250  z(up) 3.000",
+   "bounds    min (0.000, -0.250, 0.000)  max (2.000, 0.000, 3.000)",
+   "triangles 3536"
+  ]
+ },
+ "bg_claude_a01": {
+  "atlas_px": 2048,
+  "px_per_m": 323.4,
+  "samples": 48,
+  "albedo": "output/models/bg_claude_a01/bg_claude_a01_albedo.png",
+  "uv_fill": 0.2792085225873691,
+  "stats": [
+   "model: bg_claude_a01",
+   "size (m)  x 2.000  y(fwd) 0.750  z(up) 1.000",
+   "bounds    min (-1.000, -0.375, 0.000)  max (1.000, 0.375, 1.000)",
+   "triangles 3012"
+  ]
+ },
+ "bg_claude_a02": {
+  "atlas_px": 2048,
+  "px_per_m": 491.5,
+  "samples": 48,
+  "albedo": "output/models/bg_claude_a02/bg_claude_a02_albedo.png",
+  "uv_fill": 0.48610002943840164,
+  "stats": [
+   "model: bg_claude_a02",
+   "size (m)  x 1.000  y(fwd) 0.500  z(up) 2.000",
+   "bounds    min (-0.500, -0.250, 0.000)  max (0.500, 0.250, 2.000)",
+   "triangles 2300"
+  ]
+ },
+ "bg_claude_f01": {
+  "atlas_px": 2048,
+  "px_per_m": 512,
+  "note": "4m world-phase texture; floor shader samples world XZ/4",
+  "stats": [
+   "model: bg_claude_f01",
+   "size (m)  x 2.000  y(fwd) 2.000  z(up) 0.200",
+   "bounds    min (0.000, -2.000, -0.200)  max (2.000, 0.000, 0.000)",
+   "triangles 108"
+  ]
+ }
+}

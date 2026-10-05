@@ -1,0 +1,49 @@
+﻿{
+    "date":  "2026-10-05",
+    "files":  [
+                  {
+                      "name":  "01_cool_painted_metal.png",
+                      "width":  1672,
+                      "height":  941,
+                      "bytes":  1323722,
+                      "sha256":  "45812FB3DAE0830F148AAC0BD04EC5C399A28F66FF5410A1D7D1CD900660D3AF",
+                      "visualReview":  "PASS; concept geometry counts and palette checked; generated fine-detail/perspective differences remain"
+                  },
+                  {
+                      "name":  "02_teal_chunky_metal.png",
+                      "width":  1672,
+                      "height":  941,
+                      "bytes":  1409158,
+                      "sha256":  "C74FBDD4040C6A7EE5C32D092367381CE3386D946D463FCC27AD2F073A8F9F86",
+                      "visualReview":  "PASS; concept geometry counts and palette checked; generated fine-detail/perspective differences remain"
+                  },
+                  {
+                      "name":  "03_ingame_teal_concept.png",
+                      "width":  1672,
+                      "height":  941,
+                      "bytes":  1670288,
+                      "sha256":  "DCA0CCE2997CA850DFD9B8DC8A6D4943EC77361164F6CDBEA77C325324C7640D",
+                      "visualReview":  "PASS; concept geometry counts and palette checked; generated fine-detail/perspective differences remain"
+                  }
+              ],
+    "referenceCopySHA256Matches":  true,
+    "captureCompleted":  true,
+    "captureScriptErrors":  0,
+    "captureEnvironmentErrors":  1,
+    "bot":  "Main15s bot+dronebot seed4; room progression t14.6, clean exit requested at15s; environment errors present",
+    "botScriptErrors":  0,
+    "fullTests":  "run_tests.ps1 attempted; stalled \u003e5 minutes at claude_background_check; interrupted. No full-suite PASS claim.",
+    "completedTestResultLines":  [
+                                     "  RESULT OK (0 fail)\r",
+                                     "  RESULT OK (0 fails)\r",
+                                     "  RESULT OK (0 fails)\r",
+                                     "  RESULT OK (0 fails)\r",
+                                     "  RESULT  OK  (0 fail)\r",
+                                     "  BUG_ARENA_CHECK OK\r",
+                                     "  BUG_CHOMPER_CHECK OK\r",
+                                     "  BUG_ENEMIES_CHECK OK\r",
+                                     "  BUG_GRUB_CHECK OK\r"
+                                 ],
+    "productionAssetsChanged":  false,
+    "approval":  "Awaiting user choice; no game texture application"
+}

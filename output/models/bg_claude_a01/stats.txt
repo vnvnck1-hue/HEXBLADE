@@ -1,0 +1,9 @@
+model: bg_claude_a01
+size (m)  x 2.000  y(fwd) 0.750  z(up) 1.000
+bounds    min (-1.000, -0.375, 0.000)  max (1.000, 0.375, 1.000)
+triangles 3012
+parts:
+  top                         540 tris  parent=body  origin=(0.00, 0.00, 0.00)
+  body                       1512 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  drawers                     960 tris  parent=body  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_claude_a01.glb

@@ -1,0 +1,11 @@
+﻿{
+    "mode":  "built-in imagegen",
+    "asset":  "assets/ui/calm_hud/mecha_bust.png",
+    "prompt":  "output/calm-ingame-ui-20261004/portrait-prompt.txt",
+    "reference":  "output/calm-ingame-ui-20261004/reference.png",
+    "sha256":  "D695471561746C575E3D0D8790E55F7F9F57EB22D4D990230E0AC39CA46792E2",
+    "generated_copy_same":  true,
+    "import_size_limit":  512,
+    "mipmaps":  true,
+    "original_transparent_alpha":  true
+}

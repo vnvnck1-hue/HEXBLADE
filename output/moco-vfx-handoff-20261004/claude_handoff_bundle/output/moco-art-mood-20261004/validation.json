@@ -1,0 +1,35 @@
+{
+    "mode":  "built-in imagegen",
+    "source_is_exact_attachment_copy":  true,
+    "images":  [
+                   {
+                       "file":  "source_screenshot.png",
+                       "width":  3406,
+                       "height":  1407,
+                       "sha256":  "2881EB27196C598AA70B42E1C655FF74835F51637134E2DD3DAF4A51AD5B6D77",
+                       "bytes":  4425954
+                   },
+                   {
+                       "file":  "01_moco_balanced_combat.png",
+                       "width":  1951,
+                       "height":  806,
+                       "sha256":  "0FCC3F8F85F48E5F6BF19D0E8B5B4011C6F3D4139EDAD1F288B14F4946713DF5",
+                       "bytes":  1597084
+                   },
+                   {
+                       "file":  "02_moco_heavy_hit.png",
+                       "width":  1952,
+                       "height":  806,
+                       "sha256":  "B4D6320A8E8DC30930669B451B1C9B278D3F9F1BBD92244F7C59F7E95D4C00E0",
+                       "bytes":  1624499
+                   },
+                   {
+                       "file":  "03_moco_drone_support.png",
+                       "width":  1951,
+                       "height":  806,
+                       "sha256":  "A8819EEC04D405242C18EA814EDC5D4C6C4E65D4A7376EAB73713CE5DEC103BF",
+                       "bytes":  1621295
+                   }
+               ],
+    "visual_review":  "All three saved final images viewed; room/camera/central mech/two cube enemies/two barrels/partner drone/main HUD areas retained. Variant 2 G HEAL changed to G DOCK. Generated repaint changes details and UI; not pixel-identical. Motions are static concept poses, not validated animations."
+}

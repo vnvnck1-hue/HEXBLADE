@@ -1,0 +1,5 @@
+Edit this existing HEXBLADE sector map concept. Correct ONLY the little Korean node text on the hex tokens. Every node with a green plus must say exactly '정비', every node with coral crossed blades must say exactly '전투', the mustard diamond node '정예', cyan start '출발', magenta boss 'MAMMOTH'. Some currently say 전비/전루; correct these to 정비/전투. Keep the SAME graph topology, node count, coordinates, route lines, all header and stat text, illustration, mech, drone, palette, border, UI arrangement, camera and composition. Do not redesign or add anything. Maintain exact original screen aspect. Only localized small-label corrections.
+
+---
+
+Edit this existing HEXBLADE combat/cleanup concept. Correct ONLY the TRIAD SUPPORT meter in the lower-left card: the numeric label is 0 / 100, so remove the green fill and show an EMPTY dark slate track. Keep the label exactly '0 / 100'. Preserve the meter frame/position/size and every other part: same character, drone, room, all machinery, enemies, smoke, blade arc, cleanup effect, HUD text, weapon dock, borders, colors, and screen aspect. No other changes or redesign. This is a localized meter-state correction.

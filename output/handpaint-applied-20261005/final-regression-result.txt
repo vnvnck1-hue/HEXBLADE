@@ -1,0 +1,2 @@
+46 tests verified: 45 passed in full suite; ground_break_check passed after bounded-sampling test repair and targeted recheck. Final failed tests: 0.
+Full-suite log preserves the initial random-sample failure.

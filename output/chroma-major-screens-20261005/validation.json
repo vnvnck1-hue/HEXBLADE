@@ -1,0 +1,75 @@
+{
+  "concepts": [
+    {
+      "file": "01_lobby.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "4782457dc751daef8dba235734ffc2d430a9f37e9351bec7d10770eb43f05f22",
+      "generated_copy_match": true
+    },
+    {
+      "file": "02_sector_map.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "9600e90adec422aef54f52750cc3fb908992a5187059db315014bb28a9a32680",
+      "generated_copy_match": true
+    },
+    {
+      "file": "03_combat_cleanup.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "596ed429e3e51552b0ecf2c608269adae5978046cf4bee1c29c8bdf167d4f4f0",
+      "generated_copy_match": true
+    },
+    {
+      "file": "04_dialogue.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "8b84852d7d268377bc4e13a299d7b539fca5a4353f2dc72d06451e93289938f2",
+      "generated_copy_match": true
+    },
+    {
+      "file": "05_docking.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "55fa309983489c5069222a518b05c52df75062b80af2002ab1b7044d8c62bca8",
+      "generated_copy_match": true
+    },
+    {
+      "file": "06_vulcan.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "bd62aaec4e0ba6184f8d73d88742dd9619bd7aee1a716360abc953b8e64d6d1b",
+      "generated_copy_match": true
+    },
+    {
+      "file": "07_shipwright.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "dd75f0c57e2aa6d8e5f453de275b8f6742d2eae4526b923ba3a30c7b7b46b91e",
+      "generated_copy_match": true
+    }
+  ],
+  "final_count": 7,
+  "all_generated_copies_match": true,
+  "visual_review": "completed; small map node lettering remains for typesetting",
+  "dialogue_source_copy_match": true,
+  "cutin_source_copy_match": true,
+  "engine_script_errors": 0,
+  "engine_environment_errors": "system certificate store read errors; rendering and PNG saving completed",
+  "game_implementation": false
+}

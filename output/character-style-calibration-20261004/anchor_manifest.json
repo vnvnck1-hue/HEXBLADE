@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-04",
+  "style_source": "initial_four_originals_only",
+  "generated_test_is_style_anchor": false,
+  "concept_image_in_generation_inputs": false,
+  "anchors": [
+    {
+      "path": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png",
+      "sha256": "06A01411B400C086EAB250D9AA77B7AEAEC6A020A01525BBB7D1907495A61E15"
+    },
+    {
+      "path": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_31.png",
+      "sha256": "AFF4DB6AF92918B54190B58582E2E3A1889010BCD5FDCA969CEE50F0355895F5"
+    },
+    {
+      "path": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_38.png",
+      "sha256": "039C7DB8BF93EEA1E55A15C4CB36A6F4F76E8BD1144B78A4212677BD090DADAD"
+    },
+    {
+      "path": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_43.png",
+      "sha256": "E6F16A3A70DABF66F6C2DCC7140DC750064C4E5BC2203D7D16B6DA99F5C39156"
+    }
+  ]
+}

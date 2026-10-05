@@ -1,0 +1,19 @@
+﻿{
+    "godot":  "4.7.2-stable",
+    "all_tests_passed":  true,
+    "test_count":  35,
+    "all_test_errors":  0,
+    "protected_14_source_files_same":  true,
+    "protected_pixels":  {
+                             "blocked_skills":  true,
+                             "blocked_triad":  true,
+                             "ready_skills":  true,
+                             "ready_triad":  true
+                         },
+    "main_bot_seconds":  60,
+    "main_bot_errors":  0,
+    "boss_bot_seconds":  8,
+    "boss_bot_errors":  0,
+    "branch":  "feature/round-skill-hud",
+    "committed":  false
+}

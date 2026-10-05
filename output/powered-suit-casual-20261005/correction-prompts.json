@@ -1,0 +1,12 @@
+[
+  {
+    "key": "01_field_rebuild",
+    "path": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-e9ffb3e8-75ce-4042-a2cd-1b49eb21bbe7.png",
+    "prompt": "Localized correction only. In the TOP RIGHT panel titled \"착용 구조\", the side cutaway wearer and suit have been cropped at the knee. Redraw ONLY this panel: fit a complete compact full-body side-view suit with its orange full-size human wearer, head inside helmet, hands in gloves, knees at knee hinges and feet inside boots, entirely between the panel header and bottom edge. Scale the whole side-view illustration smaller so both soles and crown have generous clearance. Remove the separate standing orange comparison human at far right in this panel to give the cutaway enough room. Keep the \"착용 구조\" header and a small \"사람 1.75m\" label if room, no broken height arrows. The suit nominal height2.2m remains in main hero labels. All OTHER artwork must remain unchanged: left hero, front/back, lower shoulder detail, open back sketch, action poses, titles. Preserve EXACT same casual bold navy outline, flat graphic cel shading and chunky proportions; do not add mechanical detail or realism."
+  },
+  {
+    "key": "03_hex_blade",
+    "path": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-4e4f0f2e-7cf4-4a3c-9aca-e769cee184f2.png",
+    "prompt": "Localized correction only in the narrow SIDE CUTAWAY panel titled \"착용 구조\" at middle-right. The orange wearer's head currently sits too low behind helmet: relocate/redraw ONLY the head and connecting neck so the whole orange human head is physically INSIDE the existing cream helmet's protective outline, eyes directly aligned behind the orange visor, crown beneath upper helmet shell, chin inside lower shell. Keep human shoulders/elbows/pelvis/knees/feet and all their correct joint positions unchanged, gently adjust neck and tiny collar area if needed. Do not make a tiny torso pilot. Remove BOTH misleading segmented dimension brackets and their \"전고 2.2m\" and \"사람 1.75m\" labels from within this cutaway panel; leave the main left hero's large \"전고 2.2m\" label alone. Keep every other part of sheet unchanged: all hero proportions, big simple cream/green armor, front/rear, open back sketch, shoulder detail, two sword action poses, title. EXACT same casual 2D cartoon style with broad flat two-tone cel shapes, bold outlines; no realism or new textures."
+  }
+]

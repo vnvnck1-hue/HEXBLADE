@@ -1,0 +1,22 @@
+﻿[
+    {
+        "Log":  "import-final.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "hud-check.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "capture.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "main-bot.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "main-bot-final.log",
+        "Errors":  0
+    }
+]

@@ -1,0 +1,34 @@
+Use case: stylized-concept.
+Create ONE complete CHARACTER + ACTION + SKILL + VFX CONCEPT SHEET of a single manned SD cleaning drone. This must be a dense but beautifully readable professional game character-development board, not a single hero image and not multiple different robot designs.
+
+INPUT ROLES:
+Image 1 (teal cleaning robot) is the PRIMARY IDENTITY reference: keep this SAME drone across every view and action. Images 2-5 (plant character sheet and three game VFX sheets) are LAYOUT / INFORMATION-DENSITY / STYLIZED VFX references only. Do not copy their characters, faces, logos, title text, weapons, monsters, crowns or story elements.
+
+CHARACTER:
+One compact SD cleaning drone with a thick horizontal rounded oval capsule body, dusty saturated teal top shell, broad warm ivory side/lower armor, charcoal undercarriage and joints, one small coral latch on closed rear-top hatch. Exactly THREE short thick legs, triangular footprint, each with a big simple round hip pivot and broad rounded-square cleaning foot pad. Preserve same leg count, shell seams, color placement, latch and downward-facing front-underbody rectangular pressure-washing bar in all depictions. A woman rides inside its opaque cabin, but do not depict a human, visible cockpit or cockpit glass.
+NO FACE anywhere: no digital face display, no black visor, eyes, eyebrows, smiling vents or two eye-like lamps. Personality comes ONLY from posture and work habits.
+Personality proposal: meticulous, eager, sturdy. It pauses to inspect a last tiny stain, takes quick short steps, lowers its body and plants its feet firmly for work, then perks its body up in a satisfied little completion bounce. Simple recognizable mechanical body, compressed cute proportions reminiscent of Brawl Stars game shape language, not a glossy plastic toy or a gritty realistic engineering machine. Not fruit or bizarre abstract design.
+
+CANVAS AND LAYOUT:
+A high-resolution LANDSCAPE sheet, ideally 3072 x 2048 pixels, generous clean margins, subtle dark muted plum-gray background that makes cream armor and cyan-water VFX pop. Organized in THREE clean horizontal bands, with very subtle separators, not heavy boxes. Hierarchy: large hero identity view at top left; three smaller equal-height turnaround views top right; three lively behavior/pose drawings across middle; ability scenes and VFX breakdown across bottom. Show all important information at glance with no overlap. About 10-12 clear drawings total, no tiny unreadable micro-panels. Drawings vary size according to importance. Minimal concise labels, pale cream text, no paragraphs.
+
+TOP BAND:
+Large primary 3/4 front hero pose with grounded confident stance (about 25% of total sheet visual area) and a compact row of 4 paint swatches beneath it. At right: FRONT, SIDE and BACK of the exact same machine, consistent scale, pose and grounded baseline. Back view reveals a small closed service panel/docking socket, never a face. Clear whole silhouettes in each view. Front should make triangular 3-foot layout understandable.
+Header EXACT text: "WASHER / CHARACTER & VFX".
+Tiny personality subtitle EXACT text: "METICULOUS · EAGER · STURDY".
+
+MIDDLE BAND:
+Three ACTION concepts, same robot and colors:
+"IDLE": body leans slightly down toward one tiny leftover stain, foot taps carefully, a small curved motion arrow shows fidgeting. No speech bubble or expression icon.
+"MOVE": fast short tripod stepping, one foot raised and body tilted a little, 2 short clean motion strokes show brisk rhythm, not long humanoid legs.
+"CLEAN": low body, all three feet braced wide, washing bar lowered and aimed at a purple grime patch, short bright mint-white spray visibly turns patch to clean floor.
+Actions must feel different, full bodies visible, poses give personality without facial features.
+
+BOTTOM BAND:
+Left "BASIC WASH": small 3/4 robot emitting a restrained narrow fan of cyan-white WATER ribbons. Show nozzle-origin, travel and floor splash in ONE coherent scene, cleaning grime rather than firing a bullet.
+Center "PRESSURE SPIN": robot planted firmly, washing bar sweeps around the lower hull with a simple circular motion arrow; a large low turquoise sweeping water crescent and foam rim propagate along floor, clearing a circular grime patch. Character's silhouette remains visible, no transformation, no weapon attack, no giant explosion. This is a PROPOSED skill, do not add damage numbers or cooldowns.
+Right "VFX BREAKDOWN": three standalone effect shapes arranged left-to-right with slim arrows: compact fan spray at origin, flowing cyan ribbon with several large water droplets, rounded floor splash with white foam spots plus tiny faded residual droplets. Simple illustrated stages communicate emit / flow / splash / fade. No debris meteor, gems or animals.
+VFX palette consistently turquoise core / light cyan ribbon / warm white foam, purple grime is destination contrast. Effects are bold readable hand-drawn stylized game VFX with bright silhouettes and restrained glow, not photoreal fluid spray or noisy particles. Keep water shapes readable and separate from armor.
+
+STYLE AND CONSISTENCY:
+Clean 2D concept painting with chunky rounded hard surfaces, broad values, softly painted volume, confident edges. Hero and model views detailed enough for design understanding; actions slightly simplified but same design. Use energetic stylized 2D VFX comparable to layout references. No watermarks, signatures, external brands, decorative random shapes, unrelated characters or excessive written notes. Every robot shown is the SAME ONE character.

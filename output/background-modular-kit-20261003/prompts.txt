@@ -1,0 +1,175 @@
+Use case: stylized-concept. Asset type: individual modeling orthographic reference sheet for a modular game environment kit.
+Input image 1 is the approved normal world concept STYLE AND MATERIAL reference, not a requested room scene. Input image 2 is the approved infection concept STYLE reference only.
+Produce ONE single asset sheet for the specified part, not a whole room and no other kit pieces.
+The asset must be painted in the exact visual family of these references: sculpted chunky industrial forms, controlled bevel highlights, broad soft handpainted gradients, sparse selective chips, quiet violet #56438A, deep blueviolet #423665, dusty mauve #6E4382, dusty coral #CE5F54 for accents, lavender-gray secondary plates. Magenta #AC41A6 only if a specified light, muted mint #5C857C only tiny indicators. Infection uses wine-plum and gray-lavender. Never photoreal or neon-all-over.
+CRITICAL DRAWING LAYOUT: landscape 1536x1024, clean light neutral gray background. Three clearly separated orthographic projections of THE SAME OBJECT: left FRONT (look along +Z, X horizontal Y vertical); middle RIGHT (look along -X, Z horizontal Y vertical); right TOP (look along -Y, X horizontal Z vertical). No perspective in these three views, no visible top in FRONT, no visible front in TOP. Thin gray projection framing and measurement arrows outside silhouettes. Fit each viewport without cropping, keep same scale wherever practical, same exact part details across views. For very thin sheets, front/right views must truly be thin, never tilt to reveal top. For rotationally symmetric parts do not invent new shape between views.
+Top header contains only asset ID and simple English part name, bottom labels FRONT / RIGHT / TOP. Include only the supplied dimension values in meters; no invented dimension text. Reference neutral illumination so material color is clear; no environment cast shadow, no environment backdrop. Small tasteful palette chips at bottom. No isometric beauty view. Connections and flat mating surfaces must remain readable. Bare geometry on edges, no asymmetric painted highlights implying nonmatching socket positions.
+
+
+F01 기본 바닥
+Size X/Y/Z: 2/0.2/2 m
+Square violet beveled steel floor slab. Quiet uninterrupted top, sparse selective edge wear; no stripes, bolts or holes. Top at Y=0, bottom -0.20.
+
+F02 반폭 바닥
+Size X/Y/Z: 2/0.2/1 m
+Half-depth rectangular violet slab, same thickness and bevel as F01. Quiet top.
+
+F03 배수 그레이팅
+Size X/Y/Z: 2/0.2/0.5 m
+Long narrow inset dark plum drain grate, recessed slats running across short depth, violet frame flush with floor top; open slots, no pipes below.
+
+F04 미끄럼 방지판
+Size X/Y/Z: 1/0.2/1 m
+Square dark plum floor slab with orderly chunky raised round anti-slip studs, 5 by 5, within 20mm surface relief; same edge system.
+
+F05 바닥 외곽 마감
+Size X/Y/Z: 2/0.2/0.25 m
+Narrow violet floor-edge fascia strip, coral-painted outer vertical face, small soft bevel, no railing attached.
+
+D01 직선 안전선
+Size X/Y/Z: 2/0.002/1 m
+Thin flat overlay carrier, invisible except coral safety stripe width 0.25 centered along X, from x0 to2 at z0.5. Show visible stripe and dotted rectangular carrier boundary, edge-on views intentionally hairline, NOT a solid slab.
+
+D02 90도 안전선
+Size X/Y/Z: 1/0.002/1 m
+Thin flat overlay with coral 90-degree curved stripe, width .25, centerline radius .5 about corner x0,z0; connects (x.5,z0) to(x0,z.5). Dashed carrier outline. Hairline edge-on projections, not a solid slab.
+
+D03 안전선 끝단
+Size X/Y/Z: 0.5/0.002/0.5 m
+Thin flat overlay coral stripe .25 wide along X ending in a blunt rounded cap. Dashed square carrier outline, hairline side and front projections.
+
+W01 벽 패널
+Size X/Y/Z: 2/3/0.25 m
+Single tall cool lavender-gray industrial wall panel, dark violet perimeter bevel, subtle recessed central face. Bare panel with no pipes, lights or props.
+
+W02 벽 이음 덮개
+Size X/Y/Z: 0.25/3/0.12 m
+Narrow vertical dark violet seam-cover pilaster, small bevel, two chunky inset fasteners. Applied over joint of two W01 walls, not a structural replacement.
+
+W03 벽 모서리 덮개
+Size X/Y/Z: 0.35/3/0.35 m
+Vertical L-section corner cover, two equal perpendicular wings .35 wide, .08 material thickness; dark violet with restrained coral edge chips. Hollow L plan, NOT a solid square pillar.
+
+W04 문틀
+Size X/Y/Z: 4/3/0.5 m
+Industrial violet U-shaped portal frame only, no leaves. Outer width4 height3 depth.5, clear rectangular opening width3.5 height2.5, jambs each .25, header .5. Chunky bolts on jambs, restrained coral trim. Open bottom, no threshold obstruction.
+
+W05 미닫이 문짝
+Size X/Y/Z: 1.74/2.48/0.12 m
+One rectangular left-hand sliding door leaf, violet plate, thick diagonal dark brace and short dusty coral diagonal warning panels. Single leaf only, flat back; copy and rotate around Y for opposing leaf; no frame.
+
+W06 벽 하단 몰딩
+Size X/Y/Z: 2/0.25/0.1 m
+Horizontal wall skirting strip dark violet, narrow coral top bevel, no pipes. Straight flat cut ends with identical profile.
+
+W07 벽 상단 캡
+Size X/Y/Z: 2/0.12/0.35 m
+Horizontal top-wall cap, inverted shallow U cross-section straddling .25 thick wall, .35 outer depth, .05 wings. Violet metal with selected coral wear.
+
+P01 직선 배관
+Size X/Y/Z: 2/0.25/0.25 m
+Straight horizontal dark indigo industrial pipe along X, external diameter .25, circular hollow cut ends. No collars attached, exactly constant diameter at ends.
+
+P02 90도 배관
+Size X/Y/Z: 0.625/0.25/0.625 m
+Quarter-circle hollow pipe in XZ plane, centerline bend radius .5, diameter .25. Two perpendicular open end faces; no collars.
+
+P03 T 배관
+Size X/Y/Z: 1/0.25/0.625 m
+Hollow T fitting in XZ plane: straight X centerline 1m, branch towards +Z .5m, diameter .25; 3 circular open mouths. No collars.
+
+P04 배관 연결 링
+Size X/Y/Z: 0.12/0.35/0.35 m
+Short coral cylindrical coupling sleeve along X, outside diameter .35, bore .252, length .12. Clear through hole, octagonal outer silhouette, no pipe included.
+
+P05 배관 끝마개
+Size X/Y/Z: 0.08/0.25/0.25 m
+Closed dark-violet cylindrical pipe end cap along X, .25 diameter, .08 length; coral narrow rim. One flat circular closed face.
+
+R01 직선 난간 바
+Size X/Y/Z: 2/0.78/0.08 m
+Two separate horizontal coral cylindrical rails along X, diameter .08; centers Y=.25 and .95 above conceptual floor. Combined vertical extent .78, show two bars only, NO posts, no feet. End planes x0 and2.
+
+R02 코너 난간 바
+Size X/Y/Z: 0.5/0.78/0.5 m
+Pair of coral 90-degree horizontal rail bends, diameter .08, centerline radius .25, identical bends at Y=.25 and .95. Only bars, no posts or bases.
+
+R03 난간 기둥
+Size X/Y/Z: 0.25/1.1/0.25 m
+Single dark-violet floor pedestal .25 square, coral upright post .1 thick height1.1. Two horizontal socket levels .25 and .95 for rail bars, diameter .08. Four base bolts.
+
+A01 작업대
+Size X/Y/Z: 2/1/0.75 m
+Work bench from reference, coral woodlike painted metal countertop, violet two drawer pedestals, open central knee space, chunky beveled edges. Empty top; no tools cup cloth.
+
+A02 수납장
+Size X/Y/Z: 1/2/0.5 m
+Tall violet utility locker, two unequal front inset cabinet doors, short coral handles, two low feet; flat back. No electrical lamp attached.
+
+A03 전기함
+Size X/Y/Z: 1/1.5/0.35 m
+Wall-mounted lavender-gray chunky electrical cabinet, big recessed rectangular door, four large corner bolts, bottom cable entry holes; no attached lamp or conduits.
+
+A04 공구 걸이판 세트
+Size X/Y/Z: 1.5/0.75/0.12 m
+Wall-mounted lavender-gray tool board assembly carrying exactly three chunky dark metal spanners of different sizes on simple hooks. Board and removable wrench silhouettes clear. No hose attached.
+
+A05 공구 상자
+Size X/Y/Z: 0.5/0.3/0.25 m
+Small violet toolbox, beveled lid, coral carry handle lying down, coral front latch, no text.
+
+A06 소형 약품통
+Size X/Y/Z: 0.25/0.5/0.25 m
+Small rectangular coral cleaning-fluid jerrycan, recessed grip on top, short dark cap, vertical violet inset on front, no label text.
+
+A07 빗자루
+Size X/Y/Z: 0.35/1.5/0.12 m
+Coral handled broom with wide trapezoidal dusty-coral bristles; straight upright for orthographic views, no leaning or perspective. Handle diameter .04.
+
+A08 머그컵
+Size X/Y/Z: 0.18/0.15/0.12 m
+Small plain lavender-gray work mug, cylindrical body diameter .12 height .15, one handle on +X giving width .18, hollow open top.
+
+A09 작업대 천
+Size X/Y/Z: 0.5/0.4/0.5 m
+Single lavender-gray cleaning cloth draped over a right-angle workbench edge; two broad soft folds, top .5x.5 and hanging flap .4 high. Show cloth alone, ghost dotted bench edge for support only, no solid bench.
+
+A10 가로 튜브등
+Size X/Y/Z: 1/0.15/0.15 m
+Horizontal enclosed magenta work strip light, dark-violet frame, rounded rectangular luminous core, wall mounting brackets at rear. Subdued glow does not obscure silhouette.
+
+A11 세로 표시등
+Size X/Y/Z: 0.2/0.5/0.2 m
+Vertical short capsule magenta indicator lamp, deep-violet top and bottom caps, flat wall-mount back. Emissive core restrained and shapes readable.
+
+A12 케이블 도관
+Size X/Y/Z: 0.5/0.5/0.1 m
+Dark-violet bent rigid cable conduit in an S stepped route, diameter .08, two parallel open ends, two small wall saddle clips. No electrical box included.
+
+A13 걸이 호스
+Size X/Y/Z: 0.5/0.6/0.15 m
+Looped dark-violet rubber hose hung as one oval coil on a simple small wall hook, two short free ends with muted coral connectors; no tool board behind it.
+
+I01 감염 직선 줄기
+Size X/Y/Z: 1/0.14/0.22 m
+Independent wine-purple fleshy tendril lying along X on invisible flat substrate; organic asymmetry through middle but both end necks circular diameter .12, tangents exactly along X. No floor included.
+
+I02 감염 코너 줄기
+Size X/Y/Z: 0.5/0.14/0.5 m
+Wine-purple fleshy quarter-turn tendril on invisible flat substrate, centerline radius .25, circular neck diameter .12 at both ends, tangents perpendicular. No substrate included.
+
+I03 감염 분기 줄기
+Size X/Y/Z: 1/0.16/0.5 m
+Wine-purple Y branching tendril on invisible flat substrate, three blunt connection necks diameter .12, chunky handpainted smooth forms, rose edges. No sacs or membrane included.
+
+I04 감염 연결막
+Size X/Y/Z: 1/0.08/1 m
+Separate pale gray-lavender organic web membrane for laying over wall or floor; irregular four-lobed roughly square patch with three asymmetrical holes, thin raised ridges, feathered irregular edge. No tendrils, sacs or substrate included.
+
+I05 감염 포낭
+Size X/Y/Z: 0.5/0.3/0.5 m
+Single flattened mauve fleshy ovoid sac, subdued wine skin, soft rose patches, broad flat attachment underside, .5 square footprint .3 tall. No substrate or tendrils included.
+
+I06 감염 줄기 끝단
+Size X/Y/Z: 0.5/0.14/0.22 m
+Wine-purple organic tendril terminal along X, one circular connector neck diameter .12 at x0, taper gradually to flattened ragged sealed tip at x.5. No substrate.

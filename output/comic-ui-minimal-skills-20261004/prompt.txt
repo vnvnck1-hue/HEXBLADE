@@ -1,0 +1,14 @@
+Use case: precise-object-edit / ui-mockup.
+Edit this ONE selected game screenshot. User likes its current style and requests ONLY the LOWER-RIGHT SKILL CONTROLS to be even more SIMPLE AND MINIMAL.
+DIRECT EDIT TARGET: input screenshot. Keep all pixels/composition outside the lower-right HUD editing region visually unchanged. Preserve the game's current bright floor, blockcover, facilitypanels, gates, all mech/drone/enemy actors, explosion/smoke/trails, camera/framing, upper-left portrait/status, upper-center missionlabels, top-right minimap and bottom-left TRIAD panel, enemyhealthbars. Do not globally recolor or restyle the image. Same ultra-wide aspect1944:809. No external title/comparison/annotations/watermark.
+EDIT REGION ONLY: lower-right quadrant occupied by the original six tall actiontiles plus SHIFT BOOST caption (approximately x.59 to.995, y.73 to.99). Remove those six tall individual cards and busy illustrated equipment icons, reconstruct visible underlying arena in their unused old footprints.
+NEW MINIMAL CONTROL DOCK: a significantly SMALLER single neat low horizontal strip in the very bottom-right, about30% screenshotwidth and10% screenshotheight, generous safe margin. One simple flat mutednavy translucent backing strip with subtle corners, NO individual cardboxes, NO decorative frame, NO red panel outlines. Six evenly spaced simple flat FILLED SILHOUETTE symbols with consistent visualweight, mostly warmivory/dustyblue. No comic hatching, texture, weapon detailing, gradients, shine, speedflames or elaborate drawn effects.
+Six controls left-to-right:
+1 dodge: simple curved dodge-arrow glyph, key SPACE below;
+2 rush: simple doublechevron glyph, key E below;
+3 rocket: simple small solid rocket shape, dimgraydisabled, count0, key R below;
+4 gun: simple filled gun silhouette, small readable14/30 above its key, key RMB/T below;
+5 laser: simple straight beam line with a small enddot, key L+R below;
+6 sword: simple diagonal blade silhouette, key LMB below. Selectedsword indicated only by one SHORT mutedcoral underline, no bigger panel or saturated red illustration.
+Keys use one compact uniform semibold plain offwhite legend row, without chunky white keycaps. Remove ALL long action-name captions DODGE RUSH ROCKET GUN LASER SWORD. Keep small SHIFT BOOST as an understated secondarytext tag just ABOVE the strip's left edge, no large headercard or extra meter. Preserve exact counts14/30 and0, no invented cooldowns/currencies/status.
+This must feel quieter and much less visually bulky than the current row, while keeping skills recognizable. Keep surrounding accepted graphicstyle and palette. All new lower-right icons/captions safely inside frame, no overlay covering actual drone at x.86,y.66. Change nothing else.

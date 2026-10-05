@@ -1,0 +1,82 @@
+{
+    "date":  "2026-10-04",
+    "mode":  "built-in imagegen edit",
+    "final_design_count":  1,
+    "final":  "moco_ui_concept.png",
+    "initial_inputs":  [
+                           {
+                               "path":  "source_screenshot.png",
+                               "role":  "User screenshot, direct edit target"
+                           },
+                           {
+                               "path":  "references/moco_combat_2025.jpg",
+                               "role":  "Older actual mo.co combat HUD screenshot, UI style only",
+                               "source":  "https://gamingonphone.com/reviews/mo-co-game-review/"
+                           },
+                           {
+                               "path":  "references/moco_combat_overview.jpg",
+                               "role":  "Launch-era actual mo.co combat HUD screenshot, UI style only",
+                               "source":  "https://www.gamigion.com/supercells-mo-co-a-constructive-deep-dive/"
+                           },
+                           {
+                               "path":  "references/moco_official_outfits.webp",
+                               "role":  "Official menu cards and selected tile, excludes promotional slogan",
+                               "source":  "https://play.google.com/store/apps/details?id=com.supercell.moco"
+                           }
+                       ],
+    "generation":  {
+                       "initial_generated":  "exec-516f122f-fab7-43ef-beba-2d7a8748241e.png",
+                       "initial_saved":  "ui_concept_draft.png",
+                       "prompt":  "prompt.txt",
+                       "correction_target":  "ui_concept_draft.png",
+                       "correction_generated":  "exec-8565d988-2e40-4947-bf52-1b52e4597c16.png",
+                       "correction_prompt":  "correction_prompt.txt",
+                       "correction_scope":  "Remove duplicate old energy dots and add missing RMB alongside reload T; same design"
+                   },
+    "files":  [
+                  {
+                      "path":  "source_screenshot.png",
+                      "width":  3406,
+                      "height":  1407,
+                      "sha256":  "2881eb27196c598aa70b42e1c655ff74835f51637134e2dd3daf4a51ad5b6d77"
+                  },
+                  {
+                      "path":  "moco_ui_concept.png",
+                      "width":  1951,
+                      "height":  806,
+                      "sha256":  "d643a47659b59540d4da43eb632e54839b5fa6baff3eef82b50df6d5e4b0b26e"
+                  },
+                  {
+                      "path":  "ui_concept_draft.png",
+                      "width":  1951,
+                      "height":  806,
+                      "sha256":  "55928b3c33d77ada66baca4d11cf6785de7d8c3408eec9090c25dbaac7f4a86a"
+                  },
+                  {
+                      "path":  "references/moco_combat_2025.jpg",
+                      "width":  1500,
+                      "height":  682,
+                      "sha256":  "32c399d5dbcb1d56cd6ce858b984573d7f9559484849716ea6760863cfa28711"
+                  },
+                  {
+                      "path":  "references/moco_combat_overview.jpg",
+                      "width":  2340,
+                      "height":  1080,
+                      "sha256":  "1d9fe8a67b8950e5336f86345bf7b9a407babfe8e89b39ec3fd89996fdbcb95c"
+                  },
+                  {
+                      "path":  "references/moco_official_outfits.webp",
+                      "width":  526,
+                      "height":  243,
+                      "sha256":  "05222fced212bc49cfed67d151fbfbbf44bfe328f7e68f5f712be9540f7c8bc5"
+                  }
+              ],
+    "code_evidence":  [
+                          "scripts/hud.gd",
+                          "scripts/presentation/hud_presets.gd",
+                          "scripts/drone/drone_hud.gd",
+                          "scripts/drone/partner_drone.gd"
+                      ],
+    "code_role":  "Read only, current functions and Q/X/Z input state; excluded from mo.co style research",
+    "version_note":  "Older gameplay references are not claimed as confirmed 2026 latest HUD"
+}

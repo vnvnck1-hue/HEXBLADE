@@ -1,0 +1,58 @@
+{
+    "date":  "2026-10-04",
+    "method":  "built-in imagegen",
+    "source_scene":  "res://scenes/main.tscn",
+    "godot":  "4.7.2-stable",
+    "seed":  4,
+    "capture_frame":  "f_0007.png",
+    "source_size":  [
+                        1920,
+                        800
+                    ],
+    "source_sha256":  "6203B12885E6F21561ED288C170153D42A2308D7BF33D18190B5A92A14D43BAF",
+    "selected_style_sha256":  "B1E44DB7E01E4D6B20AD4043F4BECD843AD7DE1111A21AF98E2C7B4C1181230B",
+    "files":  [
+                  {
+                      "file":  "01_slash_cluster.png",
+                      "width":  1942,
+                      "height":  809,
+                      "sha256":  "00CFCF47ACF6FDC5B27A021649BBB5FAEF1E1FE5D840D1F73CBC706599D0C42E",
+                      "generated_original":  "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10584-b9c4-7bd1-bc09-10c589ad66c4\\exec-1c7f083e-e682-47e2-ab35-985936fc357f.png",
+                      "copy_verified":  true,
+                      "visually_reviewed":  true
+                  },
+                  {
+                      "file":  "02_ink_tiles.png",
+                      "width":  1944,
+                      "height":  809,
+                      "sha256":  "ED7AD0DB9DA7A74F7E661D36BAEE9B216E821BC5D71E162E086BD550771F1F7C",
+                      "generated_original":  "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10584-b9c4-7bd1-bc09-10c589ad66c4\\exec-97d9b6ed-85f7-4fa6-a0e8-0815fa2efd77.png",
+                      "copy_verified":  true,
+                      "visually_reviewed":  true
+                  },
+                  {
+                      "file":  "03_brush_dock.png",
+                      "width":  1942,
+                      "height":  809,
+                      "sha256":  "0AC133389204F488D8E9010C309EA88C912C7D6BE4ACB62426BC9CA6F7CE6B0E",
+                      "generated_original":  "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10584-b9c4-7bd1-bc09-10c589ad66c4\\exec-6a5aa6e6-9549-4b4b-bbe1-66ce81255e4f.png",
+                      "copy_verified":  true,
+                      "visually_reviewed":  true
+                  }
+              ],
+    "new_enemy_health_bars":  3,
+    "current_background_layout_visually_preserved":  true,
+    "pixel_identical":  false,
+    "game_code_changed":  false,
+    "committed":  false,
+    "pushed":  false,
+    "remaining_limitations":  [
+                                  "Generated bitmap concept, local redraw/resize",
+                                  "Variant1 stylized BOOST lettering remains ambiguous; re-typeset on implementation"
+                              ],
+    "capture_errors":  [
+                           "relative log directory under user data not writable",
+                           "root certificate store access"
+                       ],
+    "script_error_found":  false
+}

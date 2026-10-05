@@ -1,0 +1,14 @@
+{
+  "brawl": true,
+  "char": 0.481734793550094,
+  "char_vs_bg": 0.160948953083143,
+  "floor": 0.431632045088332,
+  "floor_n": 131,
+  "service": 0.145885636017511,
+  "service_n": 68,
+  "service_over_floor": 0.337986110340015,
+  "tag": "dark_s4_wide",
+  "wall_minus_floor": 0.0538156455877833,
+  "wall_top": 0.485447690676116,
+  "wall_top_n": 53
+}

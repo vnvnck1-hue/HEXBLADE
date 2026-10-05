@@ -1,0 +1,62 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BIG_ROOM id=3 shape=7 scale=2.0 r=21.5 cells=673
+BIG_ROOM id=6 shape=6 scale=2.5 r=22.5 cells=1441
+BIG_ROOM id=9 shape=4 scale=2.9 r=34.2 cells=1888
+PASS  원형 장비 HUD 아이콘 6종 로드
+PASS  sword: 투명 장비 그림
+PASS  gun: 투명 장비 그림
+PASS  dash: 투명 장비 그림
+PASS  boost: 투명 장비 그림
+PASS  energy: 투명 장비 그림
+PASS  missile: 투명 장비 그림
+PASS  (1280.0, 720.0): 장비/드론 패널 화면 안 · 서로 비겹침
+PASS  (1280.0, 800.0): 장비/드론 패널 화면 안 · 서로 비겹침
+PASS  (1920.0, 1080.0): 장비/드론 패널 화면 안 · 서로 비겹침
+PASS  (1920.0, 800.0): 장비/드론 패널 화면 안 · 서로 비겹침
+PASS  발사 예약 미사일은 실제 발사될 때까지 수량 유지
+PASS  차분한 HUD 초상 로드 · 임포트 최대 512px
+PASS  메카 초상 투명 알파 유지
+PASS  TRIAD 카드 초상 로드 · 임포트 최대 512px
+PASS  TRIAD 초상 투명 알파
+PASS  (1280, 720): 실제 창에서 상단 카드 화면 안 · 비겹침
+PASS  (1280, 720): 실제 TRIAD 카드 좌하단 · 스킬/상단 비겹침
+PASS  (1280, 800): 실제 창에서 상단 카드 화면 안 · 비겹침
+PASS  (1280, 800): 실제 TRIAD 카드 좌하단 · 스킬/상단 비겹침
+PASS  (1920, 1080): 실제 창에서 상단 카드 화면 안 · 비겹침
+PASS  (1920, 1080): 실제 TRIAD 카드 좌하단 · 스킬/상단 비겹침
+PASS  (1920, 800): 실제 창에서 상단 카드 화면 안 · 비겹침
+PASS  (1920, 800): 실제 TRIAD 카드 좌하단 · 스킬/상단 비겹침
+PASS  화면 공간 적 HP바 · 기존 3D바 중복 숨김
+PASS  다른 프리셋에서 기존 미니맵 · 수치 · 적 HP바 복귀
+PASS  다른 프리셋에서 기존 드론 패널 크기 복귀
+PASS  새 상단 HUD에서 중복 수치 숨김
+PASS  H 로 STRIKER → CORNERS → COCKPIT → TACTICAL → LEGACY → STRIKER ([0, 1, 2, 3, 4, 0])
+PASS  Shift+H 는 이전 프리셋 (LEGACY)
+PASS  STRIKER: 기존 세로 나열 숨김
+PASS  STRIKER: 아이콘 줄 숨김
+PASS  STRIKER: 극단 상태를 그려도 멈추지 않음
+PASS  STRIKER: 장비 원형 버튼은 STRIKER에서 표시
+PASS  CORNERS: 기존 세로 나열 숨김
+PASS  CORNERS: 아이콘 줄 보임
+PASS  CORNERS: 극단 상태를 그려도 멈추지 않음
+PASS  CORNERS: 장비 원형 버튼은 STRIKER에서 표시
+PASS  CORNERS: 아이콘 줄이 화면 안 · 서로 겹치지 않음
+PASS  COCKPIT: 기존 세로 나열 숨김
+PASS  COCKPIT: 아이콘 줄 숨김
+PASS  COCKPIT: 극단 상태를 그려도 멈추지 않음
+PASS  COCKPIT: 장비 원형 버튼은 STRIKER에서 표시
+PASS  TACTICAL: 기존 세로 나열 숨김
+PASS  TACTICAL: 아이콘 줄 보임
+PASS  TACTICAL: 극단 상태를 그려도 멈추지 않음
+PASS  TACTICAL: 장비 원형 버튼은 STRIKER에서 표시
+PASS  TACTICAL: 아이콘 줄이 화면 안 · 서로 겹치지 않음
+PASS  LEGACY: 기존 세로 나열 보임
+PASS  LEGACY: 아이콘 줄 보임
+PASS  LEGACY: 극단 상태를 그려도 멈추지 않음
+PASS  LEGACY: 장비 원형 버튼은 STRIKER에서 표시
+BIG_ROOM id=3 shape=6 scale=2.0 r=17.1 cells=849
+BIG_ROOM id=6 shape=6 scale=2.5 r=22.5 cells=1441
+BIG_ROOM id=9 shape=0 scale=3.0 r=29.1 cells=1755
+PASS  씬을 다시 불러도 COCKPIT 유지
+RESULT  OK  (0 fail)

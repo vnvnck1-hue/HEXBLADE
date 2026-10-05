@@ -1,0 +1,229 @@
+{
+    "gif_canvas":  [
+                       512,
+                       512
+                   ],
+    "gif_frames":  12,
+    "durations_ms":  [
+                         80,
+                         70,
+                         70,
+                         70,
+                         90,
+                         70,
+                         70,
+                         80,
+                         90,
+                         100,
+                         100,
+                         110
+                     ],
+    "total_ms":  1000,
+    "frames":  [
+                   {
+                       "soft_alpha_pixels":  103314,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            85,
+                                            75,
+                                            462,
+                                            469
+                                        ],
+                       "sha256":  "BFD50AB9FD29249C8C4DA311FB4FDAA0B0C923C8C6D1CA840C13D9913BC3D76E",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  0
+                   },
+                   {
+                       "soft_alpha_pixels":  105076,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            83,
+                                            71,
+                                            463,
+                                            469
+                                        ],
+                       "sha256":  "120B8D36992FEF281AACE3F26E7DE4EFE55132A9A3DA3CA584A7101F0F5F5F54",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  1
+                   },
+                   {
+                       "soft_alpha_pixels":  105231,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            84,
+                                            71,
+                                            461,
+                                            470
+                                        ],
+                       "sha256":  "12927F1FD2A57F995F9E9B0C7658DBF89FCE8976508CA619EDFC72454AFDE7F2",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  2
+                   },
+                   {
+                       "soft_alpha_pixels":  109447,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            86,
+                                            77,
+                                            478,
+                                            470
+                                        ],
+                       "sha256":  "39CF9972AED2D29A12B2328CD3483543B23901BFB8C8F27508987A5598095803",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  3
+                   },
+                   {
+                       "soft_alpha_pixels":  112284,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            82,
+                                            81,
+                                            496,
+                                            471
+                                        ],
+                       "sha256":  "6F24D09E0CB35E0FF905EA28D317997096589F45EEAC45D9F196336B2608F897",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  4
+                   },
+                   {
+                       "soft_alpha_pixels":  109315,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            86,
+                                            80,
+                                            482,
+                                            471
+                                        ],
+                       "sha256":  "27E9C60B1AA202F90A0FC8C6141CA5536019215E2303F96372C9D6DDAAAB7C90",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  5
+                   },
+                   {
+                       "soft_alpha_pixels":  106126,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            84,
+                                            70,
+                                            462,
+                                            473
+                                        ],
+                       "sha256":  "0495D31ED936D105A5BCEA06A8AD8363D194014103BFEE6D664DA296F5D9EC78",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  6
+                   },
+                   {
+                       "soft_alpha_pixels":  104037,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            84,
+                                            79,
+                                            465,
+                                            471
+                                        ],
+                       "sha256":  "77951336B6E25208DDAA3D557D47D153760CC8E715D0460BF299F73FD50263A7",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  7
+                   },
+                   {
+                       "soft_alpha_pixels":  104054,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            81,
+                                            73,
+                                            465,
+                                            469
+                                        ],
+                       "sha256":  "C406B71A5CF126B2AC3E5CE0204AA37787142D62AA3AAE980D000775A829B502",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  8
+                   },
+                   {
+                       "soft_alpha_pixels":  103809,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            83,
+                                            74,
+                                            465,
+                                            469
+                                        ],
+                       "sha256":  "70E02FAB76920881B5EE8C2689E4C3228C59FAF596F4929F1336C9126F026F6B",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  9
+                   },
+                   {
+                       "soft_alpha_pixels":  105034,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            83,
+                                            73,
+                                            465,
+                                            468
+                                        ],
+                       "sha256":  "4BBE2D24425D6ECDC1E0EC0E9DDEAACE93BAF5DC124D1C5E51A15E67BE7F7D0B",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  10
+                   },
+                   {
+                       "soft_alpha_pixels":  103635,
+                       "canvas_edge_pixels":  0,
+                       "alpha_bounds":  [
+                                            84,
+                                            74,
+                                            465,
+                                            469
+                                        ],
+                       "sha256":  "8DE3FA60050FAD76585631413B3CF326D3B52B88ACE15975E1F9C43E8CF2AC3F",
+                       "registration_transform_error_px":  0,
+                       "canvas":  [
+                                      512,
+                                      512
+                                  ],
+                       "index":  11
+                   }
+               ],
+    "pass":  true
+}

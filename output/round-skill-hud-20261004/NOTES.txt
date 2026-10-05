@@ -1,0 +1,43 @@
+사용자 첨부 스타일을 실제 기본 STRIKER HUD에 적용 (2026-10-04)
+
+참고: reference.png (사용자 첨부, 우측하단 HUD 크롭 원본)
+생성 방식: 내장 imagegen, 6개 장비별 독립 호출. 첨부는 장비/그림체 참조.
+프롬프트: prompts.txt
+게임에서 소비하는 저장 위치: assets/ui/round_skills/{sword,gun,dash,boost,energy,missile}.png
+PNG 투명 알파 원본을 보존. Godot 임포트 최대256px / 밉맵=true.
+아이콘 SHA256: icon-sha256.json
+
+적용 범위:
+- 기본 STRIKER의 우측하단만 장비 그림 + 남색 반투명 원 + 연보라 얇은 테 + 키 배지로 변경.
+- 실제 탄창/재장전, 대시쿨다운, 부스터잔량/과열, 에너지3칸/재생/충전, 미사일 예약탄 포함 수량.
+- 큰 광선검 + 사격/회피 하단 + 부스터/레이저/미사일 상단. 기존 E돌진 작은 보조 원 유지.
+- 상태/키/원은 엔진에서 실시간으로 그림. 클릭 가능한 모바일 터치버튼이 아님.
+- 기존 H/Shift+H 프리셋 전환과 다른4종은 유지. 게임 조작·밸런스는 수정하지 않음.
+- 드론 패널은 원형 장비 묶음 왼쪽 하단으로 배치하여 미니맵/콤보/장비와 겹치지 않음.
+- 패널 우측 숫자/상태 정렬 교정, 동시 작업자가 추가한 SPACE청소질주 안내/기능 보존.
+
+코드:
+scripts/presentation/round_skill_dock.gd
+scripts/presentation/hud_presets.gd (자식 연결 / 기존 STRIKER하단 제거)
+scripts/drone/drone_hud.gd (패널 배치/문자 경계만)
+tests/hud_preset_check.gd (새 장비/투명 알파/해상도별 공간/예약 미사일/프리셋 표시 검사)
+docs/hud-presets.md
+
+현재 개발 배경에서 찍은 실제 게임 캡처:
+applied.png              1280x800 / 기본 상태, mag=26, missile=4를 캡처 스크립트에서 설정
+reloading_cooldown.png   1280x800 / 재장전/대시쿨다운/과열/자원 없음
+charging_queue.png       1280x800 / 레이저 충전/에너지2/예약미사일4
+battle.png               1920x800 / seed4 실제 본편 bot의 첫 방 (최종배치)
+캡처: _capture/round_skill_hud_show.gd
+프레임 덤프: _capture/round_skill_hud_bot/ 및 round_skill_hud_bot_final/ (git 제외)
+
+고정 Godot4.7.2를 tools/godot.ps1 통해 실행.
+capture-final.log: 최종 3상태 렌더, ERROR/SCRIPT ERROR 0.
+bot.log: 본편 bot60초(패널 상단 배치 초안), 종료0 / ERROR0.
+bot-final.log: 최종 배치 본편 bot20초, 종료0 / ERROR0.
+bot-capture-folder-missing.log: 중간 재검증의 캡처 폴더 누락에 따른 PNG저장오류 기록.
+  폴더 생성 후 같은 최종본으로 재실행했고 bot-final.log가 정상 검증 결과.
+all-tests.log: 전체34종 PASS, ERROR/SCRIPT ERROR0. HUD/드론 검사는 최종 패널 배치 수정 후 실행됨.
+
+작업 브랜치 feature/round-skill-hud. 커밋/푸시 없음.
+기존 컨셉/캐릭터/배경/다른 작업자 미추적 파일 보존.

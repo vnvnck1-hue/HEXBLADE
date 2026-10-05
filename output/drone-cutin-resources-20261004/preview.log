@@ -1,0 +1,34 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+ERROR: Condition "err != OK" is true.
+   at: initialize (drivers/gles3/shader_gles3.cpp:792)
+OpenGL API 3.3.0 NVIDIA 560.94 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3060
+
+ERROR: Failed to read the root certificate store.
+   at: get_system_ca_certificates (platform/windows/os_windows.cpp:2582)
+DRONE_CUTIN_PACK_CHECK issues=0 source=[1254, 1254] previews=3 alpha=checked

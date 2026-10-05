@@ -1,0 +1,8 @@
+model: bg_codex_locker_a02
+size (m)  x 1.000  y(fwd) 0.500  z(up) 2.000
+bounds    min (-0.500, -0.250, 0.000)  max (0.500, 0.250, 2.000)
+triangles 988
+parts:
+  case                        644 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  doors                       344 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_codex_locker_a02.glb

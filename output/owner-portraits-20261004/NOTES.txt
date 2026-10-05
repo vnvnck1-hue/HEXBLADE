@@ -1,0 +1,17 @@
+청소업체 사장 — 초반 대화용 포트레이트 3종
+제작: Codex 내장 imagegen, 2026-10-04.
+캐릭터 기준: output/cleaning-company-owner-20261004/owner_fullbody_v4_tall_smooth.png.
+그림체 기준: 최초 메카닉 메이드 4장. docs/character-art-style.txt 참고.
+
+assets/portraits/cleaning_owner/owner-welcome.png: 첫 인사, 미소와 손바닥을 편 환영 동작.
+assets/portraits/cleaning_owner/owner-briefing.png: 업무 설명, 계약 태블릿과 검지를 들어 강조하는 동작.
+assets/portraits/cleaning_owner/owner-encouragement.png: 출발 격려, 밝은 웃음과 엄지를 든 동작.
+
+scripts/dialogue/dialogue_portrait.gd는 정사각 텍스처를 정사각 슬롯에 그린다.
+scripts/dialogue/dialogue_view.gd 하단 대화창에 맞춰 얼굴과 주요 손동작을 상단에 배치했다.
+세 장은 투명 배경의 개별 PNG이며 공통 의상/헤어/장신구를 유지한다.
+표정별 생성 결과의 머리 각도/크기에는 차이가 있어 픽셀 단위 정렬을 보장하지 않는다.
+브로치/태블릿 등 비대칭 디자인이 있으므로 추후 연결 시 자동 좌우 반전 여부를 검토한다.
+첫 인사→업무 설명→출발 격려는 원화의 사용 제안이며 기존 초반 시나리오에 삽입하지 않았다.
+실제 생성 프롬프트는 prompts.txt. 원본 생성 파일은 Codex generated_images에 보존.
+PNG 크기/투명도 검증만 수행. 게임 캐스트 등록/엔진 임포트/게임 화면 검증은 하지 않았다.

@@ -1,0 +1,73 @@
+﻿{
+    "Sheets":  [
+                   {
+                       "File":  "01_field_rebuild.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "1E605D06BDEEBE48B555B72CB57F3ACA3D0C5686D71BA75AB43AD471CA27569E",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "02_agile_guard.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "93BFDEFC875DD5993D92F323EABEA3CEC6A0E39D000FA25A90CED26E1C3A1807",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "03_hex_blade.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "11DA00D8D5FB39FD76824BE23B966E4461A6D18A11AEE26007CCF7ED971DE6D6",
+                       "CopyIdentical":  true
+                   },
+                   {
+                       "File":  "04_heavy_brace.png",
+                       "Width":  1536,
+                       "Height":  1024,
+                       "SHA256":  "3AA605AB8544C0B41EE4C791B708ED5EA578CC2F197A674FE826286D5B5DA206",
+                       "CopyIdentical":  true
+                   }
+               ],
+    "ReferencePhotos":  [
+                            {
+                                "File":  "graze_custom_1.jpg",
+                                "Width":  560,
+                                "Height":  560,
+                                "SHA256":  "A330C2FD11358937660CE95647D2AEBE98B83F7A89041CFD446529DF604E6503"
+                            },
+                            {
+                                "File":  "graze_custom_2.jpg",
+                                "Width":  560,
+                                "Height":  560,
+                                "SHA256":  "17556561AEF1DBA6000466761FE21D67B6E7ADB409E5FA162C90D4A1476128A2"
+                            },
+                            {
+                                "File":  "graze_custom_3.jpg",
+                                "Width":  560,
+                                "Height":  560,
+                                "SHA256":  "694FCB34D91FF95563412B3773A61A8E101281389A8BF1F9C12420783861FBB9"
+                            },
+                            {
+                                "File":  "reginlaze_julietta_1.jpg",
+                                "Width":  560,
+                                "Height":  560,
+                                "SHA256":  "7926E16A03B46D60CA3DAF15EE4B2499917A78DE405D1C94A55A2EC1D0F407E9"
+                            },
+                            {
+                                "File":  "reginlaze_julietta_2.jpg",
+                                "Width":  560,
+                                "Height":  560,
+                                "SHA256":  "BA623D03A1B3D1DD89E3C3C78B6BBEC1A4DB7CC58A7D7DC2C2FEE5DFCDF3918C"
+                            },
+                            {
+                                "File":  "reginlaze_julietta_3.jpg",
+                                "Width":  560,
+                                "Height":  560,
+                                "SHA256":  "4E0C24A98D343787FBC6DAC69336F743851C4F5D818E95CED40740B89A9EAB29"
+                            }
+                        ],
+    "VisualReview":  "All four final tool images and all six source photos inspected",
+    "Requirements":  "reference research before generation, strong two-machine influences, four distinct wearable designs with front/rear/cutaway/entry/actions",
+    "GameApplied":  false
+}

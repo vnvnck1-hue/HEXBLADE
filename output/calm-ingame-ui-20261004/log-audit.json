@@ -1,0 +1,26 @@
+﻿[
+    {
+        "Log":  "import-final.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "capture.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "hud-check.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "main-bot-final.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "boss-bot.log",
+        "Errors":  0
+    },
+    {
+        "Log":  "sweep-recheck.log",
+        "Errors":  0
+    }
+]

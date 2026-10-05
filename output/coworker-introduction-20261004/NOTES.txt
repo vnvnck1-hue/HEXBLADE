@@ -1,0 +1,23 @@
+정비 동료 소개 씬 — 2026-10-04
+
+사용자 요청: 첨부 보라색 작업복 캐릭터를 사장이 소개하고 플레이어까지 셋이 대화하는 씬.
+사용자 정정: 화면 중앙을 쳐다보라는 뜻이 아님. 시선은 플레이어, 몸 방향만 좌우에 맞게 다르게.
+최종 원화는 직접 플레이어를 보는 시선. 왼쪽 사장 몸 +1, 오른쪽 정비사 몸 -1.
+내장 imagegen으로 동료 기본 인사/밝은 엄지 응답, 사장 소개 포즈 세 장을 제작했다.
+동일 인물 편집 대상과 최초 원본 두 장의 스타일 기준을 구분했다. 실제 프롬프트 portrait_prompts.txt.
+정정 전 생성된 옆을 보는 초안은 게임에 쓰지 않았으며 generated_images 원본은 보존했다.
+
+실행: coworker_dialogue.cmd / 로비 > 동료 소개 · 사장과 정비사 / 대화 테스트 F4.
+씬 scenes/coworker_dialogue.tscn, 대본 data/dialogue/coworker_introduction.dlg.
+역할/기체 이상 질문 × 긴장/자신감 응답, 네 조합. 직함 '정비사'는 이름 미정인 캐릭터 표시.
+플레이어는 기존 me 화자/이름표로 참여. 세 사람이 각자 발언하고 공동 점검 준비로 마침.
+대화의 worker_introduced/team_check_ready 플래그는 시안. 전투 전환/실제 정비 기능 구현 아님.
+
+1280×800: 두 인물 중심25%/75%, 그림 크기 약516px, 하단 대화창182px.
+허리 끝28px만 창 뒤로 이어짐. 선택지는 창 안, 얼굴/양손과 겹치지 않음.
+발언자는 밝게, 듣는 인물은70% 밝기로 유지. 플레이어 발언 때 두 NPC 모두 듣는 상태.
+자리를 바꾸거나 표정을 변경할 때 몸 방향 계산. 새 소개 포즈는 반전 가능, 기존 사장 원화는 보존.
+
+파일 검증/네 분기/실제 UI: tests/coworker_dialogue_check.gd, 기존 tests/dialogue_check.gd.
+실제 화면7장: 01_owner_introduces ~ 07_together. 캡처 _capture/coworker_introduction_show.gd.
+임포트/회귀/봇 로그와 validation.json을 함께 보존. 다른 작업 파일/기존 원화 보존, 커밋/푸시 없음.

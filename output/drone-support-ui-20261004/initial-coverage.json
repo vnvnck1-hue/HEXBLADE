@@ -1,0 +1,162 @@
+﻿[
+    {
+        "Name":  "abyss_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "ammo_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "blade_tech_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "blender_models_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "brawl_look_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "bug_arena_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "bug_chomper_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "bug_enemies_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "bug_grub_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "claude_background_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "claude_service_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "codex_background_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "combo_presets_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "coworker_dialogue_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "dialogue_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "enemy_wander_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "gimmicks_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "gun_sound_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "hit_react_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "hud_preset_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "input_buffer_check",
+        "Errors":  19,
+        "NeedsRetry":  true
+    },
+    {
+        "Name":  "mammoth_death_lab_check",
+        "Errors":  26,
+        "NeedsRetry":  true
+    },
+    {
+        "Name":  "mammoth_ingame_check",
+        "Errors":  2147,
+        "NeedsRetry":  true
+    },
+    {
+        "Name":  "mech_player_check",
+        "Errors":  25,
+        "NeedsRetry":  true
+    },
+    {
+        "Name":  "missile_check",
+        "Errors":  14,
+        "NeedsRetry":  true
+    },
+    {
+        "Name":  "moco_vfx_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "painted_look_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "parry_commit_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "partner_drone_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "room_wave_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "rush_skill_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    },
+    {
+        "Name":  "space_sweep_check",
+        "Errors":  0,
+        "NeedsRetry":  false
+    }
+]

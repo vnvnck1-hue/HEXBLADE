@@ -1,0 +1,56 @@
+{
+    "status":  "PASS",
+    "asset_count":  8,
+    "visual_inspection":  "All eight assets and contact sheet inspected",
+    "alpha_geometry":  "See manifest.json; all canvas edges transparent; maximum alpha radius below 212 px",
+    "assets":  [
+                   {
+                       "id":  "01_coffee_cup",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "5752F4BFA556CB3830F0F45A93A28CB5FE20C5AB5504CCD5A81D303E171158A1",
+                       "png_sha256":  "F25D4211B4280F53DC42D4212C505BB102DC2A33B2742F4B2FC2491981FE9207"
+                   },
+                   {
+                       "id":  "02_coffee_saucer",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "B2A20BAC0A2F865FAFBB6AB2940D4851F5CC08A30DB4CEF28038841D14E09421",
+                       "png_sha256":  "155DC981867B6076D2798290C966AAD2D2AB5193A3920180A7CB63E123BAF249"
+                   },
+                   {
+                       "id":  "03_black_ribbon",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "0B62FC7FCAE7017B6BF718F75D509A256919A022EE2532AA1F8CE611082103BD",
+                       "png_sha256":  "F715AB620389299C4A84D09841B3AB4460830967DE12B86063D47A7B32A30FA4"
+                   },
+                   {
+                       "id":  "04_cupcake",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "9A77E550686C0EECCA5507F3AEEE48036F7A43E2D3ABA9513CFE66EC41044301",
+                       "png_sha256":  "EAC9F7E3FF2575906E6E281346BEDBD57246A9F61C63AEDDE87FEA8C5AD92904"
+                   },
+                   {
+                       "id":  "05_teapot",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "C10FE3787F3BF60457E7EA8B21EF20FFE1B75C89A5FBF0422B7E6DD108B7F6AE",
+                       "png_sha256":  "E77DC865A74CE23B8841144CA095896DA9E0138FCBD63AD3C3BDADACEEDDE84C"
+                   },
+                   {
+                       "id":  "06_silver_spoon",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "3D35F5844DF05A31034ECD82D35B5D445E18D09E985A3FBAE8BD82BDCADCB1DB",
+                       "png_sha256":  "3B0D38BABF26440D5D5E54622AA09B6DC4EAA0E9FF61E84F2917BFD4B39CDD66"
+                   },
+                   {
+                       "id":  "07_white_handkerchief",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "7F013A9E8C36ED73AE3399242B2614797CFBD3803B6CA3E55A80DA171F4BC2BF",
+                       "png_sha256":  "0C7C704D19EA680E6CBA9C626F3E21F0D566F29C7555E77F4C7ABA9948674E04"
+                   },
+                   {
+                       "id":  "08_macaron",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "F81CA2F572C59120D1574AB1F5727CCF605875C60D6DA0E164510046EEDD6892",
+                       "png_sha256":  "DF987248CA37187B85E3565D79347E2971EA6497A276319E2ED011F4619B4033"
+                   }
+               ]
+}

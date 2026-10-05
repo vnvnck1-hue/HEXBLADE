@@ -1,0 +1,143 @@
+{
+    "schema_version":  1,
+    "scope":  "resources and offline preview only; gameplay integration belongs to Claude",
+    "engine":  "4.7.2-stable",
+    "approved_concept_sha256":  "88dd669530ae0fabea6a9deb81a4a2030f91985952549b775f50441271b0801a",
+    "files":  [
+                  {
+                      "file":  "assets/vfx/drone_cutin/bashful_ticks.svg",
+                      "bytes":  206,
+                      "sha256":  "71304682b022b0116c77ce943c4d07ffa579b81e67345007aa25fe833eeb3b0b"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/bashful_ticks.svg.import",
+                      "bytes":  1063,
+                      "sha256":  "03a5e7c67b16d8720d7a3118e37fabe89d539be3cbefa80ca0a275b0eb0c1a2c"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/cockpit_cutin_ready.png",
+                      "bytes":  1223965,
+                      "sha256":  "56e7a544a92bd78b0a1e9f289ca076c99b2d67e25001b948b40c053736a95172"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/cockpit_cutin_ready.png.import",
+                      "bytes":  984,
+                      "sha256":  "917955b3e863686eec952bf34523a6007c2e7083a0d0b2d73592a5b5004b6c69"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/cockpit_plate.png",
+                      "bytes":  2186054,
+                      "sha256":  "91eb7d1badbc187a6c7098d49468bc68bd7998f67d54db7fb381c36d17126c52"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/cockpit_plate.png.import",
+                      "bytes":  965,
+                      "sha256":  "2fa548e8f394b119e1888e4bba0ffcba87c02ac4c67c6e7cb32e7499267f72bd"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/cockpit_plate_clipped.png",
+                      "bytes":  1193657,
+                      "sha256":  "3854707b59fb5310a97e53820ac09683c24a7a8a7dc039e370621f4fa8c02af0"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/cockpit_plate_clipped.png.import",
+                      "bytes":  990,
+                      "sha256":  "0dbbfbfd81f51118eb5693a747516533c30cf455ad402b8f12c2abecca5bf858"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/dock_flash.svg",
+                      "bytes":  534,
+                      "sha256":  "0f7e1489eded84f512951f6de1ea76ce7768ee50acfdc20432124400d80ff3da"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/dock_flash.svg.import",
+                      "bytes":  1053,
+                      "sha256":  "8c08a54ddc5f7dd24317fc064667edcb8dbf81dd5ca1485978d94aec249c75f8"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/layout.json",
+                      "bytes":  2724,
+                      "sha256":  "4489cd0a1fd1d7203518a4c10a2c0ec1b4b719d6bb8e8567407a2fbae47a0016"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/lock_ring.svg",
+                      "bytes":  922,
+                      "sha256":  "5b09b237a6da30d48deec72d9a744b9538512559066a7e5382d6b117a108dad6"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/lock_ring.svg.import",
+                      "bytes":  1051,
+                      "sha256":  "5f8ab035c2051ec7d5c16f414d75635ee7a6efdc57c79998a502560376f4ec79"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_clip.gdshader",
+                      "bytes":  242,
+                      "sha256":  "ebd2870ddef1c11ffa4e76561f4bb5a846d7517957630d8d8acfffee3156b5cf"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_clip.gdshader.uid",
+                      "bytes":  20,
+                      "sha256":  "a83162ef572d3840b61467527181fb2325f92f9b1c3557fd12c318f239e8ee37"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_clip.tres",
+                      "bytes":  326,
+                      "sha256":  "7feee79920c53d4348af895c262dd671de9ed8b05e0e5001b4ec4bf3e81cbd21"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_frame.svg",
+                      "bytes":  444,
+                      "sha256":  "5d7551ab5fae06838ec13e52ed60fdd2822f9484b043b5775466df6253001eed"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_frame.svg.import",
+                      "bytes":  1057,
+                      "sha256":  "9ea06c75fa404eb53f766c022da25bb7945c4fd615394dc8f6c56827c9d6b1ca"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_glow.svg",
+                      "bytes":  336,
+                      "sha256":  "f5c108285541577f56ae11ab1e3246de5b99d26c98b4beba0dbc6cbf5c1b43c7"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_glow.svg.import",
+                      "bytes":  1054,
+                      "sha256":  "7c694f5b3546bf2c0fbfb229064432da3edeea0da415591869a9a5259fdbd55f"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_mask.svg",
+                      "bytes":  168,
+                      "sha256":  "6e9ec0f40b395f9732eb4e1f874627fa0dc53c6435b48b24de3fc907310f8943"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/panel_mask.svg.import",
+                      "bytes":  1053,
+                      "sha256":  "6477d20f3ee1e118e0416999a6de41c995e03a2a81625a0f49aa8f1bc87353a8"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/README.txt",
+                      "bytes":  602,
+                      "sha256":  "2b5418e85aa941021113c9be67c68805ce97b3d7cb9c757f527a9d0c522db83d"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/sync_streak.svg",
+                      "bytes":  428,
+                      "sha256":  "0c4efbed884b137a238c6197978a7632bb3c02451e9d96a791f51140eb0a2c44"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/sync_streak.svg.import",
+                      "bytes":  1057,
+                      "sha256":  "56a3c264a8da94e35ebb27094ab196733dd997c39638c251e9c92f4cd305d98d"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/triangle_shard.svg",
+                      "bytes":  207,
+                      "sha256":  "db204c0586fa86ced74c0a509819881482c85d9fd7b23117cffb1bf00a2fe4a8"
+                  },
+                  {
+                      "file":  "assets/vfx/drone_cutin/triangle_shard.svg.import",
+                      "bytes":  1066,
+                      "sha256":  "3c6b3ea2c0a35d0957829244ca3da0c6ff5e42b7e37d1d3668d806346946cd53"
+                  }
+              ]
+}

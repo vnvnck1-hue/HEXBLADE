@@ -1,0 +1,8 @@
+[1]
+Edit this exact same POP STICKER HUD screenshot. Keep all objects, UI, wording, layout, colors and style unchanged. Make only two tiny stale-overlay removals: erase the obsolete row of three faint energy dots on the floor left of player near x735..784,y308 in this1951x806 image; KEEP the NEW three energy pips directly under4/5 health above player. Erase the tiny obsolete beige health line immediately above the LOWER-LEFT white cube, beneath its NEW CORAL WHITE-BORDERED health bar. KEEP BOTH new enemy coral bars above both cube heads. Reconstruct floor beneath only those obsolete dots and beige line. No other modification, no new drawing or border.
+
+[2]
+Edit this same SOFT CAPSULE HUD screenshot. Keep the entire picture and every UI element unchanged except add explicit readable companion keys. On the three small companion action tiles in the LOWER LEFT card, make their bottom captions read exactly 'Q DOCK', 'X SHIELD', 'Z CLEAN' with clear bold letters, preserving muted disabled Q/X, active mint Z and the0/100 empty support meter. Keep both existing enemy coral health bars, the cream player status panel4/5, controls and all scene objects untouched. This is a tiny caption correction only, not another layout.
+
+[3]
+Edit this same MINIMAL EDITORIAL HUD screenshot. Keep all scene objects and all interface shapes/colors/layout unchanged. Correct ONLY the companion captions along the LOWER LEFT strip to read exactly 'Q DOCK', 'X SHIELD', 'Z CLEAN' in three compact separate positions, dark/dim disabled Q and X, bright mint Z. Keep the support0/100 meter EMPTY and both enemy coral bars above both cube heads. Do not change health4/5, ammo26/30, keyboard legends on the right, minimap, body poses or camera. No other edits.

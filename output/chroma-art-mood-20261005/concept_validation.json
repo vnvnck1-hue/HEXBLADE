@@ -1,0 +1,24 @@
+{
+  "generator": "built-in imagegen",
+  "concepts": [
+    {
+      "file": "01_workshop_equipment.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "d60147afe078f3548cf7f2739abce9349c66defd3e8ba74a7009d36112696c72"
+    },
+    {
+      "file": "02_combat_paintover.png",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "sha256": "27c0490aea275de303ba990e6a42987d270c547e8c3b0a2dd88e48b282d821b7"
+    }
+  ],
+  "source_copy_hashes_match": true,
+  "visual_review": "passed; concept reinterpretation, not pixel identical",
+  "game_implementation": false
+}

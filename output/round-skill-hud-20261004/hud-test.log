@@ -1,0 +1,76 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BIG_ROOM id=3 shape=4 scale=2.0 r=22.8 cells=857
+BIG_ROOM id=6 shape=0 scale=2.5 r=22.2 cells=999
+BIG_ROOM id=9 shape=0 scale=2.9 r=31.9 cells=1840
+PASS  원형 장비 HUD 아이콘 6종 로드
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/ui/round_skills/sword.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/hud_preset_check.gd:59)
+       [1] _frames (res://tests/hud_preset_check.gd:25)
+PASS  sword: 투명 장비 그림
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/ui/round_skills/gun.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/hud_preset_check.gd:59)
+       [1] _frames (res://tests/hud_preset_check.gd:25)
+PASS  gun: 투명 장비 그림
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/ui/round_skills/dash.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/hud_preset_check.gd:59)
+       [1] _frames (res://tests/hud_preset_check.gd:25)
+PASS  dash: 투명 장비 그림
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/ui/round_skills/boost.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/hud_preset_check.gd:59)
+       [1] _frames (res://tests/hud_preset_check.gd:25)
+PASS  boost: 투명 장비 그림
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/ui/round_skills/energy.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/hud_preset_check.gd:59)
+       [1] _frames (res://tests/hud_preset_check.gd:25)
+PASS  energy: 투명 장비 그림
+WARNING: Loaded resource as image file, this will not work on export: 'res://assets/ui/round_skills/missile.png'. Instead, import the image file as an Image resource and load it normally as a resource.
+   at: load_from_file (core/io/image.cpp:2780)
+   GDScript backtrace (most recent call first):
+       [0] _run (res://tests/hud_preset_check.gd:59)
+       [1] _frames (res://tests/hud_preset_check.gd:25)
+PASS  missile: 투명 장비 그림
+PASS  (1280.0, 720.0): 장비 묶음 화면 안 · 드론 패널과 비겹침
+PASS  (1280.0, 800.0): 장비 묶음 화면 안 · 드론 패널과 비겹침
+PASS  (1920.0, 1080.0): 장비 묶음 화면 안 · 드론 패널과 비겹침
+PASS  (1920.0, 800.0): 장비 묶음 화면 안 · 드론 패널과 비겹침
+PASS  발사 예약 미사일은 실제 발사될 때까지 수량 유지
+PASS  H 로 STRIKER → CORNERS → COCKPIT → TACTICAL → LEGACY → STRIKER ([0, 1, 2, 3, 4, 0])
+PASS  Shift+H 는 이전 프리셋 (LEGACY)
+PASS  STRIKER: 기존 세로 나열 숨김
+PASS  STRIKER: 아이콘 줄 숨김
+PASS  STRIKER: 극단 상태를 그려도 멈추지 않음
+PASS  STRIKER: 장비 원형 버튼은 STRIKER에서 표시
+PASS  CORNERS: 기존 세로 나열 숨김
+PASS  CORNERS: 아이콘 줄 보임
+PASS  CORNERS: 극단 상태를 그려도 멈추지 않음
+PASS  CORNERS: 장비 원형 버튼은 STRIKER에서 표시
+PASS  CORNERS: 아이콘 줄이 화면 안 · 서로 겹치지 않음
+PASS  COCKPIT: 기존 세로 나열 숨김
+PASS  COCKPIT: 아이콘 줄 숨김
+PASS  COCKPIT: 극단 상태를 그려도 멈추지 않음
+PASS  COCKPIT: 장비 원형 버튼은 STRIKER에서 표시
+PASS  TACTICAL: 기존 세로 나열 숨김
+PASS  TACTICAL: 아이콘 줄 보임
+PASS  TACTICAL: 극단 상태를 그려도 멈추지 않음
+PASS  TACTICAL: 장비 원형 버튼은 STRIKER에서 표시
+PASS  TACTICAL: 아이콘 줄이 화면 안 · 서로 겹치지 않음
+PASS  LEGACY: 기존 세로 나열 보임
+PASS  LEGACY: 아이콘 줄 보임
+PASS  LEGACY: 극단 상태를 그려도 멈추지 않음
+PASS  LEGACY: 장비 원형 버튼은 STRIKER에서 표시
+BIG_ROOM id=3 shape=5 scale=2.0 r=18.1 cells=880
+BIG_ROOM id=6 shape=1 scale=2.5 r=18.4 cells=989
+BIG_ROOM id=9 shape=5 scale=3.0 r=26.0 cells=1656
+PASS  씬을 다시 불러도 COCKPIT 유지
+RESULT  OK  (0 fail)

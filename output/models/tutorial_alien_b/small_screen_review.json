@@ -1,0 +1,18 @@
+{
+  "type": "Blender top-game-view projection, not a Godot gameplay screenshot",
+  "columns": [
+    {
+      "projected_height_px": 64,
+      "uniform_scale": 0.17589450716758828
+    },
+    {
+      "projected_height_px": 96,
+      "uniform_scale": 0.2638417607513824
+    },
+    {
+      "projected_height_px": 128,
+      "uniform_scale": 0.35178901433517656
+    }
+  ],
+  "file": "small_screen_review.png"
+}

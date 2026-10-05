@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-04",
+  "source": "source_current_game.png",
+  "source_dimensions": [
+    1920,
+    800
+  ],
+  "source_sha256": "7D773A142AACC14208C911DA746183B48863C715C50B6E7E708A445E1080B71C",
+  "source_scene": "res://scenes/main.tscn",
+  "godot": "4.7.2-stable",
+  "source_seed": 4,
+  "source_frame": "f_0006.png",
+  "old_screenshot_used": false,
+  "method": "built-in imagegen",
+  "files": [
+    {
+      "file": "01_industrial_equipment.png",
+      "dimensions": [
+        1944,
+        809
+      ],
+      "sha256": "6848D8FF551860B8A58DCE97C73384DC97AE034B61545EDF2FA19A8B20F7D562"
+    },
+    {
+      "file": "02_comic_action.png",
+      "dimensions": [
+        1942,
+        809
+      ],
+      "sha256": "6C75B3760CBDB5F91E08B65A0E2D4D9284BD5E65C3D889D8CFAC7EB4ACBD0BBF"
+    },
+    {
+      "file": "03_bright_sf_console.png",
+      "dimensions": [
+        1942,
+        809
+      ],
+      "sha256": "CBCA2F207F5FDE73A16B40AA87AA52F06C0D1B4942B43C395D95103C4BDAEF98"
+    }
+  ],
+  "saved_copies_match_generated_originals": true,
+  "final_generated_images_visually_reviewed": 3,
+  "new_red_enemy_bars_per_design": 2,
+  "major_current_background_layout_visually_preserved": true,
+  "pixel_identical": false,
+  "minor_remaining_design_issues": "Variant 2 retains part of an original tan HP line and duplicate small Q legend; concept bitmap requires cleanup for implementation.",
+  "capture_errors": [
+    "user logs permission",
+    "root certificate store",
+    "shader cache write"
+  ],
+  "script_errors": 0,
+  "game_code_changed": false,
+  "committed": false,
+  "pushed": false
+}

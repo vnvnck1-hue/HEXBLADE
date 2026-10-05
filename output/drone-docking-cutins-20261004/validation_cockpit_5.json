@@ -1,0 +1,37 @@
+﻿[
+    {
+        "Name":  "13_cockpit_acceleration.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "88DD669530AE0FABEA6A9DEB81A4A2030F91985952549B775F50441271B0801A"
+    },
+    {
+        "Name":  "14_cockpit_over_shoulder.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "934705DF33FE105CC0173BA53AEDF9A8CDCB6005E82706A3EFC34C52E248DC21"
+    },
+    {
+        "Name":  "15_cockpit_canopy.png",
+        "Width":  1952,
+        "Height":  806,
+        "IdenticalCopy":  true,
+        "SHA256":  "5D3183BC23902F1D68AA9D9E052E5E2110B6EE936F233017F5ADB2E2942262B1"
+    },
+    {
+        "Name":  "16_cockpit_link_windows.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "28AE438D144D8F6101116A8BFA33B17B7388E840259D0E0B2FD07A31B5FAB9F1"
+    },
+    {
+        "Name":  "17_cockpit_overhead.png",
+        "Width":  1953,
+        "Height":  805,
+        "IdenticalCopy":  true,
+        "SHA256":  "854D2566D619B66A661C9A952A42C0EA21A82EA2DE99D1DB14827C6A13356035"
+    }
+]

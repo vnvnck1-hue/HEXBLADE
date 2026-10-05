@@ -1,0 +1,48 @@
+HEXBLADE background concept v6 — user reference palette
+Date: 2026-10-03
+Mode: built-in image_gen edit; concepts only, no game integration.
+Reference: user attachment codex-clipboard-8da07d58-04ba-4e40-9e74-d7cb65f365c3.png (1505x856).
+Targets: 01_base_v5_tft.png / 03_infected_v5_tft.png
+Outputs: 01_base_v6_reference_palette.png / 03_infected_v6_reference_palette.png
+
+Reference analysis:
+Large quiet violet surfaces, deep blue-violet structural shadows, dusty mauve variation.
+Warm coral trim separates edges from the violet base.
+Magenta/violet emission and tiny mint details provide local color accents.
+Not globally desaturated: saturated accents are restricted in area.
+Samples below are rounded RGB averages of selected patches, every 2 pixels.
+These are color-direction anchors, not exact guarantees for generative output.
+
+role | hex | patch x,y,width,height
+floor | #56438A | 650,370,100,80
+shadow | #423665 | 740,210,80,55
+mauve | #6E4382 | 397,296,65,50
+coral | #CE5F54 | 283,231,10,21
+magenta | #AC41A6 | 1349,145,14,30
+violet highlight | #985DDC | 1140,161,55,15
+mint | #5C857C | 1407,393,18,18
+
+ACTUAL BASE PROMPT
+Use case: style-transfer (palette-only revision).
+Asset type: hand-painted game environment concept sheet.
+Input images: Image 1 is the USER COLOR REFERENCE (a purple TFT arena). Image 2 is the EDIT TARGET (existing HEXBLADE industrial room concept sheet). Recolor Image 2 using Image 1's color relationships, NOT its objects or arena geometry.
+Primary request: preserve the entire room design, isometric camera, prop placement, floor shapes, right-hand vertical material-swatch layout, composition and polished stylized hand-painted finish of Image 2. Change its overall color scheme substantially to match Image 1.
+Color palette sampled from user reference: dominant muted violet #56438A; deep blue-violet shadow #423665; dusty mauve #6E4382; warm coral painted metal trim #CE5F54; small magenta accents #AC41A6 with violet luminous highlights near #985DDC; tiny muted mint functional indicators #5C857C.
+Color mapping: teal/bluegreen floor becomes broad subdued violet floor with soft mauve tonal variation. Cream wall panels become muted cool lavender-gray, not white or pastel. Teal cabinets and doors become blue-violet and smoky plum. Ochre/yellow safety bands, painted bevels and trim become dusty warm coral. Warm amber small lamps become controlled violet-magenta light accents. Dark graphite pipes become deep plum-indigo. Very small mint status lights only where existing indicators occur.
+Maintain the reference's value hierarchy: broad quiet low-mid-value purple surfaces, dark structural recesses, brighter coral bevels, saturated magenta confined to tiny focal accents. Do not make the entire scene neon or uniformly pink, do not crush shadows black. Distinct material colors, not a flat purple filter. Center floor remains visually quiet and readable for gameplay.
+Materials: polished TFT-like hand-painted environment texturing, broad soft painted gradients across stylized sculpted forms, selective edge highlights and simplified painted wear; no photorealism, no noisy procedural grunge, no thick impasto. Update all five right-hand material swatches to correspond to the recolored actual materials.
+Constraints: no new objects, characters, graffiti, logos, text, labels or watermark; don't copy source arena content. Preserve existing target geometry and scene silhouette. Opaque background, landscape sheet at target aspect ratio.
+Target variant: normal world base material. Keep the room clean-but-worn industrial, with NO infestation. Retain all original base-room objects. The purple/coral scheme should remain clearly distinct from an infected room.
+
+ACTUAL INFECTED PROMPT
+Use case: style-transfer (palette-only revision).
+Asset type: hand-painted game environment concept sheet.
+Input images: Image 1 is the USER COLOR REFERENCE (a purple TFT arena). Image 2 is the EDIT TARGET (existing HEXBLADE industrial room concept sheet). Recolor Image 2 using Image 1's color relationships, NOT its objects or arena geometry.
+Primary request: preserve the entire room design, isometric camera, prop placement, floor shapes, right-hand vertical material-swatch layout, composition and polished stylized hand-painted finish of Image 2. Change its overall color scheme substantially to match Image 1.
+Color palette sampled from user reference: dominant muted violet #56438A; deep blue-violet shadow #423665; dusty mauve #6E4382; warm coral painted metal trim #CE5F54; small magenta accents #AC41A6 with violet luminous highlights near #985DDC; tiny muted mint functional indicators #5C857C.
+Color mapping: teal/bluegreen floor becomes broad subdued violet floor with soft mauve tonal variation. Cream wall panels become muted cool lavender-gray, not white or pastel. Teal cabinets and doors become blue-violet and smoky plum. Ochre/yellow safety bands, painted bevels and trim become dusty warm coral. Warm amber small lamps become controlled violet-magenta light accents. Dark graphite pipes become deep plum-indigo. Very small mint status lights only where existing indicators occur.
+Maintain the reference's value hierarchy: broad quiet low-mid-value purple surfaces, dark structural recesses, brighter coral bevels, saturated magenta confined to tiny focal accents. Do not make the entire scene neon or uniformly pink, do not crush shadows black. Distinct material colors, not a flat purple filter. Center floor remains visually quiet and readable for gameplay.
+Materials: polished TFT-like hand-painted environment texturing, broad soft painted gradients across stylized sculpted forms, selective edge highlights and simplified painted wear; no photorealism, no noisy procedural grunge, no thick impasto. Update all five right-hand material swatches to correspond to the recolored actual materials.
+Constraints: no new objects, characters, graffiti, logos, text, labels or watermark; don't copy source arena content. Preserve existing target geometry and scene silhouette. Opaque background, landscape sheet at target aspect ratio.
+Target variant: infected overlay on exactly the existing industrial room. Preserve the existing vines, sacs, membranes and their positions and extent, don't spread into the open central floor. Recolor tendrils deep wine/plum with dusty rose edges; pale membranes become subdued lavender-gray rather than bright ivory, sacs muted mauve with restrained magenta inner accents. The underlying floor, walls and coral trim must use the same violet/coral world-base scheme. Infestation reads by organic shapes and local contrast, not blanket green or bright neon.
+

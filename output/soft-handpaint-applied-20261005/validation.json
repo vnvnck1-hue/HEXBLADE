@@ -1,0 +1,116 @@
+{
+    "date":  "2026-10-05",
+    "engine":  "4.7.2-stable Forward+",
+    "approval":  "A_floor selected by user, requested game application",
+    "selected_source":  "C:/Users/vnvnc/.codex/generated_images/01a10c06-ad60-7102-aaea-4cf444ff4ec8/exec-e903b743-1f83-4b3a-82cc-fbbf55288421.png",
+    "floor_source_copy_exact":  true,
+    "wall_source_copy_exact":  true,
+    "image_generation_this_turn":  false,
+    "generator_for_originals":  "built-in imagegen, prior turn",
+    "original_prompts":  "output/soft-handpaint-asym-20261005/prompts.json",
+    "files":  [
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\textures\\handpaint_blue\\floor_brush.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "b36328ff190ee71207272a202e5095f72b84bab1627cf54e91805d3ce97befc7"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\textures\\handpaint_blue\\wall_brush.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "0004fd9c4fb18e0cd83f054a51122fa473de28335b6d494b64c6962aec5954d5"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-applied-20261005\\modules.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "a208de47e6e4eb06e50e32e7e98bf2568bb10e15e75deb831cd876e5d2cdcab8"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-applied-20261005\\game_0180.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "3dbc522f9c3fb86e64dd70395caf550eba9fb3e9ae19e0f10845ff191fbb026e"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-applied-20261005\\game_0480.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "3aefada0be1a4001b01bb81f2a792abd64d71cd389c9c1356d5772a237168434"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-applied-20261005\\game_0900.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "3a998ecad489c02ea5798704bad65af0f66886ccfd47f2db354b81504d201202"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-applied-20261005\\game_1380.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "df63074b9d679d50a9c46823bd3017addc0e80a6d284e0e1381d25d78f2b4729"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-applied-20261005\\game_1770.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "65244147a83b04f24a084e8cda99722ede8fcbabaa58d3c72406eecd422b4761"
+                  }
+              ],
+    "logs":  [
+                 {
+                     "name":  "import",
+                     "exit_code":  0,
+                     "errors":  [
+
+                                ]
+                 },
+                 {
+                     "name":  "game",
+                     "exit_code":  0,
+                     "errors":  [
+
+                                ]
+                 },
+                 {
+                     "name":  "modules",
+                     "exit_code":  0,
+                     "errors":  [
+
+                                ]
+                 },
+                 {
+                     "name":  "legacy",
+                     "exit_code":  0,
+                     "errors":  [
+
+                                ]
+                 }
+             ],
+    "full_suite_status":  "ALL 46 TESTS PASSED, before user rollback request; archived application result",
+    "bot":  "main.tscn --bot --dronebot --seed=4",
+    "physics_frames":  1800,
+    "godmode":  false,
+    "game_saved_screenshots":  5,
+    "procedural_wear":  false,
+    "brush_blending":  false,
+    "albedo_recoloring":  false,
+    "existing_lighting":  true,
+    "repeat_period_m":  4,
+    "floor_plate_m":  2,
+    "unique_plates_per_period":  4,
+    "wall_modules":  {
+                         "w01":  "A_wall.png / original UV",
+                         "half_jamb_wall_cover_pillar":  "A_floor.png / 1m world projection"
+                     },
+    "legacy_check":  "RESULT OK (0 fails)",
+    "commit":  false,
+    "push":  false,
+    "final_material_checks":  "ALL 2 TESTS PASSED (blue_handpaint_check, ground_break_check)",
+    "debris_brightness":  "base lift=1.0, existing cloned debris lift retained",
+    "game_complete":  true,
+    "production_current_status":  "rolled_back_to_before",
+    "historical_record_only":  true,
+    "rollback_record":  "rollback.json"
+}

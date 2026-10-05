@@ -1,0 +1,18 @@
+﻿{
+    "all_tests_pass":  true,
+    "test_count":  26,
+    "engine_error_count":  0,
+    "bot_completed":  true,
+    "capture_completed":  true,
+    "captured_png_count":  7,
+    "requirements":  {
+                         "standalone_scene":  "scenes/coworker_dialogue.tscn / coworker_dialogue.cmd / F4 / lobby, actual-scene tests and bot",
+                         "three_person_conversation":  "owner + worker + me speak on all four paths; 01/02/03 screenshots",
+                         "emotion_poses_in_game":  "three new imported alpha PNGs, worker introduction/cheerful in 02/04/06",
+                         "gaze_toward_player":  "manual review of actual 01/02/04 screenshots: both eyes engage player rather than side",
+                         "different_body_directions":  "manual rendered review plus left owner body+1/right worker body-1, swap and expression tests",
+                         "lower_dialogue_box":  "05 screenshot + geometry test, options inside bottom panel",
+                         "branching":  "role/repair x nervous/confident, four paths complete with team_check_ready",
+                         "legacy_dialogue":  "dialogue_check PASS, F1/F2/F3/R, existing owner portraits preserved"
+                     }
+}

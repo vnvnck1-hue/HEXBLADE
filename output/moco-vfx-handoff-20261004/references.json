@@ -1,0 +1,24 @@
+{
+    "date":  "2026-10-04",
+    "mode":  "built-in imagegen",
+    "use_case":  "stylized-concept",
+    "image_inputs_role":  "Supporting visual references for VFX art language; new sheets, not screenshot edits",
+    "direct_inputs":  [
+                          "output/moco-art-mood-20261004/02_moco_heavy_hit.png",
+                          "output/moco-art-mood-20261004/03_moco_drone_support.png"
+                      ],
+    "outputs":  [
+                    {
+                        "file":  "01_vfx_shapes_colors.png",
+                        "generated_file":  "exec-7d10f267-2a89-4d28-9b45-a6524cc65145.png"
+                    },
+                    {
+                        "file":  "02_vfx_timing_placement.png",
+                        "generated_file":  "exec-856c7c3b-cf0a-4ca5-8b32-9313bc9729de.png"
+                    }
+                ],
+    "prompts":  "prompts.txt",
+    "research_origin":  "output/moco-art-mood-20261004/references.json",
+    "code_evidence":  "code_baseline.json",
+    "status":  "Proposed art direction, not implementation or official mo.co colors"
+}

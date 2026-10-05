@@ -1,0 +1,73 @@
+[
+  {
+    "key": "01_lobby",
+    "title": "로비·출격 메뉴",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/01_lobby.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/models/partner_drone/view_front34.png"
+    ]
+  },
+  {
+    "key": "02_sector_map",
+    "title": "섹터 경로 지도",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/02_sector_map.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/02_sector_portals.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png"
+    ]
+  },
+  {
+    "key": "03_combat_cleanup",
+    "title": "일반 전투·청소",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/03_combat_action.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/models/partner_drone/view_front34.png"
+    ]
+  },
+  {
+    "key": "04_dialogue",
+    "title": "사장·정비사 대화",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/04_dialogue.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_38.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_43.png"
+    ]
+  },
+  {
+    "key": "05_docking",
+    "title": "합체 DOCKING 컷인",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/05_docking.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/03_combat_action.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_38.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_43.png"
+    ]
+  },
+  {
+    "key": "06_vulcan",
+    "title": "VULCAN 용광로",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/06_forge.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png"
+    ]
+  },
+  {
+    "key": "07_shipwright",
+    "title": "SHIPWRIGHT 거미 보스",
+    "references": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/07_spider_visible.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/07_spider_model.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png"
+    ]
+  }
+]

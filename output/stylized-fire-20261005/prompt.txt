@@ -1,0 +1,21 @@
+Use case: stylized-concept
+Asset type: production 2D game VFX animation spritesheet, NOT a concept illustration.
+Primary request: Draw a NEW hand-animated flame loop closely matching the supplied reference flame's graphic style and rising/pinching motion.
+Input images: reference_contact.png shows ALL 24 frames of the user's GIF; pairs repeat, so it contains 12 unique drawings. The three reference_phase images are enlarged motion/style samples. Use these as style and motion references, do not include any reference background.
+Produce one truly transparent RGBA square spritesheet with EXACTLY 12 frames in EXACTLY 4 columns x 3 rows, equal 384x512 cells on a 1536x1536 sheet. No lines, no borders, no annotations, no frame numbers. Read order left-to-right then next row.
+STYLE: minimalist hand-drawn 2D cartoon fire, clean flat fill, exactly saturated orange outer silhouette (#FF7008 approximately) and warm golden yellow interior (#FFD037 approximately). Strong sweeping arcs, elongated S-curve, sharp tapered hooks and tips, rounded concave bites, elastic broad-to-narrow necks, negative space open to transparency. Interior yellow ribbons track the same upward flow and narrow at the same necks. NO black outlines, NO gradients, NO bloom/glow, NO realistic flames, NO smoke, NO noise, NO pixel art, NO white highlights, NO red rim, NO checkerboard.
+Each cell contains ONE tall slender flame attached to a short flat horizontal bottom edge: fixed flame base center at local x=192, base y=464; base width about 120px, main flame height varies naturally about 310-400px. Keep this base stable through all 12 drawings, same scale and same cell registration. Include 1 or 2 detached orange/yellow curved slivers only when motivated by pinch-off. Fit entire art safely inside each cell with >24px side/top padding. Transparent below the flat base. Do NOT crop any art or let it cross into adjacent cells.
+ANIMATION one continuous forward cycle, NOT twelve different design icons. A traveling sinusoidal flame mass rises through the stem and then detaches. Specific consecutive phases:
+01 Tall S-shaped stem, upper hooked tongue curls right, broad lower body leans left, yellow flowing center.
+02 The upper hook narrows and rises, the stem's upper neck becomes thinner, lower yellow mass moves up.
+03 Upper tongue pinches loose as a small hook, main stem upper edge bends right and is compressed.
+04 Detached hook rises and thins; lower main stem forms a rounded left bulge with a concave right bite.
+05 Top main mass rolls left, waist narrows, yellow ribbon passes into upper lobe.
+06 Upper lobe begins separating across a diagonal thin neck; new lower yellow tongue grows from base.
+07 Upper-left lobe detaches, orange/yellow crescent above left; lower flame remains attached, bent right.
+08 Detached crescent rises/shrinks; lower flame sends up a new curved right tongue.
+09 Right tongue stretches taller and curls left; small detached crescent nearly disappears.
+10 New tongue rises, yellow center extends up, a sweeping S shape reforms from base.
+11 Tall new upper hook and flowing S stem, close to phase01 but with hook still advancing.
+12 Intermediate flowing shape naturally just before phase01; seam 12->01 must be as small as other consecutive steps.
+Preserve the irregular organic silhouette of the reference, especially open concave holes and its single ribbon-like main flame; do not replace with a generic symmetrical campfire with three static spikes. Flat narrow root, no logs, no candles, no ground, no objects, no scene. Natural slight volume changes but consistent overall flame size. Genuine transparent background and clean antialiased edges.

@@ -1,0 +1,86 @@
+﻿[
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\presentation\\round_skill_dock.gd",
+        "Before":  "4BC91F6C95728B92C2AE60732A2293C4D3E7547A9871757270B73CD669D0301C",
+        "After":  "4BC91F6C95728B92C2AE60732A2293C4D3E7547A9871757270B73CD669D0301C",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\drone\\drone_hud.gd",
+        "Before":  "FADA3E9104E38622C0150F3AF926DC5EF3D9EBFC8379E2170EF5403C138A8FE3",
+        "After":  "FADA3E9104E38622C0150F3AF926DC5EF3D9EBFC8379E2170EF5403C138A8FE3",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\boost.png",
+        "Before":  "25C5CE5A3023651F5D22072258479D81DBD95E295F6B4673A7198ED6C8F4BAA3",
+        "After":  "25C5CE5A3023651F5D22072258479D81DBD95E295F6B4673A7198ED6C8F4BAA3",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\dash.png",
+        "Before":  "43DCCCB909DAF60E3CDCD7FEB63D37140D04BF319B319E676D9EB3EBACD7DECA",
+        "After":  "43DCCCB909DAF60E3CDCD7FEB63D37140D04BF319B319E676D9EB3EBACD7DECA",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\energy.png",
+        "Before":  "D2281B63BA3BA38E9ECFC0C4447C4E257EFCAF2B6102EBFA1E14DA3CFB528F6B",
+        "After":  "D2281B63BA3BA38E9ECFC0C4447C4E257EFCAF2B6102EBFA1E14DA3CFB528F6B",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\gun.png",
+        "Before":  "87F87240434F1CDEFB541CCCDC8BC7ACD2164900C2A78A32A4E3E65AD77F42E0",
+        "After":  "87F87240434F1CDEFB541CCCDC8BC7ACD2164900C2A78A32A4E3E65AD77F42E0",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\missile.png",
+        "Before":  "08B005D8B5D7080E0670298B9237DB9A14044A660B1129AA332B16E3827B3C88",
+        "After":  "08B005D8B5D7080E0670298B9237DB9A14044A660B1129AA332B16E3827B3C88",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\sword.png",
+        "Before":  "65ABA9C7E262EECAC8D42326C18EE8ED7B20075A3A244286357F8FD3CDFF0B2F",
+        "After":  "65ABA9C7E262EECAC8D42326C18EE8ED7B20075A3A244286357F8FD3CDFF0B2F",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\boost.png.import",
+        "Before":  "3CD21BC47A5F1F64259EFBC5E6A5B26CF2B11F76E52269ED350ECA232D928823",
+        "After":  "3CD21BC47A5F1F64259EFBC5E6A5B26CF2B11F76E52269ED350ECA232D928823",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\dash.png.import",
+        "Before":  "21BA3617950DF94CF180ED6F97DB7FD5053A8C05E97B73F7A4EF399D5E23AEB7",
+        "After":  "21BA3617950DF94CF180ED6F97DB7FD5053A8C05E97B73F7A4EF399D5E23AEB7",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\energy.png.import",
+        "Before":  "EA30326D68EE843DD15B96328FD6AEAF6782881398498CF266E010583B427C4F",
+        "After":  "EA30326D68EE843DD15B96328FD6AEAF6782881398498CF266E010583B427C4F",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\gun.png.import",
+        "Before":  "44B37B4279D5C3D23052A22513E56836536A4D1D69D1101C744A91357473731D",
+        "After":  "44B37B4279D5C3D23052A22513E56836536A4D1D69D1101C744A91357473731D",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\missile.png.import",
+        "Before":  "D849761AF121337CD116E9BCEB4F2A64A2F75D844D95D383CFF70FA665367E09",
+        "After":  "D849761AF121337CD116E9BCEB4F2A64A2F75D844D95D383CFF70FA665367E09",
+        "Same":  true
+    },
+    {
+        "Path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\ui\\round_skills\\sword.png.import",
+        "Before":  "2BEA69D51D889B0E4E56F52E1392432C1E04272043124EFBFC19381ECDA20937",
+        "After":  "2BEA69D51D889B0E4E56F52E1392432C1E04272043124EFBFC19381ECDA20937",
+        "Same":  true
+    }
+]

@@ -1,0 +1,20 @@
+Built-in image_gen. Reference: output/characters-workwear-20261004/02_cheerful_auburn_foreman_v2_curves.png
+
+Use case: identity-preserve.
+Asset: production character expression concept sheet.
+Primary request: Create a polished NINE-EXPRESSION character sheet of the EXACT SAME adult female workshop foreman in the supplied illustration. One unified wide/square sheet, a neatly spaced 3 by 3 grid of nine separate waist-up portraits, same character identity in every cell.
+IDENTITY LOCK: same adult face shape, copper/auburn long high ponytail, matching face-framing locks/bangs, rosy-magenta eyes, golden safety hard hat with dark protective goggles, blue work ribbon, ivory short-sleeved collared shirt, steel-blue fitted utility vest with orange reflective bands, rectangular maintenance ID and dark fingerless gloves. Preserve her latest slimmer hourglass silhouette and fitted waist: full bust and rounded hips with clearly narrow waist, not a broad thick torso. Preserve exactly the same neckline and garment designs. Same crisp dark anime linework and clean violet-toned cel shading throughout. No chibi transformations, identity drift, extra characters or costume changes.
+LAYOUT: nine equally sized individual waist-up portraits, large readable faces. Entire hard hat and ponytail top visible in each cell, gestures inside their own cells, clean separation/gutters, no overlap between portraits. Crop portraits consistently at waist; the long ponytail continues out at the bottom of each waist-up portrait rather than becoming short hair. Plain soft desaturated purple backdrop in each cell, slightly lighter gutters. One concise Korean label beneath each portrait, exactly the following nine labels, in order left-to-right then top-to-bottom. Simple clean legible pale text.
+ROW 1:
+1. Label "기본" — relaxed open eyes and brows, small closed friendly smile, radio held calmly at waist, neutral attentive stance.
+2. Label "기쁨" — bright open sparkling eyes, uplifted eyebrows, broad happy open smile with small fang, enthusiastic thumbs-up, slightly leaning forward.
+3. Label "폭소" — eyes fully squeezed shut in happy arcs, cheeks lifted, mouth wide in laughing grin, head tipped back a little, one hand over belly and other near mouth. Distinct from normal happiness.
+ROW 2:
+4. Label "자신감" — one eyebrow raised, eyes half-lidded, playful asymmetric confident smirk, one hand on hip and other fist lightly touching chest, chin lifted.
+5. Label "분노" — strongly downturned knitted brows, focused narrowed eyes, mouth open in a firm reprimand, one gloved hand pointing decisively, tense forward shoulders. A stern crew leader, same recognizable face.
+6. Label "놀람" — wide eyes with smaller pupils, very raised eyebrows, small round open mouth, both hands lifted slightly, shoulders recoiling.
+ROW 3:
+7. Label "걱정" — inwardly raised tense brows, eyes glancing sideways, small uneasy mouth, hand near chin and other holding radio, hunched slightly.
+8. Label "슬픔" — downcast eyes with subtle tears, inwardly raised brows, soft downturned mouth, shoulders lowered and radio held close against waist. Restrained sadness rather than comical wailing.
+9. Label "쑥스러움" — rosy cheeks, eyes turned aside, bashful tiny closed smile, one hand rubbing back of neck and other resting on vest, shoulders lightly tucked in.
+Make emotional differences obvious through brows, eyelids, mouth and small body gestures. Preserve facial construction and head/body scale across all panels. Detailed character concept art suitable for later dialogue portraits, no speech bubbles, no extra titles, no watermark.

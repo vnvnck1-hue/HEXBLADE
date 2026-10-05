@@ -1,0 +1,17 @@
+단독 대화 캐릭터 구도 교정, 2026-10-04
+
+사용자: 캐릭터의 위치가 애매함. 하단 대화창 고정 지시는 유지.
+최종 배치: 단독 대화는 중앙 X=50%, 1280×800/글자28에서 그림 크기 약516px.
+그림 아래끝608px, 대화창 위580px — 허리 끝28px만 창 뒤로 넣어 공중에 뜬 잘린 그림처럼 보이지 않게 함.
+얼굴/상체/양손/태블릿은 창 위에 표시. 이전 좌측442px보다 크게 표시.
+선택지는 단독 대화 때 하단 창 안에 표시하고, 그동안 이전 대사 본문은 숨김. 선택 후 본문 복귀.
+선택지가3~4개면 창 높이를 늘려 모두 표시. 기존 다인 대화는 이전 배치 유지.
+원화 재생성/변형 없음. 앞선 배치별 캡처는 output/dialogue-layout-20261004에 보존.
+
+검증: tests/dialogue_check.gd — 중앙 정렬, 허리 끝 겹침32px 이하,
+하단 고정, 선택지-캐릭터 비겹침, 최대 글자36 전체 대사 표시, 기존 분기/다인/F1~F3/R.
+대표 화면5장, capture.log, dialogue_check.log, dialogue_check_final.log, bot.log, regression.log, validation.json.
+전체 회귀25종:24종 PASS, 대화 검사 상단90px 여유가 등장/표정 점프12px와 호흡을 고려하지 않아1항목 실패.
+실제 애니메이션 허용 범위76px로 검사 보정 후 dialogue_check 재실행 PASS(0fails). 엔진 ERROR/SCRIPT ERROR0.
+코드: scripts/dialogue/dialogue_portrait.gd, dialogue_view.gd.
+다른 작업자의 파일 보존, 커밋/푸시 없음.

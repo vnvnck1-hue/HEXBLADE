@@ -1,0 +1,37 @@
+{
+  "tool": "built-in image_gen",
+  "mode": "style-transfer edit",
+  "final": [
+    {
+      "key": "01_field_rebuild",
+      "title": "A · 작업 개수형",
+      "input": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\01_field_rebuild.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-a46a2b44-bfff-486f-b12b-6bd00e60d07c.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-casual-20261005\\01_field_rebuild.png"
+    },
+    {
+      "key": "02_agile_guard",
+      "title": "B · 고기동 근접형",
+      "input": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\02_agile_guard.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-944ec318-268a-4205-b7f8-2fb1df03eeb8.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-casual-20261005\\02_agile_guard.png"
+    },
+    {
+      "key": "03_hex_blade",
+      "title": "C · 혼합 검격형",
+      "input": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\03_hex_blade.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-a1cf1217-30e7-4866-bfc4-a6a2aae75c69.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-casual-20261005\\03_hex_blade.png"
+    },
+    {
+      "key": "04_heavy_brace",
+      "title": "D · 중장갑 돌파형",
+      "input": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\04_heavy_brace.png",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-c5ffde7b-9fd2-4612-8edd-2cea3b06e9f1.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-casual-20261005\\04_heavy_brace.png"
+    }
+  ],
+  "review": "Four final tool images inspected. A wearer panel corrected to include complete legs and boots. C wearer head moved inside helmet, erroneous side-panel dimension brackets removed.",
+  "source_preserved": true,
+  "game_applied": false
+}

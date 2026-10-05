@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060
+
+BIG_ROOM id=3 shape=5 scale=2.0 r=18.4 cells=968
+BIG_ROOM id=6 shape=4 scale=2.5 r=29.2 cells=1425
+BIG_ROOM id=9 shape=5 scale=3.0 r=27.2 cells=1908
+ROOM_ENTER id=1 shape=4 scale=1.0 wave=false t=4.7
+BUG_ROOM level=0 count=3 alive=2
+CUTIN FULL BURST
+ROOM_CLEAR 1/9 t=12.4 hp=5 id=115527910867
+ROOM_ENTER id=4 shape=1 scale=1.0 wave=false t=16.5
+BUG_ROOM level=1 count=4 alive=3
+RELOAD begin t=21.787 f=1471
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=22.221 f=1497
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=22.289 f=1503
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=22.427 f=1515
+ROOM_CLEAR 2/9 t=24.4 hp=5 id=115527910867
+ROOM_ENTER id=7 shape=7 scale=1.0 wave=false t=28.6
+BUG_ROOM level=2 count=5 alive=3
+CUTIN PIERCE ×2
+RELOAD begin t=35.131 f=2297
+ROOM_CLEAR 3/9 t=37.1 hp=5 id=115527910867
+ROOM_ENTER id=5 shape=2 scale=1.0 wave=false t=45.7
+BUG_ROOM level=3 count=6 alive=4
+CUTIN FULL BURST
+RELOAD begin t=52.759 f=3412
+ROOM_CLEAR 4/9 t=56.5 hp=3 id=115527910867

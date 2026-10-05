@@ -1,0 +1,22 @@
+﻿[
+    {
+        "log":  "dialogue_check.log",
+        "error_lines":  0,
+        "completion":  1
+    },
+    {
+        "log":  "capture.log",
+        "error_lines":  0,
+        "completion":  2
+    },
+    {
+        "log":  "bot.log",
+        "error_lines":  0,
+        "completion":  1
+    },
+    {
+        "log":  "background_check.log",
+        "error_lines":  0,
+        "completion":  1
+    }
+]

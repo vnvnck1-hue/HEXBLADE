@@ -1,0 +1,81 @@
+{
+    "date":  "2026-10-05",
+    "approval":  "청보라색 컨셉으로 게임에 실제로 적용해줘",
+    "concept":  "output/handpaint-floor-wall-20261005/01_cool_painted_metal.png",
+    "engine":  {
+                   "build":  "official",
+                   "hash":  "ed1daf0bf001b61586d9930840f2f1394092c079",
+                   "hex":  263938,
+                   "major":  4,
+                   "minor":  7,
+                   "patch":  2,
+                   "status":  "stable",
+                   "string":  "4.7.2-stable (official)",
+                   "timestamp":  0
+               },
+    "render":  "Forward+",
+    "asset_dimensions":  [
+                             1254,
+                             1254
+                         ],
+    "generated_asset_copy_sha256_equal":  [
+                                              true,
+                                              true
+                                          ],
+    "files":  [
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\textures\\handpaint_blue\\floor_brush.png",
+                      "bytes":  1534149,
+                      "sha256":  "42d1364696fb4dac765d027fd95839cdb5b4662f801bdad1dd3f90e2f2ca2725"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\textures\\handpaint_blue\\wall_brush.png",
+                      "bytes":  1769807,
+                      "sha256":  "67b5987ca9cc821ddc262d0b9bbdd2ef0a4d00cecedccf59ce60f33e3eb8a0dd"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\textures\\handpaint_blue\\floor_brush.png.import",
+                      "bytes":  1015,
+                      "sha256":  "282bdffe40c2735e40dd1b68c6695b1aee14a6f57059bd77fd94d49a2f84187f"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\textures\\handpaint_blue\\wall_brush.png.import",
+                      "bytes":  1012,
+                      "sha256":  "001f934c319d7f1dc67520e7dd518ad7786a2e379ab52d6fa216df24aac20e53"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-applied-20261005\\01_gameplay.png",
+                      "bytes":  1464323,
+                      "sha256":  "8a2b77a11f6a1c8dcfc735c3f4228802b45e57a7e60c46960c1600da02af4007"
+                  },
+                  {
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\handpaint-applied-20261005\\02_modules.png",
+                      "bytes":  390610,
+                      "sha256":  "e7ebc36c19c4e0637872bb528fbfb9b9098eb8aced01736be685fce296e0e25b"
+                  }
+              ],
+    "gpu_brush_boundary_mean_delta":  0.00139018562104967,
+    "capture_error_count":  0,
+    "bot_seconds":  30,
+    "bot_seed":  4,
+    "bot_godmode":  false,
+    "bot_infestation":  "default on",
+    "bot_error_count":  0,
+    "dedicated_new_material_test":  "RESULT OK (0 fails)",
+    "dedicated_old_material_test":  "RESULT OK (0 fails)",
+    "final_import":  "exit 0, no ERROR or SCRIPT ERROR",
+    "regression_status":  "passed_after_targeted_recheck",
+    "regression_initial_log":  "tests.log",
+    "ground_break_test_recheck":  "ALL 1 TESTS PASSED",
+    "ground_break_test_fix":  "Bounded 8 retries to include unraised slab branch; verify actual handpaint lift brightness.",
+    "commit":  false,
+    "push":  false,
+    "regression_total":  46,
+    "regression_initial_passes":  45,
+    "regression_initial_exit_code":  1,
+    "regression_initial_failed_test":  "ground_break_check (random sample had no unraised slabs)",
+    "regression_recheck_exit_code":  0,
+    "regression_final_failed_tests":  [
+
+                                      ]
+}

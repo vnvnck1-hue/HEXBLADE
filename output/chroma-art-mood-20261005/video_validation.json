@@ -1,0 +1,33 @@
+{
+  "source": "C:\\Users\\vnvnc\\Downloads\\chroma-inventory-2160p.mp4",
+  "source_sha256": "ce97ac322941fe52322c178631b31e5f9db3e8a05526b78ada6fa221628c653b",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "duration_seconds": 4,
+  "decoded_frames": 120,
+  "contact_interval_frames": 10,
+  "first_last_difference_rgb_at_640": {
+    "top_navigation": [
+      0.045,
+      0.054,
+      0.129
+    ],
+    "equipment_hero": [
+      3.363,
+      3.448,
+      0.962
+    ],
+    "left_description": [
+      2.714,
+      2.839,
+      0.986
+    ],
+    "bottom_cards": [
+      0.538,
+      0.559,
+      0.266
+    ]
+  },
+  "audio_stream": false
+}

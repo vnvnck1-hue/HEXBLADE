@@ -1,0 +1,17 @@
+Create ONE animation sprite sheet, transparent RGBA background, exactly 4 columns by 3 rows = 12 equal square cells, row-major playback order. Request high resolution 4096x3072 if possible. No gutters, labels, borders, letters, UI or background.
+Image 1 is the identity/edit target: same adult purple twin-tail mechanic woman, green eyes, gold rectangular hair clips, black choker with small gold tag, purple work jacket with gold patch, white crewneck shirt, dark gloves and utility belt. Images 2-5 are ONLY original art style references: crisp anime linework, broad cel shadow shapes, simple hair masses. Preserve character and outfit from image1, not the maid clothes in other inputs.
+Draw a polished frame-by-frame ONE SECOND shampoo-ad hair toss and playful wink, not twelve unrelated portraits. Locked waist-up camera, same scale in all cells. Torso, shoulders and belt remain registered identically; only neck/head, hair, eyes and one hand animate. Both arms are relaxed initially, no thumbs-up. One gloved hand rises to brush the hair by the temple then sweeps it behind the shoulder. The head clearly lifts from lowered chin, tilts back, hair follows in a flowing arc, returns to viewer and winks.
+CRITICAL REGISTRATION IN EVERY CELL: square canvas, body centerline x=50%, belt buckle center exactly (50%,88%), lower torso ends y=97%. Shoulder width 50% of cell. Neck root remains at (50%,49%). Face/head fits between y=13% and y=47%; all flared twin-tail tips remain inside x=5%-95% and y=4%-55%. No hair or hand can leave its cell. Keep the lower torso below y=64% exactly the same shape, clothes, shading, pixel-position and size across all 12 frames. No zoom, camera motion, individual cropping or rescaling. Generous transparent padding around hair. Entire subject unmasked; do not bake diagonal clipping into art.
+Frame 1: chin down by 12deg, eyes lowered, hair at rest, hand near shoulder beginning to rise.
+Frame 2: chin lifts toward neutral, hand rises toward temple, tails lag downward.
+Frame 3: chin lifts upward, eyes closing serenely, hand touches hair near temple.
+Frame 4: head tilts gracefully backward and slightly to viewer-left, hair begins lifting behind, hand brushing through side hair.
+Frame 5: single hair toss reaches peak, chin highest, eyes closed, both twin tails fan in broad arc toward viewer-right, hand follows hair backwards.
+Frame 6: head returning toward viewer, hair at maximum trailing arc right, hand just behind ear.
+Frame 7: head almost neutral, both eyes open, hair overshoots gently left, hand descends.
+Frame 8: head neutral, smile, tails settling back, hand lowering near shoulder.
+Frame 9: smile grows, viewer-right eye begins closing, left eye stays open, hand lowers out of face.
+Frame 10: clear playful wink, viewer-right eye fully closed with curved eyelid, viewer-left green eye open, hair nearly settled.
+Frame 11: hold the wink and warm smile, tiny hair followthrough only.
+Frame 12: hold SAME wink pose, hair fully settled.
+Do not morph outfit or vary body size between frames. No sparkles or background props. Clean genuinely transparent alpha, no checkerboard drawn. Frame contours and face landmarks should follow a coherent continuous animation. Favor readable hair motion and expressive acting over exaggerated body movement. Adult fully clothed upper body.

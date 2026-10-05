@@ -1,0 +1,21 @@
+model: bug_grub
+size (m)  x 0.920  y(fwd) 1.637  z(up) 0.545
+bounds    min (-0.460, -0.680, -0.045)  max (0.460, 0.957, 0.500)
+triangles 4926
+parts:
+  body                       2046 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  head                       1360 tris  parent=-  origin=(0.00, 0.45, 0.12)
+  feeler_l_1                  188 tris  parent=head  origin=(-0.08, 0.71, 0.09)
+  feeler_l_2                  188 tris  parent=feeler_l_1  origin=(-0.11, 0.80, 0.08)
+  feeler_l_3                  384 tris  parent=feeler_l_2  origin=(-0.14, 0.87, 0.05)
+  feeler_r_1                  188 tris  parent=head  origin=(0.08, 0.71, 0.09)
+  feeler_r_2                  188 tris  parent=feeler_r_1  origin=(0.11, 0.80, 0.08)
+  feeler_r_3                  384 tris  parent=feeler_r_2  origin=(0.14, 0.87, 0.05)
+attachment points:
+  pt_feeler_tip_l          (-0.14, 0.92, 0.01)  parent=feeler_l_3
+  pt_feeler_tip_r          (0.14, 0.92, 0.01)  parent=feeler_r_3
+  pt_eye_l                 (-0.05, 0.73, 0.14)  parent=head
+  pt_eye_r                 (0.05, 0.73, 0.14)  parent=head
+  pt_mouth                 (0.00, 0.75, 0.06)  parent=head
+  pt_tail                  (0.00, -0.64, 0.05)  parent=body
+glb: assets\models\bug_grub.glb

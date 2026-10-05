@@ -1,0 +1,52 @@
+HEXBLADE 주요 화면 7종 — 채택 chroma 아트 무드 발전
+2026-10-05 / 사용자 요청: 실제 주요 화면을 참고해 같은 스타일로 디벨롭
+
+제작 결과
+01_lobby.png — 기존 로비 네 메뉴를 유지하고 메카·TRIAD 히어로 그림과 큰 연두 출격 면을 제안.
+02_sector_map.png — 실제 육각 분기와 종류를 바탕으로 작전도 패널·현재 위치·가능 경로 강조.
+03_combat_cleanup.png — 최신 실제 전투방의 서비스 기계 3대·엄폐·연기 구역을 바탕으로 참격/청소 대비.
+04_dialogue.png — 실제 사장/정비사 포즈·의상·대사와 기존 기능, 작업실 배경과 종이 대화 패널.
+05_docking.png — 실제 사선 컷인 인물/구도, 아이보리 DOCKING·민트 잔상·각진 집중선.
+06_vulcan.png — 실제 팔각 발판·양팔 용광로 기계, 큰 주황 용암 면과 보라 그림자.
+07_shipwright.png — 실제 갱도/보스 렌더, 4보행다리·4공구팔·청록 삼안·기둥과 플레이어 대비.
+
+참조의 출처
+sources/01_lobby,02_sector_map,02_sector_portals,03_combat,06_forge,07_spider.png:
+고정 Godot 4.7.2-stable, tools/godot.ps1, Forward+, 현재 각 실제 씬을 1920×1080로 직접 렌더.
+_capture/chroma_major_screens_show.gd는 원래 씬을 불러와 150 physics frame 뒤 촬영.
+run 시작 화면은 실제 자동 지도이며, 지도 뒤 포탈 화면은 want=false로 Tab 닫기와 같은 표시 상태.
+이 캡처는 자동 전투가 아닌 시작 상태이므로 전투/보스 동작은 다음 보조 캡처를 이용했다.
+
+sources/03_combat_action.png: 현재 main.tscn 실제 자동 플레이, --bot --dronebot --seed=4
+--seconds=16, --every=240, 무적 옵션 없음. 원본 _capture/chroma_major_combat/f_0003.png (약12초).
+sources/07_spider_visible.png: 기존 spider_show.gd --bot --show --mode=both --secs=12
+원본 _capture/chroma_major_spider/game_0540.png. 게임 카메라, 공격 없는 확인 모드.
+sources/07_spider_model.png: 같은 실제 엔진 렌더의 orbit_0360.png, 모델 관찰용 근접 카메라.
+초기 spider 시작 캡처는 보스가 기둥 밖/뒤에 있어 후속 실제 렌더를 추가했다.
+spider-boss-three-views.png는 육안 설계 확인만 했으며 생성 참조에 넣지 않았다.
+
+sources/04_dialogue.png: 기존 실제 coworker_introduction_show 캡처 04_worker_cheerful.png를 SHA 동일 복사.
+sources/05_docking.png: 기존 실제 diagonal_cutin_show hold_1920x800.png를 SHA 동일 복사.
+대화와 컷인에서 실제 캡처 인물은 편집 대상으로, 최초 캐릭터 4장은 모두 육안 스타일 확인.
+내장 생성 참조 최대5장 제한으로 인간 원화는 최초25/38/43 세 장을 실제 직접입력.
+참조목록 references.json. 사용자가 직전 채택한 두 컨셉은 UI/환경 그래픽 방향으로만 사용.
+
+생성/검사
+내장 imagegen 개별 생성 7회, 국소 교정 2회. CLI/API 이미지 생성 없음.
+prompts_final.txt가 실제 최종7개 생성 프롬프트와 입력목록, prompts_corrections.txt가 교정 프롬프트.
+prompts.txt는 초기 초안, prompts_character_final.txt는 입력5장 제한에 따른 사람2화면 수정본.
+최종 이미지 모두 육안 확인 및 생성본/프로젝트 저장본 SHA256 동일 검사.
+전투 0/100에 가득 차 있던 초안 지원 바를 빈 트랙으로 수정한 최종본을 선택.
+지도 한글 교정 후에도 상단 왼쪽 녹색 정비 토큰에 '전비'처럼 보이는 표기가 남는다.
+작은 키 배지/글자/지도 연결선은 구현용 정밀 명세가 아니다. 실제 적용 때 원본 데이터와 폰트로 다시 조판.
+캐릭터·모델·포즈·배경은 국소 생성 재표현이 있으며 픽셀 동일이나 모델 동일을 보증하지 않는다.
+실제 보스가 보이도록 SHIPWRIGHT 위치를 제안 구도로 옮겼고, VULCAN 동작도 실제 형상의 연출 제안이다.
+로비/대화의 입체 작업실 배경과 일부 마크는 제안 추가이며 현재 씬에 이미 존재한다는 뜻이 아니다.
+
+엔진 캡처 실행 결과
+스크립트 파싱/런타임 SCRIPT ERROR 없이 원본 캡처 저장 완료. capture.log·spider_capture.log 보존.
+샌드박스 시스템 인증서 저장소 읽기 ERROR 1건은 각 실행 시작에 존재, 렌더/PNG 저장 정상.
+첫 상대 로그 경로 실행에서 로깅 디렉터리 경고가 있었고 거미 후속은 절대 경로 로그 사용.
+본 작업은 게임 코드 수정/리소스 적용 없이 컨셉과 관찰용 캡처 스크립트만 추가; 전체 회귀검사는 하지 않음.
+프레임 덤프는 기존 .gitignore의 _capture/*/로 제외, 선택 실제참조PNG만 sources에 보존.
+기존 다수 미커밋/미추적 작업 보존. 커밋·푸시 없음. 본편 적용 없음.

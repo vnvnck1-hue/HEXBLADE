@@ -1,0 +1,113 @@
+{
+  "ok": true,
+  "models": {
+    "bg_codex_floor_f01": {
+      "size_blender_m": [
+        2.0,
+        2.0,
+        0.20000000298023224
+      ],
+      "bounds": [
+        [
+          0.0,
+          -2.0,
+          -0.20000000298023224
+        ],
+        [
+          2.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "triangles": 44,
+      "meshes": 1,
+      "uv_density_minmax": [
+        389.0332164802656,
+        512.000024349241
+      ],
+      "issues": [],
+      "editable_blend_packed_images": 3
+    },
+    "bg_codex_wall_w01": {
+      "size_blender_m": [
+        2.0,
+        0.25,
+        3.0
+      ],
+      "bounds": [
+        [
+          0.0,
+          -0.25,
+          0.0
+        ],
+        [
+          2.0,
+          0.0,
+          3.0
+        ]
+      ],
+      "triangles": 1392,
+      "meshes": 1,
+      "uv_density_minmax": [
+        389.0328358507976,
+        512.004836556096
+      ],
+      "issues": [],
+      "editable_blend_packed_images": 3
+    },
+    "bg_codex_workbench_a01": {
+      "size_blender_m": [
+        2.0,
+        0.75,
+        1.0
+      ],
+      "bounds": [
+        [
+          -1.0,
+          -0.375,
+          -5.960464477539063e-08
+        ],
+        [
+          1.0,
+          0.375,
+          1.0
+        ]
+      ],
+      "triangles": 992,
+      "meshes": 3,
+      "uv_density_minmax": [
+        389.03007191105615,
+        512.001716181357
+      ],
+      "issues": [],
+      "editable_blend_packed_images": 3
+    },
+    "bg_codex_locker_a02": {
+      "size_blender_m": [
+        1.0,
+        0.5,
+        2.0
+      ],
+      "bounds": [
+        [
+          -0.5,
+          -0.25,
+          0.0
+        ],
+        [
+          0.5,
+          0.25,
+          2.0
+        ]
+      ],
+      "triangles": 988,
+      "meshes": 2,
+      "uv_density_minmax": [
+        389.03255335265976,
+        512.0056401999615
+      ],
+      "issues": [],
+      "editable_blend_packed_images": 3
+    }
+  }
+}

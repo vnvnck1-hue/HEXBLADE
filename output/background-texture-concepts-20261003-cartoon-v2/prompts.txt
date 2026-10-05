@@ -1,0 +1,22 @@
+2026-10-03 | 내장 image_gen 사용 | 카툰 2차 원화, 사용자 검토용
+선택된 1번 기본 재질과 3번 감염 레이어의 캐주얼 카툰 재해석.
+전체 원화이며 반복 타일 텍스처가 아님. 게임 적용 없음.
+
+01_base_cartoon_v2.png
+Use case: style-transfer.
+Edit target: the attached science-fiction maintenance bay concept sheet.
+Redraw this entire concept as a MUCH MORE CASUAL, explicitly CARTOON hand-drawn game environment. This is a substantial art-direction correction: the previous image was rejected as too photorealistic. Keep the recognizable industrial maintenance bay, floor-and-wall corner, and useful material swatches, but redesign their shapes and simplify their surfaces strongly.
+Target visual language: stylized League of Legends hand-painted environment readability pushed toward a charming cartoon adventure game. Confident dark indigo contour lines, broad opaque gouache-like color strokes, just TWO OR THREE clearly grouped color values per object, flat painted highlights, gently wonky shapes and exaggerated rounded chamfers. Big squat panels, oversized hexagonal bolts, thick bent pipes, chunky cabinet handles. Medium-light dusty periwinkle/navy floor, warm ivory wall panels, cheerful muted turquoise machines, ochre-yellow safety stripes. Warm friendly repair-shop atmosphere.
+Reduce surface detail by 80 percent: each big panel should have ONLY two or three intentional broad paint chips and one broad brush-color patch. Large calm clean color areas. NO dense tiny scratches, NO gritty dirt speckle, NO realistic corrosion, NO metallic reflections or specular shine, NO cinematic realism, NO realistic 3D render, NO miniature photographed diorama. Make it read immediately as a painted cartoon illustration at thumbnail size. Keep charming wear, never sterile vector art.
+Landscape composition: large clear quarter-view open playable floor, a back wall with a simple workbench and a turquoise service cabinet and fat pipes, 5 isolated simplified painted material swatches in a clean vertical column on the right. Minimal props. Only soft painted contact shadows. Neutral lavender-gray backdrop. Clear accessible shapes. No characters, no lettering, no logos, no UI. This is the NORMAL, UNINFECTED base material concept for a space-cleanup mech game. No infection in this sheet.
+
+
+03_infected_cartoon_v2.png
+Use case: style-transfer and precise-object-edit.
+Input image 1: APPROVED-FOR-THIS-ITERATION style and layout reference: the colorful CARTOON maintenance bay, hand-painted broad strokes and clean shapes.
+Input image 2: biological infestation MATERIAL IDEA ONLY. Its realism, grittiness, darkness and wet tissue rendering were rejected. Do not copy its composition or rendering style.
+Create the INFECTED version of image 1. Preserve its camera, floor panel grid, workshop layout, workbench, service cabinet, safety stripe route, warm lights, overall brightness, broad simplified brush strokes, oversized bolts and chunky construction. This should visibly be the SAME place as image 1 with an infestation layer.
+Art direction: appealing casual cartoon sci-fi game illustration, hand-painted MOBA readability, dark indigo drawn contours, only 2-3 broad shadow/highlight color values per object. Clearly illustrated, not realistic. Maintain clean open playable floor at center.
+Add stylized alien growth creeping from mechanical seams and hugging pipes and wall bases: thick rounded plum-purple vine-like tendrils, occasional mint/olive pillowy membrane patches, small rounded ivory shell plates. The tendrils look like confidently drawn cartoon organic cables, with a single broad lavender painted highlight, NO slimy realistic reflections, NO stringy anatomy, NO gore, NO realistic muscle fibers, NO microscopic holes. Growth follows floor joints and reaches around the cabinet. Edge-focused moderate infection, around one third of the environment, center remains clear. Make the shapes curious and slightly mischievous, not horror. No faces or eyeballs.
+Replace the right-column material swatches with 5 matching hand-painted swatches: periwinkle floor crossed by one purple organic cable; thick rounded purple tendrils; ivory smooth shell patch; soft olive/mint membrane; turquoise residual stain on floor. All use EXACTLY the same simple chunky cartoon style as image 1.
+Very limited intentional paint wear, broad colored planes. No photorealism, no PBR rendering, no cinematic darkness, no dense texture noise. No characters, text, logos or UI. Landscape image.

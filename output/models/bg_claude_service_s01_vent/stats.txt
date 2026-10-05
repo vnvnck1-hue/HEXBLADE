@@ -1,0 +1,7 @@
+model: bg_claude_service_s01_vent
+size (m)  x 1.500  y(fwd) 1.500  z(up) 1.000
+bounds    min (-0.750, -0.750, 0.000)  max (0.750, 0.750, 1.000)
+triangles 1912
+parts:
+  vent                       1912 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_claude_service_s01_vent.glb

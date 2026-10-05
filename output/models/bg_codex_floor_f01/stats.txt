@@ -1,0 +1,7 @@
+model: bg_codex_floor_f01
+size (m)  x 2.000  y(fwd) 2.000  z(up) 0.200
+bounds    min (0.000, -2.000, -0.200)  max (2.000, 0.000, 0.000)
+triangles 44
+parts:
+  floor                        44 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_codex_floor_f01.glb

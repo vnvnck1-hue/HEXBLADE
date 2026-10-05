@@ -1,0 +1,7 @@
+model: bg_claude_service_s05_column
+size (m)  x 0.502  y(fwd) 0.502  z(up) 1.600
+bounds    min (-0.251, -0.251, 0.000)  max (0.251, 0.251, 1.600)
+triangles 776
+parts:
+  column                      776 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_claude_service_s05_column.glb

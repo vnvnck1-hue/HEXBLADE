@@ -1,0 +1,7 @@
+{
+ "atlas_px": 2048,
+ "px_per_m": 425.2,
+ "samples": 48,
+ "albedo": "output/models/bg_claude_w01_half/bg_claude_w01_half_albedo.png",
+ "uv_fill": 0.3100263347094548
+}

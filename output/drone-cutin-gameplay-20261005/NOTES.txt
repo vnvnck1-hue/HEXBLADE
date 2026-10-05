@@ -1,0 +1,17 @@
+실제 본편 합체 컷인 플레이 캡처 / 2026-10-05
+
+Godot4.7.2-stable Forward+, tools/godot.ps1로 실제 scenes/main.tscn 실행.
+--bot --dronebot --seed=4: 본편 자동 플레이로 전투/청소/합체 진행. 무적 옵션 없음.
+관찰 도구 _capture/cockpit_ingame_play_capture.gd는 화면/상태만 기록하며 게이지/드론 상태/적/컷인 시계를 변경하지 않는다.
+CockpitCutin.fixed_dt=0 (실제 게임 시계), 소녀 컷인은 현재 게임에 연결된 CockpitCutin이 재생.
+플레이36.505초 합체 시작: 청소5, 게이지62.14, HP5/5. 완료 후 게이지32.14, 실제 DOCKED와 휠윈드.
+실제 Viewport 원본1920x800 캡처13프레임 중 아래3장 선택. 합성/재생성/크롭/색보정 없음. 저장복사 SHA256 동일.
+01_docking_impact.png: cutin_003, 합체 충격 흑백 프레임, 소녀 컷인.
+02_cockpit_whirl.png: cutin_006, 소녀·등의 드론·휠윈드가 함께 보이는 대표 장면.
+03_cockpit_hold.png: cutin_008, 얼굴 유지와 휠윈드.
+capture.json: 원본 플레이 상태/파일/시각/게이지/키 옵션. runtime.log: ERROR/SCRIPT ERROR0.
+원본13장 및 전후 프레임: _capture/cockpit_ingame_play_20261005/ (기존 _capture/*/ 규칙으로 git 제외).
+게임 코드/리소스 변경 없음. 캡처 관찰 도구·최종 화면·로그·기록만 추가. 커밋/푸시 없음.
+
+재현:
+powershell -File tools\godot.ps1 wait --max-fps 60 --resolution 1920x800 -s res://_capture/cockpit_ingame_play_capture.gd -- --bot --dronebot --seed=4 --seconds=180 --out=res://_capture/cockpit_ingame_play_20261005

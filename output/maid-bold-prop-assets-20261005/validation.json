@@ -1,0 +1,74 @@
+{
+    "status":  "PASS",
+    "asset_count":  11,
+    "visual_inspection":  "All individual generated assets and final contact sheet inspected",
+    "alpha_geometry":  "See manifest.json; all canvas edges transparent; maximum alpha radius below 212 px",
+    "assets":  [
+                   {
+                       "id":  "01_coffee_cup",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "CA439A855DD390CB0B85F491A9A5AC45DFB691C7287EBAE735C5A9F476C0F9ED",
+                       "png_sha256":  "4126C884171A7F4C62A556F5F7248CBE6EE7F372B3FBD948046C7F6DE5D5D2FC"
+                   },
+                   {
+                       "id":  "02_coffee_saucer",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "006A3FE75BE83724D7087E02F8D5998DC42ECCB62953001542BE4A7CDFD9246B",
+                       "png_sha256":  "DEDCDC41F2245D82A96EF3133951FC69929A389966B394A6752EB5B3558193D4"
+                   },
+                   {
+                       "id":  "03_black_pink_ribbon",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "CEE06C9C64172B850AF436C625CD6EAE06F8FA324FE4CC774A0AF3DD56B01AC7",
+                       "png_sha256":  "DBF20AAA818C7FEEE99B0D82EA93C028B639F8AD4A737A1FCA75F8B63808E57F"
+                   },
+                   {
+                       "id":  "04_cherries",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "6F6310FA405496D1D9F6A28A795596AED5B25C8CB54E04AF37C2164861F708EC",
+                       "png_sha256":  "5A3403D71E80CD334DC90D995ADBBDA22A03C103C99F8CD59719E7215352BACC"
+                   },
+                   {
+                       "id":  "05_white_napkin",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "39376ED6820559ABAF4CEDB1E6C51B38255508A6242871666F3809F80BA00BC1",
+                       "png_sha256":  "07381DD5A850EF36B9CFC92CE0D56F6ED89C72BA69F307EEC510CFEF46125385"
+                   },
+                   {
+                       "id":  "06_teapot",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "55881CD60E5DE0F04315E0A820164953927FE596FE8D98503F41232E47778355",
+                       "png_sha256":  "298ED088FB0013102CE24F314B43FDDB6D06DCFEF5E3B677E6CC85A7FF2F1B69"
+                   },
+                   {
+                       "id":  "07_cherry_cake",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "EB35397AADFAD4C0762092932E2B282DF85F7EB75CCD4A3DFC45A37C42914949",
+                       "png_sha256":  "4F350AE303114A7AD59E53532A594D3D470DADC32A9BFEFB7947A68AD4DF1975"
+                   },
+                   {
+                       "id":  "08_pink_macaron",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "1B86723374D20B99B501161AA56B934B2757CAC780402803128BF09D0793A9FE",
+                       "png_sha256":  "CD3E80D32D77719EC16BC28F4E28A0CC7FE6B445AA73A36B7FA8F8E03223880D"
+                   },
+                   {
+                       "id":  "09_silver_spoon",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "72D5CDCA93E6283ECA1DBD4EA53F0CE1425CFB00D557A683B65461139CC52926",
+                       "png_sha256":  "713BF29B71F20BF2FA57F03EDEE3B4B602CE6FED9693F7A6A4E795C7C1BAA9FB"
+                   },
+                   {
+                       "id":  "10_service_bell",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "958E2CC418FB9D2B5EE6F111BB5B7EC04AAC1D1E5976B6826CC41028829CFF4D",
+                       "png_sha256":  "522222A7CBF632AACFC7F43E4BA81E8691FB65A84E91E388B993D932D8D25B52"
+                   },
+                   {
+                       "id":  "11_gold_sparkle",
+                       "master_copy_matches":  true,
+                       "master_sha256":  "B310F68F2B05C112DD362C70ED7F7DA95800B00B2694F1EC3BF5938EEAD7B957",
+                       "png_sha256":  "77D8B17C29244B8D961CBD8E46715144F2503DC6A05E88623806D3FC32898B0C"
+                   }
+               ]
+}

@@ -1,0 +1,1051 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS  시험장: 기믹 관리자와 연기·레일 배치
+PASS  연기 속: 숨음 · 공격 불가 · 홀로그램
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+PASS  숨은 동안 적이 새로 쏘지 않는다 (새 적탄 0)
+PASS  숨은 동안 적의 사격 준비가 멈춘다 (1.64 → 1.64)
+PASS  연기 속에서는 사격 입력이 막힌다 (플레이어 탄 0)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+PASS  빠져나오면 은신·홀로그램 해제
+PASS  빠져나올 때 연기 가닥이 끌려 나온다 (최대 29 가닥)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+PASS  드러나면 적이 다시 공격을 준비한다 (1.06 → 0.73)
+ERROR: The axis Vector3 (0.0, -0.999232, 0.0) must be normalized.
+   at: set_axis_angle (core/math/basis.cpp:844)
+   GDScript backtrace (most recent call first):
+       [0] update (res://scripts/drone/sweep_gear.gd:162)
+       [1] _sweep (res://scripts/drone/partner_drone.gd:1008)
+       [2] _physics_process (res://scripts/drone/partner_drone.gd:370)
+PASS  레일 위에 가만히 서 있어도 실려 간다 (1초 5.0m)
+PASS  가스통은 판정용 그룹에 들지만 소품이다
+PASS  다 깎인 가스통이 터진다
+PASS  옆 가스통이 연쇄로 터진다
+PASS  주변 적이 폭발 피해를 입는다 (10 → 3)
+PASS  주변 플레이어도 폭발 피해를 입는다 (2 → 1)
+PASS  터진 자리에 그을음과 불이 남는다
+PASS  가스통 자체는 처치 수에 세지 않는다 (증가 0)
+PASS  레버 옆이면 돌릴 수 있다
+PASS  돌리는 동안 제자리에 묶이고 공격할 수 없다
+PASS  누를수록 조금씩 열린다 (중간 0.63)
+PASS  16 번 누르면 활짝 열린다
+PASS  다 열리면 손을 놓는다
+REPAIR_KIT hp=4
+PASS  키트를 주우면 체력 +2 (4)
+BIG_ROOM id=3 shape=4 scale=2.0 r=22.8 cells=857
+BIG_ROOM id=6 shape=0 scale=2.5 r=28.0 cells=1350
+BIG_ROOM id=9 shape=5 scale=3.0 r=28.3 cells=2088
+PASS  방 탐색: 전투방에 기믹 배치 (연기 7 · 레일 4 · 가스통 10 · 해치 예정 4)
+PASS  시작 자리에는 연기를 두지 않는다
+RESULT gimmicks_check fails=0

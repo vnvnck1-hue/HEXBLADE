@@ -1,0 +1,19 @@
+{
+  "v10": {
+    "front": {
+      "silhouette_iou": 0.8865,
+      "reference_pixels": 151711,
+      "model_pixels": 161273
+    },
+    "side": {
+      "silhouette_iou": 0.8469,
+      "reference_pixels": 153127,
+      "model_pixels": 153706
+    },
+    "back": {
+      "silhouette_iou": 0.8925,
+      "reference_pixels": 150695,
+      "model_pixels": 160555
+    }
+  }
+}

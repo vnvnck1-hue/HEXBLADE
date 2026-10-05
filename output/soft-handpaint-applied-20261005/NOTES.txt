@@ -1,0 +1,49 @@
+2026-10-05 — 사용자 요청으로 롤백 완료. 아래 적용 기록/캡처는 현재 본편 상태가 아닌 취소된 작업 이력.
+텍스처2개·셰이더/스크립트5개·테스트1개를 before/ 원본과 바이트 동일 복원, README 변경 취소.
+전체46테스트 결과는 취소된 적용 상태의 기록. 복구 뒤 전체 테스트 재실행 없이 PNG 재임포트만 수행.
+새 지시 전 다시 적용하지 말 것. 최종 복구 검증은 rollback.json.
+
+2026-10-05 — 사용자 선택 비대칭 청보라 A안 본편 적용(아래 기록은 취소됨)
+
+사용자 승인
+첨부 exec-e903b743-1f83-4b3a-82cc-fbbf55288421.png를 선택하고 “이걸로 적용해봐 게임에”라고 요청.
+첨부의 /C:/ 경로는 Windows에서 잘못된 표기이므로 C:/ 경로로 정상 열람했다.
+선택된 파일은 직전 output/soft-handpaint-asym-20261005/A_floor.png와 동일하다.
+바닥 PNG를 그대로 적용하고 벽도 같은 A안으로 맞추는 범위를 알린 뒤 작업했다.
+
+실제 파일
+assets/textures/handpaint_blue/floor_brush.png: 선택된 A_floor.png의 바이트 동일 복사.
+SHA256 b36328ff190ee71207272a202e5095f72b84bab1627cf54e91805d3ce97befc7
+assets/textures/handpaint_blue/wall_brush.png: A_wall.png의 바이트 동일 복사.
+SHA256 0004fd9c4fb18e0cd83f054a51122fa473de28335b6d494b64c6962aec5954d5
+원본은 이전 대화의 내장 imagegen으로 제작되었으며 이번에는 이미지 생성/재그림/리사이즈/색보정 없음.
+제작 프롬프트: output/soft-handpaint-asym-20261005/prompts.json
+3D 텍스처 임포트는 기존 고품질 VRAM 압축·미프맵·UID 설정 유지.
+
+적용 방식
+blue_handpaint_common: 4개 겹친 반크기 샘플 혼합을 없애고 PNG를 직접 샘플.
+blue_handpaint_floor: 임의 타일 밝기·추가 줄눈·턱·절차적 도장 마모 제거.
+본편 BrawlLook의 선택 텍스처 경로에서 value_k 재착색 배율 제거, 기본 바닥 lift는1.0.
+파괴 연출용 재질 복제는 기존처럼 lift를 올려 파편만 밝게 강조할 수 있다.
+방별 줄눈 offset와 기존 4m 월드 투영은 유지: 2m 네 타일마다 서로 다른 표현, 네 타일 묶음은4m 반복.
+W01: A_wall PNG와 기존 GLB UV 연결. 베벨/볼트/패널은 승인한 아틀라스 및 실제 메시 형상.
+반쪽 벽/옆판/낮은 벽/엄폐물/기둥: UV 아틀라스가 서로 다르므로 선택한 바닥 PNG를 월드 축 기준1m 판으로 투영.
+다른 벽 모듈용 그림을 새로 생성한 것은 아니다. 모델/기존 UV 데이터/충돌/판정 변경 없음.
+기존 조명·그림자·플레이어 조명 풀·셀 음영·효과음·인물·설비는 유지.
+기존 --bgpaint=old는 청보라 작업 전 재질 비교용이며 직전 거친 핸드페인팅으로 돌아가는 옵션이 아니다.
+기본 BrawlLook 화면에서 모든 벽 변경이 적용된다. N으로 다른 룩을 선택할 때의 벽은 그 룩의 원래 재질 정책을 따른다.
+
+검증 자료
+game_0180.png/game_0480.png/game_0900.png/game_1380.png/game_1770.png:
+실제 main.tscn 기본 카메라/조명, --bot --dronebot --seed=4, 1800 physics frame 자동 플레이.
+무적 옵션 없음. UI·전투 이펙트를 포함한 원본1920x1080 PNG, 게임 카메라/인물/배치 임의 편집 없음.
+capture_game.gd 및 game.log에 플레이 위치/프레임/저장 결과.
+modules.png: 실제 F01/W01/half/jamb/wall/cover/pillar GLB + 본편 재질/해/환경광, 검사 스튜디오 고정 카메라.
+capture_modules.gd 및 modules.log에 실제 선택된 리소스 경로/아틀라스 여부/저장 결과.
+tests.log: 저장소 tools/run_tests.ps1 전체 실행 결과.
+legacy.log: --bgpaint=old blue_handpaint_check 별도 검사.
+import.log: tools/godot.ps1 고정 Godot4.7.2 재임포트.
+최종 파일 해시/PNG 크기/로그 오류/종료 코드는 validation.json.
+
+before/는 이번 작업 직전 관련 파일만 보관한 복구 자료(.gdignore 아래, 게임 미참조).
+기존 출력·다른 작업자의 변경은 보존했으며 커밋/푸시 없음.

@@ -1,0 +1,24 @@
+model: tutorial_alien_b
+size (m)  x 0.496  y(fwd) 0.459  z(up) 0.356
+bounds    min (-0.248, -0.215, 0.000)  max (0.248, 0.244, 0.356)
+triangles 1476
+parts:
+  body                        108 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  shell                       364 tris  parent=body  origin=(0.00, -0.03, 0.16)
+  brow                        176 tris  parent=body  origin=(0.00, 0.05, 0.16)
+  jaw                         204 tris  parent=body  origin=(0.00, 0.05, 0.16)
+  leg_0_l                     104 tris  parent=body  origin=(-0.11, 0.10, 0.10)
+  leg_0_r                     104 tris  parent=body  origin=(0.11, 0.10, 0.10)
+  leg_1_l                     104 tris  parent=body  origin=(-0.13, -0.02, 0.10)
+  leg_1_r                     104 tris  parent=body  origin=(0.13, -0.02, 0.10)
+  leg_2_l                     104 tris  parent=body  origin=(-0.16, -0.14, 0.10)
+  leg_2_r                     104 tris  parent=body  origin=(0.16, -0.14, 0.10)
+attachment points:
+  pt_foot_0_l              (-0.18, 0.13, 0.00)  parent=leg_0_l
+  pt_foot_0_r              (0.18, 0.13, 0.00)  parent=leg_0_r
+  pt_foot_1_l              (-0.20, 0.01, 0.00)  parent=leg_1_l
+  pt_foot_1_r              (0.20, 0.01, 0.00)  parent=leg_1_r
+  pt_foot_2_l              (-0.22, -0.11, 0.00)  parent=leg_2_l
+  pt_foot_2_r              (0.22, -0.11, 0.00)  parent=leg_2_r
+  pt_mouth                 (0.00, 0.22, 0.16)  parent=body
+glb: assets\models\tutorial_alien_b.glb

@@ -1,0 +1,140 @@
+01_lobby — 로비·출격 메뉴
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/01_lobby.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/models/partner_drone/view_front34.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: ui-mockup / stylized-concept.
+Image 1: actual current lobby; its four entry points and identity are authoritative. Image 2: approved equipment concept for the cream mech and bold menu graphic style. Image 3: approved gameplay style reference. Image 4: exact TRIAD shape.
+Develop the current plain title-and-buttons lobby into a memorable main menu. Preserve the four functional choices: main sector run, MAMMOTH B presentation test, test scenes, quit. No fake shop, currencies, saved mission numbers, invented crew.
+Composition: title and four vertically stacked menu entries on the left 45%; a bold large 3/4 cream mech standing with red sword and tiny white TRIAD on the right 55%. Their silhouettes sit against one diagonal lime graphic band; background otherwise a dark plum stylized service garage with chunky hex patterns, a few cream repair labels and big simplified vent shapes. This is HERO MENU ART, a proposed addition to the currently plain lobby. Slightly poster-like composition, confident and scrappy space cleaning crew mood. The lime selected main entry is dominant, other entries dark-plum with cream type and restrained cream edges. No long descriptions filling the screen. Big believable cel-shaded machinery, not pseudo-photo.
+Exact text: large title "HEX BLADE"; four entries "섹터 런", "연출 테스트", "테스트 씬", "종료"; secondary small text under first "HEX SECTOR RUN", under second "MAMMOTH B"; bottom hint "↑↓ 선택    ENTER 결정". Keep text readable and few. Mech armor stays cream. Produce one finished widescreen menu.
+
+==========
+
+02_sector_map — 섹터 경로 지도
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/02_sector_map.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/02_sector_portals.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: ui-mockup.
+Image 1: actual full sector map, authoritative graph structure, node types and data. Image 2: actual room with portals behind the map, context only. Image 3 and 4: approved graphic style, not a content source.
+Develop the existing Tab sector map overlay into a space-cleaning field operation board. Keep the left-to-right branching hex graph topology and the distinct START, COMBAT, ELITE, REPAIR and MAMMOTH BOSS nodes. Preserve the sense of seven stages leading to MAMMOTH. An organized central graph fills about 65% of screen, no clutter.
+A big dark ink-purple operation sheet with asymmetrical warm-cream edge, backed by the dimmed real room and a lime diagonal index strip upper-left. Hex nodes become tactile paper tokens with clean chunky icon silhouettes and modest shadow offsets: start mint, combat coral with crossed blades, elite mustard diamond, repair mint medical plus, boss magenta mechanical horned symbol. Current start gets a cream ring, two immediate available combat branches are emphasized with bright lines. Later branches lower saturation but still readable. Line weights differ for reachable path vs future path. Keep actual node positions and connections close to Image 1; do not create a game-world map or turn hexes into a collectible card inventory. Small actual-stat strip at top-right.
+Text exact: top "SECTOR 1" and "도시 외곽"; stats "단계 0 / 7", "체력 5", "코인 0", "점수 0"; node labels "출발", "전투", "정예", "정비", "MAMMOTH"; bottom legend same four types and small "TAB 지도 닫기". No mouse confirm button, no new reward system. Single coherent widescreen interface, graph readability is primary.
+
+==========
+
+03_combat_cleanup — 일반 전투·청소
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/03_combat_action.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/models/partner_drone/view_front34.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: stylized-concept / ui-mockup.
+Image 1: actual latest live battle capture with cream bug enemies, three industrial machinery panels, square cover blocks, smoke zone, player mech, TRIAD and the current HUD. Use this exact room identity and high-angle camera. Image 2: the accepted battle art mood, reproduce its clear outlines/cream paper trim rather than its room arrangement. Image 3: mech identity only. Image 4: exact drone identity.
+Develop a new readable action moment within the actual room: the cream mech at central cover block slashing an ivory bug with a coral-red/white blade crescent. Another bug approaches from left. TRIAD beside the player is absorbing lime residue and small shell fragments along a cyan curved suction ribbon. The smoke fixture remains right, but drawn as translucent slate-purple simplified smoke lobes, never covering all action. Keep the three service machines at the upper wall and the square cover arrangement from Image 1. There must be ample walkable floor. Keep player close to original on-screen gameplay scale; no hero close-up.
+Room large flat charcoal-purple and chalk-blue planes, cream machine front plates, dark plum hard contact shadows and localized halftone under equipment. Existing coral barriers and orange directional hazard markings stay readable. Lime is restricted to residue/cleaning and small selection accents; no green screen wash. Punchy cream/coral impact wedges, sparse yellow bullets, only one or two damage numerals. UI surrounds the action using exactly the existing functional positions: top-left health/boost, top-center room/enemies, top-right mini-map and score, bottom-left TRIAD support, bottom-right familiar round equipment icons. Frame shells use warm cream cut-paper corners and thin dark strokes, with restrained lime accents. Keep the new E down-slam icon as a small downward arrow circle.
+Text: "HEXBLADE", "5 / 5", "BOOST"; top "ROOM 0 / 9", "ENEMIES 2"; mini "SCORE 100"; support "TRIAD", "SUPPORT", "Q DOCK", "X SHIELD", "Z CLEAN"; weapon input labels "E", "SHIFT", "SPACE", "L+R", "R", "LMB", "RMB", ammo "17 / 30". Do not add giant LOCK lettering over player, remove debug hints. Single polished gameplay art concept.
+
+==========
+
+04_dialogue — 사장·정비사 대화
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/04_dialogue.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_38.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_43.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: identity-preserve / ui-mockup.
+Image 1 is the ACTUAL dialogue edit target and the authoritative two ADULT character identities: left silver-white-haired owner, gold eyes, navy blazer, teal blouse and clipboard; right purple short twin-tail mechanic with gold hair hardware, green eyes, purple open work jacket, white T-shirt, black fingerless gloves, cheerful thumbs-up. Preserve their faces, hair, body proportions, clothes and poses. Do not convert either into a maid or change the outfit neckline.
+Image 2: approved GRAPHIC UI style ONLY. Images 3-5: three of the project's original four human character DRAWING STYLE references: clear dark outlines and finer inside lines, angular eyelids, simple nose/mouth, broad hair clumps and restrained lavender cel shadows. Use their rendering language, not their characters or maid outfits. No thicker sticker border around women, no semi-realism, no new faces.
+Redevelop the dialogue SCREEN around these existing portraits. Similar left/right placements and waist-up crop; bright mechanic speaking, owner slightly lower emphasis. Build a quiet service garage behind them in large slate/plum machinery silhouettes, cream work light and a small lime wall stripe. Keep room calm so portraits dominate. A broad dark ink-plum dialogue box at bottom is a clean asymmetric paper-cut shape with a cream rim, left lime/violet speaker name tab, two or three very short flat graphic details. Controls small upper-right, scene title upper-left. No comic speech bubbles replacing the main dialogue box, no new choices or affinity stats. Typography crisp enough for a game.
+Exact text: top "첫 출근 · 정비 동료 소개"; speaker "정비사" and small "MECHANIC"; dialogue "우주 먼지는 얌전히 쌓여 있지는 않거든! 그래도 조작은 차근차근 알려 줄게."; top-right controls "기록 L", "자동 A", "넘기기 S", "숨기기 H"; bottom-right "다음 ▶". Keep the text within the dialogue panel and portraits unobstructed above it. One widescreen screen, stylish but gentle.
+
+==========
+
+05_docking — 합체 DOCKING 컷인
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/05_docking.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/03_combat_action.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_38.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_43.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: identity-preserve / stylized-concept.
+Image 1 is the actual implemented diagonal docking cut-in EDIT TARGET: mechanic same as dialogue, purple short twin-tails with gold hardware, green eyes, purple work jacket, white T-shirt and fingerless glove thumbs-up. Keep this exact adult woman's identity, pose and costume, and the diagonal-band cut-in design. Image 2: latest actual battle room for background only, not training UI. Images 3-5: three original character DRAWING STYLE references only; do not copy their maid costumes or faces.
+Develop the actual docking beat into a polished graphic impact frame. A single diagonal strip slopes DOWN toward the right by about 8 degrees, crossing lower-middle screen. Huge cream "DOCKING" lettering scrolls conceptually behind the character, dark ink-plum shadow and lime/mint offset echo. Foreground mechanic is waist-up center-right, tilted only subtly, cheerful energetic thumbs-up, expressive green eyes. She is clipped cleanly at the common lower diagonal boundary as in Image 1; no rectangular portrait card, no cockpit framing. Do not make body larger/chest more exposed than the real target. Preserve character rendering in the original restrained anime cel style; backgrounds and effects carry the graphic mood.
+The real industrial gameplay room stays visible dimmed above and around the strip, recognizable little cream mech and white TRIAD joining in the middle behind her. Keep upper-left mech HUD, small top-right minimap and lower-right circular equipment as subdued context; no training/debug panel, no instructional text pile. Place bold long convergence speed lines around band edges, a few cream angular fragments and tiny mint dock sparks. Use a dark purple band and concentrated lime/cream graphic flash rather than full-screen neon glare. Clear frame layering, no additional characters.
+Only primary text "DOCKING", secondary little "TRIAD LINK"; the small HUD may retain "HEXBLADE" and "TRIAD". This is one keyframe of the existing event, not a new UI menu.
+
+==========
+
+06_vulcan — VULCAN 용광로
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/06_forge.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: stylized-concept / ui-mockup.
+Image 1: authoritative actual VULCAN forge boss scene. The octagonal platform suspended amid lava, giant forge-machine body at north edge, massive left/right industrial arms and columns, multi-port circular top emitter and orange grille core are essential. Images 2/3: approved comic language and exact player mech, not their environment colors.
+Repaint this actual boss battle in that style with a warm ORANGE vs deep PLUM palette, keep the lava orange and dangerous. Elevated quarter-view, full octagonal platform visible with its floor facets and four yellow-black caution markings. Giant VULCAN looming across north edge, torso partly outside frame as in actual screenshot, both enormous articulated arms flanking arena. Preserve its squat industrial furnace identity, circular multi-hole emitter and grille, do not turn it into a humanoid dragon or generic robot head.
+Show small cream player near south-center dashing sideways with a red energy blade and a short warm-white afterimage. One forge arm slams at arena edge sending angular yellow-orange shard sparks and a floor CORAL telegraph crescent; effects modest and readable. Lava rendered as large 2-3-tone orange/yellow flowing shapes with dark maroon islands, no photoreal liquid or overwhelming bloom. Platforms dark slate/plum planes with cream bevel highlights, machinery bold contours and broad ink-violet halftone shadows. Cool mint player resources and small lime UI marks establish shared brand without coloring lava green.
+UI: wide TOP CENTER boss bar with clean cream paper-cut frame, saturated coral fill and readable PHASE label; player's small health card upper-left below boss line, score upper-right, original round skill dock lower-right. Boss bar and mech card do not overlap, avoid giant original-card scale. Boss arena remains visible.
+Exact short text: "VULCAN", small "용광로 거신", "PHASE 1", "100%"; player "HEXBLADE", "5 / 5", "BOOST"; "SCORE 0"; input labels "E", "SPACE", "SHIFT", "L+R", "R", "RMB", "LMB"; ammo "30 / 30". Do not add a TRIAD portrait/support panel absent from the actual scene. One final widescreen game battle concept, imposing and readable.
+
+==========
+
+07_shipwright — SHIPWRIGHT 거미 보스
+REFERENCE INPUTS:
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/07_spider_visible.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/07_spider_model.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/02_combat_paintover.png
+D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-art-mood-20261005/01_workshop_equipment.png
+
+Asset type: a SINGLE polished 16:9 game-screen concept painting for HEXBLADE, part of a coherent seven-screen art-direction set.
+Use the supplied ACTUAL GAME SCREEN as factual grounding, and the approved art concepts as graphic art direction. Keep this game's own characters, enemies, mechanics and recognizable environment shapes. This is an aspirational visual redevelopment, not a collage, not a comparison sheet and not a screenshot claim.
+Shared visual language: near-black ink-plum, warm cream typography, acid-lime/mint highlights; expressive asymmetrical paper-cut panels with small diagonal notches and restrained offset solid shadows. Crisp dark violet contours, large cel-shaded material facets, sparse halftone ONLY in broad shadows, minimal fine scratches. Stylized 3D world combined with flat editorial comic UI. No glassmorphism, no photorealistic gritty metal, no excessive bloom, no all-over dots. Make typography and interactive hierarchy lucid. A little lime carries the brand; the room has its own color story.
+Identity: the player is a compact chunky cream/khaki utility mech with yellow/orange eyes, broad armor and charcoal joints, RED energy sword, practical backpack, not a sleek humanoid. TRIAD is a small round white four-legged drone with THREE round mint front modules and circular side housings, no face display. No new mascot. Do not put header labels outside the intended game screen.
+
+Use case: stylized-concept / ui-mockup.
+Image 1 is a newly captured ACTUAL GAME CAMERA frame in the SHIPWRIGHT shaft: enormous vertical industrial pillars, dark riveted slab floor, dangling thin web strands, blue mechanical spider near upper-center behind pillar, small cream mech at bottom. Image 2 is an ACTUAL ENGINE close camera of the same boss for identity details. Image 3: accepted comic gameplay render language. Image 4: player identity only.
+Develop a threatening but playable boss screen. Preserve high-angle quarter-view floor and the soaring shaft pillars, but compose the giant blue mechanical spider emerging CLEARLY beside an upper-center pillar, instead of hiding its eyes behind it. It is a REPAIR MACHINE SPIDER: FOUR enormous articulated walking legs with round grey joints and angular blue armor, black rubber feet; FOUR smaller front TOOL ARMS (welder, drill, claw, circular saw), THREE big mint-cyan round eyes along the front, under-chin gatling and taller machinery abdomen/back hatch with a small toolkit/monitor. Keep hard mechanical materials, never organic insect anatomy, no eight identical thin walking legs, no generic red-eyed spider or giant glowing green orb.
+Small cream player with red sword stands south-left, facing the descending boss. A coral outlined hazard ring shows imminent landing, a few thin cool cream web strands drift across floor. One cyan shaft spotlight and mint eye light clearly separate the spider silhouette from dark ink-purple pillars. World palette cool blue/teal/slate and near-black plum, restrained warm yellow safety lights; very little lime except a tiny UI accent. Leave traversable floor around mech. Shadows broad and graphic, sparse halftone under pillars; avoid opaque fog and realistic horror grime.
+Boss bar along top center uses same warm-cream paper-cut silhouette as VULCAN with coral fill, readable name and phase. Smaller upper-left mech card below bar and score upper-right; lower-right circular weapon dock remains; no invented TRIAD support card absent in actual boss scene, no fake mini-map. Any corner web ornament small and off the main play area. Avoid cinematic close-up: both boss and player should be visible as a game frame.
+Exact text: "SHIPWRIGHT", small "수선공 거미", "PHASE 1", "100%"; player "HEXBLADE", "5 / 5", "BOOST"; score "SCORE 0"; controls "E", "SPACE", "SHIFT", "L+R", "R", "RMB", "LMB"; ammo "30 / 30". One polished widescreen game scene.

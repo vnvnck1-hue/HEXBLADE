@@ -1,0 +1,115 @@
+01_corner_panels — 코너 패널
+
+Use case: ui-mockup / precise-object-edit.
+Asset type: ONE full 16:9 gameplay HUD concept for HEXBLADE, one of four alternative MAIN COMBAT UI designs.
+Image 1 is the EDIT TARGET and accepted comic graphic mood: same blue-plum industrial room, three upper-wall service machinery panels, square cover blocks, right smoke bank, chunky cream mech slashing ivory bug, coral crescent and cream starburst, white TRIAD with three mint circular front modules, cyan vacuum trail and lime residue. Preserve that entire world image, camera, composition, lighting, entity positions and action as closely as image generation permits. Only redesign the SCREEN-SPACE HUD. Do not redraw a different room, change the character pose, replace the enemies, add an inventory menu or put a title board over combat.
+Image 2 is the real engine screenshot for this game's UI functions, key bindings, actual world identity. It is supporting factual reference only; DO NOT revert Image 1's stylized world to Image 2's look and DO NOT copy its oversized LOCK x3 overlay.
+Shared HUD visual language: ink-plum flat opaque small panels, warm ivory paper-cut borders with a few diagonal notches, mint/acid-lime selection/ready marks, restrained orange BOOST and coral danger cues. Crisp editorial comic typography, controlled solid offset shadows, occasional sparse halftone at ONE edge, sophisticated clean hierarchy. No transparent frosted-glass sci-fi panels, no metallic bevel UI, no huge lime backplates, no long instructions, no random barcode decoration. Never add human anime portraits; portrait subjects are the EXISTING cream mech and round white TRIAD only.
+Use EXACTLY the same illustrative HUD state in every variant, independent of the earlier capture's values:
+- "HEXBLADE" health "4 / 5": FOUR filled mint armor blocks and ONE dim empty block.
+- "BOOST": two orange blocks lit, one block empty, representing 2/3.
+- "TRIAD" with "SUPPORT 65 / 100": meter filled about 65% and rest dark; Q/X ready mint, Z CLEAN neutral cream. A small marker at 50% is acceptable, no full bar.
+- "ROOM 0 / 9", "ENEMIES 2".
+- mini-map small with the actual room/corridor silhouette and a cyan player diamond, a few coral enemy dots; "SCORE 100"; small "COMBO 3".
+- RED SABER key "LMB"; ORANGE RIFLE key "RMB" with "17 / 30", tiny "T" reload hint. RED saber has the biggest primary-attack icon.
+- VIOLET DRILL BOOTS key "SPACE"; paired BOOST THRUSTERS key "SHIFT".
+- GREEN ENERGY CELL key "L+R", and energy state "1 / 3": one mint pip lit, two dim.
+- MISSILE key "R", count "0": DESATURATED gray missile and muted key, never bright ready.
+- A small down-slam arrow key "E", secondary size.
+- Support actions "Q DOCK", "X SHIELD", "Z CLEAN", these three and no new abilities.
+Include each primary function ONCE. No duplicate mech status, support portrait or weapon strip. Use short text only; exact labels and counts must remain readable, give adequate spacing. All HUD elements inside comfortable screen safe margins. Central 70% of gameplay should remain clear of HUD, no big floating center notification. Avoid overlarge portraits or icons.
+All four are visual concept mockups, no live-data or implementation claim. Deliver a single polished wide gameplay screenshot with the new UI, not a moodboard, not a grid, no 'CONCEPT A' headings.
+DESIGN DIRECTION A: REFINED CUT-PAPER CORNERS, familiar spatial memory, strong readability and minimum world coverage.
+Keep broad positions from Image 1 but redesign the shells and sizes. A SMALL horizontal mech portrait/status card in the UPPER LEFT, about 22% screen width and 12% height; portrait about one-third of that card, readable 4/5 and short BOOST beneath. A tiny ticket-shaped ROOM/ENEMIES label top-center. A tidy rectangular mini-map with ivory sliced-corner frame top-right, about 13% width, short score and combo beneath; less height than old source.
+Lower-left: a neat compact support card about 27% width and 12% height, white TRIAD portrait left, 65/100 bar and Q/X/Z badges right. Short cream labels, mint bar and highlights; allow visible floor above it.
+Lower-right: retain the familiar OPEN CIRCULAR skill arrangement from Image 1, with the largest red sword circle at far lower-right, rifle immediately left, boots slightly left of rifle; booster/energy/missile above, E as tiny outer-left circle. Warm ivory thin circle rims, compact rectangular key tabs, no giant opaque skill background. Green 1/3 energy pips next to cell, missile gray with 0, gun ammo prominent but short.
+Panel trims are narrow controlled cream cuts, not thick giant torn sheets. Sparse lime corner streaks ONLY at ready markers. Keep the five UI regions balanced, with much smaller portraits than source. Crisp production-ready layout.
+
+==========
+
+02_equipment_cards — 장비 카드
+
+Use case: ui-mockup / precise-object-edit.
+Asset type: ONE full 16:9 gameplay HUD concept for HEXBLADE, one of four alternative MAIN COMBAT UI designs.
+Image 1 is the EDIT TARGET and accepted comic graphic mood: same blue-plum industrial room, three upper-wall service machinery panels, square cover blocks, right smoke bank, chunky cream mech slashing ivory bug, coral crescent and cream starburst, white TRIAD with three mint circular front modules, cyan vacuum trail and lime residue. Preserve that entire world image, camera, composition, lighting, entity positions and action as closely as image generation permits. Only redesign the SCREEN-SPACE HUD. Do not redraw a different room, change the character pose, replace the enemies, add an inventory menu or put a title board over combat.
+Image 2 is the real engine screenshot for this game's UI functions, key bindings, actual world identity. It is supporting factual reference only; DO NOT revert Image 1's stylized world to Image 2's look and DO NOT copy its oversized LOCK x3 overlay.
+Shared HUD visual language: ink-plum flat opaque small panels, warm ivory paper-cut borders with a few diagonal notches, mint/acid-lime selection/ready marks, restrained orange BOOST and coral danger cues. Crisp editorial comic typography, controlled solid offset shadows, occasional sparse halftone at ONE edge, sophisticated clean hierarchy. No transparent frosted-glass sci-fi panels, no metallic bevel UI, no huge lime backplates, no long instructions, no random barcode decoration. Never add human anime portraits; portrait subjects are the EXISTING cream mech and round white TRIAD only.
+Use EXACTLY the same illustrative HUD state in every variant, independent of the earlier capture's values:
+- "HEXBLADE" health "4 / 5": FOUR filled mint armor blocks and ONE dim empty block.
+- "BOOST": two orange blocks lit, one block empty, representing 2/3.
+- "TRIAD" with "SUPPORT 65 / 100": meter filled about 65% and rest dark; Q/X ready mint, Z CLEAN neutral cream. A small marker at 50% is acceptable, no full bar.
+- "ROOM 0 / 9", "ENEMIES 2".
+- mini-map small with the actual room/corridor silhouette and a cyan player diamond, a few coral enemy dots; "SCORE 100"; small "COMBO 3".
+- RED SABER key "LMB"; ORANGE RIFLE key "RMB" with "17 / 30", tiny "T" reload hint. RED saber has the biggest primary-attack icon.
+- VIOLET DRILL BOOTS key "SPACE"; paired BOOST THRUSTERS key "SHIFT".
+- GREEN ENERGY CELL key "L+R", and energy state "1 / 3": one mint pip lit, two dim.
+- MISSILE key "R", count "0": DESATURATED gray missile and muted key, never bright ready.
+- A small down-slam arrow key "E", secondary size.
+- Support actions "Q DOCK", "X SHIELD", "Z CLEAN", these three and no new abilities.
+Include each primary function ONCE. No duplicate mech status, support portrait or weapon strip. Use short text only; exact labels and counts must remain readable, give adequate spacing. All HUD elements inside comfortable screen safe margins. Central 70% of gameplay should remain clear of HUD, no big floating center notification. Avoid overlarge portraits or icons.
+All four are visual concept mockups, no live-data or implementation claim. Deliver a single polished wide gameplay screenshot with the new UI, not a moodboard, not a grid, no 'CONCEPT A' headings.
+DESIGN DIRECTION B: FIELD EQUIPMENT CARDS, orderly graphic information, concentrated top identity and collectible-card-like SKILL ART.
+A unified low horizontal CREW STATUS ribbon across upper-left ~45% of screen: cream mech portrait and armor/boost on left half, small white TRIAD portrait and SUPPORT 65/100/Q-X-Z on right half. The ribbon has one shared ivory paper edge with a center notch; no additional support panel bottom-left. Portraits small, similar sizes, not two enormous headshots.
+Top-center objective is a small hanging cream tab. Mini-map upper-right remains separate, with SCORE/COMBO a slim caption below, no oversized map.
+Lower-right: SIX short slanted equipment cards in a compact TWO ROW by THREE COLUMN rack (not circles), occupying at most 30% width by 20% height. Top row booster SHIFT, energy L+R +1/3, gray missile R +0. Bottom row boots SPACE, orange rifle RMB +17/30/T, red saber LMB. Each has the actual equipment illustration, a tiny key badge and a narrow state stripe. Cards mostly dark plum; only the icon's own red/orange/violet/green supplies color, NOT six giant saturated colored rectangles. Saber slightly taller/bolder. Small E down-arrow tab attached just left of rack. Thin ivory outer cuts, no bevel or glass.
+BOTTOM LEFT stays completely clear of status cards, so cleaning action can be seen. Display player+drone pairing once at top. Strong editorial alignment, subtle diagonal motion in card corners, enough breathing space to read each key.
+
+==========
+
+03_bottom_console — 하단 통합 도크
+
+Use case: ui-mockup / precise-object-edit.
+Asset type: ONE full 16:9 gameplay HUD concept for HEXBLADE, one of four alternative MAIN COMBAT UI designs.
+Image 1 is the EDIT TARGET and accepted comic graphic mood: same blue-plum industrial room, three upper-wall service machinery panels, square cover blocks, right smoke bank, chunky cream mech slashing ivory bug, coral crescent and cream starburst, white TRIAD with three mint circular front modules, cyan vacuum trail and lime residue. Preserve that entire world image, camera, composition, lighting, entity positions and action as closely as image generation permits. Only redesign the SCREEN-SPACE HUD. Do not redraw a different room, change the character pose, replace the enemies, add an inventory menu or put a title board over combat.
+Image 2 is the real engine screenshot for this game's UI functions, key bindings, actual world identity. It is supporting factual reference only; DO NOT revert Image 1's stylized world to Image 2's look and DO NOT copy its oversized LOCK x3 overlay.
+Shared HUD visual language: ink-plum flat opaque small panels, warm ivory paper-cut borders with a few diagonal notches, mint/acid-lime selection/ready marks, restrained orange BOOST and coral danger cues. Crisp editorial comic typography, controlled solid offset shadows, occasional sparse halftone at ONE edge, sophisticated clean hierarchy. No transparent frosted-glass sci-fi panels, no metallic bevel UI, no huge lime backplates, no long instructions, no random barcode decoration. Never add human anime portraits; portrait subjects are the EXISTING cream mech and round white TRIAD only.
+Use EXACTLY the same illustrative HUD state in every variant, independent of the earlier capture's values:
+- "HEXBLADE" health "4 / 5": FOUR filled mint armor blocks and ONE dim empty block.
+- "BOOST": two orange blocks lit, one block empty, representing 2/3.
+- "TRIAD" with "SUPPORT 65 / 100": meter filled about 65% and rest dark; Q/X ready mint, Z CLEAN neutral cream. A small marker at 50% is acceptable, no full bar.
+- "ROOM 0 / 9", "ENEMIES 2".
+- mini-map small with the actual room/corridor silhouette and a cyan player diamond, a few coral enemy dots; "SCORE 100"; small "COMBO 3".
+- RED SABER key "LMB"; ORANGE RIFLE key "RMB" with "17 / 30", tiny "T" reload hint. RED saber has the biggest primary-attack icon.
+- VIOLET DRILL BOOTS key "SPACE"; paired BOOST THRUSTERS key "SHIFT".
+- GREEN ENERGY CELL key "L+R", and energy state "1 / 3": one mint pip lit, two dim.
+- MISSILE key "R", count "0": DESATURATED gray missile and muted key, never bright ready.
+- A small down-slam arrow key "E", secondary size.
+- Support actions "Q DOCK", "X SHIELD", "Z CLEAN", these three and no new abilities.
+Include each primary function ONCE. No duplicate mech status, support portrait or weapon strip. Use short text only; exact labels and counts must remain readable, give adequate spacing. All HUD elements inside comfortable screen safe margins. Central 70% of gameplay should remain clear of HUD, no big floating center notification. Avoid overlarge portraits or icons.
+All four are visual concept mockups, no live-data or implementation claim. Deliver a single polished wide gameplay screenshot with the new UI, not a moodboard, not a grid, no 'CONCEPT A' headings.
+DESIGN DIRECTION C: LOW INTEGRATED COMBAT DOCK, horizontal instrument-board organization, clear upper game field.
+Move mech armor/boost, TRIAD support and SKILLS into a single thin compositional line along the BOTTOM EDGE. It is a low paper-cut ink-plum dock no more than 15% screen height at center, with slightly raised portrait ends. It must not cover the mech/bug/slash/drone in the world center. Keep dark panel fill limited to its slim shape, not a huge black slab.
+Bottom-left ~36% width: two SMALL adjacent identity modules, cream mech medallion +4/5 armor/BOOST and white TRIAD medallion +65/100 support/Q-X-Z. Both names readable. A narrow gap/paper notch separates them, silhouettes do not collide.
+Across lower-center to lower-right: a single row of SIX actual equipment drawings, ordered boots SPACE, boosters SHIFT, energy L+R, gray missile R0, orange rifle RMB17/30/T, red saber LMB as the largest right-end module. Icons are free cutout silhouettes set into SHALLOW angular wells, not upright tall cards. Small E down-arrow tab near boots. Energy 1/3 pips directly beneath energy cell. Key strips along the dock's bottom edge; avoid two rows of overlapping text.
+Upper-left: ONLY a tiny ROOM/ENEMIES ticket, no mech health. Upper-right: a compact square mini-map and SCORE100/COMBO3 beside or below it. The top-center is open. No duplicated support or armor at top.
+Styling is refined ivory edge, broad dark-plum base, clean shared alignment and tiny mint ready strips, subtle diagonal endcaps. All essential information has room despite compactness. It should look like a sleek illustrated arcade control dock, same comic art style as Image1.
+
+==========
+
+04_minimal_hex — 미니멀 헥스
+
+Use case: ui-mockup / precise-object-edit.
+Asset type: ONE full 16:9 gameplay HUD concept for HEXBLADE, one of four alternative MAIN COMBAT UI designs.
+Image 1 is the EDIT TARGET and accepted comic graphic mood: same blue-plum industrial room, three upper-wall service machinery panels, square cover blocks, right smoke bank, chunky cream mech slashing ivory bug, coral crescent and cream starburst, white TRIAD with three mint circular front modules, cyan vacuum trail and lime residue. Preserve that entire world image, camera, composition, lighting, entity positions and action as closely as image generation permits. Only redesign the SCREEN-SPACE HUD. Do not redraw a different room, change the character pose, replace the enemies, add an inventory menu or put a title board over combat.
+Image 2 is the real engine screenshot for this game's UI functions, key bindings, actual world identity. It is supporting factual reference only; DO NOT revert Image 1's stylized world to Image 2's look and DO NOT copy its oversized LOCK x3 overlay.
+Shared HUD visual language: ink-plum flat opaque small panels, warm ivory paper-cut borders with a few diagonal notches, mint/acid-lime selection/ready marks, restrained orange BOOST and coral danger cues. Crisp editorial comic typography, controlled solid offset shadows, occasional sparse halftone at ONE edge, sophisticated clean hierarchy. No transparent frosted-glass sci-fi panels, no metallic bevel UI, no huge lime backplates, no long instructions, no random barcode decoration. Never add human anime portraits; portrait subjects are the EXISTING cream mech and round white TRIAD only.
+Use EXACTLY the same illustrative HUD state in every variant, independent of the earlier capture's values:
+- "HEXBLADE" health "4 / 5": FOUR filled mint armor blocks and ONE dim empty block.
+- "BOOST": two orange blocks lit, one block empty, representing 2/3.
+- "TRIAD" with "SUPPORT 65 / 100": meter filled about 65% and rest dark; Q/X ready mint, Z CLEAN neutral cream. A small marker at 50% is acceptable, no full bar.
+- "ROOM 0 / 9", "ENEMIES 2".
+- mini-map small with the actual room/corridor silhouette and a cyan player diamond, a few coral enemy dots; "SCORE 100"; small "COMBO 3".
+- RED SABER key "LMB"; ORANGE RIFLE key "RMB" with "17 / 30", tiny "T" reload hint. RED saber has the biggest primary-attack icon.
+- VIOLET DRILL BOOTS key "SPACE"; paired BOOST THRUSTERS key "SHIFT".
+- GREEN ENERGY CELL key "L+R", and energy state "1 / 3": one mint pip lit, two dim.
+- MISSILE key "R", count "0": DESATURATED gray missile and muted key, never bright ready.
+- A small down-slam arrow key "E", secondary size.
+- Support actions "Q DOCK", "X SHIELD", "Z CLEAN", these three and no new abilities.
+Include each primary function ONCE. No duplicate mech status, support portrait or weapon strip. Use short text only; exact labels and counts must remain readable, give adequate spacing. All HUD elements inside comfortable screen safe margins. Central 70% of gameplay should remain clear of HUD, no big floating center notification. Avoid overlarge portraits or icons.
+All four are visual concept mockups, no live-data or implementation claim. Deliver a single polished wide gameplay screenshot with the new UI, not a moodboard, not a grid, no 'CONCEPT A' headings.
+DESIGN DIRECTION D: MINIMAL HEX TOKENS, highly open playfield, restrained graphic accents.
+Upper-left: a small hexagonal cream mech portrait token, next to an almost panel-free horizontal armor strip FOUR lit mint segments plus ONE dark segment and 4/5; a slim BOOST 2/3 strip beneath. Thin ink-plum backing only directly behind text, no large enclosing rectangle.
+Just below this cluster on left edge: a TINY white TRIAD hex token, a narrow 65% mint SUPPORT meter, and Q DOCK/X SHIELD/Z CLEAN as compact three key tabs. No big drone card at bottom. Keep all these top-left functions within about 24% screen width and 19% height, main battlefield empty.
+Upper-center: one thin diagonal ticket with ROOM0/9 and ENEMIES2. Upper-right: a compact flattened HEXAGONAL map frame holding the SAME room/corridor geometry, not a decorative radar scanner. SCORE100 and COMBO3 as tiny anchored text beneath, little cream edge notches.
+Lower-right: a TIGHT HONEYCOMB cluster of seven hex skill tokens, thin ivory rims and dark plum inner fills. Red SABER/LMB largest at lower-right; rifle/RMB17/30/T beside it; boots/SPACE; booster/SHIFT; energy/L+R with1/3pips; muted gray missile/R0; smallest E down-arrow. The hexes align with a consistent small gap and keys fitted BELOW each icon, never floating over the illustrated weapon. No jagged random exploding outlines, no flashing lime wheels, no huge opaque rack.
+Use large clean negative spaces, mostly monochrome ivory/plum UI with only meaningful mint/orange/red states. Fine halftone only on one tiny label corner. This should feel lighter and more precise than A/B/C while obviously sharing the same comic graphic identity.

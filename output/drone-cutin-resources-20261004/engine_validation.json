@@ -1,0 +1,85 @@
+{
+  "bashful_ticks.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      128,
+      128
+    ]
+  },
+  "clipped": {
+    "corner_alpha": 0.0,
+    "face_alpha": 1.0,
+    "format": 5,
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  "color_preservation": {
+    "max_rgb_error": 0.00392156839370728,
+    "samples": 11092
+  },
+  "dock_flash.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      256,
+      256
+    ]
+  },
+  "issues": 0,
+  "lock_ring.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      256,
+      256
+    ]
+  },
+  "mask_alpha_mismatches_on_8px_grid": 0,
+  "panel_frame.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  "panel_glow.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  "panel_mask.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  "ready": {
+    "corner_alpha": 0.0,
+    "face_alpha": 1.0,
+    "size": [
+      1024,
+      1024
+    ]
+  },
+  "source_size": [
+    1254,
+    1254
+  ],
+  "sync_streak.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      256,
+      32
+    ]
+  },
+  "triangle_shard.svg": {
+    "corner_alpha": 0.0,
+    "size": [
+      96,
+      96
+    ]
+  }
+}

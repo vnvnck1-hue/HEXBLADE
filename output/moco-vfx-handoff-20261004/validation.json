@@ -1,0 +1,59 @@
+{
+    "date":  "2026-10-04",
+    "scope":  "Concept sheets, palette consistency, handoff document integrity; no runtime or gameplay test",
+    "images":  [
+                   {
+                       "file":  "01_vfx_shapes_colors.png",
+                       "width":  1536,
+                       "height":  1024,
+                       "sha256":  "39426ad5bf9cb186971dbc158649fcb93c2a393533dc97cb0d18cf0726e58f50",
+                       "unchanged_from_generated_original":  true,
+                       "visual_review":  "Saved file viewed; shapes, eight printed HEX labels and storyboard labels legible"
+                   },
+                   {
+                       "file":  "02_vfx_timing_placement.png",
+                       "width":  1536,
+                       "height":  1024,
+                       "sha256":  "6904525562c0bac9b5a2f74afbafe840d95ea5ad662ca868d40aab7e7c8bad31",
+                       "unchanged_from_generated_original":  true,
+                       "visual_review":  "Saved file viewed; shapes, eight printed HEX labels and storyboard labels legible"
+                   }
+               ],
+    "palette":  {
+                    "count":  12,
+                    "svg_matches_json":  true,
+                    "all_colors_in_document":  true,
+                    "svg_swatch_bounds_checked":  true,
+                    "png_pixels_illustrative":  true
+                },
+    "document":  {
+                     "path":  "docs/moco-vfx-claude-handoff.md",
+                     "local_links":  [
+                                         "../output/moco-vfx-handoff-20261004/01_vfx_shapes_colors.png",
+                                         "../output/moco-vfx-handoff-20261004/02_vfx_timing_placement.png",
+                                         "../output/moco-vfx-handoff-20261004/exact_palette.svg",
+                                         "../output/moco-vfx-handoff-20261004/palette_and_presets.json",
+                                         "../output/moco-art-mood-20261004/01_moco_balanced_combat.png",
+                                         "../output/moco-art-mood-20261004/02_moco_heavy_hit.png",
+                                         "../output/moco-art-mood-20261004/03_moco_drone_support.png",
+                                         "../output/moco-vfx-handoff-20261004/texture_measurements.json",
+                                         "../output/moco-art-mood-20261004/research.txt",
+                                         "../output/moco-art-mood-20261004/references.json"
+                                     ],
+                     "all_local_links_exist":  true,
+                     "review":  "Effects, timing, placement, color, background formulas, current code locations, cache/depth/light constraints and future verification specified"
+                 },
+    "gameplay_conditions":  [
+                                "HEAVY and CRIT separated",
+                                "Shield does not stun",
+                                "Actual damage replaces sample 26/78",
+                                "Shield 10s or consumed; link transient",
+                                "SPIN/LAUNCH existing motion remains 0.5s",
+                                "Current Q/X/Z inputs preserved"
+                            ],
+    "game_code_changed":  false,
+    "engine_run":  false,
+    "committed":  false,
+    "pushed":  false,
+    "message_sent_to_claude":  false
+}

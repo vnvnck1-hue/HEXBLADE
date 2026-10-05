@@ -1,0 +1,92 @@
+[
+  {
+    "pixel": [
+      566,
+      419
+    ],
+    "hit": true,
+    "object": "body",
+    "culled_backfaces_skipped": [
+      "body"
+    ],
+    "world_position": [
+      -0.13068917393684387,
+      0.06250063329935074,
+      0.14221307635307312
+    ],
+    "polygon_index": 147,
+    "material": "B_cartoon_atlas"
+  },
+  {
+    "pixel": [
+      566,
+      433
+    ],
+    "hit": true,
+    "object": "body",
+    "culled_backfaces_skipped": [
+      "body"
+    ],
+    "world_position": [
+      -0.1251448690891266,
+      0.070201076567173,
+      0.13326624035835266
+    ],
+    "polygon_index": 147,
+    "material": "B_cartoon_atlas"
+  },
+  {
+    "pixel": [
+      575,
+      449
+    ],
+    "hit": true,
+    "object": "jaw",
+    "culled_backfaces_skipped": [
+      "body"
+    ],
+    "world_position": [
+      -0.11087558418512344,
+      0.10205318033695221,
+      0.12872420251369476
+    ],
+    "polygon_index": 10,
+    "material": "B_cartoon_atlas"
+  },
+  {
+    "pixel": [
+      579,
+      433
+    ],
+    "hit": true,
+    "object": "jaw",
+    "culled_backfaces_skipped": [
+      "body"
+    ],
+    "world_position": [
+      -0.11869579553604126,
+      0.09653986245393753,
+      0.13938754796981812
+    ],
+    "polygon_index": 2,
+    "material": "B_cartoon_atlas"
+  },
+  {
+    "pixel": [
+      565,
+      449
+    ],
+    "hit": true,
+    "object": "body",
+    "culled_backfaces_skipped": [
+      "body"
+    ],
+    "world_position": [
+      -0.11837418377399445,
+      0.07826796174049377,
+      0.12295810878276825
+    ],
+    "polygon_index": 147,
+    "material": "B_cartoon_atlas"
+  }
+]

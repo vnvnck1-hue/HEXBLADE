@@ -1,0 +1,18 @@
+﻿{
+    "godot":  "4.7.2-stable",
+    "tests_present":  37,
+    "tests_passed":  37,
+    "all_current_tests_passed":  true,
+    "coverage_provenance":  "coverage-final.json: first full run plus five retries and one new test",
+    "latest_test_errors":  0,
+    "protected_source_files":  14,
+    "protected_source_same":  true,
+    "skills_pixels":  {
+                          "blocked":  true,
+                          "ready":  true
+                      },
+    "hud_actual_window_checks":  4,
+    "main_bot_seconds":  60,
+    "main_bot_errors":  0,
+    "committed":  false
+}

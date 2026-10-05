@@ -1,0 +1,96 @@
+{
+  "created": "2026-10-05",
+  "tool": "built-in image_gen",
+  "height_m": 2.2,
+  "human_height_m": 1.75,
+  "primary_sources": [
+    {
+      "machine": "グレイズ改",
+      "page": "https://www.bandaispirits.co.jp/products/search/detail.php?grp_id=5325&prd_id=4549660018797000",
+      "local_html": "references/graze_custom.html",
+      "images": [
+        {
+          "url": "https://bandai-a.akamaihd.net/bc/img/model/b/1000100808_1.jpg",
+          "local": "references/graze_custom_1.jpg",
+          "generator_input": true
+        },
+        {
+          "url": "https://bandai-a.akamaihd.net/bc/img/model/b/1000100808_2.jpg",
+          "local": "references/graze_custom_2.jpg",
+          "generator_input": true
+        },
+        {
+          "url": "https://bandai-a.akamaihd.net/bc/img/model/b/1000100808_3.jpg",
+          "local": "references/graze_custom_3.jpg",
+          "generator_input": false
+        }
+      ]
+    },
+    {
+      "machine": "モビルレギンレイズ(ジュリエッタ機)",
+      "page": "https://www.bandaispirits.co.jp/products/search/detail.php?grp_id=5325&prd_id=4549660112419000",
+      "local_html": "references/reginlaze_julietta.html",
+      "images": [
+        {
+          "url": "https://bandai-a.akamaihd.net/bc/img/model/b/1000107663_1.jpg",
+          "local": "references/reginlaze_julietta_1.jpg",
+          "generator_input": true
+        },
+        {
+          "url": "https://bandai-a.akamaihd.net/bc/img/model/b/1000107663_2.jpg",
+          "local": "references/reginlaze_julietta_2.jpg",
+          "generator_input": true
+        },
+        {
+          "url": "https://bandai-a.akamaihd.net/bc/img/model/b/1000107663_3.jpg",
+          "local": "references/reginlaze_julietta_3.jpg",
+          "generator_input": false
+        }
+      ]
+    }
+  ],
+  "continuity_reference": "references/hex_blade_original.png",
+  "outputs": [
+    {
+      "key": "01_field_rebuild",
+      "title": "작업 개수형",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-8571f1f6-8fe5-48c4-a846-599a62dbb79d.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\01_field_rebuild.png",
+      "emphasis": "그레이즈 개량형의 교체 장갑·노출 프레임·박스 어깨"
+    },
+    {
+      "key": "02_agile_guard",
+      "title": "고기동 근접형",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-df92081b-6100-48c8-a8c2-9933f91efc4a.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\02_agile_guard.png",
+      "emphasis": "레긴레이즈의 상체 장갑·녹색 외장·큰 전완·쌍검"
+    },
+    {
+      "key": "03_hex_blade",
+      "title": "혼합 검격형",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-d4823b9e-8a73-4682-9737-f6c7a943dfc7.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\03_hex_blade.png",
+      "emphasis": "그레이즈 프레임 + 레긴레이즈 장갑 + 기존 크림·붉은 검"
+    },
+    {
+      "key": "04_heavy_brace",
+      "title": "중장갑 돌파형",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10b52-473c-7393-a83e-0781546f4712\\exec-a456d205-183e-49b5-b16a-762d31c1b04d.png",
+      "destination": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\04_heavy_brace.png",
+      "emphasis": "그레이즈식 프레임에 레긴레이즈식 가운틀릿·흉갑 강화"
+    }
+  ],
+  "concept_only": true,
+  "model_applied": false,
+  "engineering_validation": false,
+  "corrections_needed": false,
+  "review": {
+    "all_four_visually_inspected": true,
+    "graze_vs_reginlaze_shapes_distinct": true,
+    "head_hands_feet_in_corresponding_shells": true,
+    "no_seated_chest_pilot": true,
+    "front_rear_cutaway_entry_detail_action_views": true,
+    "text": "large Korean labels legible, minor small generated type/annotation variation remains",
+    "proportions": "illustration; do not treat pixel positions as engineering dimensions"
+  }
+}

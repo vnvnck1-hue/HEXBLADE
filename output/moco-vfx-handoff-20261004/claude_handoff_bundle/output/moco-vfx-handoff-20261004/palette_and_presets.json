@@ -1,0 +1,166 @@
+{
+    "version":  1,
+    "status":  "art_direction_proposal_not_runtime_config",
+    "color_space":  "sRGB hex; generated concept pixels are illustrative; these codes are canonical",
+    "colors":  {
+                   "CORE":  "#FFFFFF",
+                   "ATTACK":  "#FF3CBD",
+                   "SHADE":  "#B72C8F",
+                   "CRIT_ACCENT":  "#FFE45A",
+                   "SUPPORT":  "#35EED7",
+                   "SOFT":  "#BFFFF0",
+                   "INK":  "#25104D",
+                   "DANGER":  "#FF5268",
+                   "FLOOR_BASE":  "#6F7BA4",
+                   "WALL_TOP":  "#A0A7D1",
+                   "WALL_SIDE":  "#68719D",
+                   "SERVICE_BASE":  "#26334F"
+               },
+    "presets":  {
+                    "normal_hit":  {
+                                       "core_ms":  70,
+                                       "shape_ms":  150,
+                                       "residual_ms":  220,
+                                       "diameter_enemy_width":  [
+                                                                    0.6,
+                                                                    0.9
+                                                                ],
+                                       "shards":  [
+                                                      3,
+                                                      4
+                                                  ],
+                                       "core_area_ratio_max":  0.2,
+                                       "light_enabled":  false,
+                                       "camera_pull_m":  [
+                                                             0.1,
+                                                             0.25
+                                                         ]
+                                   },
+                    "heavy_hit":  {
+                                      "core_ms":  70,
+                                      "shape_ms":  160,
+                                      "residual_ms":  300,
+                                      "diameter_enemy_width":  [
+                                                                   1.2,
+                                                                   1.6
+                                                               ],
+                                      "shards":  [
+                                                     4,
+                                                     6
+                                                 ],
+                                      "core_area_ratio_max":  0.3,
+                                      "gameplay_new_hitstop":  false,
+                                      "text":  "HEAVY! only for classified heavy hits; CRIT! only for a real critical event"
+                                  },
+                    "slash":  {
+                                  "normal_arc_degrees":  [
+                                                             110,
+                                                             150
+                                                         ],
+                                  "heavy_arc_degrees":  [
+                                                            150,
+                                                            190
+                                                        ],
+                                  "normal_thickness_radius_ratio":  [
+                                                                        0.1,
+                                                                        0.16
+                                                                    ],
+                                  "heavy_thickness_radius_ratio":  [
+                                                                       0.16,
+                                                                       0.24
+                                                                   ],
+                                  "normal_ms":  120,
+                                  "heavy_ms":  180,
+                                  "collision_range":  "reuse existing attack range"
+                              },
+                    "shield":  {
+                                   "existing_gameplay_duration_s":  10,
+                                   "deploy_ms":  250,
+                                   "fill_alpha":  [
+                                                      0.04,
+                                                      0.1
+                                                  ],
+                                   "rim_alpha":  [
+                                                     0.35,
+                                                     0.55
+                                                 ],
+                                   "hit_flash_ms":  100,
+                                   "visual_only_no_stun":  true
+                               },
+                    "link":  {
+                                 "life_ms":  350,
+                                 "width_m":  [
+                                                 0.03,
+                                                 0.06
+                                             ],
+                                 "dash_m":  0.18,
+                                 "gap_m":  0.12,
+                                 "motes":  [
+                                               2,
+                                               3
+                                           ],
+                                 "depth_test":  true
+                             },
+                    "clean_vortex":  {
+                                         "ring_segments":  3,
+                                         "diameter":  "actual current skill radius times two, not a new radius",
+                                         "height_above_ground_m":  0.05,
+                                         "thickness_radius_ratio":  [
+                                                                        0.015,
+                                                                        0.025
+                                                                    ],
+                                         "inward_particles":  [
+                                                                  6,
+                                                                  8
+                                                              ],
+                                         "particle_direction":  "toward nozzle/player per active cleaning or vortex, not outwards",
+                                         "existing_pull_s":  0.75
+                                     },
+                    "text":  {
+                                 "normal_px_at_1280x800":  28,
+                                 "heavy_px_at_1280x800":  40,
+                                 "status_px_at_1280x800":  34,
+                                 "outline_px":  [
+                                                    2,
+                                                    3
+                                                ],
+                                 "normal_life_ms":  550,
+                                 "heavy_life_ms":  650,
+                                 "status_life_ms":  700,
+                                 "screen_offset_y_px":  -24,
+                                 "max_per_target":  2,
+                                 "max_global":  16
+                             },
+                    "background_initial_tuning":  {
+                                                      "floor_detail_mean_linear":  0.06699,
+                                                      "floor_detail_strength":  0.12,
+                                                      "floor_value":  0.78,
+                                                      "wall_value":  0.8,
+                                                      "service_prop_value":  0.38,
+                                                      "world_sat_fallback":  0.35,
+                                                      "sun_energy":  1.15,
+                                                      "ambient_energy":  0.72,
+                                                      "shadow_opacity":  0.5,
+                                                      "ssao_intensity":  0.45,
+                                                      "ssao_radius":  0.7,
+                                                      "glow_intensity":  0.25,
+                                                      "glow_bloom":  0,
+                                                      "glow_hdr_threshold":  1.1,
+                                                      "wall_palette_blend":  0.65,
+                                                      "service_detail_strength":  0.1,
+                                                      "service_grate_rate":  0.2,
+                                                      "service_lamp_energy":  1
+                                                  }
+                },
+    "notes":  [
+                  "All new tuning values need runtime review; no gameplay implementation performed.",
+                  "Use existing shield/stagger/knockback outcomes; do not infer new effects from drawings.",
+                  "Floor base hex is a material input, not guaranteed final screen pixel color.",
+                  "Window sizes and ms snapshots on sheet 2 are concept keys; lifetime values here and in handoff are the implementation starting points."
+              ],
+    "proposal_effect_budget":  {
+                                   "simultaneous_hit_groups":  24,
+                                   "fragments_global":  96,
+                                   "not_benchmarked":  true
+                               }
+}

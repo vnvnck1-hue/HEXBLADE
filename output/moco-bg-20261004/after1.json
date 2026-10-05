@@ -1,0 +1,19 @@
+{
+  "brawl": true,
+  "char": 0.461496753528374,
+  "char_vs_bg": 0.17160523205249,
+  "dark_floor": 0.132595348980098,
+  "env_amb": 0.720000028610229,
+  "env_glow": 0.25,
+  "floor": 0.513573984964239,
+  "floor_n": 92,
+  "restored_floor": 0.506662983154472,
+  "service": 0.200014007163441,
+  "service_n": 5,
+  "service_over_floor": 0.389455099010454,
+  "sun_e": 1.14999997615814,
+  "tag": "after1",
+  "wall_minus_floor": 0.2906988039372,
+  "wall_top": 0.804272788901439,
+  "wall_top_n": 14
+}

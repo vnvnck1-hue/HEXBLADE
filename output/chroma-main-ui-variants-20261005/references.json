@@ -1,0 +1,34 @@
+{
+  "edit_target": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/03_combat_cleanup.png",
+  "actual_engine_reference": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/sources/03_combat_action.png",
+  "variants": [
+    {
+      "key": "01_corner_panels",
+      "title": "코너 패널"
+    },
+    {
+      "key": "02_equipment_cards",
+      "title": "장비 카드"
+    },
+    {
+      "key": "03_bottom_console",
+      "title": "하단 통합 도크"
+    },
+    {
+      "key": "04_minimal_hex",
+      "title": "미니멀 헥스"
+    }
+  ],
+  "illustrative_state": {
+    "hp": "4/5",
+    "boost": "2/3",
+    "support": "65/100",
+    "room": "0/9",
+    "enemies": 2,
+    "score": 100,
+    "combo": 3,
+    "ammo": "17/30",
+    "energy": "1/3",
+    "missiles": 0
+  }
+}

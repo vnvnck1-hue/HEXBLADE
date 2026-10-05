@@ -1,0 +1,27 @@
+[
+    {
+        "file":  "01_brown_dome.png",
+        "sha256":  "1B60F4FF79C59A6D48470441061865654A1BC357238B77D814C07D49DBB47582",
+        "copy_identical":  true
+    },
+    {
+        "file":  "02_cream_drop.png",
+        "sha256":  "A35C5C2DD9403218A86910DD86FC126C4EA18417B5C57164E0CDE7690A86CCE8",
+        "copy_identical":  true
+    },
+    {
+        "file":  "03_peach_bean.png",
+        "sha256":  "8D44D4EF0BA3A1E7C62C03F748965FADFAB7E92862E309520B23BA9FF7EC5C5A",
+        "copy_identical":  true
+    },
+    {
+        "file":  "references/user_brown.png",
+        "sha256":  "7956B853DA9EB8804D72AD211CAC4D87C76DC96F4B2D7881BD0C4DD5A2D750AC",
+        "copy_identical":  true
+    },
+    {
+        "file":  "references/user_cream.png",
+        "sha256":  "4785E59CFF826D1FF665C208D29C28FE184B1E16B9A785642763BA83F632E443",
+        "copy_identical":  true
+    }
+]

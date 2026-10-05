@@ -1,0 +1,38 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060
+
+BIG_ROOM id=3 shape=5 scale=2.0 r=18.4 cells=968
+BIG_ROOM id=6 shape=4 scale=2.5 r=29.2 cells=1425
+BIG_ROOM id=9 shape=5 scale=3.0 r=27.2 cells=1908
+ROOM_ENTER id=1 shape=4 scale=1.0 wave=false t=4.7
+BUG_ROOM level=0 count=3 alive=2
+CUTIN FULL BURST
+ROOM_CLEAR 1/9 t=12.4 hp=5 id=119973873290
+ROOM_ENTER id=4 shape=1 scale=1.0 wave=false t=15.9
+BUG_ROOM level=1 count=4 alive=3
+CUTIN FULL BURST
+RELOAD begin t=21.953 f=1655
+ROOM_CLEAR 2/9 t=23.3 hp=5 id=119973873290
+ROOM_ENTER id=7 shape=7 scale=1.0 wave=false t=27.2
+BUG_ROOM level=2 count=5 alive=3
+COMBO step=1 cut=0 FLASH hit=2 blocked=0 t=31.189 f=2227
+COMBO step=1 cut=1 FLASH hit=2 blocked=0 t=31.258 f=2233
+COMBO step=1 cut=2 FLASH hit=2 blocked=0 t=31.393 f=2243
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=31.715 f=2267
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=32.370 f=2306
+COMBO step=2 cut=2 RECOIL SHOT hit=0 blocked=0 t=32.503 f=2314
+ROOM_CLEAR 3/9 t=35.0 hp=5 id=119973873290
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.004539,"dock_seconds":-1.0,"drone_state":6,"file":"cutin_001.png","game_seconds":36.5053556836146,"gauge":62.14,"hp":5,"phase":0,"real_ms":44120}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.054539,"dock_seconds":-1.0,"drone_state":6,"file":"cutin_002.png","game_seconds":36.6386890169479,"gauge":62.14,"hp":5,"phase":0,"real_ms":44309}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.104539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_003.png","game_seconds":36.7720223502812,"gauge":32.14,"hp":5,"phase":2,"real_ms":44571}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.154539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_004.png","game_seconds":36.7800223502812,"gauge":32.14,"hp":5,"phase":2,"real_ms":44742}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.204539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_005.png","game_seconds":36.9133556836145,"gauge":32.14,"hp":5,"phase":2,"real_ms":44930}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.254539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_006.png","game_seconds":37.0466890169478,"gauge":32.14,"hp":5,"phase":2,"real_ms":45104}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.304539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_007.png","game_seconds":37.1800223502812,"gauge":32.14,"hp":5,"phase":2,"real_ms":45375}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.354539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_008.png","game_seconds":37.3133556836145,"gauge":32.14,"hp":5,"phase":2,"real_ms":45687}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.404539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_009.png","game_seconds":37.4466890169478,"gauge":32.14,"hp":5,"phase":2,"real_ms":45987}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.454539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_010.png","game_seconds":37.5800223502811,"gauge":32.14,"hp":5,"phase":3,"real_ms":46285}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.504539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_011.png","game_seconds":37.7133556836145,"gauge":32.14,"hp":5,"phase":3,"real_ms":46596}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.554539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_012.png","game_seconds":37.8466890169478,"gauge":32.14,"hp":5,"phase":3,"real_ms":46868}
+GAMEPLAY_CUTIN {"alive":true,"cleaned":5,"cutin_seconds":0.604539,"dock_seconds":0.054539,"drone_state":7,"file":"cutin_013.png","game_seconds":37.9800223502811,"gauge":32.14,"hp":5,"phase":3,"real_ms":47121}
+GAMEPLAY_CAPTURE_RESULT cutin_frames=13

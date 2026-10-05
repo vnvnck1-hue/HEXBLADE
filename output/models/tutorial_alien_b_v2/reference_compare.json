@@ -1,0 +1,36 @@
+{
+  "v1": {
+    "front": {
+      "silhouette_iou": 0.7902,
+      "reference_pixels": 151711,
+      "model_pixels": 150146
+    },
+    "side": {
+      "silhouette_iou": 0.7451,
+      "reference_pixels": 153127,
+      "model_pixels": 166096
+    },
+    "back": {
+      "silhouette_iou": 0.8047,
+      "reference_pixels": 150695,
+      "model_pixels": 147897
+    }
+  },
+  "v2": {
+    "front": {
+      "silhouette_iou": 0.8639,
+      "reference_pixels": 151711,
+      "model_pixels": 155341
+    },
+    "side": {
+      "silhouette_iou": 0.762,
+      "reference_pixels": 153127,
+      "model_pixels": 141576
+    },
+    "back": {
+      "silhouette_iou": 0.8724,
+      "reference_pixels": 150695,
+      "model_pixels": 155003
+    }
+  }
+}

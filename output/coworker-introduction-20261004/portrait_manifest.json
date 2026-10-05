@@ -1,0 +1,26 @@
+﻿{
+    "generated_with":  "built-in imagegen",
+    "style_anchors":  [
+                          "assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_25.png",
+                          "assets/캐릭터/ChatGPT 이미지 2026년 10월 3일 오후 11_28_31.png"
+                      ],
+    "assets":  [
+                   {
+                       "path":  "assets/portraits/cleaning_owner/owner-introduction-player.png",
+                       "sha256":  "1e9044a92233d9f452fae8c67b506aa50c96853b33a4db54ea70878a7acc3296",
+                       "import_present":  true
+                   },
+                   {
+                       "path":  "assets/portraits/purple_worker/purple-worker-introduction-player.png",
+                       "sha256":  "d787107dddf03f7b7b2ac0400b0e2ac704d28a4b52453d7c87a1ec49c18526e3",
+                       "import_present":  true
+                   },
+                   {
+                       "path":  "assets/portraits/purple_worker/purple-worker-cheerful-player.png",
+                       "sha256":  "3dabaa718e9ec3ddec46f565bc7b9ff2ef6a3606e9c84562d8dcbd9f5fb8199e",
+                       "import_present":  true
+                   }
+               ],
+    "visual_review":  "실제 씬 캡처 01,02,03,04,05에서 플레이어 시선, 좌우 다른 몸 방향, 동일 외형/의상, 두 인물 손동작과 하단 창 배치 확인",
+    "correction":  "시선은 화면 중앙/상대 NPC가 아닌 플레이어. 몸 방향만 좌우에 따라 다르게."
+}

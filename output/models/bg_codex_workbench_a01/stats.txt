@@ -1,0 +1,9 @@
+model: bg_codex_workbench_a01
+size (m)  x 2.000  y(fwd) 0.750  z(up) 1.000
+bounds    min (-1.000, -0.375, -0.000)  max (1.000, 0.375, 1.000)
+triangles 992
+parts:
+  countertop                  220 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  frame                       308 tris  parent=-  origin=(0.00, 0.00, 0.00)
+  drawers                     464 tris  parent=-  origin=(0.00, 0.00, 0.00)
+glb: assets\models\bg_codex_workbench_a01.glb

@@ -1,0 +1,38 @@
+﻿[
+    {
+        "File":  "01_field_rebuild.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "7EB5B0EE73EEC53BA08DAD9B7BCAE6C787F5B0CAC6B34188D63215A4E2F3ECA1",
+        "CopyIdentical":  true,
+        "EditInput":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\01_field_rebuild.png",
+        "InputSHA256":  "1E605D06BDEEBE48B555B72CB57F3ACA3D0C5686D71BA75AB43AD471CA27569E"
+    },
+    {
+        "File":  "02_agile_guard.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "B3D50BD8B13E0BB78414F769DE22EB2145E37EFBBDAEDF4DCB5AC49265B17D57",
+        "CopyIdentical":  true,
+        "EditInput":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\02_agile_guard.png",
+        "InputSHA256":  "93BFDEFC875DD5993D92F323EABEA3CEC6A0E39D000FA25A90CED26E1C3A1807"
+    },
+    {
+        "File":  "03_hex_blade.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "6B9AA18DE820A221E2A523520F1353699A71B52DADD0CD723A5D482DFEA1F35F",
+        "CopyIdentical":  true,
+        "EditInput":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\03_hex_blade.png",
+        "InputSHA256":  "11DA00D8D5FB39FD76824BE23B966E4461A6D18A11AEE26007CCF7ED971DE6D6"
+    },
+    {
+        "File":  "04_heavy_brace.png",
+        "Width":  1536,
+        "Height":  1024,
+        "SHA256":  "98F99BB33166659917D771B432FBB451F6010D8BD133AD8A981952DB48A34E1D",
+        "CopyIdentical":  true,
+        "EditInput":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\powered-suit-ironblood-20261005\\04_heavy_brace.png",
+        "InputSHA256":  "3AA605AB8544C0B41EE4C791B708ED5EA578CC2F197A674FE826286D5B5DA206"
+    }
+]

@@ -1,0 +1,38 @@
+{
+  "checks": {
+    "saved_eevee_studio": true,
+    "toon_shader_saved": true,
+    "three_tone_ramp": true,
+    "three_studio_lights": true,
+    "outline_compositor_saved": true,
+    "packed_512x256_texture": true,
+    "turnaround_saved_first": true,
+    "render_deliverables": true,
+    "six_distinct_legs": true,
+    "separate_jaws": true,
+    "uv_body": true,
+    "uv_brow": true,
+    "uv_jaw": true,
+    "uv_leg_0_l": true,
+    "uv_leg_0_r": true,
+    "uv_leg_1_l": true,
+    "uv_leg_1_r": true,
+    "uv_leg_2_l": true,
+    "uv_leg_2_r": true,
+    "uv_shell": true,
+    "1476_triangles": true,
+    "one_shared_material": true,
+    "no_degenerate_triangles": true,
+    "35_6_cm_high": true,
+    "feet_on_floor": true,
+    "foot_markers": true
+  },
+  "triangles": 1476,
+  "material_count": 1,
+  "reimported_blender_dimensions_xyz_m": [
+    0.4959999918937683,
+    0.45901909470558167,
+    0.35600000619888306
+  ],
+  "glb_size_bytes": 49924
+}

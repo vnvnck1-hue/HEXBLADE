@@ -1,0 +1,116 @@
+{
+    "date":  "2026-10-05",
+    "engine":  "4.7.2-stable Forward+",
+    "generator":  "built-in imagegen",
+    "files":  [
+                  {
+                      "name":  "A_floor",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\A_floor.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "b36328ff190ee71207272a202e5095f72b84bab1627cf54e91805d3ce97befc7",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "name":  "A_wall",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\A_wall.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "0004fd9c4fb18e0cd83f054a51122fa473de28335b6d494b64c6962aec5954d5",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "name":  "B_floor",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\B_floor.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "6668a2ab9ef49e32be94e45bde3fe4e635068382a5a96f27a639f4dbce5b3355",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "name":  "B_wall",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\B_wall.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "1b6031e8336c858dced15ad2c2160a2ff573c7714ea898bdfd6aff6bb74ff60d",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "name":  "C_floor",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\C_floor.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "01e6a28d2692b3470664b64c639174bf348c1f886780aaec0b4223e3b2a04909",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "name":  "C_wall",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\C_wall.png",
+                      "width":  1254,
+                      "height":  1254,
+                      "sha256":  "5ec6f004a0baeca6458791b8ee9236e7e1d4f174c325a6a98eba877d69b4206b",
+                      "source_copy_exact":  true
+                  },
+                  {
+                      "name":  "A_model_direct",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\A_model_direct.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "7a626dd99e6cab028bf0195de3df3e658399d49a497ed86ffe46952cc5be2dea"
+                  },
+                  {
+                      "name":  "A_model_lit",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\A_model_lit.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "91a7b6477138e2cba37a389ffa07c870f6dbcbcd40317b66238ddcb995183cba"
+                  },
+                  {
+                      "name":  "B_model_direct",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\B_model_direct.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "bd5965bf9c18a5e495868bfa4f80aec98b0c9783195f26ea0d996ab7a8cf207d"
+                  },
+                  {
+                      "name":  "B_model_lit",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\B_model_lit.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "5c47243ff4856e3eaf4c931a789bf00368a2e4ca20663c3071035b57b94a5a38"
+                  },
+                  {
+                      "name":  "C_model_direct",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\C_model_direct.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "8345a783c480301bd519ca91d118d69d314aec69ba4d239306099009a190670a"
+                  },
+                  {
+                      "name":  "C_model_lit",
+                      "path":  "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\soft-handpaint-asym-20261005\\C_model_lit.png",
+                      "width":  1920,
+                      "height":  1080,
+                      "sha256":  "1f023399d398736cfbb0663713bebbafc1d02f59d68fd1e4614d852928d64dd4"
+                  }
+              ],
+    "production_changed":  false,
+    "approval":  "pending",
+    "raw_texture_count":  6,
+    "actual_glb_preview_count":  6,
+    "wall_front_rotation_deg":  180,
+    "shader_recolor":  false,
+    "procedural_wear":  false,
+    "brush_blending":  false,
+    "preview_exit_code":  0,
+    "capture_success_count":  6,
+    "preview_complete":  true,
+    "error_lines":  [
+
+                    ],
+    "repeat_period_m":  4,
+    "unique_floor_panels_per_period":  4,
+    "globally_unique_panels":  false,
+    "commit":  false,
+    "push":  false
+}

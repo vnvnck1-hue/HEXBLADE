@@ -1,0 +1,17 @@
+[
+    {
+        "file":  "cream_grub_turnaround.png",
+        "sha256":  "BA85ED6172C56855F1199E47973FC6952323E539DC44F9744FB35EB3AC4054B3",
+        "copy_identical":  true
+    },
+    {
+        "file":  "selected_concept.png",
+        "sha256":  "06DB234A80E7C5232FFD6FB50A4A2CA1BD18F768028E2AA5B6919AA22729C0D8",
+        "copy_identical":  true
+    },
+    {
+        "file":  "turnaround_draft.png",
+        "sha256":  "96AEFA0306345225BB933A915A98A40131D0829917DF2A4729F584CFDC3E1944",
+        "copy_identical":  true
+    }
+]

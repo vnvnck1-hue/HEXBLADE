@@ -1,0 +1,68 @@
+{
+    "status":  "rolled_back",
+    "request":  "멈춰. 다시 롤백해줘",
+    "restored_files":  [
+                           {
+                               "path":  "scripts/claude_background/blue_handpaint.gd",
+                               "sha256":  "2d13f55192416c063e23ef437986477e4f9c4d2c170db5f48dbae17b53af83ca",
+                               "backup_sha256":  "2d13f55192416c063e23ef437986477e4f9c4d2c170db5f48dbae17b53af83ca",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "scripts/claude_background/blue_handpaint_common.gdshaderinc",
+                               "sha256":  "0a91ed152c5a250e6c8da899a887f8e80293f57752cc988d0f47b79bb95a04ef",
+                               "backup_sha256":  "0a91ed152c5a250e6c8da899a887f8e80293f57752cc988d0f47b79bb95a04ef",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "scripts/claude_background/blue_handpaint_floor.gdshaderinc",
+                               "sha256":  "e74d5fbd3b241a6514c344a4b35da379128f221825f2eaabf9c7d827373969f9",
+                               "backup_sha256":  "e74d5fbd3b241a6514c344a4b35da379128f221825f2eaabf9c7d827373969f9",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "scripts/claude_background/blue_handpaint_wall.gdshaderinc",
+                               "sha256":  "801fcd16045c3933326d9dd992c18ac2e6dde23120db79cf2384c2f881339fc0",
+                               "backup_sha256":  "801fcd16045c3933326d9dd992c18ac2e6dde23120db79cf2384c2f881339fc0",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "scripts/presentation/brawl_look.gd",
+                               "sha256":  "00aeb35fd0cabd7a39228940dd35fac6641a659181fe72a8945a3d6b657c986c",
+                               "backup_sha256":  "00aeb35fd0cabd7a39228940dd35fac6641a659181fe72a8945a3d6b657c986c",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "assets/textures/handpaint_blue/floor_brush.png",
+                               "sha256":  "42d1364696fb4dac765d027fd95839cdb5b4662f801bdad1dd3f90e2f2ca2725",
+                               "backup_sha256":  "42d1364696fb4dac765d027fd95839cdb5b4662f801bdad1dd3f90e2f2ca2725",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "assets/textures/handpaint_blue/wall_brush.png",
+                               "sha256":  "67b5987ca9cc821ddc262d0b9bbdd2ef0a4d00cecedccf59ce60f33e3eb8a0dd",
+                               "backup_sha256":  "67b5987ca9cc821ddc262d0b9bbdd2ef0a4d00cecedccf59ce60f33e3eb8a0dd",
+                               "exact":  true
+                           },
+                           {
+                               "path":  "tests/blue_handpaint_check.gd",
+                               "sha256":  "05c3ce6346ae0818e7ac87b9e8c8eb35d1c118c3e7385f3f853228357b95288f",
+                               "backup_sha256":  "05c3ce6346ae0818e7ac87b9e8c8eb35d1c118c3e7385f3f853228357b95288f",
+                               "exact":  true
+                           }
+                       ],
+    "exact_count":  8,
+    "restore_point":  "Immediately before this A asymmetric texture application",
+    "readme_own_change_reverted":  true,
+    "other_work_preserved":  true,
+    "artifacts_retained_as_unapplied_history":  true,
+    "godot":  "4.7.2-stable",
+    "reimport_exit_code":  0,
+    "errors":  [
+
+               ],
+    "new_game_run_after_stop":  false,
+    "new_tests_after_stop":  false,
+    "commit":  false,
+    "push":  false
+}

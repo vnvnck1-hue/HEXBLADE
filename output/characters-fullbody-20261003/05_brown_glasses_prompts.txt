@@ -1,0 +1,14 @@
+Built-in image_gen; concept reference supplied by user.
+Output: 05_brown_glasses_fullbody.png
+
+INITIAL PROMPT
+Use case: stylized-concept.
+Input image role: visual concept reference for a NEW character, not a background to reproduce.
+Primary request: Create one polished full-body anime character illustration inspired by the supplied brown-haired bespectacled maid/attendant concept. Head-to-toe character art continuing a set of clean cel-shaded character portraits.
+Subject: a clearly adult woman with a warm, gentle, slightly flustered personality and a naturally full, soft curvy build. Chestnut brown hair in a loose high bun with curled side locks, cream dotted headband tied with a small bow, warm amber-brown eyes, delicate round gold wire glasses, rosy cheeks, shy slightly worried eyebrows and a small closed mouth. Her hands are lifted gracefully near the two temples of her glasses, echoing the reference gesture.
+Outfit: fully buttoned ivory long-sleeved blouse with softly gathered fabric, small stand collar and elegant cuffs; muted plum-grey fitted buttoned vest, slim black waist belt, small gold pendant and fine chain; dusty pink striped waist apron with delicate cream lace hem and subtle desaturated blue ruffles at the shoulders. Continue into a practical dark knee-length softly flared skirt, opaque dark stockings, simple dark brown low-heeled lace-up ankle boots. Keep clothing layering coherent and retain the reference's distinctive cream/plum/dusty-pink palette.
+Style: crisp expressive anime linework, restrained soft cel shading, well-drawn fabric folds and warm highlights, tasteful character concept art. Preserve the appealing soft face and full build of the reference, do not make her slim or chibi.
+Composition: single character, vertical portrait, three-quarter frontal view, natural balanced standing pose with one knee relaxed. ENTIRE headband, hair bun, both hands, complete skirt, both legs and both shoes inside the canvas. Clear margin over hair and below soles. Plain muted purple background like the earlier full-body maid character series, subtle soft grounding shadow only. No indoor scenery or additional characters, no text, no watermark.
+
+FRAMING REVISION
+Use case: precise-object-edit. Edit ONLY framing of this illustration: zoom out about 8 percent so the complete top of the brown hair bun is visible with a clear purple background margin above it (about 5 percent of canvas height). Keep the entire boots visible with clear margin below. Preserve exactly the same character identity, face, glasses, expression, full curvy body proportions, hand gesture, every outfit detail, colors, clean anime rendering, pose, background and shadow. Do not redesign anything. One single full-body character, portrait canvas. No text or watermark.

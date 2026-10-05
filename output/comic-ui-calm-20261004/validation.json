@@ -1,0 +1,53 @@
+{
+    "date":  "2026-10-04",
+    "method":  "built-in imagegen",
+    "source":  "source_current_game.png",
+    "source_origin":  "output/comic-ui-explorations-20261004/source_current_game.png",
+    "source_sha256":  "6203B12885E6F21561ED288C170153D42A2308D7BF33D18190B5A92A14D43BAF",
+    "source_size":  [
+                        1920,
+                        800
+                    ],
+    "files":  [
+                  {
+                      "file":  "01_ordered_navy.png",
+                      "width":  1942,
+                      "height":  809,
+                      "sha256":  "8BCB5D99C56F6D3D54029FDE070B636C1B2AD71C59B5087FF0A753A0EC24D659",
+                      "generated_original":  "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10584-b9c4-7bd1-bc09-10c589ad66c4\\exec-9942f40d-1d85-4060-a788-54ce38ea5f08.png",
+                      "copy_verified":  true,
+                      "visually_reviewed":  true
+                  },
+                  {
+                      "file":  "02_bluegray_ink.png",
+                      "width":  1942,
+                      "height":  809,
+                      "sha256":  "EC1495A0FBD9634764FF5499F642C9A976D66F23B3291195192EEEC28DB2C1BC",
+                      "generated_original":  "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10584-b9c4-7bd1-bc09-10c589ad66c4\\exec-42518a44-6ed2-480f-b98a-c0d5860c91fc.png",
+                      "copy_verified":  true,
+                      "visually_reviewed":  true
+                  },
+                  {
+                      "file":  "03_calm_horizontal.png",
+                      "width":  1944,
+                      "height":  809,
+                      "sha256":  "E36923AAF450D46B716A4E1098728E31D465F0A2597803CEF6C7760F10F2CEAA",
+                      "generated_original":  "C:\\Users\\vnvnc\\.codex\\generated_images\\01a10584-b9c4-7bd1-bc09-10c589ad66c4\\exec-e0ed46b0-9a4c-4c95-8dcb-1b3654c1c795.png",
+                      "copy_verified":  true,
+                      "visually_reviewed":  true
+                  }
+              ],
+    "final_visual_checks":  [
+                                "Calmer orderly comic HUD, fewer jagged/red outlines",
+                                "Mech portrait and illustrated equipment preserved",
+                                "Three coral enemy health bars, old tan line removed",
+                                "Five green life cells and three energy ticks",
+                                "PC key legends including Q and SHIFT reviewed",
+                                "Current developed background major layout preserved"
+                            ],
+    "pixel_identical":  false,
+    "engine_run_this_request":  false,
+    "game_code_changed":  false,
+    "committed":  false,
+    "pushed":  false
+}
