@@ -228,6 +228,8 @@ func _explode() -> void:
 			d.y = 0
 			en.take_hit(DAMAGE, d.normalized() if d.length() > 0.01 else Vector3.FORWARD, p, "missile")
 	FX.fire_explosion(p, 0.5)
+	if p.y - Main.gy(p) < 1.3:
+		GroundBreak.burst(p, 0.3)
 	FX.sparks(p, 8, [Color.WHITE, Color("ffb040"), Color("ff5a3a")], 7.0, 0.35, -10.0, 0.08)
 	Sfx.play("boom", 0.25, -9.0)
 	Main.inst.shake(0.08)

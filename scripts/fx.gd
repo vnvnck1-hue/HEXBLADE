@@ -89,9 +89,32 @@ render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never;
 instance uniform float progress = 0.0;
 instance uniform vec3 deep = vec3(0.78, 0.06, 0.1);
 instance uniform vec3 light = vec3(1.0, 0.72, 0.55);
+instance uniform float heavy = 0.0;
+// mo.co 무드 (MocoFX.on): 속이 빈 초승달 — 흰 앞날 · 마젠타 몸체 · 짙은 마젠타 꼬리, 꼬리로 갈수록 폭·투명도가 함께 준다.
+// 두께/반지름: 일반 0.16 · 강타 0.24 (호 밴드 0.45~2.7m 중 바깥쪽만), 보이는 호 길이: 일반 약 128° · 강타 150°
+uniform bool moco = false;
+uniform vec3 m_core = vec3(1.0);
+uniform vec3 m_attack = vec3(1.0, 0.045, 0.504);
+uniform vec3 m_shade = vec3(0.473, 0.025, 0.275);
 void fragment() {
 	float u = UV.x;
 	float v = UV.y;
+	if (moco) {
+		float mlen = mix(0.85, 1.0, heavy);
+		float mhead = progress / 0.72;   // 휘두름 끝(0.72)에 앞날이 호 끝에 닿고, 그 뒤엔 꼬리가 따라 빠져나간다
+		float mtail = mhead - mlen;
+		if (u > mhead || u < mtail) discard;
+		float al = (u - mtail) / mlen;
+		float sh = sin(clamp(u, 0.0, 1.0) * 3.14159);
+		float thick = mix(0.19, 0.29, heavy);
+		float vm = 1.0 - sh * thick * mix(0.2, 1.0, al);
+		if (v < vm) discard;
+		float ed = smoothstep(vm, 1.0, v);
+		vec3 mc = mix(m_shade, m_attack, smoothstep(0.0, 0.5, al));
+		mc = mix(mc, m_core * 1.2, smoothstep(0.55, 0.92, ed) * smoothstep(0.5, 0.92, al));
+		ALBEDO = mc;
+		ALPHA = clamp(al * 2.2, 0.0, 1.0) * (1.0 - smoothstep(0.72, 1.0, progress));
+	} else {
 	float head = progress * 1.45;
 	float len = 0.62;
 	float tail = head - len;
@@ -103,10 +126,19 @@ void fragment() {
 	float edge = smoothstep(vmin, 1.0, v);
 	ALBEDO = mix(deep, light, edge) * 1.35;
 	ALPHA = clamp(along * 1.8, 0.0, 1.0) * (1.0 - smoothstep(0.7, 1.0, progress)) * 0.95;
+	}
 }
 """
 	_slash_mat = ShaderMaterial.new()
 	_slash_mat.shader = ss
+	if MocoFX.on:
+		_slash_mat.set_shader_parameter("moco", true)
+		var lc := func(c: Color) -> Vector3:
+			var l := c.srgb_to_linear()
+			return Vector3(l.r, l.g, l.b)
+		_slash_mat.set_shader_parameter("m_core", lc.call(MocoFX.CORE))
+		_slash_mat.set_shader_parameter("m_attack", lc.call(MocoFX.ATTACK))
+		_slash_mat.set_shader_parameter("m_shade", lc.call(MocoFX.SHADE))
 	_slash_mesh = _build_arc_mesh(0.45, 2.7, deg_to_rad(150.0), 28)
 
 	var sh := Shader.new()
@@ -414,15 +446,17 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 			_slash_arc(pos, up * Basis.from_scale(Vector3(-1, 1, 1)), 0.05)
 		2:
 			# 호를 세워 위 → 아래로 긋고, 앞바닥을 내려친 충격을 더한다
-			_slash_arc(pos + Vector3(0, 0.3, 0), up * Basis(Vector3.BACK, PI * 0.5) * Basis.from_scale(Vector3(0.9, 1, 1.1)), 0.06)
+			_slash_arc(pos + Vector3(0, 0.3, 0), up * Basis(Vector3.BACK, PI * 0.5) * Basis.from_scale(Vector3(0.9, 1, 1.1)), 0.06, 0.0, true)
 			var fwd := -up.z
 			var hit := Vector3(pos.x, Main.gy(pos) + 0.05, pos.z) + fwd * 2.2
-			shockwave(hit, Pal.BLADE, 2.2, 0.25, 0.07)
-			sparks(hit + Vector3(0, 0.1, 0), 14, [Color.WHITE, Pal.BLADE, Pal.BLADE_CORE], 7.0, 0.35, -12.0, 0.08)
+			# mo.co 무드: 붉은색은 적 위험 예고 몫 → 아군 공격색(마젠타)
+			var bc: Color = MocoFX.ATTACK if MocoFX.on else Pal.BLADE
+			shockwave(hit, bc, 2.2, 0.25, 0.07)
+			sparks(hit + Vector3(0, 0.1, 0), 14, [Color.WHITE, bc, MocoFX.SHADE if MocoFX.on else Pal.BLADE_CORE], 7.0, 0.35, -12.0, 0.08)
 		3:
 			for i in 3:
-				_slash_arc(pos, Basis(Vector3.UP, yaw + i * TAU / 3.0) * Basis.from_scale(Vector3(1.05, 1, 1.05)), 0.045, i * 0.033)
-			shockwave(Vector3(pos.x, Main.gy(pos) + 0.05, pos.z), Pal.BLADE, 3.2, 0.28, 0.06)
+				_slash_arc(pos, Basis(Vector3.UP, yaw + i * TAU / 3.0) * Basis.from_scale(Vector3(1.05, 1, 1.05)), 0.045, i * 0.033, true)
+			shockwave(Vector3(pos.x, Main.gy(pos) + 0.05, pos.z), MocoFX.ATTACK if MocoFX.on else Pal.BLADE, 3.2, 0.28, 0.06)
 		_:
 			_slash_arc(pos, up, 0.05)
 	# 바닥의 옅은 붉은 원 (GIF 36 프레임)
@@ -435,7 +469,8 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 	var gm := StandardMaterial3D.new()
 	gm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	gm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	gm.albedo_color = Color(0.95, 0.25, 0.22, 0.12)
+	# 붉은색은 적 위험 예고(DANGER) 몫이라 mo.co 무드에선 아군 공격색(마젠타)으로
+	gm.albedo_color = Color(MocoFX.ATTACK, 0.1) if MocoFX.on else Color(0.95, 0.25, 0.22, 0.12)
 	var dm := MeshInstance3D.new()
 	dm.mesh = _disc
 	dm.material_override = gm
@@ -446,11 +481,12 @@ static func slash(owner: Node3D, yaw: float, style := 0) -> void:
 	tw2.tween_callback(dm.queue_free)
 
 
-static func _slash_arc(pos: Vector3, b: Basis, swing: float, delay := 0.0) -> void:
+static func _slash_arc(pos: Vector3, b: Basis, swing: float, delay := 0.0, heavy := false) -> void:
 	var mi := MeshInstance3D.new()
 	mi.mesh = _slash_mesh
 	mi.material_override = _slash_mat
 	mi.set_instance_shader_parameter("progress", 0.0)
+	mi.set_instance_shader_parameter("heavy", 1.0 if heavy else 0.0)
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_add(mi, pos)
 	mi.basis = b
@@ -460,7 +496,9 @@ static func _slash_arc(pos: Vector3, b: Basis, swing: float, delay := 0.0) -> vo
 		tw.tween_interval(delay)
 	# swing 초 만에 호가 완성되고, 짧게 잔광이 남았다 사라진다
 	tw.tween_method(set_p, 0.0, 0.72, swing)
-	tw.tween_method(set_p, 0.72, 1.0, 0.4).set_ease(Tween.EASE_OUT)
+	# mo.co 무드: 전체 일반 약 120ms · 강타 약 180ms 안에 끝난다 (예전 잔광 0.4초)
+	var tail := (0.13 if heavy else 0.07) if MocoFX.on else 0.4
+	tw.tween_method(set_p, 0.72, 1.0, tail).set_ease(Tween.EASE_OUT)
 	tw.tween_callback(mi.queue_free)
 
 

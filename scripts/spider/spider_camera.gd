@@ -1,20 +1,19 @@
 extends CameraRig
-## 갱도 카메라: 기본 쿼터뷰(CameraRig)보다 낮은 각도로 벽과 기둥의 높이가 읽히게 하고, 그 위에 연출을 덧붙인다.
-##  - 시차: 플레이어가 좌우로 움직이면 카메라가 살짝 돌아 기둥들이 서로 엇갈려 지나간다 (공간감)
-##  - 보스 담기: 보이는 보스 쪽으로 시선을 당기고 거리만큼 물러난다. 보스가 벽 높이 · 기둥 위 · 천장에 있으면 올려다본다
-##  - 숨었을 때: 조금 물러나 천천히 좌우를 살핀다 (어디서 나올지 모르는 긴장)
+## 갱도 카메라: 통일 시야(CameraRig TACTICAL 62° · 화각 36°)를 그대로 쓰고, 각도는 바꾸지 않는 연출만 덧붙인다.
+##  - 보스 담기: 보이는 보스 쪽으로 시선을 당기고 거리만큼 물러난다. 보스가 벽 높이 · 기둥 위 · 천장에 있으면 조금 더 물러난다
+##  - 숨었을 때: 조금 물러나 시선이 천천히 좌우를 살핀다 (어디서 나올지 모르는 긴장)
 ##  - 등장 순간(revealed): 튀어나온 자리로 시선이 확 끌렸다가 돌아오고 짧게 줌인 펀치
-##  - 천장 낙하: 위에서 내려오는 보스를 올려다보다가, 떨어지는 순간 내려찍기와 함께 흔들린다
+##  - 천장 낙하: 떨어지는 순간 내려찍기와 함께 흔들린다
+## (예전의 낮은 각도 · 좌우 시차 회전 · 올려다보기 기울임은 시야 통일로 뺐다)
 
 const Stage := preload("res://scripts/spider/spider_stage.gd")
-const BASE := Vector3(0, 16.5, 13.5)
-const FOV := 44.0
-const PARALLAX := 0.13        # 좌우 시차 회전 (rad)
+## 54×46m 갱도와 거대 거미를 담으려고 거리만 1.3배 (예전 (0,16.5,13.5) · 화각 44° 와 보이는 넓이가 같다)
+const BASE := Vector3(0, 18.0, 9.6) * 1.3
+const FOV := CameraRig.VIEW_FOV
 
 var boss: Node3D
 var _bias := Vector3.ZERO
 var _back := 0.0
-var _yaw := 0.0
 var _lift := 0.0
 var _rev_t := 0.0
 var _rev_at := Vector3.ZERO
@@ -62,7 +61,6 @@ func update(dt: float, player: Player) -> void:
 	var want := Vector3.ZERO
 	var back := 0.0
 	var lift := 0.0
-	var yaw := clampf(-player.global_position.x / Stage.HX, -1.0, 1.0) * PARALLAX
 	var hidden := true
 	if is_instance_valid(boss) and boss.is_inside_tree():
 		hidden = bool(boss.get("hidden"))
@@ -81,7 +79,6 @@ func update(dt: float, player: Player) -> void:
 		# 숨어 있다: 물러나 천천히 둘러본다
 		_search_t += dt
 		back = 0.14
-		yaw += sin(_search_t * 0.45) * 0.07
 		want += Vector3(sin(_search_t * 0.3) * 2.0, 0, -1.5)
 	else:
 		_search_t = 0.0
@@ -101,12 +98,8 @@ func update(dt: float, player: Player) -> void:
 		want.z -= south
 	_bias = _bias.lerp(want, 1.0 - exp(-2.4 * dt))
 	_back = lerpf(_back, back, 1.0 - exp(-2.0 * dt))
-	_yaw = lerp_angle(_yaw, yaw, 1.0 - exp(-1.6 * dt))
 	_lift = lerpf(_lift, lift, 1.0 - exp(-3.0 * dt))
-	# 올려다보기: 카메라를 낮추고 뒤로 빼 각도를 눕힌다
-	var off := BASE * Vector3(1.0, 1.0 - _lift * 0.42, 1.0 + _lift * 0.22)
-	p.offset = off.rotated(Vector3.UP, _yaw) * (1.0 + _back)
+	# 각도는 통일 시야 그대로, 거리만 늘린다
+	p.offset = BASE * (1.0 + _back)
 	super.update(dt, player)
 	global_position += _bias
-	if _lift > 0.01:
-		rotate_object_local(Vector3.RIGHT, _lift * 0.3)

@@ -18,7 +18,8 @@ const PICK_R := 1.15
 const DOOR_R := 0.9
 const WALL_H := 0.62
 const LEVER_SCALE := 1.4       # 쿼터뷰에서 레버 동작이 읽히도록 크게
-const SHOUTS := ["끼릭!", "덜컥!", "끼기긱!", "영차!", "으랏차!", "철컥!"]
+const CREAKS := ["끼릭!", "끼릭끼릭!", "덜컥!", "끼기긱!", "철컥!", "끼릭!"]   ## 손잡이 의성어 (떠오르는 글자)
+const SHOUTS := ["영차!", "으랏차!", "끄응…!", "조금만 더!"]                ## 돌리는 메카의 기합 (대사 말풍선)
 
 static var _font: SystemFont
 static var _half_disc: ArrayMesh
@@ -281,9 +282,13 @@ func crank(p: Player) -> void:
 		snd.pitch_scale = 0.8 + progress * 0.9
 	var hub := _crank.global_position
 	FX.sparks(hub, 4, [Color.WHITE, Color("ffd060")], 4.5, 0.25, -12.0, 0.04)
-	if _presses % 4 == 1:
-		var off := Vector3(randf_range(-0.6, 0.6), 0.9 + randf_range(0.0, 0.4), 0)
-		Main.inst.hud.popup(SHOUTS[(_presses / 4) % SHOUTS.size()], Color("ffe070"), hub + off)
+	if _presses % 2 == 1:
+		# 끼릭끼릭: 손잡이 곁에서 좌우 번갈아 떠오르는 의성어 글자
+		var side := 1.0 if (_presses / 2) % 2 == 0 else -1.0
+		var off := Vector3(side * randf_range(0.35, 0.7), 0.7 + randf_range(0.0, 0.35), 0)
+		Main.inst.hud.popup(CREAKS[(_presses / 2) % CREAKS.size()], Color("ffe070"), hub + off)
+	if _presses % 6 == 3:
+		SpeechBubble.say(p, SHOUTS[(_presses / 6) % SHOUTS.size()], SpeechBubble.SAY, {"offset": Vector3(0, 2.3, 0)})
 	if _presses % 2 == 0:
 		_sweat(p)
 	_swoosh()
@@ -344,6 +349,7 @@ func _open_fully() -> void:
 	Sfx.play("hatch", 0.05, -2.0)
 	Sfx.play("charged", 0.0, -4.0)
 	Main.inst.hud.popup("REPAIR KIT!", Color("7dffb0"), global_position + Vector3(0, 2.2, 0))
+	Main.inst.hud.popup("덜커덩!", Color("ffe070"), global_position + Vector3(0.6, 1.4, 0))
 	Main.inst.shake(0.2)
 
 

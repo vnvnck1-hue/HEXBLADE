@@ -42,6 +42,7 @@ var _rising := false
 func _ready() -> void:
 	super()
 	hp = 9
+	hp_mul = 0.5      # 다른 적보다 체력 절반
 	radius = 0.75
 	fire_timer = randf_range(1.0, 1.8)
 	slice_size = Vector3(0.62, 0.8, 0.56)
@@ -125,7 +126,12 @@ func _ai(dt: float) -> void:
 		S.WINDUP: rate = TURN * 0.25
 		S.FIRE: rate = TURN * 0.4
 	var aim_err := 0.0
-	if player.alive:
+	if wander.on and state == S.TRACK:
+		# 놓쳤다: 머리를 천천히 돌려 이리저리 훑는다
+		var f := wander.face_dir()
+		var diff := wrapf(atan2(-f.x, -f.z) - rotation.y - head.rotation.y, -PI, PI)
+		head.rotation.y += clampf(diff, -TURN * 0.45 * dt, TURN * 0.45 * dt)
+	elif player.alive:
 		var target_yaw := atan2(-dir.x, -dir.z) - rotation.y
 		var diff := wrapf(target_yaw - head.rotation.y, -PI, PI)
 		head.rotation.y += clampf(diff, -rate * dt, rate * dt)
@@ -183,7 +189,8 @@ func _ai(dt: float) -> void:
 		if fold <= 0.0:
 			wob_v.x -= 6.0
 			Sfx.play("hatch", 0.1, -12.0)
-	head.rotation.x = wob.x * 0.4 + fold
+	head.rotation.x = wob.x * 0.4 + fold + wander.nod() * 0.6
+	head.rotation.z = wander.sway() * 0.5
 
 
 ## 포구에서 플레이어까지 벽에 막히지 않았는지
@@ -277,11 +284,19 @@ func _on_hurt() -> void:
 		fire_timer = maxf(fire_timer, 0.35)
 
 
-## 바닥에 박힌 포탑: 밀려나지 않고 제자리에서 젖혀졌다 튕겨 돌아온다
+## 바닥에 박힌 포탑: 회전·띄움 없이 젖힘·비틀림·숙임만 (비틀림은 받침째 홱 돌아간다)
+func _react_pool(heavy: bool) -> Array:
+	if heavy:
+		return [HitReact.RECOIL, HitReact.TWIST, HitReact.TWIST, HitReact.CRUMPLE]
+	return [HitReact.RECOIL, HitReact.TWIST, HitReact.CRUMPLE]
+
+
+## 밀려나지 않고 제자리에서 꺾였다 튕겨 돌아온다 (승강판 위에서 위치는 거의 그대로)
 func _update_hurt(dt: float) -> void:
 	knock = Vector3.ZERO
 	super(dt)
-	(j.body as Node3D).position.y = 1.0 + PLATE
+	var body: Node3D = j.body
+	body.position = Vector3(body.position.x * 0.35, 1.0 + PLATE + minf(body.position.y - hurt_base_y, 0.0) * 0.4, body.position.z * 0.35)
 	spin = move_toward(spin, 0.0, 40.0 * dt)
 
 

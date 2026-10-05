@@ -110,11 +110,12 @@ func _ai(dt: float) -> void:
 			want *= clampf(st_t / 0.06, 0.0, 1.0) * (1.0 - smoothstep(st_len - 0.08, st_len, st_t) * 0.6)
 			turn_rate = _face(move_dir, dt, 16.0)
 			if st_t >= st_len:
-				_go(A.PAUSE, randf_range(0.18, 0.5))
+				_go(A.PAUSE, randf_range(0.7, 1.4) if wander.on else randf_range(0.18, 0.5))
 				rig.alarm = maxf(rig.alarm, 0.25)
 		A.PAUSE:
-			turn_rate = _face(dir, dt, 9.0)
-			if st_t >= st_len:
+			turn_rate = _face(dir, dt, 4.0 if wander.on else 9.0)
+			# 놓쳤을 때: 배회가 멈춰 두리번거리는 동안은 제자리에서 고개만 돌린다
+			if st_t >= st_len and not (wander.on and not wander.walking):
 				if active and attack_cd <= 0.0 and dist < BITE_RANGE:
 					_go(A.BITE_WIND, BITE_WIND_T)
 					_warn(global_position + dir * 0.8, "melee")
@@ -177,6 +178,11 @@ func _ai(dt: float) -> void:
 ## 다음 달리기 방향: 원하는 거리 쪽으로, 좌우로 번갈아 꺾어 지그재그
 func _pick_skitter(dir: Vector3, dist: float) -> void:
 	zig = -zig
+	if wander.on:
+		# 놓쳤을 때: 배회 목적지 쪽으로 짧게 종종걸음
+		move_dir = dir.rotated(Vector3.UP, zig * randf_range(0.1, 0.4)).normalized()
+		_go(A.SKITTER, randf_range(0.18, 0.32))
+		return
 	var to := dir
 	if dist < DESIRED - 1.5:
 		to = -dir
@@ -214,6 +220,15 @@ func _spit() -> void:
 	punch = 0.5
 	Sfx.play("bug_hiss", 0.1, -3.0)
 	Sfx.play("eshot", 0.08, -8.0)
+
+
+## 물기(패링 공격)는 준비동작부터 돌진이 끝날 때까지 맞아도 끊기지 않는다
+func parry_committed() -> bool:
+	return state == A.BITE_WIND or state == A.LUNGE
+
+
+func _charge_glow_k() -> float:
+	return maxf(st_t / BITE_WIND_T, 0.01) if state == A.BITE_WIND else 0.0
 
 
 ## 피격·패링 경직: 하던 공격을 끊는다

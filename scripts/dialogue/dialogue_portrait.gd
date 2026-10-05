@@ -13,6 +13,11 @@ var expr := ""
 var slot := "left"
 var active := false
 var leaving := false
+## 단독 상담은 중앙에 세우고 그림의 허리 끝을 하단 창 뒤에 살짝 넣는다.
+var solo := false
+## 좌우 두 인물은 몸 방향만 안쪽으로, 시선은 원화대로 플레이어 쪽으로 유지한다.
+var paired := false
+var solo_bottom := 266.0
 
 var _tex: Texture2D
 var _old: Texture2D
@@ -43,9 +48,21 @@ func setup(id: String, at: String, e: String, screen: Vector2) -> void:
 
 func place(at: String) -> void:
 	slot = at
+	_orient()
+
+
+func body_direction() -> int:
 	var c: Dictionary = DialogueCast.CAST[who]
-	var want := 1 if SLOT_X[at] <= 0.5 else -1   # 화면 가운데 쪽을 바라보게
-	_flip = c.flip_ok and int(c.face) != want
+	var direction := int(c.get("faces", {}).get(expr, c.face))
+	return -direction if _flip else direction
+
+
+func _orient() -> void:
+	var c: Dictionary = DialogueCast.CAST[who]
+	var want := 1 if SLOT_X[slot] <= 0.5 else -1
+	var raw_direction := int(c.get("faces", {}).get(expr, c.face))
+	var can_flip: bool = c.flip_ok or expr in c.get("flip_expr", [])
+	_flip = can_flip and raw_direction != want
 
 
 func set_expr(e: String, animate := true) -> void:
@@ -58,6 +75,7 @@ func set_expr(e: String, animate := true) -> void:
 		hop(0.6)
 	expr = e
 	_tex = t
+	_orient()
 
 
 func leave() -> void:
@@ -87,10 +105,16 @@ func _side() -> float:
 
 
 func h_size() -> float:
+	if solo or paired:
+		return minf(_screen.y - solo_bottom - 92.0, _screen.x * 0.5 - 40.0)
 	return _screen.y * (0.76 if slot in BACK_SLOTS else 0.88)
 
 
 func _target_x() -> float:
+	if solo:
+		return _screen.x * 0.5
+	if paired:
+		return _screen.x * (0.25 if slot in ["left", "left2"] else 0.75)
 	return _screen.x * SLOT_X[slot]
 
 
@@ -127,8 +151,12 @@ func _process(dt: float) -> void:
 	if _shake > 0.0:
 		sx = sin(_t * 70.0) * 14.0 * _shake / 0.35
 	var y := _screen.y - s + s * 0.06 + lerpf(14.0, 0.0, _light) + _hop * 40.0 - _bob * 4.0
+	if solo or paired:
+		# 큰 프레임 간격 뒤 스프링이 아래로 넘쳐도 그림의 허리/손을 화면 안에 유지한다.
+		y = _screen.y - solo_bottom - s + clampf(_hop * 40.0 - _bob * 4.0, -12.0, 0.0)
 	position = Vector2(_x - s * 0.5 + sx, y)
-	modulate = Color(DIM.lerp(Color.WHITE, _light), _alpha)
+	var listener := Color(0.70, 0.70, 0.78) if paired else DIM
+	modulate = Color(listener.lerp(Color.WHITE, _light), _alpha)
 	queue_redraw()
 
 

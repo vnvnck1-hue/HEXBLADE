@@ -94,7 +94,10 @@ func _ai(dt: float) -> void:
 
 	match state:
 		S.MOVE:
-			_move(dt, dir, dist)
+			if wander.on:
+				_wander(dt)
+			else:
+				_move(dt, dir, dist)
 			if active and not evading():
 				shot_cd -= dt
 				beam_cd -= dt
@@ -109,7 +112,10 @@ func _ai(dt: float) -> void:
 					shot_cd = randf_range(1.0, 1.6)
 					burst_left = BURST_SHOTS
 					burst_timer = BURST_TELE
-			_face(dir, dt, TURN)
+			if wander.on:
+				_face(wander.face_dir(), dt, 3.5)
+			else:
+				_face(dir, dt, TURN)
 		S.CHARGE:
 			vel = vel.move_toward(Vector3.ZERO, 40.0 * dt)
 			charge_t += dt
@@ -177,6 +183,9 @@ func _ai(dt: float) -> void:
 	body.position.y = 1.0 + sin(t * 3.1) * 0.06 + rear * 0.5 + shiver * 0.05
 	body.rotation.z = lerpf(body.rotation.z, clampf(local_v.x * 0.07, -0.6, 0.6) + shiver * 0.12, 1.0 - exp(-10.0 * dt)) + wob.y * 0.3
 	body.rotation.x = lerpf(body.rotation.x, clampf(local_v.z * 0.03, -0.25, 0.25) + rear * 1.0, 1.0 - exp(-(10.0 + rear * 8.0) * dt)) + wob.x * 0.3
+	# 두리번 (놓쳤을 때): 살피는 쪽으로 갸웃하고 기수를 숙여 내려다본다
+	body.rotation.z += wander.sway() * dt * 10.0
+	body.rotation.x += wander.nod() * dt * 10.0
 	_animate_jets(dt)
 
 
@@ -221,6 +230,21 @@ func _move(dt: float, dir: Vector3, dist: float) -> void:
 		ghost_t = 0.0
 		Sfx.play("dash", 0.12, -9.0)
 		FX.shockwave(global_position, Color("ff7a8a"), 1.2, 0.2, 0.05)
+
+
+## 놓쳤을 때 배회: 대시 없이 천천히 떠다닌다 (서로 겹치지 않게만 민다)
+func _wander(dt: float) -> void:
+	dash_t = 0.0
+	var want := wander.move_dir()
+	for o in Enemy.live(get_tree()):
+		if o == self or not is_instance_valid(o):
+			continue
+		var d: Vector3 = global_position - (o as Node3D).global_position
+		d.y = 0
+		var l := d.length()
+		if l < 2.4 and l > 0.001:
+			want += d / l * (2.4 - l)
+	vel = vel.move_toward(want.limit_length(1.0) * SPEED * Wander.SPEED_K, ACCEL * 0.5 * dt)
 
 
 func _face(dir: Vector3, dt: float, rate: float) -> void:
@@ -502,6 +526,11 @@ func parry_eta() -> float:
 				return INF
 			return gap / lunge_speed
 	return INF
+
+
+## 돌진 베기는 준비동작부터 돌진이 끝날 때까지 맞아도 끊기지 않는다
+func parry_committed() -> bool:
+	return state == S.LUNGE_TELE or state == S.LUNGE_HOLD or state == S.LUNGE
 
 
 func parry_kind() -> String:

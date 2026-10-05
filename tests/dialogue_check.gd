@@ -36,6 +36,11 @@ func _until(cond: Callable, sec: float) -> bool:
 
 
 func _run() -> void:
+	# 헤드리스 기본 창 모양과 무관하게 실제 게임의 1280×800 배치를 검증한다.
+	root.size = Vector2i(1280, 800)
+	root.content_scale_size = Vector2i(1280, 800)
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	await _frames(2)
 	# ── 1. 파일 ──
 	for f in DirAccess.get_files_at("res://data/dialogue"):
 		if f.ends_with(".dlg"):
@@ -46,7 +51,30 @@ func _run() -> void:
 		for e in DialogueCast.CAST[id].expr:
 			if DialogueCast.texture(id, e) == null:
 				missing.append(id + ":" + e)
-	_check(missing.is_empty(), "포트레이트 그림 12장 모두 있음 %s" % str(missing))
+	_check(missing.is_empty(), "등록된 포트레이트 그림 모두 있음 %s" % str(missing))
+	# 새 오프닝의 두 질문 × 두 응답을 모두 끝까지 실행한다.
+	var opening := DialogueScript.load_file("res://data/dialogue/cleaning_opening.dlg")
+	for question in 2:
+		for attitude in 2:
+			var intro := DialogueRunner.new(opening)
+			var expressions: Array = []
+			intro.said.connect(func(l):
+				if l.who == "owner" and not expressions.has(l.expr):
+					expressions.append(l.expr))
+			intro.start()
+			var choices := 0
+			for step in 200:
+				if intro.done:
+					break
+				if intro.waiting_choice:
+					intro.choose(question if choices == 0 else attitude)
+					choices += 1
+				else:
+					intro.advance()
+			_check(intro.done and choices == 2 and intro.flags.get("first_contract_ready", false), "청소업체 오프닝 분기 %d/%d 끝까지, 의뢰 준비" % [question, attitude])
+			_check(intro.flags.get("asked_payment" if question == 0 else "asked_safety", false)
+				and intro.flags.get("opening_attitude") == ("nervous" if attitude == 0 else "confident")
+				and expressions.has("welcome") and expressions.has("briefing") and expressions.has("encouragement"), "질문/응답 분기 보존, 사장 표정 3종 사용")
 	var bad := DialogueScript.from_text("ghost: 누구?\n@enter mira nowhere\n-> nolabel\nmira sleepy: 하암")
 	_check(bad.errors.size() == 4, "잘못된 화자 · 자리 · 라벨 · 표정을 오류로 잡음 (%d)" % bad.errors.size())
 
@@ -139,6 +167,84 @@ func _run() -> void:
 	_check(done[0] and runner.flags.get("trust_mira", 0.0) == 1.0, "끝까지 진행, 미라 신뢰 +1 (%s)" % str(runner.flags))
 	_check(view.portraits.is_empty(), "@exit all 로 모두 퇴장")
 	_check(DialogueRunner.picked.size() >= 2, "고른 선택지 기억 (%d)" % DialogueRunner.picked.size())
+	view.queue_free()
+	await _frames(2)
+	# 실제 테스트씬 기본 대본, 새 표정 전환과 단독 대화의 빈 쪽 선택지 배치.
+	var main: DialogueMain = load("res://scenes/dialogue.tscn").instantiate()
+	root.add_child(main)
+	_check(main.current == "cleaning_opening" and main.view.portraits.has("owner"), "실제 대화 테스트씬 기본값은 사장 오프닝")
+	for step in 100:
+		if main.runner.waiting_choice or main.runner.done:
+			break
+		main.view.wait_left = -1.0
+		main.view._complete()
+		main.runner.advance()
+	await _frames(2)
+	_check(main.runner.waiting_choice and main.view.choice_box.get_child_count() == 2
+		and main.view.choice_box.anchor_left == 0.0 and main.view.choice_box.anchor_right == 1.0
+		and main.view.portraits.owner.expr == "briefing", "사장 업무 설명 그림, 선택지 두 개는 하단 창 안에")
+	await _until(func(): return absf(main.view.portraits.owner.get_global_rect().get_center().x - 640.0) < 2.0, 2.0)
+	var owner_rect: Rect2 = main.view.portraits.owner.get_global_rect()
+	var base_overlap := owner_rect.intersection(main.view.box.get_global_rect()).size.y
+	_check(base_overlap > 0.0 and base_overlap <= 32.0
+		and absf(owner_rect.get_center().x - 640.0) < 2.0
+		and main.view.box.anchor_top == 1.0 and main.view.box.anchor_left == 0.0 and main.view.box.anchor_right == 1.0
+		# 표정 교체의 12px 점프와 0.4% 호흡 확대 중에도 상단 메뉴 아래에 머문다.
+		and owner_rect.position.x >= 0.0 and owner_rect.position.y >= 76.0
+		and owner_rect.end.x <= root.get_visible_rect().size.x
+		and owner_rect.end.y <= root.get_visible_rect().size.y - 38.0, "단독 대화: 중앙 정렬, 허리 끝만 하단 창에 연결 (%s / %s)" % [owner_rect, main.view.box.get_global_rect()])
+	_check(not owner_rect.intersects(main.view.choice_box.get_global_rect()), "하단 선택지는 캐릭터와 겹치지 않음")
+	var saved_size := DialogueView.size_idx
+	DialogueView.size_idx = 3
+	main.view._apply_size()
+	var fits := true
+	for item in opening.items:
+		if item.op != "say":
+			continue
+		var preview: Dictionary = item.duplicate()
+		preview.was_seen = false
+		main.view._on_said(preview)
+		main.view._complete()
+		await _frames(2)
+		fits = fits and main.view.text.get_content_height() <= main.view.text.size.y
+	_check(fits, "오프닝 모든 대사가 최대 글자 크기 36에서도 대화창 안에 표시")
+	DialogueView.size_idx = saved_size
+	main.view._apply_size()
+	main.view._pick(0)
+	for step in 100:
+		if main.runner.waiting_choice or main.runner.done:
+			break
+		main.view.wait_left = -1.0
+		main.view._complete()
+		main.runner.advance()
+	await _frames(2)
+	main.view._pick(1)
+	_check(main.view.portraits.owner.expr == "encouragement" and main.view.plate_name.text == "사장", "응답 뒤 실제 화면에서 격려 표정과 이름표")
+	key.physical_keycode = KEY_F2
+	key.keycode = KEY_F2
+	root.push_input(key)
+	await _frames(2)
+	_check(main.current == "hangar_briefing" and main.view.portraits.has("mira"), "F2로 기존 격납고 브리핑 전환")
+	_check(main.view.box.anchor_left == 0.0 and main.view.box.anchor_right == 1.0
+		and not main.view.portraits.mira.solo, "다인 대화는 기존 하단 전체 너비 배치 유지")
+	key.physical_keycode = KEY_F3
+	key.keycode = KEY_F3
+	root.push_input(key)
+	await _frames(2)
+	_check(main.current == "feature_demo" and not main.runner.dlg.items.is_empty(), "F3로 기존 기능 시연 전환")
+	key.physical_keycode = KEY_F1
+	key.keycode = KEY_F1
+	root.push_input(key)
+	await _frames(2)
+	_check(main.current == "cleaning_opening" and main.view.portraits.has("owner"), "F1로 새 오프닝 복귀")
+	main.runner.flags["first_contract_ready"] = true
+	key.physical_keycode = KEY_R
+	key.keycode = KEY_R
+	root.push_input(key)
+	await _frames(2)
+	_check(main.runner.flags.is_empty() and main.current == "cleaning_opening", "R 재시작 시 이번 대화의 선택 상태 초기화")
+	main.queue_free()
+	await _frames(2)
 
 	print("RESULT dialogue_check: %s (%d fails)" % ["PASS" if fails == 0 else "FAIL", fails])
 	quit(1 if fails > 0 else 0)

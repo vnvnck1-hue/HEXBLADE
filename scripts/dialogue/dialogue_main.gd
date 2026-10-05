@@ -1,19 +1,23 @@
 class_name DialogueMain
 extends Control
 ## 대화 시스템 테스트 씬 (scenes/dialogue.tscn). 대사 파일을 골라 처음부터 돌려 본다.
-##   F1 격납고 브리핑 · F2 기능 시연 · R 처음부터 · Esc 로비
+##   F1 청소업체 첫 출근 · F2 격납고 브리핑 · F3 기능 시연 · F4 동료 소개 · R 처음부터 · Esc 로비
 ## 실행 인자 (-- 뒤): --script=feature_demo  --bot(자동 진행 + 선택지 무작위, 끝나면 종료)  --seed=1
 ##                    --capture=폴더(res:// 기준, 미리 만들어 둠) --every=0.5  --seconds=40
 
 const SCRIPTS := [
-	{"key": KEY_F1, "id": "hangar_briefing", "title": "격납고 브리핑"},
-	{"key": KEY_F2, "id": "feature_demo", "title": "기능 시연"},
+	{"key": KEY_F1, "id": "cleaning_opening", "title": "청소업체 첫 출근"},
+	{"key": KEY_F2, "id": "hangar_briefing", "title": "격납고 브리핑"},
+	{"key": KEY_F3, "id": "feature_demo", "title": "기능 시연"},
+	{"key": KEY_F4, "id": "coworker_introduction", "title": "동료 소개"},
 ]
 const DIR := "res://data/dialogue/"
 
+@export var initial_script := "cleaning_opening"
+
 var view: DialogueView
 var runner: DialogueRunner
-var current := "hangar_briefing"
+var current := "cleaning_opening"
 var help: Label
 var bot := false
 var bot_pick_t := 0.0
@@ -26,6 +30,7 @@ var elapsed := 0.0
 
 
 func _ready() -> void:
+	current = initial_script
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	add_child(Sfx.new())

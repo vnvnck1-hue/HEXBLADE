@@ -15,10 +15,7 @@ extends RefCounted
 ##    검술 콤보 사이에 좌·우클릭을 함께 누르면 콤보를 잠깐 멈추고 순간적으로 뒤로 물러서며(무적)
 ##    단타 레이저를 쏜다. 에너지를 쓰지 않는다. 링크가 열린 채라 곧바로 좌클릭하면 다음 단으로 이어진다.
 ##
-## ③ 돌진 스킬 (E 누르고 조준 → 떼기)
-##    E 를 누르고 있는 동안 바닥에 푸른 민트색 메카닉 조준 인디케이터(돌진 경로의 폭·길이)가 마우스 방향으로 그려지고,
-##    떼면 그 방향으로 ① 의 1단계 짧은 돌진(모은 정도 SKILL_K, 거리 SKILL_REACH 배)이 나간다. 쿨타임 SKILL_CD 초.
-##    이 돌진으로 적을 처치하면 남은 쿨타임이 SKILL_KILL_CD 초로 줄어든다.
+## (E 키는 도약 내려찍기 LeapSlam 이 맡는다. 예전 E 돌진 스킬은 없어졌다.)
 
 enum St { IDLE, PENDING, CHARGE, RUSH, BACKSTEP }
 
@@ -52,12 +49,6 @@ const BS_TIME := 0.22
 const BS_FIRE := 4.0 * F        # 물러서기 시작하고 이만큼 뒤 발사
 const BS_SPEED := 19.0
 const BS_K := 0.55              # 레이저 세기 (임팩트 프레임이 나오지 않는 단계)
-# 돌진 스킬 (E)
-const SKILL_K := 0.0            # 기 모으기 돌진의 1단계(가장 짧은 돌진)
-const SKILL_CD := 3.0
-const SKILL_REACH := 1.3        # 1단계 돌진 거리 배율 (사거리 +30%)
-const SKILL_KILL_CD := 1.5      # 이 스킬로 적을 처치하면 남은 쿨타임을 여기까지 줄인다
-const SKILL_COL := Color("4ff5d2")   # 푸른 민트
 
 const SMOKE_LIGHT: Array[Color] = [Color("d8d4e6"), Color("f2eef8"), Color("4a4660"), Color("2e2a40")]
 const SMOKE_HOT: Array[Color] = [Color("ffd0e8"), Color("f4ecf6"), Color("6a3a5a"), Color("362838")]
@@ -91,23 +82,9 @@ var _zoom_step := 0
 var _zoom_hold := 0.0
 var _trail_life := 0.038
 var _trail_reach := 1.65
+var _trail_bright := 1.0
 var _spiral_t := 0.0
 var _queued := false            # 회피 레이저 도중 누른 검: 끝나자마자 다음 단으로
-# 돌진 스킬
-var skill_cd := 0.0
-var skill_kills := 0            # 돌진 스킬로 처치한 수 (확인용)
-var _skill_aim := false
-var _skill_prev := false
-var _skill_rush := false        # 지금 돌진이 스킬로 나간 것인가
-var _skill_ind: Node3D
-var _skill_dir := Vector3.FORWARD
-var _ind_t := 0.0               # 인디케이터가 펼쳐진 뒤 지난 시간
-var _ind_im: ImmediateMesh
-var _ind_label: Label3D
-var _ind_end := Vector3.ZERO    # 도착 지점 (월드)
-var ind_len := 0.0              # 지금 그린 경로 길이 · 폭 (확인용)
-var ind_width := 0.0
-var ind_blocked := false
 
 
 func _init(owner: Player) -> void:
@@ -179,7 +156,8 @@ func feed(held: bool, rmb: bool, allowed: bool, dt: float) -> bool:
 	if not allowed:
 		if st == St.PENDING or st == St.CHARGE:
 			abort()
-		return false
+		# 대시 · 관통 일격 등으로 묶인 동안 누른 좌클릭은 검 선입력으로 넘긴다 (기 모으기로 가리지 않는다)
+		return pressed and not rmb and st == St.IDLE
 	match st:
 		St.BACKSTEP:
 			if pressed and not rmb:
@@ -190,7 +168,7 @@ func feed(held: bool, rmb: bool, allowed: bool, dt: float) -> bool:
 				return true
 			if pressed and not rmb:
 				# 콤보·관통 일격이 이어지는 중이면 기다리지 않고 바로 벤다
-				if p.combo.posing() or p.combo.link_t > 0.0 or p.phantom_ready or p.slash_cd > 0.0 or p.charging:
+				if p.combo.posing() or p.combo.link_t > 0.0 or p.phantom_ready or p.whirl.armed() or p.slash_cd > 0.0 or p.charging:
 					return true
 				st = St.PENDING
 				t = 0.0
@@ -232,7 +210,6 @@ func abort() -> void:
 		vel = Vector3.ZERO
 	st = St.IDLE
 	_queued = false
-	_skill_rush = false
 
 
 # ── 기 모으기 ───────────────────────────────────────────
@@ -400,7 +377,7 @@ func _release() -> void:
 	_launch(p.aim_dir)
 
 
-## 모은 정도 k 로 d 방향 돌진을 시작한다 (기 모으기 · 돌진 스킬 공용)
+## 모은 정도 k 로 d 방향 돌진을 시작한다
 func _launch(d: Vector3, reach := 1.0) -> void:
 	maxed = k >= 1.0
 	dir = d
@@ -434,9 +411,15 @@ func _launch(d: Vector3, reach := 1.0) -> void:
 	if s:
 		s.pitch_scale = 0.8 if maxed else 1.05
 	if maxed:
-		# 나선 잔상: 리본을 오래 남겨 드릴 회전한 칼끝이 경로에 광선검 색 나선을 그린다
+		# 나선 잔상: 리본을 오래 남겨 드릴 회전한 칼끝이 경로에 광선검 색 나선을 그린다 (원래 밝기로)
+		# 되돌릴 값은 지금 잡는다 (기본 리본은 Player 가 잔상을 만든 뒤 정한다)
+		if not is_equal_approx(p.trail.life, SPIRAL_LIFE):       # 나선이 이어질 때는 처음 값을 지킨다
+			_trail_life = p.trail.life
+			_trail_reach = p.trail.reach
+			_trail_bright = p.trail.bright
 		p.trail.life = SPIRAL_LIFE
 		p.trail.reach = SPIRAL_REACH
+		p.trail.bright = 1.0
 		_spiral_t = -1.0
 		Sfx.play("roll", 0.0, 0.0)
 		main.hitstop(0.04)
@@ -483,8 +466,6 @@ func _rush_tick(dt: float) -> void:
 		var push := dir if not maxed else (dir + Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)) * 0.6).normalized()
 		en.take_hit(_dmg, push, en.global_position, "slash")
 		en.knock = k0 + (en.knock - k0) * (0.15 if maxed else 0.8)
-		if _skill_rush and not en.alive:
-			_skill_kill(en)
 		var hp := en.global_position + Vector3(0, 1.0, 0)
 		FX.sparks(hp, 8, [Color.WHITE, Color(1.0, 0.5, 0.8), Pal.BLADE], 7.0, 0.22, -10.0, 0.05)
 		if maxed:
@@ -522,7 +503,6 @@ func _finish_rush(completed: bool) -> void:
 	var main := Main.inst
 	var to := p.global_position
 	st = St.IDLE
-	_skill_rush = false
 	vel = dir * (3.0 if completed else 0.0)
 	p.velocity = vel                 # 돌진 속도가 남아 미끄러지지 않게 바로 멈춘다
 	trail_on(false)
@@ -653,283 +633,9 @@ func _backstep_tick(dt: float) -> void:
 		p.velocity = Vector3.ZERO
 
 
-# ── 돌진 스킬 (E) ───────────────────────────────────────
-
-## E 상태를 매 틱 넘긴다. held: E 누름 · allowed: 지금 조작 가능. 돌진이 나가면 true.
-func skill_feed(held: bool, allowed: bool) -> bool:
-	var pressed := held and not _skill_prev
-	var released := not held and _skill_prev
-	_skill_prev = held
-	if not allowed:
-		_skill_aim_end()
-		return false
-	if pressed and skill_cd > 0.0:
-		_skill_deny()
-	if held and not _skill_aim and skill_cd <= 0.0 and st != St.RUSH and st != St.BACKSTEP:
-		_skill_aim = true
-		_skill_ind = _make_skill_ind()
-		_update_skill_ind(0.0)
-		var tick := Sfx.play("tink", 0.0, -12.0)
-		if tick:
-			tick.pitch_scale = 1.4
-	if released and _skill_aim:
-		_skill_aim_end()
-		if skill_cd <= 0.0 and st != St.RUSH and st != St.BACKSTEP:
-			_skill_go()
-			return true
-	return false
-
-
-## 조준 중인가 (인디케이터가 떠 있다)
-func skill_aiming() -> bool:
-	return _skill_aim
-
-
-func skill_ready() -> bool:
-	return skill_cd <= 0.0
-
-
-func _skill_aim_end() -> void:
-	_skill_aim = false
-	if is_instance_valid(_skill_ind):
-		_skill_ind.queue_free()
-	_skill_ind = null
-
-
-func _skill_aim_dir() -> Vector3:
-	var to := p.aim_point - p.global_position
-	to.y = 0
-	return to.normalized() if to.length() > 0.3 else p.aim_dir
-
-
-func _skill_go() -> void:
-	# 기 모으기 · 콤보 중이면 끊고 바로 나간다
-	if st == St.PENDING or st == St.CHARGE:
-		abort()
-	p.combo.cancel(true)
-	_skill_dir = _skill_aim_dir()
-	p.aim_dir = _skill_dir
-	k = SKILL_K
-	_launch(_skill_dir, SKILL_REACH)
-	_skill_rush = true
-	skill_cd = SKILL_CD
-	FX.shockwave(p.global_position, SKILL_COL, 1.6, 0.2, 0.05)
-	FX.shockwave(_ind_end, SKILL_COL, 1.3, 0.16, 0.03)     # 도착 조준점이 잠기며 한 번 번쩍
-
-
-func _skill_kill(en: Enemy) -> void:
-	skill_kills += 1
-	if skill_cd > SKILL_KILL_CD:
-		skill_cd = SKILL_KILL_CD
-		var main := Main.inst
-		main.hud.popup("RESET", SKILL_COL, en.global_position + Vector3(0, 2.2, 0))
-		FX.shockwave(p.global_position, SKILL_COL, 2.2, 0.25, 0.08)
-		var ping := Sfx.play("ready", 0.0, -4.0)
-		if ping:
-			ping.pitch_scale = 1.3
-
-
-func _skill_deny() -> void:
-	var main := Main.inst
-	main.hud.popup("%.1f" % skill_cd, Color(0.5, 0.75, 0.72), p.global_position + Vector3(0, 2.2, 0))
-	var ping := Sfx.play("tink", 0.0, -8.0)
-	if ping:
-		ping.pitch_scale = 0.6
-
-
-static var _ind_mat: StandardMaterial3D
-
-
-## 스킬 인디케이터 (메카닉 조준 장치): 매 틱 ImmediateMesh 로 바닥에 다시 그린다.
-##   펼침: 레일이 발밑에서 앞으로 뻗어 나가고, 도착 조준경이 크게 떴다가 조여 든다.
-##   점선 레일 + 0.5m 눈금 · 네 모서리 꺾쇠 · 앞으로 차례로 켜지는 쉐브론 · 훑고 지나가는 스캔 띠
-##   도착점: 회전하는 4분할 링 + 고정 십자선 + 가운데 마름모, 옆에 거리 표시. 벽에 막히면 주황 LIMIT.
-func _make_skill_ind() -> Node3D:
-	if _ind_mat == null:
-		_ind_mat = StandardMaterial3D.new()
-		_ind_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		_ind_mat.vertex_color_use_as_albedo = true
-		_ind_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-		_ind_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-		_ind_mat.albedo_color = Color(1.3, 1.3, 1.3)
-		_ind_mat.render_priority = 2
-	_ind_t = 0.0
-	var root := Node3D.new()
-	FX.root.add_child(root)
-	_ind_im = ImmediateMesh.new()
-	var mi := MeshInstance3D.new()
-	mi.mesh = _ind_im
-	mi.material_override = _ind_mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	root.add_child(mi)
-	_ind_label = Label3D.new()
-	_ind_label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	_ind_label.no_depth_test = true
-	_ind_label.pixel_size = 0.006
-	_ind_label.font_size = 40
-	_ind_label.outline_size = 8
-	_ind_label.outline_modulate = Color(0.02, 0.08, 0.08, 0.9)
-	_ind_label.render_priority = 3
-	root.add_child(_ind_label)
-	return root
-
-
-func _skill_want() -> float:
-	return lerpf(DIST.x, DIST.y, SKILL_K) * SKILL_REACH
-
-
-func _update_skill_ind(dt: float) -> void:
-	if not is_instance_valid(_skill_ind):
-		return
-	var d := _skill_aim_dir()
-	var want := _skill_want()
-	var dist := _free_dist(d, want)
-	var w := lerpf(WIDTH.x, WIDTH.y, SKILL_K)
-	ind_len = dist
-	ind_width = w
-	ind_blocked = dist < want - 0.3
-	_ind_t += dt
-	var open := _out(clampf(_ind_t / 0.16, 0.0, 1.0))
-	var lock := _out(clampf((_ind_t - 0.1) / 0.14, 0.0, 1.0))
-	var reach := dist * open
-	var base := p.global_position
-	base.y = Main.gy(base) + 0.05
-	_skill_ind.global_position = base
-	_skill_ind.basis = Basis.looking_at(d, Vector3.UP)
-	_ind_end = base + d * dist
-	var tt := Time.get_ticks_msec() * 0.001
-	var mc := SKILL_COL
-	var tc := Color("ffb347") if ind_blocked else mc
-	var hw := w * 0.5
-	var im := _ind_im
-	im.clear_surfaces()
-	im.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
-	_fade_len = dist                 # 이 아래로 그리는 모든 면은 캐릭터 쪽 투명 → 끝에서 가파르게 진해진다 (_fade)
-	# 바탕: 그라데이션이 꼭짓점 사이 직선 보간으로 뭉개지지 않게 잘게 나눠 그린다 · 스캔 띠
-	var fs := maxi(int(ceil(reach / 0.15)), 1)
-	for i in fs:
-		var za := -reach * i / fs
-		var zb := -reach * (i + 1) / fs
-		_iq(im, Vector2(-hw, za), Vector2(hw, za), Vector2(hw, zb), Vector2(-hw, zb), Color(mc, 0.42), 0.0)
-	var sz := -reach * fmod(tt * 0.9, 1.0)
-	var sz1 := minf(sz + 0.6, 0.0)
-	_iq(im, Vector2(-hw, sz1), Vector2(hw, sz1), Vector2(hw, sz), Vector2(-hw, sz), Color(mc, 0.13), 0.001)
-	_il(im, Vector2(-hw, sz), Vector2(hw, sz), 0.03, Color(mc, 0.55), 0.002)
-	# 점선 레일
-	var z := 0.3
-	while z < reach:
-		var z1 := minf(z + 0.34, reach)
-		for sd: float in [-1.0, 1.0]:
-			_il(im, Vector2(sd * hw, -z), Vector2(sd * hw, -z1), 0.045, Color(mc, 0.85), 0.003)
-		z += 0.48
-	# 눈금: 0.5m 마다 바깥으로, 1m 마다 길게
-	for i in range(1, int(reach / 0.5) + 1):
-		var zz := -i * 0.5
-		var big := i % 2 == 0
-		var ln := 0.17 if big else 0.08
-		for sd: float in [-1.0, 1.0]:
-			_il(im, Vector2(sd * (hw + 0.04), zz), Vector2(sd * (hw + 0.04 + ln), zz), 0.028, Color(mc, 0.75 if big else 0.4), 0.003)
-	# 쉐브론: 발밑에서 앞으로 차례차례 켜진다
-	var step := 0.55
-	var n := maxi(int((dist - 1.1) / step), 1)
-	for i in n:
-		var cz := -(0.75 + i * step)
-		if -cz > reach - 0.4:
-			break
-		var ph := fposmod(tt * 1.7 - float(i) / n, 1.0)
-		var a := 0.14 + 0.8 * exp(-ph * 7.0)
-		var apex := Vector2(0, cz - 0.13)
-		for sd: float in [-1.0, 1.0]:
-			_il(im, apex, Vector2(sd * hw * 0.55, cz + 0.13), 0.06, Color(mc, a), 0.004)
-	# 모서리 꺾쇠: 시작 둘은 바로, 끝 둘은 다 펼쳐진 뒤 바깥에서 조여 든다
-	var bl := 0.28
-	for sd: float in [-1.0, 1.0]:
-		var c0 := Vector2(sd * (hw + 0.1), 0.1)
-		_il(im, c0, c0 + Vector2(0, -bl), 0.055, Color(mc, 0.95), 0.005)
-		_il(im, c0, c0 + Vector2(-sd * bl, 0), 0.055, Color(mc, 0.95), 0.005)
-		if lock > 0.0:
-			var gap := (1.0 - lock) * 0.5
-			var c1 := Vector2(sd * (hw + 0.1 + gap), -dist - 0.1 - gap)
-			_il(im, c1, c1 + Vector2(0, bl), 0.055, Color(tc, 0.95 * lock), 0.005)
-			_il(im, c1, c1 + Vector2(-sd * bl, 0), 0.055, Color(tc, 0.95 * lock), 0.005)
-	# 발밑 반원 (뒤쪽) + 눈금
-	_iarc(im, Vector2.ZERO, 0.6, 0.15, PI - 0.15, 0.035, Color(mc, 0.45), 14, 0.003)
-	for q in 5:
-		var u := Vector2(cos(PI * (0.2 + q * 0.15)), sin(PI * (0.2 + q * 0.15)))
-		_il(im, u * 0.6, u * 0.7, 0.025, Color(mc, 0.45), 0.003)
-	# 도착 조준경: 크게 떴다가 조이며 회전이 느려진다
-	if open > 0.3:
-		var c := Vector2(0, -dist)
-		var sc := lerpf(1.9, 1.0, lock)
-		var rot := tt * lerpf(9.0, 1.6, lock)
-		var al := clampf((open - 0.3) / 0.7, 0.0, 1.0)
-		for q in 4:
-			var a0 := rot + q * PI * 0.5 + 0.22
-			_iarc(im, c, 0.62 * sc, a0, a0 + PI * 0.5 - 0.44, 0.07, Color(tc, 0.95 * al), 8, 0.006)
-		_iarc(im, c, 0.42 * sc, 0.0, TAU, 0.025, Color(tc, 0.55 * al), 28, 0.006)
-		for q in 8:
-			var ang := -rot * 0.6 + q * PI * 0.25
-			var u := Vector2(cos(ang), sin(ang))
-			_il(im, c + u * 0.34 * sc, c + u * 0.4 * sc, 0.03, Color(tc, 0.6 * al), 0.006)
-		for q in 4:
-			var u := Vector2(cos(q * PI * 0.5), sin(q * PI * 0.5))
-			_il(im, c + u * 0.74, c + u * 0.95, 0.05, Color(tc, 0.95 * al * lock), 0.006)
-		var dm := 0.09 * (1.0 + 0.25 * sin(tt * 14.0))
-		_iq(im, c + Vector2(0, -dm), c + Vector2(dm, 0), c + Vector2(0, dm), c + Vector2(-dm, 0), Color(tc, al), 0.007)
-		if ind_blocked:
-			_il(im, Vector2(-hw - 0.2, -dist - 0.02), Vector2(hw + 0.2, -dist - 0.02), 0.07, Color(tc, 0.9), 0.007)
-	im.surface_end()
-	_fade_len = 0.0
-	# 거리 표시
-	_ind_label.visible = lock > 0.5
-	_ind_label.position = Vector3(hw + 0.85, 0.15, -dist)
-	_ind_label.text = ("LIMIT %.1fm" if ind_blocked else "%.1fm") % dist
-	_ind_label.modulate = Color(tc.r, tc.g, tc.b, lock)
-
-
-## 바닥 사각형 (로컬 x, z)
-static func _iq(im: ImmediateMesh, a: Vector2, b: Vector2, c: Vector2, d: Vector2, col: Color, h: float) -> void:
-	for v: Vector2 in [a, b, c, a, c, d]:
-		im.surface_set_color(Color(col, col.a * _fade(v.y)) if _fade_len > 0.0 else col)
-		im.surface_add_vertex(Vector3(v.x, h, v.y))
-
-
-static var _fade_len := 0.0
-const FADE_MIN := 0.04          # 캐릭터 발밑 투명도 배율 (거의 투명)
-const FADE_POW := 4.0           # 클수록 끝에서 더 가파르게 진해진다 (절반 지점 6%, 3/4 지점 32%, 끝 100%)
-
-
-## 인디케이터 투명도 배율: 로컬 z(앞이 -) 를 경로 길이로 나눈 진행도 f 의 거듭제곱
-static func _fade(z: float) -> float:
-	var f := clampf(-z / _fade_len, 0.0, 1.0)
-	return lerpf(FADE_MIN, 1.0, pow(f, FADE_POW))
-
-
-## 바닥 선분 (폭 w)
-static func _il(im: ImmediateMesh, a: Vector2, b: Vector2, w: float, col: Color, h: float) -> void:
-	var t := b - a
-	if t.length() < 0.0001:
-		return
-	var nn := Vector2(-t.y, t.x).normalized() * w * 0.5
-	_iq(im, a + nn, b + nn, b - nn, a - nn, col, h)
-
-
-## 바닥 호 (각도는 로컬 x→z 평면, +z 가 뒤쪽)
-static func _iarc(im: ImmediateMesh, c: Vector2, r: float, a0: float, a1: float, w: float, col: Color, n: int, h: float) -> void:
-	var r0 := r - w * 0.5
-	var r1 := r + w * 0.5
-	for i in n:
-		var u0 := Vector2.from_angle(lerpf(a0, a1, float(i) / n))
-		var u1 := Vector2.from_angle(lerpf(a0, a1, float(i + 1) / n))
-		_iq(im, c + u0 * r0, c + u0 * r1, c + u1 * r1, c + u1 * r0, col, h)
-
-
 # ── 진행 · 자세 ─────────────────────────────────────────
 
 func update(dt: float) -> void:
-	skill_cd = maxf(0.0, skill_cd - dt)
-	if _skill_aim:
-		_update_skill_ind(dt)
 	if st == St.IDLE or st == St.BACKSTEP:
 		if _zoom_hold > 0.0:
 			_zoom_hold -= dt
@@ -940,6 +646,7 @@ func update(dt: float) -> void:
 			if _spiral_t <= 0.0:
 				p.trail.life = _trail_life
 				p.trail.reach = _trail_reach
+				p.trail.bright = _trail_bright
 	match st:
 		St.CHARGE:
 			_charge_tick(dt)

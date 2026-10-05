@@ -3,7 +3,7 @@ extends SceneTree
 ## 방 탐색 아레나의 바닥 굴곡과 점프 입력을 실제 키 입력(InputEventKey)으로 확인한다.
 ##  1. 모든 방에 굴곡이 있고, 어디에도 단차(끊긴 높이)가 없으며 굴곡은 낮고 완만하다
 ##  2. 굴곡을 걸어서 지나갈 때 막히거나 공중에 뜨지 않는다
-##  3. Shift + Space 단타 → 대시 / Space 단독 → 대시 / Shift + Space 길게 → 점프
+##  3. Space 단독 · Shift + Space 모두 곧바로 대시, 길게 눌러도 점프하지 않는다 (점프 입력 삭제)
 
 var fails := 0
 var main: Main
@@ -136,16 +136,18 @@ func _run() -> void:
 		_check(top > best.h * 0.8, "walked over a %.2fm bump (reached %.2f)" % [best.h, top])
 		_check(not air and stuck < 5, "walking over bump stays grounded and unblocked (air=%s stuck=%d)" % [air, stuck])
 
-	# 3. Shift + Space 단타 → 대시
+	# 3. Shift + Space → 점프 기능 삭제: 기다림 없이 바로 대시, 길게 눌러도 뛰지 않는다
 	await _place(home)
 	_key(KEY_SHIFT, true)
 	await _frames(2)
 	_key(KEY_SPACE, true)
-	await _frames(3)
-	_check(player.dash_t <= 0.0 and not player.airborne, "shift+space held 3 frames: still charging (no dash, no jump yet)")
-	_key(KEY_SPACE, false)
 	await _frames(2)
-	_check(player.dash_t > 0.0 and not player.airborne, "shift+space tap -> dash, not jump")
+	_check(player.dash_t > 0.0 and not player.airborne, "shift+space -> immediate dash, not jump")
+	var air := false
+	for i in 30:
+		await _frames(1)
+		air = air or player.airborne
+	_check(not air, "shift+space hold never jumps")
 	await _release_all()
 	await _frames(40)
 
@@ -156,25 +158,6 @@ func _run() -> void:
 	_check(player.dash_t > 0.0 and not player.airborne, "space alone -> immediate dash")
 	await _release_all()
 	await _frames(40)
-
-	# Shift + Space 길게 → 점프
-	await _place(home)
-	_key(KEY_SHIFT, true)
-	await _frames(2)
-	_key(KEY_SPACE, true)
-	var t_jump := -1
-	for i in 30:
-		await _frames(1)
-		if player.airborne and t_jump < 0:
-			t_jump = i
-	_check(t_jump >= 9 and t_jump <= 14 and player.dash_t <= 0.0, "shift+space hold -> jump after ~0.18s (frame %d), no dash" % t_jump)
-	var peak := 0.0
-	for i in 40:
-		await _frames(1)
-		peak = maxf(peak, player.global_position.y - player.gy)
-	await _release_all()
-	await _frames(30)
-	_check(not player.airborne, "landed after jump (peak %.2fm above ground)" % peak)
 
 	print("TERRAIN_JUMP_CHECK %s (%d fails)" % ["OK" if fails == 0 else "FAILED", fails])
 	quit(1 if fails > 0 else 0)

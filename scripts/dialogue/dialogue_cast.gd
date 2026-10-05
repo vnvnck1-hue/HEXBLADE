@@ -1,13 +1,29 @@
 class_name DialogueCast
 extends RefCounted
 ## 대화에 나오는 인물 목록. 이름 · 색 · 표정 그림 · 목소리 높이 · 그림이 바라보는 쪽.
-## 그림은 아직 아트 시안 폴더(output/character-dialogue-20261001)에 있다. 옮기면 DIR 만 바꾼다.
+## 기존 네 인물은 시안 폴더(DIR), 새 인물은 개별 dir로 assets 경로를 지정한다.
 
 const DIR := "res://output/character-dialogue-20261001/"
 
-## face: 그림 속 얼굴이 향한 쪽 (+1 화면 오른쪽, -1 왼쪽). flip_ok: 좌우 반전해도 디자인이 깨지지 않는가
+## face/faces: 원화의 몸 방향 (+1 화면 오른쪽, -1 왼쪽). 시선은 플레이어 쪽으로 그린다.
+## flip_ok/flip_expr: 반전 가능한 인물/표정. 비대칭 기존 디자인은 그대로 보존한다.
 ## voice: 글자 소리 기본 높이(Hz) · wave: 0 사각 / 1 삼각 / 2 사인
 const CAST := {
+	"owner": {
+		"name": "사장", "en": "OWNER", "color": Color("91c7b7"), "voice": 290.0, "wave": 2,
+		"face": 1, "flip_ok": false,
+		"flip_expr": ["introduction"],
+		"dir": "res://assets/portraits/cleaning_owner/",
+		"expr": {"welcome": "owner-welcome", "briefing": "owner-briefing", "encouragement": "owner-encouragement", "introduction": "owner-introduction-player"},
+		"default": "welcome",
+	},
+	"worker": {
+		"name": "정비사", "en": "MECHANIC", "color": Color("b69be4"), "voice": 380.0, "wave": 1,
+		"face": -1, "flip_ok": true,
+		"dir": "res://assets/portraits/purple_worker/",
+		"expr": {"introduction": "purple-worker-introduction-player", "cheerful": "purple-worker-cheerful-player"},
+		"default": "introduction",
+	},
 	"mira": {
 		"name": "미라", "en": "MIRA", "color": Color("c8303c"), "voice": 300.0, "wave": 0,
 		"face": 1, "flip_ok": false,
@@ -66,6 +82,7 @@ static func texture(id: String, expr: String) -> Texture2D:
 		return null
 	var c: Dictionary = CAST[id]
 	var file: String = c.expr.get(expr, c.expr[c.default])
-	if not _tex.has(file):
-		_tex[file] = load(DIR + file + ".png")
-	return _tex[file]
+	var path: String = c.get("dir", DIR) + file + ".png"
+	if not _tex.has(path):
+		_tex[path] = load(path)
+	return _tex[path]

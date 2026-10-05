@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "art": {
+    "plate": "cockpit_plate.png",
+    "clipped_plate": "cockpit_plate_clipped.png",
+    "ready_fallback": "cockpit_cutin_ready.png",
+    "source_size": [
+      1254,
+      1254
+    ],
+    "working_canvas": [
+      1024,
+      1024
+    ],
+    "mask": "panel_mask.svg",
+    "material_optional": "panel_clip.tres",
+    "frame": "panel_frame.svg",
+    "glow": "panel_glow.svg",
+    "use_one_plate_only": true
+  },
+  "polygon_px": [
+    [
+      16,
+      156
+    ],
+    [
+      300,
+      16
+    ],
+    [
+      825,
+      160
+    ],
+    [
+      1008,
+      1008
+    ],
+    [
+      16,
+      780
+    ]
+  ],
+  "palette": {
+    "mint": "#83ffe0",
+    "white": "#eafff7",
+    "ink": "#142032",
+    "pink": "#ff8fb8",
+    "contact": "#ffe88a"
+  },
+  "layout": {
+    "panel_side_formula": "min(viewport_height * 1.22, viewport_width * 0.51)",
+    "position_formula": "Vector2(-side * 0.025, -side * 0.05)",
+    "keep_square_aspect": true,
+    "layer_suggested": 9,
+    "hud_observed_layer": 10,
+    "face_uv": [
+      0.48,
+      0.35
+    ],
+    "edge_anchor_uv": [
+      0.88,
+      0.3
+    ],
+    "all_panel_layers_share_transform": true
+  },
+  "timeline": {
+    "clock": "real monotonic time; never divide by time_scale to advance during true pause",
+    "trigger": "_begin_recall(fast=true)",
+    "dock_trigger": "_gattai_impact()",
+    "enter_seconds": 0.16,
+    "enter_offset_side": -0.9,
+    "overshoot_scale": 1.03,
+    "settle_seconds": 0.06,
+    "hold_after_dock_seconds": 0.27,
+    "exit_seconds": 0.18,
+    "exit_offset_side": -0.55,
+    "dock_flash_seconds": 0.09,
+    "ring_seconds": 0.26,
+    "shard_count": 7,
+    "retrigger": "reuse or replace same owner; no stacking",
+    "cancel": "scene exits, dead owner, canceled RECALL, missing camera; always cleanup"
+  },
+  "fx": {
+    "ring": "lock_ring.svg",
+    "contact_flash": "dock_flash.svg",
+    "shard": "triangle_shard.svg",
+    "streak": "sync_streak.svg",
+    "bashful_ticks": "bashful_ticks.svg",
+    "dock_anchor": "camera.unproject_position(player.global_position + Vector3(0,1.1,0))",
+    "streak_count": 3,
+    "streak_divergence_px_at_800h": 12,
+    "dock_ring_diameter_at_800h": 132,
+    "shard_pool_size": 7
+  },
+  "audio": {
+    "generate_new_audio": false,
+    "existing": [
+      "launch",
+      "drone_hop",
+      "drone_dock",
+      "drone_burst",
+      "boom"
+    ],
+    "note": "reuse existing synthesized DroneSound/Sfx; do not double-play dock/boom; no voiced dialogue recording supplied"
+  },
+  "scope": {
+    "runtime_integrated": false,
+    "preview_only": true,
+    "asset_exports": "Godot offscreen 2D rendering; generated cockpit art plus repo-native SVG mask/frame",
+    "no_game_hud_in_art": true
+  }
+}

@@ -40,9 +40,10 @@ var legacy_left: VBoxContainer
 var energy_slot: Control       # LEGACY 배치에서 에너지 아이콘 줄이 놓일 자리
 var missile_slot: Control
 var presets: HudPresets
-const HINT_FULL := "WASD 이동   좌클릭 검   우클릭 사격   T 재장전   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   Shift+Space 길게 점프   R 유지 락온 미사일   V 카메라   F5 재시작   H HUD"
+var combo_meter: ComboMeter
+const HINT_FULL := "WASD 이동   좌클릭 검   우클릭 사격   T 재장전   좌+우클릭 유지 충전 레이저   Space 회피(끝날 때 다시: 2단)   Shift 부스터   R 유지 락온 미사일   V 카메라   F5 재시작   H HUD"
 ## 프리셋은 버튼마다 키를 붙여 두므로 안내 줄에는 나머지만 남긴다
-const HINT_SHORT := "WASD 이동   Space 끝날 때 다시: 2단 회피   Shift+Space 길게: 점프   V 카메라   F5 재시작   H HUD 프리셋"
+const HINT_SHORT := "WASD 이동   Space 중 검: 일격참 · 끝날 때 다시 → 검: 휠윈드 · 누른 채 이동: 청소   E 도약 내려찍기   V 카메라   F5 재시작   H HUD 프리셋"
 
 
 func _ready() -> void:
@@ -252,6 +253,9 @@ void fragment() {
 	cross.set_anchors_preset(Control.PRESET_FULL_RECT)
 	cross.draw.connect(_draw_cross)
 	root.add_child(cross)
+	# 타격 콤보 점수 (화면 왼쪽). 예전 처치 콤보 숫자는 이것으로 대신한다
+	combo_meter = ComboMeter.new()
+	root.add_child(combo_meter)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -271,6 +275,9 @@ func _apply_preset() -> void:
 	var icons := legacy or HudPresets.current in [HudPresets.CORNERS, HudPresets.TACTICAL]
 	energy_icons.visible = icons
 	missile_icons.visible = icons
+	var art := CalmHud.active()
+	for node in [wave_label, count_label, minimap, combo_box]:
+		node.visible = not art
 
 
 ## 아이콘 줄 위치: LEGACY 는 세로 나열 속 빈 자리, 나머지는 프리셋이 정한 곳
@@ -409,28 +416,32 @@ func _draw_lock_reticle(p: Vector2, count: int) -> void:
 
 
 func _draw_minimap() -> void:
-	var m := Main.inst
-	if m == null or m.map == null or m.map.minimap_tex == null:
-		return
 	var sz := minimap.size
 	minimap.draw_rect(Rect2(Vector2.ZERO, sz), Color(0.03, 0.03, 0.08, 0.72))
 	minimap.draw_rect(Rect2(Vector2.ZERO, sz), Color(0.4, 0.4, 0.7, 0.5), false, 1.0)
+	draw_map(minimap, Rect2(Vector2.ZERO, sz))
+
+func draw_map(canvas: Control, area: Rect2) -> void:
+	var m := Main.inst
+	if m == null or m.map == null or m.map.minimap_tex == null:
+		return
+	var sz := area.size
 	var map := m.map
-	var k := sz.x / ArenaMap.W
-	minimap.draw_texture_rect(map.minimap_tex, Rect2(Vector2.ZERO, sz), false)
+	var k := Vector2(sz.x / ArenaMap.W, sz.y / ArenaMap.H)
+	canvas.draw_texture_rect(map.minimap_tex, area, false)
 	var to_map := func(p: Vector3) -> Vector2:
 		var c := Vector2(p.x / ArenaMap.CELL + ArenaMap.W * 0.5, p.z / ArenaMap.CELL + ArenaMap.H * 0.5)
-		return c * k
+		return area.position + c * k
 	for e in get_tree().get_nodes_in_group("enemies"):
 		if e.get("prop"):
-			minimap.draw_circle(to_map.call((e as Node3D).global_position), 1.6, Color(1, 0.65, 0.2))
+			canvas.draw_circle(to_map.call((e as Node3D).global_position), 1.6, Color(1, 0.65, 0.2))
 		else:
-			minimap.draw_circle(to_map.call((e as Node3D).global_position), 2.2, Color(1, 0.35, 0.45))
+			canvas.draw_circle(to_map.call((e as Node3D).global_position), 2.2, Color(1, 0.35, 0.45))
 	if m.player:
 		var pp: Vector2 = to_map.call(m.player.global_position)
 		var ad := Vector2(m.player.aim_dir.x, m.player.aim_dir.z)
-		minimap.draw_line(pp, pp + ad * 7.0, Color(0.6, 1, 1, 0.9), 1.5)
-		minimap.draw_circle(pp, 3.2, Color(0.4, 1, 1))
+		canvas.draw_line(pp, pp + ad * 7.0, Color(0.6, 1, 1, 0.9), 1.5)
+		canvas.draw_circle(pp, 3.2, Color(0.4, 1, 1))
 	# 방 상태 표식
 	for r in map.rooms:
 		if not r.combat:
@@ -441,9 +452,9 @@ func _draw_minimap() -> void:
 		if not seen:
 			continue
 		match r.state:
-			"idle": minimap.draw_circle(cp, 3.0, Color(1, 0.6, 0.8, 0.8), false, 1.2)
-			"active": minimap.draw_circle(cp, 4.0 + sin(m.time * 8.0), Color(1, 0.3, 0.4), false, 1.6)
-			"cleared": minimap.draw_circle(cp, 2.5, Color(0.5, 0.85, 1.0))
+			"idle": canvas.draw_circle(cp, 3.0, Color(1, 0.6, 0.8, 0.8), false, 1.2)
+			"active": canvas.draw_circle(cp, 4.0 + sin(m.time * 8.0), Color(1, 0.3, 0.4), false, 1.6)
+			"cleared": canvas.draw_circle(cp, 2.5, Color(0.5, 0.85, 1.0))
 
 
 func _process(_dt: float) -> void:
@@ -500,6 +511,9 @@ func _process(_dt: float) -> void:
 	minimap.queue_redraw()
 	_update_combo(m)
 	_update_ult(p)
+	if CalmHud.active():
+		ult_header.visible = false
+		ult_timer.visible = false
 	if m.time > 8.0 and m.state == Main.State.PLAY:
 		# 프리셋은 버튼마다 키가 붙어 있으므로 안내 줄을 끝까지 걷어 낸다
 		var hint_a := 0.35 if HudPresets.current == HudPresets.LEGACY else 0.0
@@ -558,7 +572,7 @@ func hurt_flash() -> void:
 
 func _update_combo(m: Main) -> void:
 	score_label.text = "SCORE  %d" % m.score
-	if m.combo >= 2:
+	if false and m.combo >= 2:   # 처치 콤보 숫자는 왼쪽 ComboMeter 로 옮겼다
 		combo_label.text = "%d" % m.combo
 		combo_sub.text = "COMBO  ·  BEST %d" % m.best_combo
 		combo_bar.value = m.combo_t / Main.COMBO_TIME

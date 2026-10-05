@@ -59,19 +59,41 @@ var orb_cd := 0.0
 var windup_k := 0.0
 ## 패링 공격 알림 순간의 금빛 전신 섬광 남은 시간
 var glow_t := 0.0
+## 패링 공격 준비동작 중 흰 전신 발광이 켜져 있나 (_update_charge_glow)
+var charge_on := false
+var _charge_sent := -1.0
 ## 거리 벌리기 (뒷걸음질 · 이탈 대시 · 광선검 회피 반격). 확률은 기체마다 _ready 에서 정한다.
 var evade := Evade.new()
-## 피격 경직: 맞으면 하던 공격을 끊고 HURT_TIME 동안 맞은 방향으로 젖혀졌다 튕겨 돌아온다 (그동안 행동하지 않는다)
+## 플레이어를 놓쳤을 때(연기 속 은신) 배회·두리번거림. 기체 AI 가 wander.on 일 때 이것을 따라 움직인다.
+var wander := Wander.new()
+## 피격 경직: 맞으면 하던 공격을 끊고 hurt_len 동안 피격 반응 동작을 한 뒤 돌아온다 (그동안 행동하지 않는다).
+## 격투게임 피격처럼: 맞는 순간 극단 자세로 확 꺾여 잠깐 멈춘 채 떨고(HOLD) → 스프링처럼 흔들리며 돌아온다.
+## 반응은 5종(HitReact)이고, 무거운 공격(검·미사일·패링·큰 피해)일수록 회전·띄움이 섞이며 같은 반응이 연달아 나오지 않는다.
+enum HitReact { RECOIL, TWIST, CRUMPLE, SPIN, LAUNCH }
 var hurt_t := 0.0
 var hurt_age := 0.0
-var hurt_axis := Vector3.RIGHT   # 몸체를 젖히는 회전축 (자기 좌표)
+var hurt_len := 0.3
+var hurt_axis := Vector3.RIGHT   # 몸체를 젖히는 회전축 (자기 좌표) = UP × hurt_push
+var hurt_push := Vector3.BACK    # 밀려나는 수평 방향 (자기 좌표)
 var hurt_amp := 0.4
+var hurt_kind := HitReact.RECOIL
+var hurt_side := 1.0             # 비틀림·회전 방향 (+ 반시계)
+var hurt_base_y := 1.0           # 경직 시작 때 몸체 높이 (띄움·주저앉음은 여기서 더한다)
+var _last_react := -1
+var force_react := -1            # 확인용: 0 이상이면 항상 이 반응
+var _hurt_x := Transform3D.IDENTITY     # 마지막으로 준 피격 자세
+var _hurt_from := Transform3D.IDENTITY  # 새 피격이 이어 받는 직전 자세 (연타에 자세가 툭 튀지 않게)
+var _hit_source := ""
+var _hit_pos := Vector3.ZERO
 const GLOW_TIME := 0.12
 const HURT_TIME := 0.3
+const HURT_HOLD := 0.07          # 맞는 순간 극단 자세로 멈춰 떠는 시간 (히트스톱 느낌)
 ## 패링 탄을 쏠 확률 (기본 드론만 쓴다). 확인 모드에서는 1.
 var orb_chance := 0.45
 ## 확인 모드: 패링 탄만 쏜다
 var orb_only := false
+## 기체별 체력 배율 (HP_SCALE 에 한 번 더 곱한다. 포탑은 0.5)
+var hp_mul := 1.0
 ## 체력바: 첫 프레임에 체력 배율을 적용하며 만든다. 보스처럼 자체 체력 게이지가 있는 기체는 이 경로를 타지 않는다.
 var max_hp := 0
 var hp_bar: MeshInstance3D
@@ -121,6 +143,7 @@ func _ready() -> void:
 	j.body.position.y = 7.0
 	# 기본형 드론: 주로 뒷걸음질, 가끔 이탈 대시, 광선검은 가끔 피한다
 	evade.e = self
+	wander.e = self
 	evade.chance = 0.4
 	evade.back_w = 0.75
 
@@ -139,6 +162,7 @@ func _physics_process(dt: float) -> void:
 	if not landed:
 		_update_entry(dt)
 		return
+	wander.update(dt)
 	if stagger_t > 0.0:
 		_update_stagger(dt)
 	elif hurt_t > 0.0:
@@ -146,9 +170,10 @@ func _physics_process(dt: float) -> void:
 	else:
 		_ai(dt)
 		evade.update(dt)
+	_update_charge_glow()
 	# 피격 반응
 	punch = move_toward(punch, 0.0, dt * 6.0)
-	body.scale = Vector3(1.0 + punch * 0.22, 1.0 - punch * 0.16, 1.0 + punch * 0.22)
+	body.scale = Vector3(1.0 + punch * 0.22, 1.0 - punch * 0.16, 1.0 + punch * 0.22) * _hurt_scale()
 	if windup_k > 0.0:
 		# 준비동작: 스프링처럼 납작하게 눌러 힘을 모은다
 		var sq := smoothstep(0.05, 0.8, windup_k)
@@ -197,11 +222,16 @@ func _ai(dt: float) -> void:
 		strafe_timer = randf_range(1.5, 3.0)
 		strafe = -strafe
 	var move := Vector3.ZERO
-	if dist > desired + 0.8:
-		move += dir
-	elif dist < desired - 0.8:
-		move -= dir
-	move += Vector3(-dir.z, 0, dir.x) * strafe * 0.6
+	if wander.on:
+		# 놓쳤다: 제자리 주변을 천천히 떠돌며 두리번거린다 (공격 예고는 처음부터 다시)
+		move = wander.move_dir() * Wander.SPEED_K
+		fire_timer = maxf(fire_timer, TELEGRAPH + 0.35)
+	else:
+		if dist > desired + 0.8:
+			move += dir
+		elif dist < desired - 0.8:
+			move -= dir
+		move += Vector3(-dir.z, 0, dir.x) * strafe * 0.6
 	for o in live(get_tree()):
 		if o == self or not is_instance_valid(o):
 			continue
@@ -220,8 +250,11 @@ func _ai(dt: float) -> void:
 	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
 	global_position = Main.inst.push_out(global_position, radius)
 
-	# 방향: 플레이어를 바라본다
-	if player.alive:
+	# 방향: 플레이어를 바라본다 (놓쳤으면 배회 방향·두리번)
+	if wander.on:
+		var f := wander.face_dir()
+		rotation.y = lerp_angle(rotation.y, atan2(-f.x, -f.z), 1.0 - exp(-3.5 * dt))
+	elif player.alive:
 		var target_yaw := atan2(-dir.x, -dir.z)
 		rotation.y = lerp_angle(rotation.y, target_yaw, 1.0 - exp(-6.0 * dt))
 
@@ -250,6 +283,9 @@ func _ai(dt: float) -> void:
 		body.rotation.x = wob.x + tele * 0.22
 		body.rotation.z = sin(t * 1.7) * 0.06 + wob.y + sin(t * 45.0) * 0.03 * tele
 		cm.emission_energy_multiplier = 0.6 + tele * 3.0
+		# 두리번: 살피는 쪽으로 갸웃하고 바닥을 내려다본다
+		body.rotation.z += wander.sway()
+		body.rotation.x += wander.nod()
 	if fire_timer <= 0.0:
 		if orb_next:
 			_shoot_orb()
@@ -373,6 +409,35 @@ func _shoot_orb() -> void:
 	Sfx.play("eshot", 0.04, 0.0)
 
 
+## 패링 공격을 시작했나: 준비동작에 들어간 순간부터 공격이 끝날 때까지는 맞아도 끊기지 않고 끝까지 해낸다
+## (피해는 받지만 피격 경직·넉백이 없다. 패링 경직은 그대로 걸린다). 패링 공격이 있는 기체가 덮어쓴다.
+func parry_committed() -> bool:
+	return orb_next and fire_timer <= ORB_WINDUP
+
+
+## 패링 공격 준비동작 진행도 (0 = 준비 중 아님, 0 초과 ~ 1). 이 동안 몸 전체가 하얗게 빛난다.
+func _charge_glow_k() -> float:
+	return windup_k
+
+
+## 준비동작 흰 발광: 켜고 끌 때만 덮개 재질을 바꾸고, 진행도는 단계로 묶어 바뀔 때만 보낸다
+func _update_charge_glow() -> void:
+	var k := _charge_glow_k() if alive and stagger_t <= 0.0 else 0.0
+	var on := k > 0.0
+	if on != charge_on:
+		charge_on = on
+		_charge_sent = -1.0
+		_set_flash(flash_t > 0.0)
+	if not on:
+		return
+	var q := snappedf(clampf(k, 0.0, 1.0), 0.05)
+	if q == _charge_sent:
+		return
+	_charge_sent = q
+	for mi: MeshInstance3D in FX.mesh_parts(j.body as Node3D):
+		mi.set_instance_shader_parameter("charge", q)
+
+
 ## 패링 공격 예고: 몸체에 금빛을 덮고 별 섬광을 터뜨린다
 func _warn(at: Vector3, kind := "ranged") -> void:
 	warn_glow = true
@@ -397,8 +462,15 @@ func _end_warn() -> void:
 func stagger(dir: Vector3, dur: float) -> void:
 	if not alive:
 		return
+	var was_staggered := stagger_t > 0.0
 	stagger_t = dur
 	stagger_total = dur
+	if hurt_t > 0.0:
+		# 피격 반응 도중이면 비틀린 방향·위치를 털고 경직 자세로 넘어간다
+		hurt_t = 0.0
+		var hb: Node3D = j.body
+		hb.rotation = Vector3.ZERO
+		hb.position = Vector3(0.0, hurt_base_y, 0.0)
 	burst_left = 0
 	orb_next = false
 	windup_k = 0.0
@@ -411,6 +483,10 @@ func stagger(dir: Vector3, dur: float) -> void:
 	punch = 1.0
 	flash_t = 0.1
 	_set_flash(true)
+	if MocoFX.on and not was_staggered and not get("prop"):
+		var mf := MocoFX.get_inst()
+		if mf:
+			mf.status(self, "STUN!")      # 실제 경직 진입 때만 (보호막 자체는 경직을 걸지 않는다)
 	if not is_instance_valid(stun_halo):
 		stun_halo = ParryFX.stun_halo(visual)
 		stun_halo.position = Vector3(0, 1.85, 0)
@@ -460,9 +536,13 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	if stagger_t > 0.0:
 		dmg *= 2
 	_hit_spark(dmg, dir, pos, source)
+	_hit_source = source
+	_hit_pos = pos
 	hp -= dmg
 	_bar_hit = 1.0
-	knock += Vector3(dir.x, 0, dir.z) * (3.0 + dmg)
+	# 패링 공격 중에는 밀리지 않는다 (돌진 궤적·박자가 흐트러지지 않게)
+	if not parry_committed():
+		knock += Vector3(dir.x, 0, dir.z) * (3.0 + dmg)
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	wob_v += Vector2(l.z, -l.x) * (8.0 + dmg * 2.0)
 	punch = 1.0
@@ -492,7 +572,10 @@ func _hit_spark(dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
 		"missile": k = 1.5
 		"parry": k = 2.0
 		"laser": k = 0.8
-	HitSpark.spawn(at, dir, maxf(k, 1.0 + dmg * 0.08), self)
+	var heavy := dmg >= 4 or source in ["slash", "phantom", "missile", "parry"]     # _hurt 의 무거운 공격 분류와 같다
+	HitSpark.spawn(at, dir, maxf(k, 1.0 + dmg * 0.08), self, 1 if heavy else 0)
+	if not get("prop"):
+		MocoFX.report(self, dmg, heavy, at)
 
 
 ## 지금 피격 경직에 들어갈 수 있는가 (하위 기체가 덮어써 공중 도약 등을 뺀다)
@@ -500,18 +583,64 @@ func _can_hurt() -> bool:
 	return true
 
 
-## 맞음: 하던 공격을 끊고 맞은 방향으로 젖혀진다. 패링 경직·빠른 회피 이동 중에는 걸리지 않는다.
+## 맞음: 하던 공격을 끊고 피격 반응 동작을 한다. 패링 경직·빠른 회피 이동·패링 공격 중에는 걸리지 않는다.
 func _hurt(dir: Vector3, dmg: int) -> void:
-	if not landed or not is_inside_tree() or stagger_t > 0.0 or evade.moving() or not _can_hurt():
+	if not landed or not is_inside_tree() or stagger_t > 0.0 or evade.moving() or not _can_hurt() or parry_committed():
 		return
 	evade.cancel()
 	_interrupt()
-	hurt_t = HURT_TIME
+	# 회전·띄움은 도중에 맞아도 끝까지 간다 (경직만 조금 늘린다)
+	if hurt_t > 0.0 and (hurt_kind == HitReact.SPIN or hurt_kind == HitReact.LAUNCH) and _hurt_k() < 0.85:
+		hurt_t = maxf(hurt_t, 0.12)
+		return
+	# 이미 경직 중이면 그 자세에서 이어서 다시 꺾인다 (기준 높이는 처음 것을 쓴다)
+	if hurt_t <= 0.0:
+		hurt_base_y = (j.body as Node3D).position.y
+		_hurt_from = Transform3D.IDENTITY
+	else:
+		_hurt_from = _hurt_x
 	hurt_age = 0.0
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	l.y = 0
-	hurt_axis = Vector3.UP.cross(l.normalized()) if l.length() > 0.01 else Vector3.RIGHT
-	hurt_amp = clampf(0.38 + dmg * 0.06, 0.38, 0.75)
+	hurt_push = l.normalized() if l.length() > 0.01 else Vector3.BACK
+	hurt_axis = Vector3.UP.cross(hurt_push)
+	hurt_amp = clampf(0.5 + dmg * 0.07, 0.5, 0.95)
+	var heavy := dmg >= 4 or _hit_source in ["slash", "phantom", "missile", "parry"]
+	hurt_kind = _pick_react(heavy)
+	_last_react = hurt_kind
+	# 비틀림 방향: 맞은 자리가 몸 중심의 어느 옆인가 (모르면 번갈아)
+	var side := 0.0
+	if _hit_pos != Vector3.ZERO:
+		var hl := global_basis.inverse() * (_hit_pos - global_position)
+		side = signf(hurt_push.cross(Vector3(hl.x, 0, hl.z)).y)
+	hurt_side = side if side != 0.0 else -hurt_side
+	match hurt_kind:
+		HitReact.SPIN, HitReact.LAUNCH:
+			hurt_len = 0.5
+			knock += Vector3(dir.x, 0, dir.z).normalized() * 3.0
+		HitReact.CRUMPLE:
+			hurt_len = 0.38
+		_:
+			hurt_len = 0.32 if heavy else HURT_TIME
+	hurt_t = hurt_len
+	fx_t = 0.0
+
+
+## 이번 피격 반응 고르기. 같은 반응이 연달아 나오지 않는다. 기체마다 _react_pool 로 쓸 수 있는 반응을 정한다.
+func _pick_react(heavy: bool) -> int:
+	if force_react >= 0:
+		return force_react
+	var pool: Array = _react_pool(heavy)
+	if pool.size() > 1:
+		pool.erase(_last_react)
+	return pool[randi() % pool.size()]
+
+
+## 쓸 수 있는 피격 반응 (무거운 공격이면 회전·띄움이 섞인다). 바닥에 박힌 기체 등은 덮어써 뺀다.
+func _react_pool(heavy: bool) -> Array:
+	if heavy:
+		return [HitReact.RECOIL, HitReact.TWIST, HitReact.SPIN, HitReact.LAUNCH, HitReact.CRUMPLE]
+	return [HitReact.RECOIL, HitReact.TWIST, HitReact.CRUMPLE]
 
 
 ## 진행 중이던 공격을 끊는다. 경직이 풀린 뒤에도 곧바로 쏘지 않도록 예고부터 다시 시작한다.
@@ -533,9 +662,83 @@ func _on_hurt() -> void:
 	_on_stagger()
 
 
-## 젖힘 곡선: 2프레임 만에 확 젖혀졌다가 스프링처럼 흔들리며 돌아온다
+## 피격 곡선: 2프레임 만에 극단 자세로 확 꺾여 HURT_HOLD 동안 버틴 뒤, 스프링처럼 한두 번 반대로 넘어가며 0 으로 돌아온다.
+## 경직 끝(hurt_len)에서 거의 0 이 되도록 감쇠를 경직 길이에 맞춘다.
 func _hurt_curve() -> float:
-	return smoothstep(0.0, 0.035, hurt_age) * exp(-hurt_age * 8.0) * cos(hurt_age * 16.0)
+	var a := hurt_age
+	if a < HURT_HOLD:
+		return smoothstep(0.0, 0.03, a)
+	var r := a - HURT_HOLD
+	var rest := maxf(hurt_len - HURT_HOLD, 0.05)
+	return exp(-r * 7.0 / rest) * cos(r * TAU * 1.15 / rest)
+
+
+## 0~1 진행도 (회전·띄움처럼 한 방향으로 쭉 가는 반응용)
+func _hurt_k() -> float:
+	return clampf(hurt_age / maxf(hurt_len, 0.01), 0.0, 1.0)
+
+
+## 피격 반응 자세 (몸체 기준 자기 좌표의 회전 + 위치 오프셋). 기체가 제 자세 위에 덧씌울 수도 있다 (크롤러).
+func _hurt_xform() -> Transform3D:
+	var e := _hurt_curve()
+	var hit := maxf(e, 0.0)
+	var amp := hurt_amp
+	var push := hurt_push
+	var b := Basis.IDENTITY
+	var o := Vector3.ZERO
+	match hurt_kind:
+		HitReact.RECOIL:
+			# 뒤로 크게 젖혀지며 밀려난다: 윗부분이 맞은 방향으로 확 꺾이고 몸이 뒤로 튄다
+			b = Basis(hurt_axis, e * amp * 1.25)
+			o = push * 0.26 * hit + Vector3(0, 0.08 * hit, 0)
+		HitReact.TWIST:
+			# 몸통이 옆으로 홱 돌아가며 기운다: 맞은 쪽 반대로 비틀려 정면을 놓친다
+			b = Basis(Vector3.UP, hurt_side * e * (0.9 + amp * 0.9)) * Basis(hurt_axis, e * amp * 0.55) * Basis(push, -hurt_side * e * 0.3)
+			o = push * 0.16 * hit
+		HitReact.CRUMPLE:
+			# 명치를 맞은 듯 앞으로 꺾여 주저앉는다: 윗부분이 맞은 쪽으로 숙여지고 몸이 가라앉는다
+			b = Basis(hurt_axis, -e * amp * 0.95) * Basis(Vector3.UP, hurt_side * e * 0.25)
+			# 바닥에 붙은 기체(벌레 등, 기준 높이 0)는 가라앉지 않고 찌그러지기만 한다
+			o = Vector3(0, -0.3 * hit * clampf(hurt_base_y, 0.0, 1.0), 0) + push * 0.1 * hit
+		HitReact.SPIN:
+			# 맞은 기세로 한 바퀴 팽 돌아간다 (끝나면 정면). 도는 동안 맞은 쪽으로 기울어 있다
+			var k := _hurt_k()
+			var turn := 1.0 - pow(1.0 - k, 3.0)
+			var lean := sin(PI * minf(k * 1.4, 1.0))
+			b = Basis(Vector3.UP, hurt_side * TAU * turn) * Basis(hurt_axis, lean * amp * 0.7)
+			o = Vector3(0, sin(PI * k) * 0.18, 0) + push * 0.2 * lean
+		HitReact.LAUNCH:
+			# 위로 붕 떠올라 뒤로 젖혀지며 넘어가다 떨어진다
+			var k := _hurt_k()
+			var up := sin(PI * k)
+			b = Basis(hurt_axis, (up * 1.5 + e * 0.3) * amp) * Basis(Vector3.UP, hurt_side * up * 0.5)
+			o = Vector3(0, up * 0.85, 0) + push * 0.3 * sin(PI * 0.5 * k)
+	# 맞는 순간(HOLD) 잘게 떤다
+	var shake := (1.0 - smoothstep(HURT_HOLD * 0.6, HURT_HOLD + 0.06, hurt_age)) * 0.08
+	if shake > 0.0:
+		o += Vector3(randf_range(-1.0, 1.0), randf_range(-0.4, 0.4), randf_range(-1.0, 1.0)) * shake
+	var x := Transform3D(b, o)
+	var blend := smoothstep(0.0, 0.05, hurt_age)
+	if blend < 1.0:
+		x = _hurt_from.interpolate_with(x, blend)
+	_hurt_x = x
+	return x
+
+
+## 피격 반응 중 몸체 늘임·눌림 배율 (매 틱 punch 찌그러짐 위에 곱한다)
+func _hurt_scale() -> Vector3:
+	if hurt_t <= 0.0:
+		return Vector3.ONE
+	var hit := maxf(_hurt_curve(), 0.0)
+	match hurt_kind:
+		HitReact.CRUMPLE:
+			return Vector3(1.0 + 0.16 * hit, 1.0 - 0.24 * hit, 1.0 + 0.16 * hit)
+		HitReact.LAUNCH:
+			var up := sin(PI * _hurt_k())
+			return Vector3(1.0 - 0.1 * up, 1.0 + 0.16 * up, 1.0 - 0.1 * up)
+		HitReact.RECOIL, HitReact.TWIST:
+			return Vector3(1.0 - 0.08 * hit, 1.0 + 0.1 * hit, 1.0 - 0.08 * hit)
+	return Vector3.ONE
 
 
 func _update_hurt(dt: float) -> void:
@@ -551,20 +754,27 @@ func _hurt_tick(dt: float) -> void:
 	hurt_age += dt
 	wob_v += (-wob * 220.0 - wob_v * 11.0) * dt
 	wob += wob_v * dt
+	# 회전·띄움은 잔상을 끌고, 띄움은 떨어질 때 먼지가 인다
+	if hurt_kind == HitReact.SPIN or hurt_kind == HitReact.LAUNCH:
+		fx_t -= dt
+		if fx_t <= 0.0 and hurt_t > 0.08 and is_instance_valid(visual):
+			fx_t = 0.05
+			FX.afterimage(visual, Color(1.0, 0.85, 0.75, 0.3), 0.16)
+		if hurt_kind == HitReact.LAUNCH and hurt_t <= 0.0 and hurt_t > -dt:
+			FX.land_dust(global_position)
+			punch = 1.0
 
 
-## 몸체를 맞은 방향으로 젖히고 잘게 떤다. 경직이 끝나면 제자리로 돌려놓는다.
+## 몸체에 피격 반응 자세를 준다. 경직이 끝나면 제자리로 돌려놓는다.
 func _hurt_pose(body: Node3D) -> void:
 	if hurt_t <= 0.0:
 		hurt_t = 0.0
-		body.position.x = 0.0
-		body.position.z = 0.0
+		body.position = Vector3(0.0, hurt_base_y, 0.0)
 		body.rotation = Vector3.ZERO
 		return
-	var shake := exp(-hurt_age * 14.0) * 0.07
-	body.position.x = randf_range(-1.0, 1.0) * shake
-	body.position.z = randf_range(-1.0, 1.0) * shake
-	body.basis = Basis(hurt_axis, _hurt_curve() * hurt_amp) * Basis.from_euler(Vector3(wob.x * 0.4, randf_range(-1.0, 1.0) * shake, wob.y * 0.4))
+	var x := _hurt_xform()
+	body.position = Vector3(0.0, hurt_base_y, 0.0) + x.origin
+	body.basis = x.basis * Basis.from_euler(Vector3(wob.x * 0.4, 0.0, wob.y * 0.4))
 
 
 func die(dir := Vector3.ZERO, source := "bullet") -> void:
@@ -581,6 +791,7 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 	kill_source = source
 	locked = false
 	warn_glow = false
+	charge_on = false
 	if is_instance_valid(hp_bar):
 		hp_bar.queue_free()
 	if is_instance_valid(stun_halo):
@@ -822,7 +1033,13 @@ func _explode(scale_k: float, power: float, lift: float, push: Vector3) -> void:
 
 
 func _set_flash(on: bool) -> void:
-	var rest: Material = Pal.lock_hatch() if locked else (Pal.parry_glow() if warn_glow else null)
+	var rest: Material = null
+	if locked:
+		rest = Pal.lock_hatch()
+	elif charge_on:
+		rest = Pal.parry_charge()
+	elif warn_glow:
+		rest = Pal.parry_glow()
 	if glow_t > 0.0:
 		rest = Pal.parry_flash()
 	var m: Material = Pal.flash() if on else rest
@@ -850,7 +1067,7 @@ func set_locked(on: bool) -> void:
 func _init_hp() -> void:
 	# 확인 모드의 불사(999 이상)는 그대로 둔다
 	if hp < 900:
-		hp = maxi(1, int(round(hp * HP_SCALE)))
+		hp = maxi(1, int(round(hp * HP_SCALE * hp_mul)))
 	max_hp = maxi(hp, 1)
 	_bar_chip = 1.0
 	if _bar_mat == null:
@@ -883,7 +1100,8 @@ func _update_hp_bar(dt: float) -> void:
 	else:
 		_bar_chip = k
 	_bar_hit = maxf(0.0, _bar_hit - dt * 2.5)
-	hp_bar.visible = landed
+	# 차분한 HUD는 같은 실제 HP/잔상을 화면 공간의 코랄 바로 그린다.
+	hp_bar.visible = landed and not Main.ui_hidden and not (CalmHud.active() and not is_boss and not prop)
 	# 바뀐 값만 렌더링 서버로 보낸다 (적마다 물리 틱마다 불린다)
 	var v := Vector4(k, _bar_chip, _bar_hit, 1.0 if k >= 0.999 else 0.0)
 	if v == _bar_sent:

@@ -909,7 +909,8 @@ func _damage(base: float, dir: Vector3, pos: Vector3, source: String, mult: floa
 	if is_instance_valid(bar):
 		bar.call("set_hp", boss_hp / MAX_HP, amount >= 5.0)
 	kill_source = source
-	HitSpark.spawn(pos, dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self)
+	HitSpark.spawn(pos, dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self, 1 if source in ["slash", "phantom", "missile", "parry"] else 0)
+	MocoFX.report(self, roundi(amount), source in ["slash", "phantom", "missile", "parry"], pos)
 	lean_v += Vector2(-dir.z, dir.x) * minf(0.01 * amount, 0.2)
 	punch = maxf(punch, minf(0.1 + amount * 0.04, 1.0))
 	if randf() < 0.3:

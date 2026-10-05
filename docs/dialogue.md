@@ -3,6 +3,18 @@
 작성일: 2026-10-01 · 테스트 씬 `scenes/dialogue.tscn` (`dialogue_test.cmd`, 로비 → 테스트 씬 → 캐릭터 대화)
 
 거점·브리핑에서 쓸 포트레이트형 대화 기능이다. 지금은 테스트 씬에서만 돈다. 본편 연결(귀환 검사·출격 전 브리핑)은 요청이 오면 한다.
+2026-10-04: 테스트씬 기본 대본을 **청소업체 첫 출근**으로 변경했다. `dialogue_test.cmd` 또는 로비의 캐릭터 대화 항목으로 실행한다. **F1** 청소업체 첫 출근 · **F2** 기존 격납고 브리핑 · **F3** 기존 기능 시연 · **F4** 정비 동료 소개 · **R** 현재 대본 재시작.
+
+**새 동료 소개 씬**: `coworker_dialogue.cmd` 또는 로비의 **동료 소개 · 사장과 정비사**에서 바로 실행한다(`scenes/coworker_dialogue.tscn`, 대본 `data/dialogue/coworker_introduction.dlg`). 사장이 보라색 작업복의 정비사를 소개한 뒤 플레이어까지 셋이 기체 점검과 현장 대응을 이야기한다. 플레이어는 기존 `me` 화자/이름표로 참여한다. 역할/고장 질문과 긴장/자신감 응답의 네 조합이 함께 점검하는 결말에 합류한다. 이름 미정인 동료는 **정비사**로 표시하고, `worker_introduced`·`team_check_ready`는 해당 대화의 시안 플래그다.
+
+이 씬의 원화는 **시선과 몸 방향을 구분**한다. 두 인물 모두 플레이어를 바라보며, 왼쪽 사장의 몸은 오른쪽으로, 오른쪽 정비사의 몸은 왼쪽으로 살짝 틀어진다. `face`는 이 몸 방향을 나타내고, 반전 가능한 표정은 자리를 바꾸거나 표정을 교체할 때 방향을 다시 계산한다. 사장의 기존 비대칭 세 원화는 보존하며 새 `introduction` 원화만 반전을 허용한다. 새 투명 PNG는 `assets/portraits/cleaning_owner/owner-introduction-player.png`와 `assets/portraits/purple_worker/purple-worker-{introduction,cheerful}-player.png` 세 장. 동일 인물 편집을 위해 승인 원화를 편집 대상으로 사용하고 최초 원본 두 장을 그림체 기준으로 넣어 내장 imagegen으로 제작했다. 실제 프롬프트와7장 화면 캡처는 `output/coworker-introduction-20261004/`에 저장한다.
+
+넓은 화면의 좌우 두 인물은 각각 화면 너비25%/75%에 배치하고 단독 대화와 같은 상단/하단 여유에 맞춰 크기를 조절한다. 두 인물의 손과 얼굴은 하단 창 위에, 선택지는 창 안에 표시한다. 듣는 인물은70% 밝기로 유지해 소개 동안 둘 다 볼 수 있다.3~4인/좁은 화면의 기존 배치는 유지한다. `tests/coworker_dialogue_check.gd`는 실제 새 씬, 네 분기, 양쪽 몸 방향과 자리 이동/표정 교체, 투명 에셋, 하단 선택지, 최대 글자36, F4/R와 실행 경로를 검사한다. 캡처는 `tools/godot.ps1 wait -s res://_capture/coworker_introduction_show.gd`, 자동 진행은 `tools/godot.ps1 wait res://scenes/coworker_dialogue.tscn -- --bot --seed=7`.
+
+새 대본은 `data/dialogue/cleaning_opening.dlg`: 사장과 첫 인사 → 통로 확보 의뢰 → 보수/안전 질문 → 훈련과 안전 수칙 → 긴장/자신감 응답 → 출발 격려 순서다. 사장의 이름은 미정이므로 직함으로 표시하며, `owner`의 `welcome/briefing/encouragement` 표정을 사용한다. 선택 조합 네 가지가 모두 같은 첫 의뢰 준비에 합류한다. `first_contract_ready`는 대화 진행기 안의 시안 플래그이며 전투 씬 전환이나 보수 지급은 구현하지 않았다.
+
+첫 출근 상담은 `assets/portraits/cleaning_owner/`의 기존 사장 PNG 3장을 사용한다. `DialogueCast`의 인물별 `dir`로 새 에셋 경로를 연결했고 기존 네 인물의 경로는 유지한다. **대화창은 항상 하단**에 둔다. 넓은 화면의 단독 대화는 캐릭터를 화면 중앙에 크게 세우고, 허리 끝만 창 뒤로 이어지게 한다. 1280×800/글자28에서 그림은 약516px, 창 높이182px, 그림 하단은 창 뒤로28px 들어간다. 얼굴·상체·양손과 태블릿을 볼 수 있고 그림의 잘린 밑단은 창이 가린다. 최대 글자36에서는 창 높이214px로 읽을 공간을 확보한다. 단독 대화의 선택지는 하단 창 안에 배치하고 대사 본문을 잠시 숨기며, 선택 후 본문을 다시 표시한다. 선택지가3~4개면 창을 높여 버튼 공간을 확보한다. 단독/좌우 두 인물 맞춤은 화면 너비1100px 이상/가로세로 비1.35 이상에서 사용하고, 좁은 화면 또는3~4인 대화는 기존 배치를 유지한다. 창 크기/인원/자리/글자 크기/선택지 수 변경에 따라 재배치된다. 단독 상담 캡처는 `output/dialogue-centered-20261004/`에 보존한다. 캡처 실행은 `tools/godot.ps1 wait -s res://_capture/cleaning_opening_show.gd -- --out=res://output/dialogue-centered-20261004`.
+
 그림은 [카툰 포트레이트 시안](../output/character-dialogue-20261001/README.md) 12장(4명 × 표정 3종)과 [대화 UI 시안](../output/character-dialogue-20261001/dialogue-ui.png)의 배치를 그대로 쓴다.
 
 ![격납고 브리핑](../output/dialogue-20261001/03_four_people_noa.png)
@@ -95,7 +107,7 @@ mira angry !: 대사                 표정 + 그림 흔들기
 | `dialogue_voice.gd` (`DialogueVoice`) | 인물별 글자음 합성 |
 | `dialogue_cast.gd` (`DialogueCast`) | 인물 표 (이름 · 색 · 표정 그림 · 목소리 · 바라보는 쪽) |
 | `hangar_backdrop.gd` (`HangarBackdrop`) | 격납고 배경 |
-| `dialogue_main.gd` (`DialogueMain`) | 테스트 씬: F1 격납고 브리핑 · F2 기능 시연 · R 처음부터 · Esc 로비 |
+| `dialogue_main.gd` (`DialogueMain`) | 테스트 씬: F1 청소업체 첫 출근 · F2 격납고 브리핑 · F3 기능 시연 · R 처음부터 · Esc 로비 |
 
 본편에 넣을 때는 `DialogueView` 를 CanvasLayer 위에 올리고 `play(DialogueRunner.new(DialogueScript.load_file(...)))`, `finished` 신호를 받으면 된다 (전투 HUD·입력은 그동안 막아야 한다).
 

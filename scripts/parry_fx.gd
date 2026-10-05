@@ -18,7 +18,9 @@ const HOT := Color(1.0, 0.96, 0.82)
 const DURATION := 0.3
 ## 알림 별빛: 한 변 길이(월드) · 가로 → 세로 트윈 한 번씩 · 사라짐 (게임 초).
 ## 공격이 0.4초 만에 닿으므로 두 축의 트윈은 그 안에 끝나고, 사라짐만 조금 더 남는다.
-const STAR_SIZE := 24.0
+## 패링 공격 별빛은 붉은 위험 섬광(패링 불가)의 절반 크기다.
+const STAR_SIZE := 12.0
+const DANGER_STAR_SIZE := 24.0
 const STAR_AXIS := 0.1
 const STAR_FADE := 0.16
 
@@ -291,7 +293,7 @@ static func warn(pos: Vector3, kind: String, parent: Node3D = null) -> MeshInsta
 	mi.set_instance_shader_parameter("ly", 0.0)
 	(parent if parent else FX.root).add_child(mi)
 	mi.global_position = pos
-	mi.scale = Vector3.ONE * STAR_SIZE
+	mi.scale = Vector3.ONE * (DANGER_STAR_SIZE if danger else STAR_SIZE)
 	var setp := func(v: float, key: String) -> void:
 		mi.set_instance_shader_parameter(key, v)
 	var tw := mi.create_tween()

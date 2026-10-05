@@ -8,11 +8,27 @@ extends RefCounted
 ##  bug_squish 체액 터짐 (낮게 철퍽)
 ##  bug_skitter 다다닥 걸음 (아주 작은 발톱 소리 여러 번)
 ##  bug_dig    땅 파고 나옴 (흙 긁는 노이즈)
+##  bug_chomp  촘퍼 덥석 (낮은 쿵 + 이빨 딱)
+##  bug_drip   체액 방울 똑 (짧게 올라가는 물방울 소리)
+##  bug_squeak 촘퍼 깜짝·끽 (높게 꺾이는 짧은 울음)
+##  bug_squelch 애벌레 몸 수축 (축축하게 쭈욱 — 끈적한 저역 노이즈 + 낮게 미끄러지는 울림)
+##  bug_gnash  애벌레 덥석 (몸이 확 늘어나는 철퍽 + 더듬이 딱)
 
 const RATE := 22050
 
 
 static func ensure() -> void:
+	if not Sfx._cache.has("bug_squelch"):
+		Sfx._cache.bug_squelch = _wav(_squelch(0.34))
+		Sfx._cache.bug_gnash = _wav(_gnash(0.3))
+		if Sfx.inst:
+			Sfx.inst.streams = Sfx._cache
+	if not Sfx._cache.has("bug_chomp"):
+		Sfx._cache.bug_chomp = _wav(_chomp(0.22))
+		Sfx._cache.bug_drip = _wav(_drip(0.12))
+		Sfx._cache.bug_squeak = _wav(_squeak(0.26))
+		if Sfx.inst:
+			Sfx.inst.streams = Sfx._cache
 	if Sfx._cache.has("bug_click"):
 		return
 	Sfx._cache.bug_click = _wav(_clicks(0.22, [0.0, 0.07, 0.13], 2600.0, 0.5))
@@ -86,4 +102,73 @@ static func _squish(dur: float) -> PackedFloat32Array:
 		var body := sin(TAU * lerpf(180.0, 60.0, k) * tt) * 0.6 * pow(1.0 - k, 2.0)
 		var wet := y * 1.4 * pow(1.0 - k, 1.5) * (0.6 + 0.4 * sin(tt * 170.0))
 		s[i] = body + wet
+	return s
+
+
+## 덥석: 낮게 떨어지는 쿵(입이 닫히는 몸통 울림) + 이빨끼리 딱 부딪는 높은 딸깍
+static func _chomp(dur: float) -> PackedFloat32Array:
+	var n := int(dur * RATE)
+	var s := _clicks(dur, [0.0, 0.012], 3600.0, 0.55)
+	var y := 0.0
+	for i in n:
+		var tt := float(i) / RATE
+		y += 0.25 * (randf_range(-1, 1) - y)
+		s[i] += sin(TAU * lerpf(210.0, 80.0, minf(1.0, tt / 0.12)) * tt) * 0.75 * exp(-tt * 22.0) + y * 0.5 * exp(-tt * 60.0)
+	return s
+
+
+## 똑: 주파수가 위로 휘는 아주 짧은 사인 (물방울)
+static func _drip(dur: float) -> PackedFloat32Array:
+	var n := int(dur * RATE)
+	var s := PackedFloat32Array()
+	s.resize(n)
+	var ph := 0.0
+	for i in n:
+		var tt := float(i) / RATE
+		ph += TAU * lerpf(700.0, 1700.0, minf(1.0, tt / 0.05)) / RATE
+		s[i] = sin(ph) * 0.5 * minf(1.0, tt * 900.0) * exp(-tt * 38.0)
+	return s
+
+
+## 끽: 위로 꺾였다 내려오는 높은 울음 + 거친 떨림 (작은 벌레의 비명·깜짝)
+static func _squeak(dur: float) -> PackedFloat32Array:
+	var n := int(dur * RATE)
+	var s := PackedFloat32Array()
+	s.resize(n)
+	var ph := 0.0
+	for i in n:
+		var tt := float(i) / RATE
+		var k := float(i) / n
+		var f := 1500.0 + 1400.0 * sin(PI * minf(1.0, k * 1.6)) + sin(TAU * 42.0 * tt) * 160.0
+		ph += TAU * f / RATE
+		s[i] = (sin(ph) + sin(ph * 2.01) * 0.25) * 0.35 * minf(1.0, k * 30.0) * pow(1.0 - k, 1.4)
+	return s
+
+
+## 질척: 끈적하게 떨리는 저역 노이즈(점액이 늘어났다 붙는 소리) + 아래로 미끄러지는 낮은 몸 울림
+static func _squelch(dur: float) -> PackedFloat32Array:
+	var n := int(dur * RATE)
+	var s := PackedFloat32Array()
+	s.resize(n)
+	var y := 0.0
+	var ph := 0.0
+	for i in n:
+		var tt := float(i) / RATE
+		var k := float(i) / n
+		y += 0.09 * (randf_range(-1, 1) - y)
+		var env := sin(PI * minf(1.0, k * 1.15)) * pow(1.0 - k, 0.8)
+		var gate := 0.55 + 0.45 * sin(tt * TAU * lerpf(34.0, 18.0, k))      # 쭈욱-쭉 끈적한 떨림
+		ph += TAU * lerpf(150.0, 70.0, k) / RATE
+		s[i] = (y * 1.9 * gate + sin(ph) * 0.25) * env
+	return s
+
+
+## 덥석: 짧은 철퍽(늘어난 몸이 바닥을 치는 소리) + 더듬이 두 번 딱
+static func _gnash(dur: float) -> PackedFloat32Array:
+	var s := _clicks(dur, [0.03, 0.055], 2900.0, 0.45)
+	var y := 0.0
+	for i in s.size():
+		var tt := float(i) / RATE
+		y += 0.22 * (randf_range(-1, 1) - y)
+		s[i] += (y * 1.3 + sin(TAU * lerpf(160.0, 70.0, minf(1.0, tt / 0.1)) * tt) * 0.5) * exp(-tt * 18.0)
 	return s

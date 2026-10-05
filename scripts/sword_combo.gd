@@ -13,6 +13,8 @@ extends RefCounted
 ##
 ## 연결 규칙: 각 단의 타격 중 하나라도 실제로 적중(장갑에 막히지 않은 피해)했을 때만 다음 단으로 이어진다.
 ##  - 적중 → 짧은 캔슬 지점부터 선입력이 곧바로 다음 단을 낸다. 입력이 없으면 LINK_TIME 동안 기다린다.
+##    검 버튼을 누르고 있어도(held) 캔슬 지점에서 다음 단으로 이어진다.
+##    받지 못한 입력(헛침 경직 · 숨 고르기 · 마지막 단)은 press() 가 false 를 돌려 Player 의 InputBuffer 가 잠시 들고 있는다.
 ##  - 헛침 → 휘두른 기세에 몸이 끌려가는 오버스윙 자세로 늘어지고 WHIFF_LOCK 동안 검을 못 쓴다. 콤보는 1타로.
 ##  - 막힘(장갑) → 칼이 튕겨 뒤로 밀리며 같은 경직.
 ## 자세는 준비(WINDUP: 빠르게 감기고 멈칫) → 스윙(SWING 1~4프레임, 폭발적으로 뻗는다) →
@@ -26,6 +28,12 @@ extends RefCounted
 ##  spin  회전 베기: 스윙 동안 몸이 잔상으로 깜빡이고, 타격마다 몸 둘레에 가로 초승달이 터진다
 ##  sub   잔상 보간 밀도 (한 스윙에 많이 도는 동작일수록 크게)
 ##  after 착지 뒤 지연 참격 {n, delay, gap, dmg, radius}
+##  hold  준비 자세에서 이만큼(프레임) 멈칫하며 떨린다 (힘을 모으는 예비 동작)
+##  wease 준비 구간 이징 (기본 "out": 빠르게 감기고 멈칫. 묵직한 동작은 "inout": 천천히 들어 올린다)
+##  heavy 무게 연출: 낮은 바람 소리 · 적중 시 쿵 소리와 바닥 충격파 · 큰 흔들림
+## 단 확장 키: lunge_speed(파고드는 속도, 느리면 무거운 걸음) · link(입력 대기) · fease(여운 이징, 기본 "back")
+##
+## 단 목록은 _storm() 의 6단 하나 (STORM). 예전 템포 프리셋 5종은 2026-10-05 삭제.
 
 enum Ph { IDLE, LUNGE, WINDUP, SWING, FOLLOW, WHIFF, RETURN }
 
@@ -41,7 +49,7 @@ const RANGE := 8.0
 const BLINK_GAP := 1.35         # 순간이동해 서는 거리 (대상 표면에서)
 
 const NEUTRAL := {
-	"ax": 0.0, "ay": 0.0, "az": 0.0, "bl": Vector3(38, -18, 0), "bs": 1.0,
+	"ax": 0.0, "ay": 0.0, "az": 0.0, "bl": Vector3(38, -18, 0), "bs": 1.0, "bw": 1.0,
 	"tx": 0.0, "ty": 0.0, "tz": 0.0, "uy": 0.0, "lift": 0.0, "pitch": 0.0,
 	"hl": 0.0, "hr": 0.0, "kl": 0.0, "kr": 0.0, "al": 0.0,
 }
@@ -50,6 +58,8 @@ const NEUTRAL := {
 ## back(준비 중 뒤로 m) · fwd(스윙 중 앞으로 m) · reach/cone/dmg · stop(히트스탑 초) · kb(넉백 배율) ·
 ## sq(찌그러짐 충격: 준비·스윙·임팩트) · ease(키별 스윙 이징 덮어쓰기) · pitch_s(스윙음 높이) + 위 확장 키
 static var STEPS: Array = []
+static var finish_rest := FINISH_REST
+const FINISH_COL := Color(1.0, 0.6, 0.85)   # 마지막 단 이름 팝업 색
 
 var p: Player
 var trail: SaberTrail
@@ -61,6 +71,7 @@ var dur := 0.0
 var hit_ok := false
 var blocked := false
 var buffered := false
+var held := false               # 검 버튼을 누르고 있다 (Player 가 매 틱 넣는다): 적중하는 동안 다음 단으로 저절로 이어진다
 var link_t := 0.0
 var next_step := 0
 var dir := Vector3.FORWARD
@@ -80,6 +91,10 @@ var chain := 0                  # 연속 적중 단 수 (HUD·확인용)
 var hits_done := 0              # 이번 스윙에서 이미 판정한 다단히트 수
 var shots_done := 0             # 이번 사격 cut 에서 쏜 탄 수
 var ghost_t := 0                # 스윙 잔상 간격 (물리 틱)
+var hold_d := 0.0               # 준비 자세에서 멈칫하는 시간 (초, cut 의 hold)
+var hold_on := false            # 멈칫이 시작됐다 (연출 한 번)
+var base_over := ""             # 이번 구간 기본 이징 덮어쓰기 (wease · fease)
+var lunge_stop := 0.0           # 느린 접근이 멈추는 대상까지 거리
 
 
 static func _pose(over: Dictionary) -> Dictionary:
@@ -89,8 +104,11 @@ static func _pose(over: Dictionary) -> Dictionary:
 
 
 static func _build() -> void:
-	if not STEPS.is_empty():
-		return
+	if STEPS.is_empty():
+		STEPS = _storm()
+
+
+static func _storm() -> Array:
 	# 자주 쓰는 키 포즈
 	var h_ready := _pose({"ay": -1.55, "ax": -0.45, "bl": Vector3(8, -72, 0), "ty": -0.95, "tz": 0.08, "pitch": 0.22,
 		"hl": -0.55, "hr": 0.6, "kl": -0.25, "kr": -0.85, "al": 0.35})
@@ -128,7 +146,7 @@ static func _build() -> void:
 			"hl": -0.7, "hr": 0.7, "kl": -0.2, "kr": -0.9, "al": -0.5}),
 		"reach": 3.3, "cone": 70.0, "dmg": 5, "stop": 0.08, "kb": 0.8, "sq": [-6.0, 10.0, -7.0], "pitch_s": 0.85,
 	})
-	STEPS = [
+	return [
 		{   # 1타 섬광 삼연참: 6프레임 동안 가로 → 역 → 가로
 			"name": "FLASH", "lunge": true, "approach": 1.2, "follow": 9, "cancel": 4,
 			"cuts": [
@@ -280,18 +298,20 @@ func gunning() -> bool:
 
 # ── 입력 ────────────────────────────────────────────────
 
-## 검 버튼. 콤보가 처리하면 true.
+## 검 버튼. 콤보가 받아 주면 true, 지금은 못 받으면 false (Player 의 선입력 버퍼가 잠시 들고 있다가 다시 넘긴다).
 func press() -> bool:
 	if ph == Ph.WHIFF:
-		return true                      # 헛친 뒤 경직 중: 무시
+		return false                     # 헛친 뒤 경직 중: 풀리기 직전에 누른 것만 버퍼에서 살아남는다
 	if ph == Ph.LUNGE or ph == Ph.WINDUP or ph == Ph.SWING or ph == Ph.FOLLOW:
-		buffered = true
+		if step >= STEPS.size() - 1:
+			return false                 # 마지막 단: 숨 고르기가 끝나면 1타부터
+		buffered = true                  # 이 단 안에서 누른 검은 캔슬 지점에서 다음 단으로
 		return true
 	if link_t > 0.0:
 		_start(next_step)
 		return true
 	if p.slash_cd > 0.0:
-		return true
+		return false
 	_start(0)
 	return true
 
@@ -330,6 +350,8 @@ func suspend() -> void:
 # ── 진행 ────────────────────────────────────────────────
 
 func _start(i: int) -> void:
+	if p.on_attack.is_valid():
+		p.on_attack.call("slash")
 	step = i
 	cut = 0
 	hit_ok = false
@@ -367,11 +389,22 @@ func _start(i: int) -> void:
 func _enter_lunge(dist: float) -> void:
 	ph = Ph.LUNGE
 	t = 0.0
-	dur = maxf(dist / LUNGE_SPEED, 2.0 * F)
+	base_over = ""
+	var speed := float(STEPS[step].get("lunge_speed", LUNGE_SPEED))
+	dur = maxf(dist / speed, 2.0 * F)
 	vel = dir * (dist / dur)
 	lunged = true
 	from = _wrapped(cur)
 	to = (STEPS[step].cuts[0] as Dictionary).ready
+	if speed < 30.0:
+		# 묵직한 프리셋: 번개처럼 파고들지 않고 무겁게 내딛는다
+		base_over = "inout"
+		var d0 := target.global_position - p.global_position
+		d0.y = 0
+		lunge_stop = d0.length() - dist + 0.15
+		p.tilt_v += dir * 3.0
+		Sfx.play("land", 0.08, -12.0)
+		return
 	p.invuln = maxf(p.invuln, dur + 0.05)
 	p.tilt_v += dir * 8.0
 	FX.shockwave(p.global_position, Pal.BLADE, 1.8, 0.22, 0.05)
@@ -397,6 +430,9 @@ func _enter_windup() -> void:
 	t = 0.0
 	# 파고들며 이미 자세를 잡았으면 준비는 짧게
 	dur = float(c.wind) * F * (0.5 if lunged and cut == 0 else 1.0)
+	hold_d = float(c.get("hold", 0)) * F
+	hold_on = false
+	base_over = c.get("wease", "")
 	cur = _wrapped(cur)
 	from = cur.duplicate()
 	to = c.ready
@@ -497,6 +533,7 @@ func _enter_swing() -> void:
 	ghost_t = 0
 	move_d = float(c.fwd) + (approach * 0.7 if cut == 0 else 0.0)
 	move_prev = 0.0
+	base_over = ""
 	p.squash_v += float(c.sq[1])
 	p.tilt_v += dir * 6.0
 	if c.get("gun", false):
@@ -505,6 +542,13 @@ func _enter_swing() -> void:
 	var snd := Sfx.play("slash", 0.04, -1.0 if cut == 0 else -3.0)
 	if snd:
 		snd.pitch_scale = float(c.pitch_s) * randf_range(0.96, 1.04)
+	if c.get("heavy", false):
+		# 무거운 칼이 공기를 가르는 낮은 바람 소리 + 몸이 앞으로 쏠린다
+		var whoosh := Sfx.play("dash", 0.04, -3.0)
+		if whoosh:
+			whoosh.pitch_scale = 0.55
+		p.tilt_v += dir * 6.0
+		Main.inst.camera.fov_punch(2.5)
 	if c.get("slam", false):
 		p.invuln = maxf(p.invuln, dur + 0.15)
 		Sfx.play("dash", 0.05, -3.0)
@@ -538,6 +582,7 @@ func _enter_follow() -> void:
 	ph = Ph.FOLLOW
 	t = 0.0
 	dur = float(s.follow) * F
+	base_over = s.get("fease", "")
 	from = cur.duplicate()
 	to = s.rest
 	ease_over = {}
@@ -547,6 +592,7 @@ func _enter_follow() -> void:
 func _enter_whiff() -> void:
 	ph = Ph.WHIFF
 	t = 0.0
+	base_over = ""
 	dur = WHIFF_POSE
 	from = cur.duplicate()
 	# 오버스윙: 휘두른 쪽으로 몸이 더 돌아가고 앞으로 쏠리며, 떠 있었으면 떨어진다
@@ -587,6 +633,7 @@ func _enter_whiff() -> void:
 func _enter_return(d := -1.0) -> void:
 	ph = Ph.RETURN
 	t = 0.0
+	base_over = ""
 	var lf := float(cur.lift)
 	dur = d if d > 0.0 else 0.12 + maxf(lf, 0.0) * 0.14
 	land_pending = land_pending or lf > 0.3
@@ -606,6 +653,16 @@ func update(dt: float) -> void:
 	t += dt
 	match ph:
 		Ph.LUNGE:
+			if base_over != "" and is_instance_valid(target) and target.alive:
+				# 무겁게 내딛는 느린 접근: 그사이 움직인 대상을 따라가고, 닿을 거리면 바로 멈춘다
+				var d := target.global_position - p.global_position
+				d.y = 0
+				if d.length() <= lunge_stop:
+					t = dur
+				elif d.length() > 0.05:
+					dir = d.normalized()
+					p.aim_dir = dir
+					vel = dir * vel.length()
 			if t >= dur:
 				_finish_phase()
 				vel = dir * 2.0
@@ -613,7 +670,17 @@ func update(dt: float) -> void:
 		Ph.WINDUP:
 			var k := clampf(t / dur, 0.0, 1.0)
 			_move(1.0 - pow(1.0 - k, 3.0), dt)
-			if t >= dur:
+			if hold_d > 0.0 and t >= dur and not hold_on:
+				hold_on = true
+				_hold_fx()
+			if hold_d > 0.0 and is_instance_valid(target) and target.alive:
+				# 오래 모으는 동안 밀려난 대상을 천천히 따라 겨눈다
+				var d := target.global_position - p.global_position
+				d.y = 0
+				if d.length() > 0.3:
+					dir = dir.slerp(d.normalized(), clampf(dt * 10.0, 0.0, 1.0)).normalized()
+					p.aim_dir = dir
+			if t >= dur + hold_d:
 				_finish_phase()
 				_enter_swing()
 		Ph.SWING:
@@ -627,17 +694,17 @@ func update(dt: float) -> void:
 		Ph.FOLLOW:
 			vel = vel.move_toward(Vector3.ZERO, 60.0 * dt)
 			var last := step >= STEPS.size() - 1
-			if not last and buffered and t >= float(STEPS[step].cancel) * F:
+			if not last and (buffered or held) and t >= float(STEPS[step].cancel) * F:
 				_start(step + 1)
 				return
 			if t >= dur:
 				if last:
 					var boss: bool = is_instance_valid(target) and target.get("no_slash_reset") == true
-					p.slash_cd = BOSS_REST if boss else FINISH_REST
+					p.slash_cd = maxf(BOSS_REST, finish_rest) if boss else finish_rest
 					next_step = 0
 					chain = 0
 				else:
-					link_t = LINK_TIME
+					link_t = float(STEPS[step].get("link", LINK_TIME))
 					next_step = step + 1
 				_enter_return()
 		Ph.WHIFF:
@@ -683,12 +750,17 @@ func _move(frac: float, dt: float) -> void:
 		return
 	vel = dir * (move_d * (frac - move_prev) / dt)
 	move_prev = frac
-	# 대상 몸 속으로 파고들지 않는다
+	# 대상 몸 속으로 파고들지 않는다. 한 틱에 크게 내딛는 찌르기가 대상을 통째로 뛰어넘지 않게 이번 틱 이동도 앞에서 자른다.
 	if is_instance_valid(target) and target.alive and vel.dot(dir) > 0.0:
 		var d := target.global_position - p.global_position
 		d.y = 0
-		if d.length() < target.radius + 0.8 and d.dot(dir) > 0.0:
-			vel -= dir * vel.dot(dir)
+		var ahead := d.dot(dir)
+		var side := (d - dir * ahead).length()
+		if ahead > 0.0 and side < target.radius + 0.8:
+			var room := maxf(ahead - (target.radius + 0.8), 0.0)
+			var fwd_v := vel.dot(dir)
+			if fwd_v * dt > room:
+				vel -= dir * (fwd_v - room / dt)
 
 
 ## 한 번의 판정. mini 는 다단히트 중간 타격 (짧은 정지·작은 흔들림)
@@ -703,6 +775,8 @@ func _strike(c: Dictionary, mini: bool) -> Dictionary:
 		if not mini:
 			main.camera.fov_punch(-3.0 - stp * 30.0)
 		main.kick(dir * (0.15 if mini else 0.45))
+		if c.get("heavy", false) and not mini:
+			_heavy_hit()
 	elif int(r.blocked) > 0:
 		blocked = true
 		main.shake(0.25)
@@ -752,7 +826,7 @@ func _impact() -> void:
 		chain += 1
 		_enter_follow()
 		if step == STEPS.size() - 1:
-			main.hud.popup("CRESCENT", Color(1.0, 0.6, 0.85), p.global_position + Vector3(0, 2.4, 0))
+			main.hud.popup(String(STEPS[step].name), FINISH_COL, p.global_position + Vector3(0, 2.4, 0))
 	else:
 		if blocked:
 			FX.sparks((p.j.blade as Node3D).to_global(Vector3(0, 0, -1.0)), 10, [Color.WHITE, Color("ffd080")], 6.0, 0.25, -8.0, 0.05)
@@ -777,6 +851,8 @@ func _after_cut(center: Vector3, yaw: float, i: int, n: int, a: Dictionary) -> v
 	if not is_instance_valid(p) or not p.alive:
 		return
 	var main := Main.inst
+	if a.get("track", false) and is_instance_valid(target) and target.alive:
+		center = target.global_position          # 여진이 밀려난 대상을 따라간다
 	var pos := center + Vector3(randf_range(-0.6, 0.6), 0, randf_range(-0.6, 0.6))
 	pos.y = Main.gy(pos) + randf_range(0.7, 1.4)
 	var b := Basis(Vector3.UP, yaw) * Basis(Vector3.FORWARD, randf_range(-1.2, 1.2)) * Basis.from_scale(Vector3.ONE * randf_range(1.1, 1.6))
@@ -822,6 +898,36 @@ func _slam_fx(hit: bool) -> void:
 	Sfx.play("land", 0.05, 2.0)
 	Sfx.play("boom", 0.1, -8.0 if hit else -12.0)
 	Main.inst.shake(0.5)
+
+
+## 무거운 일격이 박혔다: 쿵 소리 · 맞은 자리 바닥 충격파 · 먼지 · 큰 흔들림
+func _heavy_hit() -> void:
+	var main := Main.inst
+	var at := p.global_position + dir * 1.6
+	if is_instance_valid(target) and target.alive:
+		at = target.global_position
+	var g := Vector3(at.x, Main.gy(at) + 0.05, at.z)
+	FX.shockwave(g, Color(1.0, 0.55, 0.35), 3.0, 0.28, 0.08)
+	FX.land_dust(g)
+	GroundBreak.burst(g, 0.55, dir)
+	FX.sparks(g + Vector3(0, 0.8, 0), 16, [Color.WHITE, Color(1.0, 0.75, 0.45), Color(1.0, 0.45, 0.7)], 8.0, 0.35, -16.0, 0.08)
+	Distortion.burst(g + Vector3(0, 0.8, 0), 3.2, 0.3, 1.2)
+	Sfx.play("boom", 0.08, -9.0)
+	var thud := Sfx.play("land", 0.05, 0.0)
+	if thud:
+		thud.pitch_scale = 0.7
+	main.shake(0.45)
+	main.kick(dir * 0.6)
+
+
+## 준비 자세에서 멈칫이 시작됐다: 칼끝이 반짝이며 힘이 모인다
+func _hold_fx() -> void:
+	var tip: Vector3 = (p.j.blade as Node3D).to_global(Vector3(0, 0, -1.2))
+	FX.flash(tip, Color(1.0, 0.85, 0.7), 0.5, minf(hold_d, 0.12))
+	var ping := Sfx.play("tink", 0.0, -10.0)
+	if ping:
+		ping.pitch_scale = 0.55
+	p.squash_v -= 3.0
 
 
 func _land() -> void:
@@ -892,6 +998,8 @@ func _phase_k(k: float) -> Dictionary:
 			base = "out"
 		Ph.LUNGE:
 			base = "out"
+	if base_over != "":
+		base = base_over
 	# 틱마다 최대 13번 불리므로 결과 사전을 새로 만들지 않고 다시 쓴다 (바로 _blend 가 읽는다)
 	var out := _ks
 	var kb := _ease(k, base)
@@ -923,6 +1031,13 @@ func pose(dt: float) -> void:
 		_substeps(k_prev, k)
 	k_prev = k
 	_blend(_phase_k(k))
+	if ph == Ph.WINDUP and hold_d > 0.0 and t > dur:
+		# 멈칫하는 동안 힘을 버티며 잘게 떤다 (끝으로 갈수록 세게)
+		var q := clampf((t - dur) / hold_d, 0.0, 1.0)
+		var amp := 0.012 + q * 0.03
+		cur.ax = float(cur.ax) + sin(t * 83.0) * amp
+		cur.ty = float(cur.ty) + sin(t * 61.0 + 1.3) * amp * 0.6
+		cur.lift = float(cur.lift) - q * 0.03
 	_apply()
 	var samples := pending
 	pending = []
@@ -966,7 +1081,8 @@ func _apply() -> void:
 	blade.rotation_degrees = cur.bl
 	# 스윙 순간 칼이 길게 늘어나는 만화적 스미어 (굵기는 살짝 얇아진다)
 	var bs := float(cur.bs)
-	blade.scale = Vector3(1.0 / sqrt(bs), 1.0 / sqrt(bs), bs)
+	var bw := float(cur.bw) / sqrt(bs)     # bw: 칼날 굵기 (대검 프리셋은 굵게 부푼다)
+	blade.scale = Vector3(bw, bw, bs)
 	var torso: Node3D = j.torso
 	torso.rotation = Vector3(float(cur.tx), float(cur.ty), float(cur.tz))
 	(j.hip_l as Node3D).rotation.x = float(cur.hl)

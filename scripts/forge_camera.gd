@@ -9,8 +9,10 @@ extends CameraRig
 ## lens 세기로 LensFX 배럴 왜곡을 건다. L 키로 끔 / 살짝 / 강하게, --lens=N 으로 시작 단계 지정.
 ## 흔들림·반동·FOV 펀치·패링 줌은 CameraRig 것을 쓴다. V 키로 순환, --campreset=N 으로 시작 프리셋 지정.
 
-const OFFSET := Vector3(0, 40.0, 33.6)
-const FOV := 40.0
+## 통일 시야(TACTICAL 62° · 화각 36°). 팔각 발판 전체와 거신을 담으려고 거리만 2.87배 (예전 (0,40,33.6) · 화각 40° 와 보이는 넓이가 같다).
+## 영화 구도 SHOTS 1~ 는 기록용으로 남기고 쓰지 않는다 (set_preset 이 항상 0).
+const OFFSET := Vector3(0, 18.0, 9.6) * 2.87
+const FOV := CameraRig.VIEW_FOV
 const CENTER := Vector3(0, 0, -5.0)
 const FOLLOW := 0.18
 const BOSS_AT := Vector3(0, 0, -16.5)
@@ -19,7 +21,7 @@ const LENS_LEVELS := [["OFF", "광각 끔", 0.0], ["SUBTLE", "살짝 광각 · �
 
 const SHOTS := [
 	{
-		"name": "HIGH", "desc": "기존 · 높은 부감 쿼터뷰 (전장 전체)",
+		"name": "TACTICAL", "desc": "높고 넓은 시야 · 모든 전투 카메라 공통 (전장 전체)",
 		"legacy": true, "punch": 1.0, "kill_pull": 0.0,
 	},
 	{
@@ -92,8 +94,8 @@ func cycle_lens() -> Array:
 
 
 ## CameraRig 프리셋 대신 SHOTS 를 쓴다. p 는 fov_punch 등 공용 반응 계수용.
-func set_preset(i: int) -> void:
-	shot_index = posmod(i, SHOTS.size())
+func set_preset(_i: int) -> void:
+	shot_index = 0          # 통일 시야: 높은 쿼터뷰 하나만
 	preset_index = shot_index
 	shot = SHOTS[shot_index]
 	p = {"name": shot.name, "desc": shot.desc, "punch": shot.punch, "kill_pull": shot.kill_pull}

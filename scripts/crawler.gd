@@ -172,10 +172,13 @@ func _ai(dt: float) -> void:
 	var active := player.alive and not player.hidden and Main.inst.state == Main.State.PLAY
 	match state:
 		S.IDLE:
-			vel = vel.move_toward(Vector3.ZERO, 30.0 * dt)
-			_move_ball(dt)
-			if st_t > 0.35 and not player.hidden:
-				_begin_windup(dist)
+			if wander.on:
+				_ball_wander(dt)
+			else:
+				vel = vel.move_toward(Vector3.ZERO, 30.0 * dt)
+				_move_ball(dt)
+				if st_t > 0.35 and not player.hidden:
+					_begin_windup(dist)
 		S.WINDUP:
 			_windup(dt)
 		S.ROLL:
@@ -200,6 +203,22 @@ func _ai(dt: float) -> void:
 func _log(s: String) -> void:
 	if Main.inst.crawler_show:
 		print("CRAWLER %.3f %s" % [Main.inst.time, s])
+
+
+## 놓쳤을 때 (구체): 천천히 굴러 주변을 돌아다니고, 멈추면 이리저리 기우뚱거리며 살핀다
+func _ball_wander(dt: float) -> void:
+	st_t = 0.0
+	# 목적지에 가까울수록 느려져 지나치지 않는다 (관성으로 빙빙 돌며 멀어지지 않게 조향은 단단히)
+	var to_goal := wander.goal - global_position
+	to_goal.y = 0
+	var want := wander.move_dir() * WALK_SPEED * 1.2 * clampf(to_goal.length() / 1.2, 0.3, 1.0)
+	vel = vel.move_toward(want, 14.0 * dt)
+	_move_ball(dt)
+	var speed := vel.length()
+	if speed > 0.05:
+		_roll_shell(vel / speed, speed, dt)
+	_turn(wander.face_dir(), dt, 3.0, true)
+	eye_k = 0.4 + 0.5 * wander.look_amp * (0.5 + 0.5 * sin(t * 2.6))
 
 
 func _begin_windup(dist: float) -> void:
@@ -497,59 +516,65 @@ func _sp(next: int) -> void:
 
 func _spider(dt: float, dir: Vector3, dist: float, active: bool) -> void:
 	sp_t += dt
-	_turn(dir, dt, 7.0 if sp != SP.HOP else 0.0, false)
+	# 놓쳤다: 자리 잡기·걷기 중이면 다리로 천천히 서성이며 두리번거린다 (다음 공격으로 넘어가지 않는다)
+	var wand := wander.on and (sp == SP.SETTLE or sp == SP.WALK)
+	_turn(wander.face_dir() if wand else dir, dt, (3.5 if wand else 7.0) if sp != SP.HOP else 0.0, false)
 	var move := Vector3.ZERO
-	match sp:
-		SP.SETTLE:
-			move = _walk_move(dt, dir, dist) * 0.5
-			if sp_t > 0.3:
-				_sp(SP.VOLLEY_WIND)
-		SP.VOLLEY_WIND:
-			var k := clampf(sp_t / VOLLEY_WIND_T, 0.0, 1.0)
-			eye_k = 1.4 + k * k * 4.5 + sin(t * 60.0) * 0.6 * k
-			fx_t -= dt
-			if fx_t <= 0.0:
-				# 빛 조각이 눈으로 빨려 든다
-				fx_t = lerpf(0.08, 0.03, k)
-				var e := (j.eyes as Array)[randi() % 3] as Node3D
-				var off := Vector3(randf_range(-1, 1), randf_range(-0.5, 1), randf_range(-1, 1)).normalized() * (1.0 - k * 0.6) * 0.6
-				FX.flash(e.global_position + off, Pal.CR_EYE if randf() < 0.7 else Color.WHITE, 0.12, 0.1)
-			if sp_t >= VOLLEY_WIND_T:
-				_sp(SP.VOLLEY)
-		SP.VOLLEY:
-			volley_t -= dt
-			if volley_t <= 0.0 and volley_left > 0:
-				volley_t = VOLLEY_GAP
-				volley_left -= 1
-				_volley_shot(active, volley_left == 0)
-			eye_k = move_toward(eye_k, 1.8, dt * 20.0)
-			if volley_left == 0 and sp_t > VOLLEY_GAP * VOLLEY_SHOTS + 0.25:
-				_sp(SP.WALK)
-		SP.WALK:
-			move = _walk_move(dt, dir, dist)
-			if sp_t > 0.7:
-				_sp(SP.HOP_WIND)
-		SP.HOP_WIND:
-			var k := clampf(sp_t / HOP_WIND_T, 0.0, 1.0)
-			tremble = k * k * 0.03
-			if sp_t >= HOP_WIND_T + HOP_T - Parry.TRAVEL and not danger_warned and active:
-				# 착지 0.4초 전: 내려찍기는 패링되지 않는다 → 붉은 섬광
-				danger_warned = true
-				DangerFX.warn(_center())
-			if sp_t >= HOP_WIND_T:
-				_sp(SP.HOP)
-		SP.HOP:
-			var k := clampf(sp_t / HOP_T, 0.0, 1.0)
-			# 앞 몇 프레임에 대부분의 거리를 날고, 꼭대기에서 잠깐 멈췄다가 내리꽂힌다
-			var kh := 1.0 - pow(1.0 - k, 2.2)
-			global_position = Main.inst.push_out(hop_from.lerp(hop_to, kh), R)
-			hop_y = HOP_H * (1.0 - pow(absf(2.0 * k - 1.0), 3.0))
-			air_tuck = sin(PI * k) * 0.28
-			if k >= 1.0:
-				_land(active)
-		SP.LAND:
-			if sp_t > 0.45:
-				_begin_fold()
+	if wand:
+		sp_t = 0.0
+		move = wander.move_dir() * WALK_SPEED * 0.6
+	else:
+		match sp:
+			SP.SETTLE:
+				move = _walk_move(dt, dir, dist) * 0.5
+				if sp_t > 0.3:
+					_sp(SP.VOLLEY_WIND)
+			SP.VOLLEY_WIND:
+				var k := clampf(sp_t / VOLLEY_WIND_T, 0.0, 1.0)
+				eye_k = 1.4 + k * k * 4.5 + sin(t * 60.0) * 0.6 * k
+				fx_t -= dt
+				if fx_t <= 0.0:
+					# 빛 조각이 눈으로 빨려 든다
+					fx_t = lerpf(0.08, 0.03, k)
+					var e := (j.eyes as Array)[randi() % 3] as Node3D
+					var off := Vector3(randf_range(-1, 1), randf_range(-0.5, 1), randf_range(-1, 1)).normalized() * (1.0 - k * 0.6) * 0.6
+					FX.flash(e.global_position + off, Pal.CR_EYE if randf() < 0.7 else Color.WHITE, 0.12, 0.1)
+				if sp_t >= VOLLEY_WIND_T:
+					_sp(SP.VOLLEY)
+			SP.VOLLEY:
+				volley_t -= dt
+				if volley_t <= 0.0 and volley_left > 0:
+					volley_t = VOLLEY_GAP
+					volley_left -= 1
+					_volley_shot(active, volley_left == 0)
+				eye_k = move_toward(eye_k, 1.8, dt * 20.0)
+				if volley_left == 0 and sp_t > VOLLEY_GAP * VOLLEY_SHOTS + 0.25:
+					_sp(SP.WALK)
+			SP.WALK:
+				move = _walk_move(dt, dir, dist)
+				if sp_t > 0.7:
+					_sp(SP.HOP_WIND)
+			SP.HOP_WIND:
+				var k := clampf(sp_t / HOP_WIND_T, 0.0, 1.0)
+				tremble = k * k * 0.03
+				if sp_t >= HOP_WIND_T + HOP_T - Parry.TRAVEL and not danger_warned and active:
+					# 착지 0.4초 전: 내려찍기는 패링되지 않는다 → 붉은 섬광
+					danger_warned = true
+					DangerFX.warn(_center())
+				if sp_t >= HOP_WIND_T:
+					_sp(SP.HOP)
+			SP.HOP:
+				var k := clampf(sp_t / HOP_T, 0.0, 1.0)
+				# 앞 몇 프레임에 대부분의 거리를 날고, 꼭대기에서 잠깐 멈췄다가 내리꽂힌다
+				var kh := 1.0 - pow(1.0 - k, 2.2)
+				global_position = Main.inst.push_out(hop_from.lerp(hop_to, kh), R)
+				hop_y = HOP_H * (1.0 - pow(absf(2.0 * k - 1.0), 3.0))
+				air_tuck = sin(PI * k) * 0.28
+				if k >= 1.0:
+					_land(active)
+			SP.LAND:
+				if sp_t > 0.45:
+					_begin_fold()
 	if sp != SP.HOP:
 		global_position += (move + knock) * dt
 		global_position = Main.inst.push_out(global_position, R)
@@ -841,12 +866,13 @@ func _update_hurt(dt: float) -> void:
 	walk_amt = move_toward(walk_amt, 0.0, dt * 6.0)
 	_pose(dt)
 	core_mat_pulse()
-	# 자세(_pose) 위에 젖힘을 덧씌운다
+	# 자세(_pose) 위에 피격 반응(젖힘·비틀림·숙임·회전·띄움)을 덧씌운다
 	var body: Node3D = j.body
 	if hurt_t > 0.0:
-		var shake := exp(-hurt_age * 14.0) * 0.06
-		body.position += Vector3(randf_range(-1.0, 1.0), 0.0, randf_range(-1.0, 1.0)) * shake
-		body.basis = Basis(hurt_axis, _hurt_curve() * hurt_amp * 0.8) * body.basis
+		var x := _hurt_xform()
+		body.position += x.origin
+		body.basis = x.basis * body.basis
+		body.scale *= _hurt_scale()
 	else:
 		hurt_t = 0.0
 
@@ -951,7 +977,8 @@ func _pose(dt: float) -> void:
 	if tremble > 0.0:
 		off += Vector3(randf_range(-1, 1), randf_range(-0.5, 0.5), randf_range(-1, 1)) * tremble
 	body.position = Vector3(off.x, h + off.y, off.z)
-	body.rotation = Vector3(pitch + wob.x * 0.3, twist, wob.y * 0.3)
+	# 두리번 (놓쳤을 때): 살피는 쪽으로 기우뚱, 앞을 살짝 숙인다
+	body.rotation = Vector3(pitch + wob.x * 0.3 + wander.nod() * 0.5, twist, wob.y * 0.3 + wander.sway())
 	# 뚜껑 경첩과 약점 코어. 뚜껑이 조금만 들려도 이음새로 붉은 빛이 샌다.
 	var ck := clampf(cap_k, 0.0, 1.1)
 	(j.cap as Node3D).rotation.x = CAP_OPEN * cap_k

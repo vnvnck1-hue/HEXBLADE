@@ -88,6 +88,11 @@ func _run() -> void:
 
 	# ── 3. 탄창 · 재장전 ──
 	await _frames(10)
+	# 마지막 처치의 히트스탑은 실제 시간이라 헤드리스의 빠른 프레임 동안 남아 있을 수 있다 → 풀린 뒤 쏜다
+	for i in 600:
+		if Engine.time_scale >= 0.99:
+			break
+		await physics_frame
 	_check(player.mag == Player.MAG_SIZE and Player.MAG_SIZE == 30, "탄창 30발")
 	Input.action_press("fire_mouse")
 	await _frames(int(Player.FIRE_INTERVAL * 60.0 * 10.0) + 10)

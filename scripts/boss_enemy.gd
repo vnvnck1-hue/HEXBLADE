@@ -777,7 +777,7 @@ func _begin_shock() -> void:
 	shock_ring = _ring_mesh(SHOCK_R, Color(0.35, 0.75, 1.0))
 	stage.add_child(shock_ring)
 	shock_ring.global_position = Vector3(global_position.x, 0.06, global_position.z)
-	Main.inst.hud.popup("!", Color("8ad8ff"), _core_pos() + Vector3(0, 2.5, 0))
+	SpeechBubble.at(_core_pos() + Vector3(0, 2.5, 0), "!!", SpeechBubble.EMOTE, {"size": 44})
 	Sfx.play("echarge", 0.0, -2.0)
 	print("BOSS_SHOCK near=%.1f" % near_t)
 
@@ -895,7 +895,8 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	kill_source = source
 	if source == "laser":
 		_laser_lift(dmg, dir)
-	HitSpark.spawn(fx_point(pos, dir), dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self)
+	HitSpark.spawn(fx_point(pos, dir), dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self, 1 if source in ["slash", "phantom", "missile", "parry"] else 0)
+	MocoFX.report(self, roundi(amount), source in ["slash", "phantom", "missile", "parry"], fx_point(pos, dir))
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	wob2_v += Vector2(l.z, -l.x) * minf(0.05 * amount, 0.8)
 	punch = maxf(punch, minf(0.15 + amount * 0.05, 1.0))

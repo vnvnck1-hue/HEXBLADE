@@ -15,8 +15,17 @@ const PULL := 0.7               # 기체에 파묻히지 않게 카메라 쪽으
 static var _last := {}
 
 
-## pos: 맞은 지점 · dir: 맞은 방향(월드) · k: 세기 (총알 1, 검·강공격일수록 크게) · key: 연사 간격 판정용
-static func spawn(pos: Vector3, dir: Vector3, k := 1.0, key: Object = null) -> void:
+## pos: 맞은 지점 · dir: 맞은 방향(월드) · k: 세기 (총알 1, 검·강공격일수록 크게) · key: 연사 간격 판정용(맞은 적)
+## heavy: 강타 분류 (1 강타 · 0 일반 · -1 = k 로 추정). mo.co 무드(MocoFX.on)면 별·쐐기 프리셋으로 그린다.
+static func spawn(pos: Vector3, dir: Vector3, k := 1.0, key: Object = null, heavy := -1) -> void:
+	if MocoFX.on:
+		var m := MocoFX.get_inst()
+		if m:
+			var w := 1.24
+			if key is Enemy:
+				w = (key as Enemy).radius * 2.0
+			m.hit(pos, dir, w, heavy == 1 or (heavy < 0 and k >= 1.6), k, key)
+		return
 	var g := ToonGunFX.inst
 	if g == null or not is_instance_valid(g) or not g.is_inside_tree():
 		return

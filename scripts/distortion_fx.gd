@@ -122,6 +122,7 @@ static func _setup() -> void:
 
 ## 굴절 충격파. radius = 고리가 다 퍼졌을 때 반경(m), strength = 휘는 세기, haze = 안쪽 아지랑이(0~1+)
 static func burst(pos: Vector3, radius: float, dur := 0.4, strength := 1.0, haze := 0.0) -> void:
+	FluidSmoke.blast(pos, radius, strength, haze)   # 유체 연기가 있는 씬이면 충격 바람으로 연기를 민다
 	if FX.root == null:
 		return
 	_setup()

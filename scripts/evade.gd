@@ -50,7 +50,7 @@ func cancel() -> void:
 ## 조건 공통: 플레이 중이고, 확인 모드면 거리 벌리기 확인 모드에서만
 static func _allowed() -> bool:
 	var main := Main.inst
-	if main == null or main.state != Main.State.PLAY or not main.player.alive:
+	if main == null or main.state != Main.State.PLAY or not main.player.alive or main.player.hidden:
 		return false
 	return not main.showcase or main.evade_show
 

@@ -1,10 +1,10 @@
 class_name BugLab
 extends Main
-## 벌레형 괴생명체 시험장 (Main 상속). 엄폐물 없는 넓은 홀에서 개미 병정·공벌레와 싸워 보거나,
-## 전시 모드에서 두 모델의 애니메이션을 하나씩 돌려 본다.
+## 벌레형 괴생명체 시험장 (Main 상속). 엄폐물 없는 넓은 홀에서 개미 병정·공벌레·촘퍼와 싸워 보거나,
+## 전시 모드에서 세 모델의 애니메이션을 하나씩 돌려 본다.
 ##
-## 숫자 키:  1 개미 병정 소환   2 공벌레 소환   3 모두 지우기   4 전시 모드 ↔ 전투   5 플레이어 무적   6 자동 보충(3마리 유지)
-## 실행 인자: --gallery (전시 모드로 시작) · --bot (자동 플레이, 자동 보충 켜짐) · --only=ant|pill
+## 숫자 키:  1 개미 병정 소환   2 공벌레 소환   7 촘퍼 소환   8 애벌레 소환   3 모두 지우기   4 전시 모드 ↔ 전투   5 플레이어 무적   6 자동 보충(3마리 유지)
+## 실행 인자: --gallery (전시 모드로 시작) · --bot (자동 플레이, 자동 보충 켜짐) · --only=ant|pill|chomp|grub
 
 const ROOM_SIZE := Vector2i(30, 22)
 ## 전시 모드: [이름, 길이(초)] — 차례로 반복한다
@@ -12,6 +12,14 @@ const ANT_CLIPS := [["IDLE · 더듬이 탐색", 3.0], ["SKITTER · 후다닥 �
 	["BITE · 큰턱 물기", 2.0], ["ALARM · 피격 버둥", 1.8], ["DEATH · 뒤집혀 버둥", 2.6], ["EMERGE · 땅에서 기어 나옴", 1.8]]
 const PILL_CLIPS := [["CRAWL · 물결 다리", 3.0], ["SNIFF · 더듬이 두드리기", 2.4], ["CURL · 몸 말기", 1.8],
 	["ROLL · 굴러가기", 2.4], ["UNCURL · 펼치고 기지개", 1.8], ["DEATH · 뒤집혀 버둥", 2.6], ["EMERGE · 땅에서 기어 나옴", 1.8]]
+## 촘퍼는 클립 수가 달라 따로 돈다 (BugLab.chomp_clip · _capture/chomper_show.gd 가 같은 표를 쓴다)
+const CHOMP_CLIPS := [["IDLE · 헐떡임 · 두리번 · 하품", 3.6], ["WANDER · 꼼지락 걸음", 2.6], ["CRAWL · 체액 흘리며 종종걸음", 3.0],
+	["NOTICE · 깜짝 콩!", 1.6], ["CHOMP · 웅크림 → 덥석 → 우물우물 · 핥기", 2.4], ["HURT · 덜컹 → 겁먹고 도망", 1.8],
+	["DIZZY · 어질어질", 2.4], ["DEATH · 뒤집혀 버둥", 2.6], ["EMERGE · 땅에서 기어 나옴", 1.8]]
+## 애벌레 (BugLab.grub_clip · _capture/grub_show.gd 가 같은 표를 쓴다). 기는 클립은 실제로 앞으로 나아가며 점액을 남긴다
+const GRUB_CLIPS := [["IDLE · 앞몸 들고 두리번 · 더듬이 톡톡", 4.0], ["CRAWL · 연동 수축으로 기어가기", 4.0],
+	["WANDER · 천천히 돌며 기기", 3.6], ["NOTICE · 앞몸 번쩍", 1.6], ["ATTACK · 움츠림 → 덮치기 → 추스름", 2.6],
+	["HURT · 움찔 몸부림", 1.6], ["DIZZY · 휘청", 2.4], ["DEATH · 뒤집혀 C 자로 꿈틀", 2.6], ["EMERGE · 땅에서 기어 나옴", 1.8]]
 
 var center := Vector3.ZERO
 var god := true
@@ -28,6 +36,19 @@ var g_ant_pose: Node3D
 var g_pill_pose: Node3D
 var g_t := 0.0
 var g_clip := 0
+var g_chomp: ChomperRig
+var g_chomp_root: Node3D
+var g_chomp_pose: Node3D
+var g_chomp_model: Node3D
+var c_t := 0.0
+var c_clip := 0
+var g_grub: GrubRig
+var g_grub_root: Node3D
+var g_grub_pose: Node3D
+var g_grub_start := Vector3.ZERO
+var g_grub_trail: SlimeTrail
+var u_t := 0.0
+var u_clip := 0
 var _refill_t := 0.0
 
 
@@ -92,16 +113,29 @@ func combat_rooms() -> int:
 # ── 전투 ───────────────────────────────────────
 
 func _spawn_set() -> void:
-	if only != "pill":
+	if only == "" or only == "ant":
 		spawn_bug("ant", center + Vector3(-4.0, 0, -3.0))
 		spawn_bug("ant", center + Vector3(3.5, 0, -4.5))
-	if only != "ant":
+	if only == "" or only == "pill":
 		spawn_bug("pill", center + Vector3(0.5, 0, -6.0))
 		spawn_bug("pill", center + Vector3(-7.0, 0, -6.5))
+	if only == "" or only == "chomp":
+		spawn_bug("chomp", center + Vector3(-2.0, 0, -5.0))
+		spawn_bug("chomp", center + Vector3(5.5, 0, -1.0))
+		spawn_bug("chomp", center + Vector3(-6.0, 0, 0.5))
+	if only == "" or only == "grub":
+		spawn_bug("grub", center + Vector3(2.5, 0, -6.5))
+		spawn_bug("grub", center + Vector3(-4.5, 0, -2.0))
+		spawn_bug("grub", center + Vector3(6.5, 0, -4.0))
 
 
 func spawn_bug(kind: String, at: Vector3) -> BugEnemy:
-	var e: BugEnemy = BugAnt.new() if kind == "ant" else BugPill.new()
+	var e: BugEnemy
+	match kind:
+		"ant": e = BugAnt.new()
+		"pill": e = BugPill.new()
+		"grub": e = BugGrub.new()
+		_: e = BugChomper.new()
 	world.add_child(e)
 	e.global_position = map.push_out(at, 1.0)
 	e.rotation.y = atan2(-(player.global_position.x - at.x), -(player.global_position.z - at.z))
@@ -124,7 +158,7 @@ func _process(dt: float) -> void:
 			_refill_t = 1.0
 			var n := _bugs().size()
 			if n < 3:
-				var kind := only if only != "" else ("ant" if randf() < 0.5 else "pill")
+				var kind: String = only if only != "" else ["ant", "pill", "chomp", "grub"].pick_random()
 				var p := map.random_spot(map.start_room, player.global_position, 5.0, 11.0)
 				spawn_bug(kind, p)
 
@@ -139,6 +173,12 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_2:
 				if not gallery:
 					spawn_bug("pill", map.random_spot(map.start_room, player.global_position, 4.5, 9.0))
+			KEY_7:
+				if not gallery:
+					spawn_bug("chomp", map.random_spot(map.start_room, player.global_position, 4.5, 9.0))
+			KEY_8:
+				if not gallery:
+					spawn_bug("grub", map.random_spot(map.start_room, player.global_position, 4.5, 9.0))
 			KEY_3:
 				for e in _bugs():
 					e.queue_free()
@@ -163,6 +203,8 @@ func _update_panel() -> void:
 		"BUG LAB",
 		"1  개미 병정 소환",
 		"2  공벌레 소환",
+		"7  촘퍼 소환",
+		"8  애벌레 소환",
 		"3  모두 지우기",
 		"4  %s" % ("전투로 돌아가기" if gallery else "애니메이션 전시"),
 		"5  플레이어 무적   %s" % ("켜짐" if god else "꺼짐"),
@@ -176,6 +218,8 @@ func _set_gallery(on: bool) -> void:
 	if on == (gallery != null):
 		return
 	if not on:
+		if is_instance_valid(g_grub_trail):
+			g_grub_trail.release()
 		gallery.queue_free()
 		gallery = null
 		clip_label.text = ""
@@ -216,10 +260,36 @@ func _set_gallery(on: bool) -> void:
 	var pm := (load(BugPill.MODEL) as PackedScene).instantiate() as Node3D
 	roller.add_child(pm)
 	g_pill = PillRig.new().setup(pm, roller)
+	g_chomp_root = Node3D.new()
+	gallery.add_child(g_chomp_root)
+	g_chomp_root.global_position = base + Vector3(0.1, 0, 1.25)
+	g_chomp_root.rotation.y = PI - 0.35
+	g_chomp_pose = Node3D.new()
+	g_chomp_root.add_child(g_chomp_pose)
+	g_chomp_model = (load(BugChomper.MODEL) as PackedScene).instantiate() as Node3D
+	g_chomp_pose.add_child(g_chomp_model)
+	g_chomp = ChomperRig.new().setup(g_chomp_model)
+	g_grub_root = Node3D.new()
+	gallery.add_child(g_grub_root)
+	g_grub_start = base + Vector3(-2.4, 0, 3.1)
+	g_grub_root.global_position = g_grub_start
+	g_grub_root.rotation.y = -PI * 0.5 + 0.25
+	g_grub_pose = Node3D.new()
+	g_grub_root.add_child(g_grub_pose)
+	var gm := (load(BugGrub.MODEL) as PackedScene).instantiate() as Node3D
+	g_grub_pose.add_child(gm)
+	g_grub = GrubRig.new().setup(gm)
+	g_grub_trail = SlimeTrail.make(0.6)
+	FX.blob_shadow(g_grub_root, 1.5, 0.55)
 	FX.blob_shadow(g_ant_root, 2.0, 0.6)
 	FX.blob_shadow(g_pill_root, 2.4, 0.6)
+	FX.blob_shadow(g_chomp_root, 1.3, 0.6)
 	g_t = 0.0
 	g_clip = 0
+	c_t = 0.0
+	c_clip = 0
+	u_t = 0.0
+	u_clip = 0
 	camera.snap(player.global_position)
 
 
@@ -232,11 +302,36 @@ func _gallery_update(dt: float) -> void:
 		g_clip = (g_clip + 1) % ANT_CLIPS.size()
 		dur = ANT_CLIPS[g_clip][1]
 	var k := g_t / dur
-	clip_label.text = "%d/%d   %s      |      %s" % [g_clip + 1, ANT_CLIPS.size(), ANT_CLIPS[g_clip][0], PILL_CLIPS[g_clip][0]]
+	c_t += dt
+	var cdur: float = CHOMP_CLIPS[c_clip][1]
+	if c_t >= cdur:
+		c_t = 0.0
+		c_clip = (c_clip + 1) % CHOMP_CLIPS.size()
+		cdur = CHOMP_CLIPS[c_clip][1]
+	u_t += dt
+	var udur: float = GRUB_CLIPS[u_clip][1]
+	if u_t >= udur:
+		u_t = 0.0
+		u_clip = (u_clip + 1) % GRUB_CLIPS.size()
+		udur = GRUB_CLIPS[u_clip][1]
+		g_grub_root.global_position = g_grub_start
+		g_grub_root.rotation.y = -PI * 0.5 + 0.25
+	clip_label.text = "%d/%d   %s      |      %s
+촘퍼 %d/%d   %s
+애벌레 %d/%d   %s" % [g_clip + 1, ANT_CLIPS.size(), ANT_CLIPS[g_clip][0], PILL_CLIPS[g_clip][0],
+		c_clip + 1, CHOMP_CLIPS.size(), CHOMP_CLIPS[c_clip][0], u_clip + 1, GRUB_CLIPS.size(), GRUB_CLIPS[u_clip][0]]
+	var gs := grub_clip(g_grub, g_grub_pose, u_clip, u_t, u_t / udur, dt)
+	g_grub_root.rotation.y += g_grub.turn * dt
+	g_grub_root.global_position += -g_grub_root.global_basis.z * gs * dt
+	g_grub.update(dt)
+	if u_clip <= 4 and is_instance_valid(g_grub_trail):
+		g_grub_trail.feed(g_grub.model.global_transform * g_grub.tail_local(), -g_grub_root.global_basis.z)
 	ant_clip(g_ant, g_ant_pose, g_clip, g_t, k, dur)
 	pill_clip(g_pill, g_pill_pose, g_clip, g_t, k, dt)
+	chomp_clip(g_chomp, g_chomp_pose, g_chomp_model, c_clip, c_t, c_t / cdur, dt, g_chomp_root.global_position.y)
 	g_ant.update(dt)
 	g_pill.update(dt)
+	g_chomp.update(dt)
 
 
 ## 전시 클립: 리그 입력과 몸 전체 자세(pose: 뒤집기·땅속 높이)를 정한다. 캡처 스크립트(_capture/bug_show.gd)도 쓴다.
@@ -311,3 +406,138 @@ static func pill_clip(r: PillRig, pose: Node3D, c: int, t: float, k: float, dt: 
 			r.emerge_k = k
 			pose.position.y = lerpf(-1.0, 0.0, ease(k, 0.6))
 
+
+
+## 촘퍼 전시 클립 (CHOMP_CLIPS 순서). 제자리에서 움직이고, 걷는 클립은 실제처럼 체액을 떨어뜨린다.
+static func chomp_clip(r: ChomperRig, pose: Node3D, model: Node3D, c: int, t: float, k: float, dt: float, floor_y: float) -> void:
+	r.speed = 0.0
+	r.turn = 0.0
+	r.windup = 0.0
+	r.lunge = 0.0
+	r.air = 0.0
+	r.dizzy = 0.0
+	r.dead_k = 0.0
+	r.emerge_k = 1.0
+	r.look_yaw = sin(t * 0.9) * 0.6
+	pose.rotation = Vector3.ZERO
+	pose.position = Vector3.ZERO
+	var first := t <= dt * 1.01
+	var drips := 0.0
+	match c:
+		0:
+			if absf(t - 1.3) < dt * 0.5:
+				r.yawn = 1.0
+				r.yawned = true
+			if absf(t - 3.0) < dt * 0.5:
+				r.clack = 1.0
+		1:
+			r.speed = 0.75
+			r.turn = sin(t * 1.6) * 1.4
+			drips = 0.6
+		2:
+			# 달렸다 멈췄다 (실제 추격처럼)
+			r.speed = 1.7 if fmod(t, 1.0) < 0.75 else 0.0
+			r.turn = sin(t * 2.3) * 2.0
+			drips = 1.6 * signf(r.speed)
+		3:
+			if first:
+				r.startle = 1.0
+		4:
+			var wt := 0.62
+			var lt := 0.34
+			if t < wt:
+				r.windup = smoothstep(0.0, 0.75, t / wt)
+				r.speed = -0.45 * (1.0 - t / wt)
+			elif t < wt + lt:
+				var lk := (t - wt) / lt
+				r.lunge = 1.0 - lk * 0.3
+				r.air = sin(lk * PI)
+				pose.position.y = sin(lk * PI) * BugChomper.HOP
+				if lk > 0.5 and r.snap == 0.0 and r.chew == 0.0:
+					r.snap = 1.0
+			else:
+				var rt := t - wt - lt
+				if rt < dt * 1.01:
+					r.chew = 1.0
+					r._kick_squash(0.9)
+				if absf(rt - 0.4) < dt * 0.5:
+					r.lick = 1.0
+		5:
+			if first:
+				r.alarm = 1.0
+			if t > 0.35 and t < 1.4:
+				r.speed = 3.4
+				r.alarm = maxf(r.alarm, 0.35)
+				drips = 2.0
+		6:
+			r.dizzy = 1.0 - smoothstep(0.8, 1.0, k)
+		7:
+			r.dead_k = smoothstep(0.0, 0.15, k)
+			r.kick_power = 1.0 - k * 0.8
+			BugEnemy.flip(pose, BugEnemy._ease_out_back(clampf(k / 0.18, 0.0, 1.0)), 0.72, 1.0)
+		8:
+			r.emerge_k = k
+			pose.position.y = lerpf(-0.9, 0.0, ease(k, 0.6))
+	# 체액: 초당 drips 방울 (몸에 붙은 떨어짐 점 중 하나에서)
+	if drips > 0.0 and randf() < drips * dt * 2.2:
+		var pts := ["pt_drip_belly", "pt_drip_tail", "pt_drip_l", "pt_drip_r", "pt_drip_mouth"]
+		var p := model.find_child(pts.pick_random(), true, false) as Node3D
+		if p:
+			BugChomper.drip(p.global_position, floor_y, 1.5 if randf() < 0.18 else 1.0, Vector3.ZERO, false)
+
+
+## 애벌레 전시 클립 (GRUB_CLIPS 순서). 돌려주는 값 = 몸 중심이 나아갈 속도(m/s) — 호출한 쪽이 몸 방향으로 옮긴다
+## (기는 클립에서 원점이 실제로 나아가야 바닥을 붙잡은 고리가 미끄러지지 않는다).
+static func grub_clip(r: GrubRig, pose: Node3D, c: int, t: float, k: float, dt: float) -> float:
+	r.speed = 0.0
+	r.turn = 0.0
+	r.windup = 0.0
+	r.lunge = 0.0
+	r.dizzy = 0.0
+	r.dead_k = 0.0
+	r.emerge_k = 1.0
+	r.look_yaw = sin(t * 0.7) * 0.6
+	pose.rotation = Vector3.ZERO
+	pose.position = Vector3.ZERO
+	var first := t <= dt * 1.01
+	var go := 0.0
+	match c:
+		1:
+			r.speed = BugGrub.CRAWL_SPEED * smoothstep(0.0, 0.4, t) * (1.0 - smoothstep(0.85, 1.0, k))
+			go = r.speed
+		2:
+			r.speed = BugGrub.WANDER_SPEED
+			r.turn = sin(t * 0.9) * 0.7
+			go = r.speed
+		3:
+			if first:
+				r.startle = 1.0
+		4:
+			var wt := BugGrub.WINDUP_T
+			var lt := BugGrub.LUNGE_T
+			if t < wt:
+				r.windup = smoothstep(0.0, 0.7, t / wt)
+			elif t < wt + lt:
+				var lk := (t - wt) / lt
+				r.lunge = minf(1.0, lk * 3.6)
+				if lk > 0.45 and r.bite == 0.0:
+					r.bite = 1.0
+				go = BugGrub.LUNGE_DIST / lt * (1.3 - lk * 0.6)
+			else:
+				var rt := t - wt - lt
+				r.lunge = maxf(0.0, 1.0 - rt * 1.6)
+				go = 0.25 * maxf(0.0, 1.0 - rt / BugGrub.RECOVER_T)
+				r.speed = go
+		5:
+			if first or absf(t - 0.8) < dt * 0.5:
+				r.alarm = 1.0
+		6:
+			r.dizzy = 1.0 - smoothstep(0.8, 1.0, k)
+		7:
+			r.dead_k = smoothstep(0.0, 0.15, k)
+			r.kick_power = 1.0 - k * 0.8
+			BugEnemy.flip(pose, BugEnemy._ease_out_back(clampf(k / 0.18, 0.0, 1.0)), 0.5, 1.0)
+		8:
+			r.emerge_k = k
+			pose.position.y = lerpf(-0.7, 0.0, ease(k, 0.6))
+	return go

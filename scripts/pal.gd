@@ -60,6 +60,7 @@ static var _flash_mat: StandardMaterial3D
 static var _lock_mat: ShaderMaterial
 static var _parry_mat: ShaderMaterial
 static var _parry_flash_mat: ShaderMaterial
+static var _parry_charge_mat: ShaderMaterial
 ## 카툰 렌더링(셀 음영 + 외곽선) 켜짐 여부. 기본 꺼짐. O 키로 전환, 실행 인자 --toon 으로 켠 채 시작
 static var toon_on := OS.get_cmdline_user_args().has("--toon")
 static var _toon_mats: Array[StandardMaterial3D] = []
@@ -125,7 +126,7 @@ static func set_toon(on: bool) -> void:
 	for m in _toon_mats:
 		_apply_toon(m)
 	if is_instance_valid(ToonOutline.inst):
-		ToonOutline.inst.visible = on
+		ToonOutline.inst.visible = on or ToonOutline.inst.brawl_on
 
 
 ## 조명 무시 단색. 색은 인스턴스 파라미터 tint / energy 로 지정한다.
@@ -203,6 +204,28 @@ void fragment() {
 		_parry_flash_mat = ShaderMaterial.new()
 		_parry_flash_mat.shader = sh
 	return _parry_flash_mat
+
+
+## 패링 공격 준비동작 중인 적 위에 덮는 흰 전신 발광. 인스턴스 값 charge(0~1, 준비 진행도)를 따라
+## 처음부터 또렷하게 하얘지고, 끝으로 갈수록 더 밝고 빠르게 맥동한다 (블룸이 걸리게 HDR).
+static func parry_charge() -> ShaderMaterial:
+	if _parry_charge_mat == null:
+		var sh := Shader.new()
+		sh.code = """
+shader_type spatial;
+render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
+instance uniform float charge = 0.0;
+void fragment() {
+	float rim = pow(1.0 - clamp(dot(NORMAL, VIEW), 0.0, 1.0), 1.4);
+	float pulse = 0.5 + 0.5 * sin(TIME * mix(16.0, 46.0, charge));
+	float k = 0.45 + 0.55 * smoothstep(0.0, 0.7, charge);
+	ALBEDO = vec3(1.0, 0.99, 0.96) * (1.6 + charge * 2.4 + rim * 1.4 + pulse * 0.6);
+	ALPHA = clamp(k * (0.55 + pulse * 0.2) + rim * 0.6, 0.0, 0.97);
+}
+"""
+		_parry_charge_mat = ShaderMaterial.new()
+		_parry_charge_mat.shader = sh
+	return _parry_charge_mat
 
 
 static func parry_glow() -> ShaderMaterial:

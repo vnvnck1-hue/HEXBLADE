@@ -26,6 +26,7 @@ var p_base := Vector3(0, 0, 0.05)    # 파츠 기준 리본 뿌리 (칼: 손잡�
 var p_tip := Vector3(0, 0, -1.43)    # 파츠 기준 리본 끝 (칼: 칼끝)
 var boost := 0.0                 # 외부에서 올리는 세기 (콤보 스윙 중 1)
 var tint := 0.0                  # 0 분홍·보라 / 1 불꽃빛 (관통 일격 준비 중)
+var bright := 1.0                # 밝기 배율 (가산 혼합이라 0.5 면 빛이 절반). 기본 광선검은 Player 가 0.5 로 둔다
 var gust := false                # 켜면 빠르게 휘두른 칼이 지나간 면을 따라 기체가 흩날린다 (GustFX)
 
 var _pts: Array = []             # [hilt, tip, time, weight]
@@ -130,6 +131,7 @@ uniform float rim_amt = 1.0;
 uniform float glow_amt = 1.0;
 uniform float strand_amt = 1.0;
 uniform float opacity = 1.0;
+uniform float bright = 1.0;
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 float vnoise(vec2 p) {
 	vec2 i = floor(p); vec2 f = fract(p);
@@ -161,7 +163,7 @@ void fragment() {
 	col = mix(col, deep, edge_in * 0.85);
 	col = mix(col, white, rim * (1.0 - age * 0.6));
 	float glow = 1.0 + ((1.0 - age) * 1.6 + rim * 1.2) * glow_amt;
-	ALBEDO = col * glow * grain;
+	ALBEDO = col * glow * grain * bright;
 	float fade = pow(1.0 - age, 1.4);
 	float a = max(body * (0.55 + 0.45 * (1.0 - edge_in)), rim * 0.95) + strand * 0.85 * (1.0 - age);
 	ALPHA = clamp(a * fade * w * opacity, 0.0, 1.0);
@@ -254,6 +256,7 @@ func _rebuild() -> void:
 	if not any:
 		return
 	(material_override as ShaderMaterial).set_shader_parameter("fire", tint)
+	(material_override as ShaderMaterial).set_shader_parameter("bright", bright)
 	_im.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
 	for i in n - 1:
 		var p0: Array = _pts[maxi(i - 1, 0)]

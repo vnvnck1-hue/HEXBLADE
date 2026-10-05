@@ -598,6 +598,7 @@ func build() -> void:
 
 	# 벽·기둥·엄폐물: 같은 종류·같은 높이 칸을 가로로 이어 상자 하나로
 	var wall_prop_cells := WallProps.dress(self)
+	ClaudeBgDress.plan(self, wall_prop_cells)          # 배경 첫 제작: 뒤 벽 3m W01 · 벽감 작업대·수납장 (--bg=old 면 없음)
 	var solid := PackedByteArray()
 	solid.resize(W * H)
 	var base := PackedFloat32Array()
@@ -656,6 +657,7 @@ func build() -> void:
 
 	_build_gates()
 	_build_minimap()
+	ClaudeBgDress.apply(self)                          # 배경 첫 제작: F01 바닥 재질 · 낮은 W01 블록 벽
 
 
 func _near_floor(c: Vector2i) -> bool:

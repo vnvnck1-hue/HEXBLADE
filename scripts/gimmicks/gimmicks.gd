@@ -375,11 +375,13 @@ func _set_hidden(p: Player, in_smoke: bool, hidden: bool) -> void:
 			GimmickHolo.remove(p)
 	if hidden != _was_hidden:
 		_was_hidden = hidden
-		var mark := "?" if hidden else "!"
-		var col := Color("ffe070") if hidden else Color("ff5a6a")
+		# 놓치면 "?" · 다시 들키면 "!!" — 적마다 조금씩 어긋나게 띠용! 튀어나온다
+		var mark := "?" if hidden else "!!"
+		var n := 0
 		for e in Enemy.live(get_tree()):
 			if is_instance_valid(e) and (e as Enemy).alive and not (e as Enemy).prop and (e as Enemy).landed:
-				main.hud.popup(mark, col, (e as Node3D).global_position + Vector3(0, 2.3, 0))
+				SpeechBubble.say(e as Node3D, mark, SpeechBubble.EMOTE, {"offset": Vector3(0, 2.3, 0), "delay": n * 0.06 + randf() * 0.05})
+				n += 1
 	p.hidden = hidden
 
 

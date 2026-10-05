@@ -67,6 +67,11 @@ var t := 0.0
 var _blip_n := 0
 var _last_visible := 0
 var _ended := false
+var _layout_screen := Vector2.ZERO
+var _solo_side := ""
+var _paired := false
+var _layout_font := -1
+var _layout_choice_count := -1
 var _mark_on: StyleBoxFlat           # 자동 · 넘기기 버튼의 켬/끔 바탕 (한 번만 만든다)
 var _mark_off: StyleBoxFlat
 static var _calm_rx: Array[RegEx] = []   # 기록에서 흔들림 · 물결 태그를 지우는 정규식 (한 번만 컴파일)
@@ -334,6 +339,7 @@ func _on_said(l: Dictionary) -> void:
 		var q: DialoguePortrait = portraits[id]
 		q.active = id == who
 		q.z_index = 10 if id == who else (0 if q.slot in DialoguePortrait.BACK_SLOTS else 2)
+	_update_layout(get_viewport_rect().size)
 	# 이름표: 화자 없음(해설)이면 숨기고 글자를 기울여 회색으로
 	plate_name.visible = who != ""
 	plate_en.visible = who != ""
@@ -364,6 +370,8 @@ func _on_said(l: Dictionary) -> void:
 
 func _on_asked(options: Array) -> void:
 	_clear_choices()
+	_update_layout(get_viewport_rect().size)
+	_layout_choices()
 	auto_wait = 0.0
 	for i in options.size():
 		var o: Dictionary = options[i]
@@ -390,7 +398,89 @@ func _on_asked(options: Array) -> void:
 	skip_read = false
 	_refresh_buttons()
 	if choice_box.get_child_count() > 0:
-		(choice_box.get_child(0) as Button).grab_focus.call_deferred()
+		_focus_first_choice.call_deferred()
+
+
+func _focus_first_choice() -> void:
+	# 같은 프레임에 선택/재시작했으면 이전 버튼은 이미 무대에서 빠져 있다.
+	if choice_box.is_inside_tree() and choice_box.get_child_count() > 0:
+		(choice_box.get_child(0) as Button).grab_focus()
+
+
+func _layout_choices() -> void:
+	# 단독/두 인물 상담의 선택지는 하단 창 안에 표시해 얼굴과 손을 가리지 않는다.
+	var docked := (_solo_side != "" or _paired) and runner != null and runner.waiting_choice
+	text.visible = not docked
+	if docked:
+		choice_box.anchor_left = 0.0
+		choice_box.anchor_right = 1.0
+		choice_box.offset_left = 78.0
+		choice_box.offset_right = -78.0
+		choice_box.offset_bottom = -56.0
+		return
+	var x := 0.5
+	var width := 660.0
+	# 단독 상담 장면은 빈 쪽에 선택지를 두어 얼굴과 손동작을 가리지 않는다.
+	if portraits.size() == 1:
+		var p: DialoguePortrait = portraits.values()[0]
+		if p.slot in ["left", "left2", "right", "right2"]:
+			x = 0.75 if p.slot in ["left", "left2"] else 0.25
+			width = minf(width, get_viewport_rect().size.x * 0.5 - 64.0)
+	choice_box.anchor_left = x
+	choice_box.anchor_right = x
+	choice_box.offset_left = -width * 0.5
+	choice_box.offset_right = width * 0.5
+	choice_box.offset_bottom = box.offset_top - 36.0
+
+
+func _update_layout(screen: Vector2) -> void:
+	var side := ""
+	var pair := false
+	var wide := screen.x >= 1100.0 and screen.x / screen.y >= 1.35
+	if portraits.size() == 1 and wide:
+		var p: DialoguePortrait = portraits.values()[0]
+		if p.slot in ["left", "left2", "right", "right2", "center"]:
+			side = p.slot
+	if portraits.size() == 2 and wide:
+		var left := 0
+		var right := 0
+		for id in portraits:
+			left += 1 if portraits[id].slot in ["left", "left2"] else 0
+			right += 1 if portraits[id].slot in ["right", "right2"] else 0
+		pair = left == 1 and right == 1
+	var modes_match := true
+	for id in portraits:
+		modes_match = modes_match and portraits[id].solo == (side != "") and portraits[id].paired == pair
+	var choice_count := runner.options.size() if runner != null and runner.waiting_choice else 0
+	if side == _solo_side and pair == _paired and screen == _layout_screen and modes_match and _layout_font == size_idx and _layout_choice_count == choice_count:
+		return
+	_solo_side = side
+	_paired = pair
+	_layout_screen = screen
+	_layout_font = size_idx
+	_layout_choice_count = choice_count
+	var fitted := side != "" or pair
+	var height := float(SIZES[size_idx]) * 4.0 + 70.0 if fitted else 206.0
+	if fitted and choice_count > 0:
+		height = maxf(height, float(choice_count) * 70.0 + 16.0)
+	for id in portraits:
+		portraits[id].solo = side != ""
+		portraits[id].paired = pair
+		portraits[id].solo_bottom = height + 10.0
+	box.anchor_left = 0.0
+	box.anchor_right = 1.0
+	box.anchor_top = 1.0
+	box.offset_left = 30.0
+	box.offset_right = -30.0
+	box.offset_top = -height - 38.0
+	text.offset_left = 48.0 if fitted else 64.0
+	text.offset_right = -150.0
+	text.offset_top = 36.0 if fitted else 46.0
+	text.offset_bottom = -20.0
+	plate_name.position.x = 66.0
+	plate_en.position.x = plate_name.position.x + plate_name.get_minimum_size().x + 14.0
+	_layout_choices()
+	box.queue_redraw()
 
 
 func _on_cue(c: Dictionary) -> void:
@@ -510,6 +600,7 @@ func jump_to_choice() -> void:
 func _process(dt: float) -> void:
 	t += dt
 	var screen := get_viewport_rect().size
+	_update_layout(screen)
 	# 퇴장한 인물 정리
 	for p in people.get_children():
 		var q := p as DialoguePortrait

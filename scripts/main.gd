@@ -19,6 +19,12 @@ const TURRET_RATIO := 0.15
 ## 중력 크롤러(Crawler) 비율. 같은 방식으로 이월해 전체 적의 12%를 맞춘다.
 const CRAWLER := -3
 const CRAWLER_RATIO := 0.12
+## 벌레 아레나 (방 탐색 아레나 = main.tscn 에서만): 기계 적 대신 벌레만 나오고, 방을 하나 정리할 때마다 위험도가 오른다.
+## 위험도 레벨 = 지금까지 정리한 방 수. 레벨마다 적 수 · 동시 수 · 출현 간격 · 체력 · 공격 빈도 · 구성이 올라간다.
+const BUG_GRUB := -10
+const BUG_CHOMP := -11
+const BUG_ANT := -12
+const BUG_PILL := -13
 ## 연속 처치 콤보: 이 시간 안에 다음 적을 처치하면 이어진다
 const COMBO_TIME := 3.0
 # 재화 드롭: 적이 죽을 때 가끔 그 자리에 떨어뜨린다 (플레이어가 직접 주워야 한다)
@@ -29,6 +35,7 @@ const BOSS_LOOT_STEP := 0.1      # 보스 체력이 이만큼 깎일 때마다 �
 static var inst: Main
 ## 실행 인자는 바뀌지 않으므로 한 번만 읽어 둔다 (OS.get_cmdline_user_args 는 부를 때마다 배열을 새로 만든다)
 static var cmd_args := OS.get_cmdline_user_args()
+static var ui_hidden := false     ## 화면 UI 전체 숨김 (허수아비 시험장 F2). 적 머리 위 체력바도 숨긴다
 
 var state := State.PLAY
 var player: Player
@@ -52,6 +59,9 @@ var pending_spawns := 0
 var striker_carry := 0.0
 var turret_carry := 0.0
 var crawler_carry := 0.0
+## 벌레 아레나 여부 (_ready 에서 정함) · 이번 방의 위험도 레벨
+var bug_arena := false
+var threat := 0
 ## 이번 방에서 포탑 해치를 쓴 자리 (겹치지 않게)
 var turret_spots: Array = []
 var combo := 0
@@ -105,6 +115,7 @@ var _show_aim := Vector3(2.2, 0.95, 0.4)
 func _exit_tree() -> void:
 	if inst == self:
 		inst = null
+	ui_hidden = false
 
 
 func _ready() -> void:
@@ -113,6 +124,8 @@ func _ready() -> void:
 	Engine.physics_ticks_per_second = 60
 	randomize()
 	_parse_args()
+	# 방 탐색 아레나(이 스크립트 그대로 쓰는 main.tscn)만 벌레 아레나. 상속한 씬(섹터 런·시험장·보스전)은 그대로. --enemies=classic 이면 예전 기계 적
+	bug_arena = (get_script() as Script).resource_path == "res://scripts/main.gd" and not cmd_args.has("--enemies=classic")
 	_setup_input()
 	world = Node3D.new()
 	add_child(world)
@@ -120,6 +133,7 @@ func _ready() -> void:
 	add_child(Sfx.new())
 	_build_environment()
 	PaintedLook.attach(self, env, sun)
+	BrawlLook.attach(self, env, sun)
 	_build_arena()
 	bullets = Node3D.new()
 	add_child(bullets)
@@ -144,6 +158,9 @@ func _ready() -> void:
 	hud = Hud.new()
 	add_child(hud)
 	Gimmicks.attach(self)          # 필드 기믹: 연기 구역 · 레일 · 가스통 · 수리키트 해치
+	Infestation.attach(self)       # 감염 오염물: 구석의 포낭 무더기 · 연결막 (끄기: --infest=off)
+	PartnerDrone.attach(self)      # 파트너 청소 드론 (끄기: --drone=off)
+	FluidField.attach(self)        # 유체 연기: 안개 · 독가스(기체 청소) (끄기: --fluid=off, 배치: --gas=always/off)
 	var impact := ImpactFrame.new()
 	impact.enabled = not OS.get_cmdline_user_args().has("--noimpact")
 	add_child(impact)
@@ -202,7 +219,7 @@ func _setup_input() -> void:
 	var keys := {
 		"move_left": [KEY_A, KEY_LEFT], "move_right": [KEY_D, KEY_RIGHT],
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
-		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_F], "rush_skill": [KEY_E], "interact": [KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R, KEY_Q], "reload": [KEY_T], "camera": [KEY_C], "cam_preset": [KEY_V],
+		"dash": [KEY_SPACE], "boost": [KEY_SHIFT], "slash": [KEY_F], "rush_skill": [KEY_E], "interact": [KEY_F], "restart": [KEY_R, KEY_F5], "ult": [KEY_R], "reload": [KEY_T], "camera": [KEY_C], "cam_preset": [KEY_V],
 		"pause": [KEY_ESCAPE], "mute": [KEY_M], "impact": [KEY_I], "toon": [KEY_O], "lens": [KEY_L],
 	}
 	for action in keys:
@@ -333,6 +350,9 @@ func _activate_room(id: int) -> void:
 	turret_spots.clear()
 	shake(0.25)
 	Sfx.play("spawn", 0.0, 0.0)
+	if bug_arena:
+		_activate_bug_room(r)
+		return
 	if r.wave:
 		wave = 1
 		_fill_queue(WAVE_SIZES[0], d)
@@ -374,9 +394,89 @@ func _fill_queue(count: int, d: int) -> void:
 	spawn_queue.shuffle()
 
 
+# ── 벌레 아레나: 위험도 레벨 ─────────────────────────────
+
+## 위험도 레벨 L (정리한 방 수) 의 방 적 수. 넓은 방은 크기만큼 더 (2배 방 ×1.5, 3배 방 ×2)
+static func bug_count(level: int, scale: float) -> int:
+	return roundi(mini(3 + level, 11) * (1.0 + (scale - 1.0) * 0.5))
+
+
+## 동시에 살아 있을 수 있는 벌레 수
+static func bug_alive(level: int, scale: float) -> int:
+	return mini(2 + ceili(level * 0.5), 6) + roundi((scale - 1.0) * 1.5)
+
+
+## 소환 간격 (초)
+static func bug_interval(level: int) -> float:
+	return maxf(0.35, 1.0 - level * 0.08)
+
+
+## 벌레 체력 배율
+static func bug_hp(level: int) -> float:
+	return 1.0 + level * 0.12
+
+
+## 공격 빈도: 공격 쿨타임이 이 배율만큼 빨리 돈다
+static func bug_aggro(level: int) -> float:
+	return 1.0 + level * 0.1
+
+
+## 구성 가중치 [애벌레, 촘퍼, 개미, 공벌레]: 처음엔 느린 애벌레·촘퍼, 방을 정리할수록 개미 → 공벌레가 섞이고 늘어난다
+static func bug_weights(level: int) -> Array:
+	return [maxf(0.6, 3.0 - 0.3 * level), 1.4,
+		0.0 if level < 1 else 0.6 + 0.35 * level,
+		0.0 if level < 2 else 0.4 + 0.3 * (level - 2)]
+
+
+func _activate_bug_room(r: Dictionary) -> void:
+	threat = rooms_cleared
+	var lv := "위험도 Lv.%d" % (threat + 1)
+	if r.wave:
+		wave = 1
+		_fill_bug_queue(roundi(WAVE_SIZES[0] * (1.0 + threat * 0.12)), threat)
+		spawn_timer = 0.6
+		hud.banner("WAVE 1 / %d" % ArenaMap.WAVES, Color("ff7a9a"), "대형 %s · %s · 웨이브 %d번을 모두 버티세요 · 벌레 %d마리" % [ArenaMap.SHAPE_NAMES[r.shape], lv, ArenaMap.WAVES, room_total])
+		return
+	wave = 0
+	_fill_bug_queue(bug_count(threat, r.scale), threat)
+	spawn_timer = 0.6
+	var title: String = ArenaMap.SHAPE_NAMES[r.shape] if r.scale <= 1.0 else "대형 " + ArenaMap.SHAPE_NAMES[r.shape]
+	hud.banner(title, Color("ff7a9a"), "차단막이 닫혔습니다 · %s · 벌레 %d마리" % [lv, room_total])
+	print("BUG_ROOM level=%d count=%d alive=%d" % [threat, room_total, max_alive()])
+
+
+## 벌레 count 마리를 가중치대로 뽑아 대기열에 채운다
+func _fill_bug_queue(count: int, level: int) -> void:
+	room_total = count
+	room_kills = 0
+	spawn_queue.clear()
+	var kinds := [BUG_GRUB, BUG_CHOMP, BUG_ANT, BUG_PILL]
+	var w := bug_weights(level)
+	var sum := 0.0
+	for v: float in w:
+		sum += v
+	for i in count:
+		var pick := randf() * sum
+		var k := 0
+		while k < w.size() - 1 and pick >= w[k]:
+			pick -= w[k]
+			k += 1
+		spawn_queue.append(kinds[k])
+
+
 ## 웨이브 방: 한 웨이브를 정리하면 잠깐 쉬었다가 다음 웨이브가 몰려온다 (웨이브마다 난이도 +1)
 func _next_wave() -> void:
 	wave += 1
+	if bug_arena:
+		threat = rooms_cleared + wave - 1
+		_fill_bug_queue(roundi(WAVE_SIZES[mini(wave - 1, WAVE_SIZES.size() - 1)] * (1.0 + rooms_cleared * 0.12)), threat)
+		spawn_timer = WAVE_GAP
+		print("WAVE %d/%d t=%.1f hp=%d" % [wave, ArenaMap.WAVES, time, player.hp])
+		Sfx.play("charged", 0.0, 0.0)
+		FX.shockwave(player.global_position, Color("ff7a9a"), 4.0, 0.5)
+		var fin := wave == ArenaMap.WAVES
+		hud.banner("FINAL WAVE" if fin else "WAVE %d / %d" % [wave, ArenaMap.WAVES], Color("ff5a7a") if fin else Color("ff9ab0"), "웨이브 정리 · 위험도 Lv.%d · 다음 벌레 %d마리" % [threat + 1, room_total])
+		return
 	var r: Dictionary = map.rooms[active_room]
 	var d: int = clampi(r.difficulty + wave - 1, 1, 6)
 	_fill_queue(WAVE_SIZES[mini(wave - 1, WAVE_SIZES.size() - 1)], d)
@@ -393,6 +493,8 @@ func max_alive() -> int:
 	if active_room < 0:
 		return MAX_ALIVE
 	var r: Dictionary = map.rooms[active_room]
+	if bug_arena:
+		return bug_alive(threat, r.scale) + (1 if r.wave else 0)
 	return MAX_ALIVE + roundi((r.scale - 1.0) * 1.5) + (1 if r.wave else 0)
 
 
@@ -659,7 +761,7 @@ func _physics_process(dt: float) -> void:
 			if not e.get("prop"):
 				alive += 1
 		if spawn_timer <= 0.0 and alive < max_alive():
-			spawn_timer = 0.5
+			spawn_timer = bug_interval(threat) if bug_arena else 0.5
 			_spawn(spawn_queue.pop_front())
 
 
@@ -681,11 +783,20 @@ func _spawn(pattern: int) -> void:
 		match pattern:
 			STRIKER: e = Striker.new()
 			CRAWLER: e = Crawler.new()
+			BUG_GRUB: e = BugGrub.new()
+			BUG_CHOMP: e = BugChomper.new()
+			BUG_ANT: e = BugAnt.new()
+			BUG_PILL: e = BugPill.new()
 			_: e = Enemy.new()
 		if pattern >= 0:
 			e.pattern = pattern
+		if e is BugEnemy:
+			e.hp_mul = bug_hp(threat)
+			(e as BugEnemy).aggro = bug_aggro(threat)
 		world.add_child(e)
-		e.global_position = pos)
+		e.global_position = pos
+		if e is BugEnemy:
+			e.rotation.y = atan2(-(player.global_position.x - pos.x), -(player.global_position.z - pos.z)))
 
 
 ## 포탑은 벽가·구석의 바닥 해치에서 솟아오른다 (해치 연출이 예고를 대신하므로 소환 표식은 쓰지 않는다)
@@ -711,7 +822,9 @@ func on_enemy_killed(_e: Enemy) -> void:
 	var pts := 100 * combo * mult
 	score += pts
 	hud.combo_pop(pts, _e.kill_source)
+	ComboMeter.kill()
 	_drop_loot(_e)
+	PartnerDrone.on_kill(_e)       # 처치한 자리에 잔해·체액 (드론이 치운다)
 	if is_instance_valid(player):
 		player.gain_boost()
 	hitstop(0.07)
@@ -773,9 +886,8 @@ func _fast_kill(boss_node: Node, in_p2: bool) -> void:
 
 func on_player_hurt() -> void:
 	hud.hurt_flash()
-	if combo > 1:
-		hud.combo_break()
-	combo = 0
+	ComboMeter.hurt()
+	combo = 0          # 끊김 표시는 ComboMeter 의 BREAK 가 한다
 
 
 func on_player_died() -> void:
@@ -836,8 +948,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		Pal.set_toon(not Pal.toon_on)
 		hud.banner("CARTOON  %s" % ("ON" if Pal.toon_on else "OFF"), Color(1, 1, 1), "셀 음영 + 외곽선")
 	elif event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_K:
-		# K: 하스스톤 식 핸드 페인팅 질감 켜기/끄기 (PaintedLook)
+		# K: 하스스톤 식 핸드 페인팅 질감 켜기/끄기 (PaintedLook). 브롤 룩과는 동시에 켜지지 않는다
+		if PaintedLook.game_preset == PaintedLook.NONE and BrawlLook.on:
+			BrawlLook.set_on(false)
 		hud.banner("PAINTED  %s" % PaintedLook.toggle(), Color(1, 0.9, 0.7), "하스스톤 식 핸드 페인팅 질감")
+	elif event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_N:
+		# N: 브롤스타즈 식 화면 (망원 카메라 · 밝은 조명 · 2단 셀 + 림라이트) 켜기/끄기 (BrawlLook)
+		hud.banner("BRAWL LOOK  %s" % BrawlLook.toggle(), Color(1, 0.85, 0.4), "망원 부감 · 밝은 조명 · 부드러운 셀 음영")
+	elif event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_J:
+		# J: 피해 숫자 연출 프리셋 전환 (DamageLog: STACK 머리 위 기둥 ↔ BOUNCE 튀었다 떨어짐)
+		hud.banner("DAMAGE LOG  %s" % DamageLog.PRESET_NAMES[DamageLog.use()], Color(1, 0.9, 0.55), "J 키로 전환")
 
 
 # ── 카메라 · 타격감 ─────────────────────────────────────
@@ -857,11 +977,13 @@ func dramatic(on: bool) -> void:
 		_dark_tw.kill()
 	_dark_tw = create_tween().set_parallel(true)
 	var d := 0.1 if on else 0.6
-	_dark_tw.tween_property(sun, "light_energy", 0.08 if on else 1.25, d)
-	_dark_tw.tween_property(env, "ambient_light_energy", 0.05 if on else 0.5, d)
-	_dark_tw.tween_property(env, "background_color", Color(0.0, 0.0, 0.01) if on else Color(0.02, 0.02, 0.05), d)
-	_dark_tw.tween_property(env, "glow_intensity", 1.1 if on else 0.5, d)
-	_dark_tw.tween_property(env, "glow_hdr_threshold", 0.85 if on else 1.1, d)
+	# 되돌아올 값: 브롤 룩이면 브롤 조명, 아니면 예전 기본값
+	var base: Dictionary = BrawlLook.base_light(self) if BrawlLook.base_light(self) != null else 			{"sun_e": 1.25, "amb_e": 0.5, "bg": Color(0.02, 0.02, 0.05), "glow": 0.5, "glow_thr": 1.1}
+	_dark_tw.tween_property(sun, "light_energy", 0.08 if on else base.sun_e, d)
+	_dark_tw.tween_property(env, "ambient_light_energy", 0.05 if on else base.amb_e, d)
+	_dark_tw.tween_property(env, "background_color", Color(0.0, 0.0, 0.01) if on else base.bg, d)
+	_dark_tw.tween_property(env, "glow_intensity", 1.1 if on else base.glow, d)
+	_dark_tw.tween_property(env, "glow_hdr_threshold", 0.85 if on else base.glow_thr, d)
 	if on:
 		# 임팩트 프레임이 재생 중이면 끝난 뒤 섬광을 낸다 (흑백 대비를 덮지 않게)
 		ImpactFrame.inst.after(hud.screen_flash.bind(Color(0.85, 1.0, 1.0), 0.55))
@@ -872,10 +994,13 @@ func hitstop(sec: float) -> void:
 	hitstop_until = max(hitstop_until, Time.get_ticks_msec() + int(sec * 1000.0))
 
 
-## 기본 시간 배율 (궁극기 락온 중 슬로우모션). 물리 틱을 함께 올려 느린 화면에서도 움직임이 끊기지 않게 한다.
+## 기본 시간 배율 (궁극기 락온 · 패링 · 위험 섬광 · 합체 컷인 슬로우모션).
+## 물리 틱은 60 그대로 둔다: Godot 는 물리 스텝 수를 실제 시간으로 세고 time_scale 은 스텝당 dt 만 줄이므로,
+## 0.1배속에서도 실제 1초에 60스텝이 돌아 화면은 그대로 부드럽다. (예전엔 60/s 로 틱을 올려 0.1배속이면 물리가 초당 600번 —
+## 적이 많은 방에서 슬로우모션마다 렉이 걸렸다. 측정: scale 0.1 · ticks 60 → 60 스텝/초, ticks 600 → 601 스텝/초)
 func set_slowmo(s: float) -> void:
 	slowmo = s
-	Engine.physics_ticks_per_second = int(round(60.0 / s))
+	Engine.physics_ticks_per_second = 60
 	if Time.get_ticks_msec() >= hitstop_until:
 		Engine.time_scale = s
 
@@ -1102,6 +1227,14 @@ func bot_input(p: Player) -> Dictionary:
 		# 관통 일격이 준비되면 먼 적에게도 바로 벤다
 		if p.phantom_ready and bd < Player.PHANTOM_RANGE - 1.0:
 			out.slash = true
+		# 휠윈드가 장전되면 가까운 적에게 푼다
+		if p.whirl.armed() and bd < DashWhirl.R + 1.5:
+			out.slash = true
+		# 대시 도중 검 = 일격참 돌진 (대시 두 번에 한 번꼴)
+		if p.dash_t > 0.0 and bd < Player.PHANTOM_RANGE - 1.0 and fmod(time, 6.0) < 3.0:
+			out.slash = true
+		# E 도약 내려찍기: 사거리 안 적에게 가끔
+		out.skill = bd > 3.0 and bd < LeapSlam.RANGE and p.leap.ready() and fmod(time, 4.0) < 0.05
 	# 패링: 창이 열리면 대시를 눌러 받아친다
 	if Parry.inst and Parry.inst.best_threat() != null:
 		out.dash = true

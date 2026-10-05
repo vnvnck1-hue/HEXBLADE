@@ -2,7 +2,8 @@ class_name Player
 extends CharacterBody3D
 ## 보라색 로봇.
 ## WASD 이동 · 마우스 조준 · 좌클릭 연사 · 우클릭 유지→놓기 충전 레이저
-## Space 드릴 회피 (끝나는 순간 다시 누르면 2단 대시) · Shift 백팩 부스터 비행 · E 검
+## Space 드릴 회피 (대시 중 검 → 일격참 돌진 · 끝나는 순간 다시 누르면 2단 대시 → 다음 검이 5회전 휠윈드) · Shift 백팩 부스터 비행
+## E 유지 → 원형 착지 조준 · 떼면 도약 내려찍기 (범위 피해 + 1초 기절)
 ## R 유지: 슬로우모션 락온 → 놓으면 미사일
 
 const BeamImpact := preload("res://scripts/beam_impact.gd")
@@ -20,6 +21,11 @@ const DASH_SPEED := 17.0
 const DASH_TIME := 0.3
 const DASH_CD := 0.8
 const FIRE_INTERVAL := 0.085
+# 기본 광선검 리본: 회오리(드론 휠윈드)의 형광 리본(수명 0.24 · 길이 1.25배 · 밝기 1)을 수명 · 밝기 절반으로
+const SABER_RIBBON_LIFE := 0.12
+const SABER_RIBBON_REACH := 1.25
+const SABER_RIBBON_BRIGHT := 0.5
+const BLADE_SPEED := 0.5          # 기본 광선검(콤보) 속도 배율. 드론 합체 중엔 blade_boost 2 → 예전 속도
 const MAG_SIZE := 30              # 기본 총기 탄창: 30발마다 재장전
 const RELOAD_TIME := 1.25         # 재장전 시간 (T 키, 또는 탄창이 비면 자동)
 const BULLET_SPEED := 60.0
@@ -46,16 +52,16 @@ const ENERGY_REGEN := 9.0        # 이 시간(초)마다 에너지 1칸이 저�
 const MISSILE_MAX := 12
 const MISSILE_START := 4
 const CHARGE_STAGES := [0.34, 0.67, 1.0]
-# 2단 대시: 대시 마지막 CHAIN_WINDOW 초 ~ 끝난 뒤 CHAIN_GRACE 초 안에 다시 누르면 성공
+# 2단 대시: 대시 마지막 CHAIN_WINDOW 초 ~ 끝난 뒤 CHAIN_GRACE 초 안에 다시 누르면 성공 → 휠윈드 장전 (DashWhirl, 다음 검이 휠윈드)
 const CHAIN_WINDOW := 0.1
 const CHAIN_GRACE := 0.06
-# 관통 일격 (2단 대시 성공 후 첫 검)
+# 관통 일격 = 일격참 (대시 도중 검 · 패링 성공 후 첫 검)
 const PHANTOM_RANGE := 9.0
 const PHANTOM_TIME := 0.05       # 3프레임
 const PHANTOM_BEHIND := 2.2      # 적 뒤로 빠져나가는 거리
 const PHANTOM_WIDTH := 0.9
 const PHANTOM_DMG := 20
-const PHANTOM_WINDOW := 3.0      # 2단 대시(또는 패링) 성공 후 관통 일격을 쓸 수 있는 시간
+const PHANTOM_WINDOW := 3.0      # 패링 성공 후 관통 일격을 쓸 수 있는 시간
 # 검 휘두르기 4종: 가로 베기 / 역베기 / 내려찍기 / 회전 베기
 const SLASH_TIMES := [0.16, 0.16, 0.2, 0.24]
 const SLASH_SWINGS := [0.05, 0.05, 0.06, 0.1]
@@ -69,8 +75,7 @@ const ULT_EDGE_PX := 18.0        # 조준점이 화면 가장자리에서 이만
 const ULT_WINDUP := 0.42         # R 을 뗀 뒤 발사 직전 준비동작 (실제 시간, 초). 슬로우모션도 이때 함께 끝난다
 const LOCK_MAX := 10
 
-# 점프: Shift 를 누른 채 Space 를 JUMP_HOLD 초 이상 누르고 있으면 뛴다 (짧게 떼면 평소 대시)
-const JUMP_HOLD := 0.18
+# 점프: 키보드 입력은 없다. 봇 "jump" 키 · 떨어질 때의 공중 처리에만 쓴다
 const JUMP_V := 8.8              # 정점 약 1.5m
 const GRAVITY := 25.0
 const FALL_SNAP := 0.35          # 이보다 급히 꺼지는 지면은 걸어 내려가지 않고 떨어진다
@@ -87,6 +92,12 @@ var rooted := false               # 제자리 고정 (레버 돌리는 중)
 var carry := Vector3.ZERO         # 레일이 실어 나르는 속도 (이동에 더해진다)
 var interact_ok := false          # 레버 범위: F 는 검 대신 레버로 간다
 var gimmick_pose: Callable        # 자세 덮어쓰기 (레버 돌리기), 인자 (player, dt)
+var gear_pose: Callable           # 자세 덮어쓰기 (청소 질주: 등 뒤 청소기 꺼내기 · 쓸기), 인자 (player, dt)
+var hit_guard: Callable           # 피격 가로채기 (드론 보호막): 인자 (from), true 면 피해 없음
+var blade_boost := 1.0            # 광선검 속도 강화 배율 (드론 합체 2)
+var fire_boost := 1.0             # 기본 총 연사 강화 배율 (드론 합체 2)
+var on_attack: Callable           # 공격 알림 (드론 게이지 소모): 인자 "slash" · "shot"
+var spin_pose: Callable           # 회전 자세 (드론 합체 휠윈드): 인자 (player, dt). 광선검 리본도 직접 먹이고, 팔다리 리본이 켜진다
 
 var hp := MAX_HP
 var alive := true
@@ -95,6 +106,7 @@ var aim_dir := Vector3.FORWARD
 var aim_point := Vector3.ZERO
 var move_dir := Vector3.ZERO
 var bot := false
+var aim_override := Vector3.INF   # 검사용: 마우스 대신 이 점을 조준한다 (INF 면 마우스)
 var j: Dictionary
 
 # 이동 상태
@@ -115,8 +127,6 @@ var gy := 0.0                     # 발밑 지면 높이
 var vy := 0.0                     # 수직 속도
 var airborne := false
 var view_y := 0.0                 # 카메라·조준 기준 높이: 지면 높이를 부드럽게 따라간다 (점프로 흔들리지 않게)
-var jump_wait := false            # Shift+Space 를 누른 채 점프 충전 중
-var jump_hold := 0.0
 var jump_fx: JumpFX
 var shadow: MeshInstance3D
 var gust_from := Vector3.ZERO    # 대시 기류: 지난 틱 위치
@@ -206,6 +216,9 @@ var trail: SaberTrail     # 광선검 잔상 리본
 var combo: SwordCombo     # 6단 검술 콤보
 var motion: PlayerMotion  # 사격·재장전·레이저·미사일 동작 연출
 var tech: BladeTech       # 좌클릭 길게 기 모으기 돌진 · 콤보 중 좌+우 회피 레이저
+var leap: LeapSlam        # E 도약 내려찍기
+var whirl: DashWhirl      # 2단 대시 성공 휠윈드
+var inbuf := InputBuffer.new()   # 선입력 (검 · 대시 · 돌진 스킬)
 var body_trails: Array[SaberTrail] = []   # 팔·다리 리본 (대시 회전·돌진 중에만 보임)
 var rush_feet: Array = []                 # 돌진 중 발 아래 바닥의 지난 위치 [왼, 오]
 var rushing := false
@@ -236,6 +249,8 @@ func _ready() -> void:
 	motion = PlayerMotion.new(self)
 	motion.rig()
 	tech = BladeTech.new(self)
+	leap = LeapSlam.new(self)
+	whirl = DashWhirl.new(self)
 	shadow = FX.blob_shadow(self, 2.6, 0.75)
 	jump_fx = JumpFX.new()
 	add_child(jump_fx)
@@ -258,6 +273,10 @@ func _ready() -> void:
 	trail.blade = j.blade
 	trail.anchor = self
 	trail.gust = true
+	# 기본 광선검에도 회오리(휠윈드) 때의 형광 리본을 붙인다 — 그대로면 너무 세서 수명 · 밝기는 절반
+	trail.life = SABER_RIBBON_LIFE
+	trail.reach = SABER_RIBBON_REACH
+	trail.bright = SABER_RIBBON_BRIGHT
 	add_child(trail)
 	combo = SwordCombo.new(self)
 	combo.trail = trail
@@ -278,6 +297,7 @@ func _physics_process(dt: float) -> void:
 		return
 	var main := Main.inst
 	var playing := main.state == Main.State.PLAY
+	GroundBreak.follow(self, dt)      # 돌진 · 휠윈드가 지나간 자리 바닥 흔적 (연출 전용)
 
 	# ── 입력 ──
 	var fire := false
@@ -305,19 +325,19 @@ func _physics_process(dt: float) -> void:
 		lmb_held = b.get("hold", false)
 		dual = b.get("dual", false)
 		skill_held = b.get("skill", false)
-		if b.get("ult", false) and missiles > 0 and playing and not no_attack and not ult_busy() and ult_queue == 0 and mega_t <= 0.0:
+		if b.get("ult", false) and missiles > 0 and playing and not no_attack and not leap.busy() and not ult_busy() and ult_queue == 0 and mega_t <= 0.0:
 			_begin_ult_aim()
 	else:
 		var v := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 		move_dir = Vector3(v.x, 0, v.y)
-		aim_point = main.mouse_ground(view_y + 0.95)
+		aim_point = main.mouse_ground(view_y + 0.95) if aim_override == Vector3.INF else aim_override
 		# 좌클릭 검 · 우클릭 사격 · 좌우 동시 유지 충전
 		var lmb := Input.is_action_pressed("slash_mouse")
 		var rmb := Input.is_action_pressed("fire_mouse")
 		charge_held = lmb and rmb
 		fire = rmb and not lmb
 		reload_pressed = InputMap.has_action("reload") and Input.is_action_just_pressed("reload")
-		# 좌클릭 검은 BladeTech 가 짧게 눌렀는지(검) 길게 눌렀는지(기 모으기) 가려서 낸다. F 는 바로 벤다. E 는 돌진 스킬.
+		# 좌클릭 검은 BladeTech 가 짧게 눌렀는지(검) 길게 눌렀는지(기 모으기) 가려서 낸다. F 는 바로 벤다. E 는 도약 내려찍기.
 		slash_pressed = Input.is_action_just_pressed("slash") and not (interact_ok and Input.is_action_just_pressed("interact"))
 		lmb_held = lmb
 		rmb_held = rmb
@@ -325,11 +345,17 @@ func _physics_process(dt: float) -> void:
 		skill_held = InputMap.has_action("rush_skill") and Input.is_action_pressed("rush_skill")
 		dash_pressed = Input.is_action_just_pressed("dash")
 		boost_held = Input.is_action_pressed("boost")
-		if Input.is_action_just_pressed("ult") and playing and not no_attack and not ult_busy() and ult_queue == 0 and mega_t <= 0.0:
+		if Input.is_action_just_pressed("ult") and playing and not no_attack and not leap.busy() and not ult_busy() and ult_queue == 0 and mega_t <= 0.0:
 			if missiles > 0:
 				_begin_ult_aim()
 			else:
 				_deny("NO MISSILE", "missile")
+	# 아래 상태 필터에 지워지기 전의 입력: 선입력 버퍼에 담는다
+	var dash_raw := dash_pressed
+	var slash_raw := slash_pressed
+	var slash_hold := false      # 검 버튼을 누르고 있다: 적중하는 동안 콤보가 저절로 이어진다
+	if not bot:
+		slash_hold = Input.is_action_pressed("slash") or (lmb_held and not rmb_held)
 	if mega_t > 0.0:
 		# 지속 레이저 중에는 대시만 받는다 (대시로 레이저를 끊는다)
 		fire = false
@@ -343,6 +369,20 @@ func _physics_process(dt: float) -> void:
 		charge_held = false
 	if ult_winding():
 		move_dir = Vector3.ZERO
+	if leap.busy():
+		# 도약 내려찍기 중: 몸이 묶인다 (끝나면 선입력이 이어 받는다)
+		fire = false
+		slash_pressed = false
+		dash_pressed = false
+		charge_held = false
+		boost_held = false
+		move_dir = Vector3.ZERO
+	if whirl.active():
+		# 휠윈드 중: 천천히 걷기 · 대시로 끊기만 받는다
+		fire = false
+		slash_pressed = false
+		charge_held = false
+		boost_held = false
 	if not playing:
 		fire = false
 		slash_pressed = false
@@ -381,28 +421,40 @@ func _physics_process(dt: float) -> void:
 			tilt_v += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)) * 3.0
 
 	# ── 광선검 특수기: 좌클릭 길게 → 기 모으기 돌진 · 콤보 중 좌+우 동시 → 회피 레이저 ──
-	var tech_ok := playing and not no_attack and stun_t <= 0.0 and not ult_busy() and mega_t <= 0.0 and dash_t <= 0.0 and lunge_t <= 0.0
+	var tech_ok := playing and not no_attack and stun_t <= 0.0 and not ult_busy() and mega_t <= 0.0 and dash_t <= 0.0 and lunge_t <= 0.0 \
+		and not leap.busy() and not whirl.active()
 	if dual and tech_ok and tech.try_backstep():
 		charge_held = false
-	# E 누르고 조준 → 떼면 돌진 스킬 (기 모으기 1단계 짧은 돌진)
-	if tech.skill_feed(skill_held, tech_ok and not charging):
+	# E 누르고 착지 원 조준 → 떼면 도약 내려찍기
+	if leap.feed(skill_held, tech_ok and not charging):
 		charge_held = false
+	var slash_ok := playing and not no_attack and not ult_busy() and mega_t <= 0.0 and not charging
 	if tech.feed(lmb_held, rmb_held, tech_ok, dt):
-		slash_pressed = true
+		slash_raw = true         # 대시·돌진 중 누른 좌클릭도 여기로 온다 (선입력)
 	if tech.busy():
 		fire = false
 		charge_held = false
-		slash_pressed = false
 		if not tech.charging():
 			dash_pressed = false
 
+	# ── 선입력: 지금 받아 줄 수 없는 검·대시는 버퍼에 담았다가 받아 줄 수 있게 되는 첫 틱에 꺼낸다 ──
+	# 기절 중 입력은 담아 두고(끝나기 직전 누른 것만 살아남는다), 조작 불가 · 궁극기 중에는 비운다.
+	if slash_raw and slash_ok:
+		inbuf.push("slash")
+	if dash_raw and playing and not ult_busy():
+		inbuf.push("dash")       # 같은 틱이면 대시가 이긴다
+	if not playing or ult_busy() or (no_attack and inbuf.has("slash")) or (mega_t > 0.0 and inbuf.has("slash")):
+		inbuf.clear()
+	inbuf.tick(dt, dash_t > 0.0 or lunge_t > 0.0 or tech.rushing() or tech.backstepping() or leap.busy())
+	combo.held = slash_hold and slash_ok
+
 	var to_aim := aim_point - global_position
 	to_aim.y = 0
-	if to_aim.length() > 0.3 and lunge_t <= 0.0 and not combo.committed() and not tech.rushing() and not tech.backstepping():
+	if to_aim.length() > 0.3 and lunge_t <= 0.0 and not combo.committed() and not tech.rushing() and not tech.backstepping() and not leap.busy():
 		aim_dir = to_aim.normalized()
 
 	# ── 부스터 게이지 ──
-	var want_boost := boost_held and not overheated and dash_t <= 0.0
+	var want_boost := boost_held and not overheated and dash_t <= 0.0 and not leap.busy()
 	if infinite_boost:
 		# 추격 보스전: 부스터가 꺼지지 않고 게이지도 줄지 않는다
 		want_boost = true
@@ -430,53 +482,50 @@ func _physics_process(dt: float) -> void:
 	dash_cd = max(0.0, dash_cd - dt)
 	chain_grace = maxf(0.0, chain_grace - dt)
 	# 패링: 패링 공격이 닿기 직전이면 대시 대신 반격이 나간다 (대시 쿨다운과 무관)
+	# 패링·2단 대시는 타이밍 판정이라 지금 막 누른 입력(dash_pressed)만 본다. 미리 눌러 둔 선입력으로는 성공하지 않는다.
 	if dash_pressed and lunge_t <= 0.0 and Parry.inst and Parry.inst.try_parry(self):
 		dash_pressed = false
-	# ── 점프: Shift 를 누른 채 Space 를 살짝 길게 누르고 있어야 뛴다. 짧게 떼면 평소처럼 대시. ──
-	if bot:
-		if bot_jump and _can_jump():
-			_jump_start()
-	else:
-		var shift_held := Input.is_action_pressed("boost")
-		var space_held := Input.is_action_pressed("dash")
-		if dash_pressed and shift_held and _can_jump():
-			jump_wait = true
-			jump_hold = 0.0
-			dash_pressed = false
-		elif jump_wait:
-			if not _can_jump():
-				jump_wait = false
-				jump_fx.stop_charge()
-			elif not space_held or not shift_held:
-				# 단타: 점프 대신 대시가 나간다
-				jump_wait = false
-				jump_fx.stop_charge()
-				dash_pressed = playing and stun_t <= 0.0 and not ult_busy()
-			else:
-				jump_hold += dt
-				jump_fx.charge(jump_hold / JUMP_HOLD)
-				squash_v -= 26.0 * dt         # 뛰기 전에 무릎을 굽혀 웅크린다
-				if jump_hold >= JUMP_HOLD:
-					jump_wait = false
-					_jump_start()
-	if dash_pressed and lunge_t <= 0.0:
+		inbuf.take("dash")
+	# ── 점프: 키보드 입력은 없다 (봇 검증용 "jump" 키만) ──
+	if bot and bot_jump and _can_jump():
+		_jump_start()
+	var dash_ok := playing and not ult_busy() and stun_t <= 0.0 and lunge_t <= 0.0 and not (tech.busy() and not tech.charging()) and not leap.busy()
+	if dash_ok and inbuf.has("dash"):
 		if mega_t > 0.0:
 			# 레이저 끊기
+			inbuf.take("dash")
 			_end_mega()
 			FX.flash((j.muzzle as Node3D).global_position, Pal.CYAN, 0.8, 0.08)
 			_dash_start(false)
 		elif dash_t > 0.0:
-			if not rainbow and chain_ok and dash_t <= CHAIN_WINDOW:
-				_dash_start(true)
-			else:
-				chain_ok = false        # 너무 일찍 누르면 이번 대시는 연결 불가
-		elif chain_grace > 0.0:
+			if dash_pressed:
+				inbuf.take("dash")
+				if not rainbow and chain_ok and dash_t <= CHAIN_WINDOW:
+					_dash_start(true)
+				else:
+					chain_ok = false        # 너무 일찍 누르면 이번 대시는 연결 불가
+		elif chain_grace > 0.0 and dash_pressed:
+			inbuf.take("dash")
 			_dash_start(true)
-		elif dash_cd <= 0.0:
+		elif whirl.active() and dash_pressed:
+			# 휠윈드를 대시로 끊는다 (쿨다운과 무관 · 이 대시는 다시 2단 대시로 이어지지 않는다)
+			inbuf.take("dash")
+			whirl.stop(false)
 			_dash_start(false)
-	combo.update(dt)
+			chain_ok = false
+		elif dash_cd <= 0.0 and not whirl.active():
+			inbuf.take("dash")
+			_dash_start(false)
+	combo.update(dt * blade_k())     # 광선검 콤보는 검 속도 배율만큼 느리게/빠르게 흐른다
 	tech.update(dt)
-	if lunge_t > 0.0:
+	leap.update(dt)
+	whirl.update(dt)
+	var leap_fly := leap.flying()
+	if leap_fly:
+		leap.step(dt)            # 도약: 위치를 직접 잡는다 (벽 · 엄폐물을 넘는다)
+	elif leap.busy():
+		velocity = Vector3.ZERO  # 내려찍고 굳은 자세
+	elif lunge_t > 0.0:
 		lunge_t -= dt
 		velocity = lunge_vel
 		ghost_t -= dt
@@ -505,8 +554,10 @@ func _physics_process(dt: float) -> void:
 			_dash_end()
 	elif tech.busy():
 		velocity = tech.vel
+	elif whirl.active():
+		velocity = whirl.velocity(dt)   # 2단 대시 휠윈드: 대시 거리만큼 미끄러져 나가며 돈다
 	elif combo.committed():
-		velocity = combo.vel
+		velocity = combo.vel * blade_k()
 		if combo.ph == SwordCombo.Ph.LUNGE:
 			FX.afterimage(visual, FX.GHOST, 0.18)
 	else:
@@ -523,7 +574,8 @@ func _physics_process(dt: float) -> void:
 			dir = aim_dir
 		var accel := BOOST_ACCEL if boosting and not infinite_boost else ACCEL
 		velocity = velocity.move_toward(dir * target_speed, accel * dt)
-	_move_body(dt)
+	if not leap_fly:
+		_move_body(dt)
 	_update_rush()
 	if dash_t > 0.0:
 		GustFX.dash_trail(gust_from, global_position, _gust_tint(), 1.25 if rainbow else 1.0)
@@ -542,9 +594,11 @@ func _physics_process(dt: float) -> void:
 	elif playing and ((reload_pressed and mag < MAG_SIZE) or (fire and mag <= 0)):
 		_begin_reload()
 	if fire and reload_t <= 0.0 and mag > 0 and fire_cd <= 0.0 and slash_anim <= 0.0 and not charging and laser_recoil <= 0.0 and not combo.committed():
-		fire_cd = FIRE_INTERVAL
+		fire_cd = FIRE_INTERVAL / fire_boost
 		mag -= 1
 		_fire()
+		if on_attack.is_valid():
+			on_attack.call("shot")
 		if mag <= 0:
 			_begin_reload()      # 탄창이 비면 곧바로 재장전
 
@@ -595,9 +649,18 @@ func _physics_process(dt: float) -> void:
 	_regen_energy(dt)
 
 	# ── 검 ──
-	slash_cd -= dt
-	if slash_pressed and not charging and lunge_t <= 0.0:
-		_slash()
+	slash_cd -= dt * blade_k()
+	# 휠윈드가 장전돼 있으면 검 = 휠윈드 (2단 대시 도중이어도 곧바로).
+	# 아니면 대시 도중 누른 검은 곧바로 일격참 돌진 (마우스 방향의 적을 꿰뚫고 지나간다)
+	if inbuf.has("slash") and slash_ok and stun_t <= 0.0 and not charging and lunge_t <= 0.0 and not tech.busy() and not leap.busy() and not whirl.active():
+		if whirl.armed():
+			inbuf.take("slash")
+			_release_whirl()
+		elif dash_t > 0.0:
+			inbuf.take("slash")
+			_dash_strike()
+		elif _slash():
+			inbuf.take("slash")
 
 	invuln = max(0.0, invuln - dt)
 	hurt_t = max(0.0, hurt_t - dt)
@@ -644,7 +707,7 @@ func _move_body(dt: float) -> void:
 
 
 func _can_jump() -> bool:
-	return alive and not airborne and Main.inst.state == Main.State.PLAY and stun_t <= 0.0 and lunge_t <= 0.0 		and dash_t <= 0.0 and mega_t <= 0.0 and not ult_busy() and celebrate_t < 0.0
+	return alive and not airborne and not leap.busy() and Main.inst.state == Main.State.PLAY and stun_t <= 0.0 and lunge_t <= 0.0 		and dash_t <= 0.0 and mega_t <= 0.0 and not ult_busy() and celebrate_t < 0.0
 
 
 func _jump_start() -> void:
@@ -739,14 +802,44 @@ func _dash_start(chained := false) -> void:
 	Sfx.play("dash", 0.05, -6.0)
 	Main.inst.kick(dash_dir * 0.8)
 	Main.inst.camera.fov_punch(7.0)
+
 	if chained:
-		# 2단 대시 성공: 3초 안의 다음 검은 관통 일격 (칼날이 불타오른다)
-		_arm_phantom()
+		# 2단 대시 성공: 3초 안의 다음 검은 휠윈드 (칼날이 불타오른다)
+		whirl.arm()
 		FX.sparks(global_position + Vector3(0, 0.5, 0), 18, [_rainbow(0.5, 0.0), _rainbow(0.5, 0.33), _rainbow(0.5, 0.66), Color.WHITE], 8.0, 0.4, -6.0, 0.08)
 		Sfx.play("charged", 0.0, -3.0)
 		Main.inst.hitstop(0.03)
 		Main.inst.camera.fov_punch(4.0)
 		Main.inst.hud.popup("PERFECT", _rainbow(0.35), global_position + Vector3(0, 2.2, 0))
+
+
+## 장전된 휠윈드를 푼다: 대시 중이면 끊고 그 자리에서 5바퀴 (천천히 걸을 수 있다)
+func _release_whirl() -> void:
+	_combo_break()
+	var keep := velocity
+	if dash_t > 0.0:
+		dash_t = 0.0
+		_dash_end()
+		chain_grace = 0.0
+		chain_ok = false
+		velocity = keep * 0.35         # 대시 기세가 조금 남아 미끄러지며 돌기 시작한다
+	visual.visible = true
+	whirl.start()
+
+
+## 대시 도중 검: 대시를 끊고 마우스 방향으로 일격참 (관통 일격) 돌진
+func _dash_strike() -> void:
+	dash_t = 0.0
+	_dash_end()
+	chain_grace = 0.0
+	chain_ok = false
+	visual.visible = true
+	_combo_break()
+	var to := aim_point - global_position
+	to.y = 0
+	if to.length() > 0.3:
+		aim_dir = to.normalized()
+	_phantom_start()
 
 
 ## 패링 반격: 공격해 온 적을 향해 검을 휘둘러 받아친다. 대시가 곧바로 다시 차고, 다음 검은 관통 일격이 된다.
@@ -757,6 +850,7 @@ func parry_counter(foe: Vector3, kind: String) -> void:
 		dash_t = 0.0
 		_dash_end()
 	_combo_break()
+	whirl.stop(false)
 	rainbow = false
 	chain_grace = 0.0
 	var d := foe - global_position
@@ -942,12 +1036,17 @@ func _seg_dist(o: Vector3, d: Vector3, length: float, p: Vector3) -> float:
 
 
 ## 검 버튼: 관통 일격이 준비돼 있으면 그것을, 아니면 콤보를 잇는다 (SwordCombo 가 적중 여부로 연결을 판단)
-func _slash() -> void:
+## 광선검 콤보 시간 배율 (기본 0.5 · 드론 합체 1)
+func blade_k() -> float:
+	return BLADE_SPEED * blade_boost
+
+
+func _slash() -> bool:
 	if phantom_ready and slash_cd <= 0.0 and not combo.committed():
 		_combo_break()
 		_phantom_start()
-		return
-	combo.press()
+		return true
+	return combo.press()
 
 
 ## 콤보를 즉시 끊는다: 떠 있던 높이는 부유 스프링이 이어받아 부드럽게 떨어진다
@@ -1597,6 +1696,8 @@ func _end_mega() -> void:
 func take_hit(from: Vector3) -> bool:
 	if not alive or invuln > 0.0 or Main.inst.state != Main.State.PLAY:
 		return false
+	if hit_guard.is_valid() and hit_guard.call(from):
+		return false
 	hp -= 1
 	invuln = 1.1
 	hurt_t = 1.1
@@ -1627,6 +1728,8 @@ func stagger(t: float) -> void:
 		return
 	stun_t = maxf(stun_t, t)
 	_combo_break()
+	leap.abort()
+	whirl.stop(false)
 	print("PLAYER_STUN %.2fs hp=%d" % [t, hp])
 	if lunge_t > 0.0:
 		lunge_t = 0.0
@@ -1653,6 +1756,9 @@ func shove(dir: Vector3, speed: float) -> void:
 		dash_t = 0.0
 		_dash_end()
 	_combo_break()
+	leap.abort()
+	whirl.stop(false)
+	whirl.disarm()
 	dir.y = 0
 	dir = dir.normalized()
 	velocity = dir * speed
@@ -1674,6 +1780,9 @@ func die(push := Vector3.ZERO) -> void:
 	blade_fx.visible = false
 	combo.cancel(true)
 	tech.abort()
+	leap.abort()
+	leap.free_all()
+	whirl.stop(false)
 	trail.visible = false
 	for bt in body_trails:
 		bt.visible = false
@@ -1927,13 +2036,21 @@ func _animate(dt: float) -> void:
 	trail.tint = blade_fx.flame_k
 	if combo_pose:
 		combo.pose(dt)
+	elif leap.busy():
+		leap.pose(dt)          # 도약 · 공중제비 · 내려찍기 자세
+	elif whirl.active():
+		whirl.pose(dt)         # 2단 대시 휠윈드 (광선검 원반 리본도 여기서 먹인다)
 	elif tech.posing():
 		tech.pose(dt)          # 기 모으기 · 돌진 자세 (광선검 잔상도 여기서 먹인다)
+	elif spin_pose.is_valid():
+		spin_pose.call(self, dt)    # 휠윈드 회오리 자세 (광선검 나선 리본도 여기서 먹인다)
 	else:
 		trail.boost = 1.0 if slash_anim > 0.0 or lunge_t > 0.0 else 0.0
 		trail.feed(dt, [])
 	if gimmick_pose.is_valid():
 		gimmick_pose.call(self, dt)    # 기믹 자세 (레버 돌리기)
+	if gear_pose.is_valid():
+		gear_pose.call(self, dt)       # 청소 질주 자세 (SweepGear)
 	if mech:
 		MechPlayer.settle(j)
 	_feed_body_trails(dt)
@@ -1948,9 +2065,10 @@ func _animate(dt: float) -> void:
 
 ## 팔·다리 리본: 대시(드릴 회전) 중이거나 돌진 중일 때만 보인다
 func _feed_body_trails(dt: float) -> void:
-	var on := dash_t > 0.0 or rushing or lunge_t > 0.0 or combo.ph == SwordCombo.Ph.LUNGE or tech.rushing()
+	var spin := spin_pose.is_valid() or whirl.active()
+	var on := leap.flying() or dash_t > 0.0 or rushing or lunge_t > 0.0 or combo.ph == SwordCombo.Ph.LUNGE or tech.rushing() or spin
 	# 대시 회전·돌진은 몸 톤 리본만: 광선검의 분홍 초승달은 끈다 (자세를 잡는 칼이 궤적을 어지럽히지 않게)
-	trail.active = (not on or tech.whirl()) and not tech.charging()     # 최대 돌진은 광선검 회오리 잔상을 남긴다
+	trail.active = (not on or tech.whirl() or spin or leap.busy()) and not tech.charging()     # 최대 돌진 · 휠윈드는 광선검 회오리 잔상을 남긴다
 	for bt in body_trails:
 		bt.active = on
 		bt.feed(dt, [])

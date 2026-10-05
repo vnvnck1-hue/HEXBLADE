@@ -20,16 +20,34 @@ const PRESETS := [
 		"roll": 0.06, "punch": 0.9, "speed_zoom": 0.24, "kill_pull": 1.5, "sway": 1.0,
 	},
 	{
-		"name": "TACTICAL", "desc": "높고 넓은 시야 · 절제된 반응",
-		"offset": Vector3(0, 15.0, 8.0), "fov": 36.0, "follow": 7.0, "look": 0.12, "lead": 0.08,
+		"name": "TACTICAL", "desc": "높고 넓은 시야 · 모든 전투 카메라 공통",
+		# 각도(62°)는 그대로, 거리만 1.2배 (예전 (0,15,8))
+		"offset": Vector3(0, 18.0, 9.6), "fov": 36.0, "follow": 7.0, "look": 0.12, "lead": 0.08,
 		"roll": 0.0, "punch": 0.3, "speed_zoom": 0.08, "kill_pull": 0.3, "sway": 0.0,
 	},
+	# 브롤스타즈 식 망원 부감 (BrawlLook): 멀리서 화각 26° 로 50° 내려다본다. 원근이 약해 벽 앞면이 평행에 가깝고
+	# 캐릭터가 정면에 가깝게 보인다. 바닥이 보이는 넓이는 예전 TACTICAL (0,15,8) 과 같게 거리를 맞췄다 (docs/brawl-look.md).
+	{
+		"name": "BRAWL", "desc": "망원 렌즈 50° 부감 · 브롤스타즈 식",
+		"offset": Vector3(0, 15.9, 13.3), "fov": 26.0, "follow": 8.0, "look": 0.12, "lead": 0.06,
+		"roll": 0.0, "punch": 0.3, "speed_zoom": 0.06, "kill_pull": 0.3, "sway": 0.0,
+	},
 ]
+const DEFAULT := 3   # TACTICAL (높고 넓은 시야 · 절제된 반응)
+const BRAWL := 4
+## 게임의 모든 전투 카메라는 TACTICAL 시야 하나로 통일한다 (62° 내려다봄 · 화각 36°). set_preset 은 무엇을 넘겨도 이것.
+## 거대 보스 전장(추격 · 용광로 · 거미)은 같은 각도 · 화각에서 거리만 늘린다: view_offset(배율).
+## 나머지 프리셋은 기록용으로 남겨 둔다. 연출 컷(격파 감독 · 쇼타임 컷인)은 잠깐 따로 잡는다.
+const VIEW_FOV := 36.0
 
-var preset_index := 3   # 기본: TACTICAL (높고 넓은 시야 · 절제된 반응)
-var p: Dictionary = PRESETS[3]
-var cur_offset: Vector3 = PRESETS[3].offset
-var cur_fov: float = PRESETS[3].fov
+
+static func view_offset(dist_k := 1.0) -> Vector3:
+	return (PRESETS[DEFAULT].offset as Vector3) * dist_k
+
+var preset_index := DEFAULT
+var p: Dictionary = PRESETS[DEFAULT]
+var cur_offset: Vector3 = PRESETS[DEFAULT].offset
+var cur_fov: float = PRESETS[DEFAULT].fov
 
 var focus := Vector3.ZERO
 var lead := Vector3.ZERO
@@ -108,8 +126,9 @@ func _lens_rm2(vs: Vector2) -> float:
 	return a * a * 0.25 + 0.25
 
 
-func set_preset(i: int) -> void:
-	preset_index = posmod(i, PRESETS.size())
+## 시야는 하나로 통일됐다: 어떤 번호를 넘겨도 TACTICAL (V 키 · --campreset 도 바꾸지 않는다)
+func set_preset(_i: int) -> void:
+	preset_index = DEFAULT
 	p = PRESETS[preset_index]
 
 

@@ -137,7 +137,7 @@ func _run() -> void:
 	current_scene = lab
 	await _frames(5)
 	var bugs: Array = lab._bugs()
-	_check(bugs.size() == 4, "시험장에 벌레 4마리 (%d)" % bugs.size())
+	_check(bugs.size() == 10, "시험장에 벌레 10마리 — 개미 2 · 공벌레 2 · 촘퍼 3 · 애벌레 3 (%d)" % bugs.size())
 	await _frames(50)
 	var landed := bugs.all(func(e): return is_instance_valid(e) and e.landed)
 	_check(landed, "땅에서 기어 나와 전투 시작")

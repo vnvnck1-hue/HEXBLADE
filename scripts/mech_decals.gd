@@ -14,6 +14,8 @@ const PAD := 0.3      # 텍스처 가장자리 여백(단위). 클램프 번짐 
 const LIGHT := [Color(0.5, 0.5, 0.74), 0.11, 0.0]
 const DARK := [Color(0.05, 0.05, 0.1), 0.2, 0.0]
 const AMBER := [Color(0.8, 0.6, 0.32), 0.12, 0.0]
+## mo.co 무드 배경(BrawlLook.moco)에서는 바닥·벽 윗면이 밝은 라벤더라 LIGHT 도료가 바탕과 같은 밝기가 되어 사라진다 → 더 밝은 도료
+const LIGHT_MOCO := [Color(0.86, 0.9, 1.0), 0.15, 0.0]
 
 ## 네온 순차 점등. groups = 차례로 켜질 부품 번호 묶음(도형 정의 순서)
 ## rate = 초당 단계, rest = 한 바퀴 뒤 꺼져 있는 단계 수, trail = 뒤따르는 잔광 세기
@@ -296,6 +298,8 @@ static func _decal(tex: Array, size: Vector2, paint: Array, depth: float) -> Dec
 	var d := Decal.new()
 	d.texture_albedo = tex[0]
 	d.size = Vector3(size.x, depth, size.y)
+	if paint == LIGHT and BrawlLook.moco and BrawlLook.on:
+		paint = LIGHT_MOCO
 	d.modulate = paint[0]
 	d.albedo_mix = paint[1]
 	if paint[2] > 0.0:

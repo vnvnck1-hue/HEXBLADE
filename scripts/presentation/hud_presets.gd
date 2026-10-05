@@ -32,6 +32,7 @@ const EN_C := Color("5af0ff")
 const MSL_C := Color("ffa040")
 
 var hud: Hud
+var calm: CalmHud
 var font: Font
 var t := 0.0
 var s := 1.0                 # 900px 높이 기준 배율
@@ -59,6 +60,11 @@ func _init(h: Hud) -> void:
 	font = h.font
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_preset(Control.PRESET_FULL_RECT)
+	var dock := RoundSkillDock.new()
+	dock.hud = h
+	add_child(dock)
+	calm = CalmHud.new(h)
+	add_child(calm)
 
 
 func _process(dt: float) -> void:
@@ -94,7 +100,7 @@ func _process(dt: float) -> void:
 		dash_ready_pop = 1.0
 	dash_was_ready = ready
 	dash_ready_pop = maxf(0.0, dash_ready_pop - rdt * 3.5)
-	var sready := p.tech == null or p.tech.skill_ready()
+	var sready := p.leap == null or p.leap.ready()
 	if sready and not skill_was_ready:
 		skill_ready_pop = 1.0
 	skill_was_ready = sready
@@ -253,6 +259,8 @@ func _draw() -> void:
 # ── STRIKER : 젠레스 존 제로식 ──────────────────────────
 
 func _draw_striker(m: Main, p: Player) -> void:
+	if calm != null and calm.enabled:
+		return
 	# 좌상단 기체 카드: 헥스 엠블럼 · 기체명 · 사선 장갑칸 · 부스터 막대
 	var o := Vector2(26, 24)
 	# 폭은 720p 에서도 보스 체력바(가운데 720px)와 겹치지 않게 잡았다
@@ -277,83 +285,27 @@ func _draw_striker(m: Main, p: Player) -> void:
 		if blink:
 			_txt(Vector2(o.x + 200, by + 20), "BLADE  %.1f" % p.phantom_t, 12, Pal.BLADE, HORIZONTAL_ALIGNMENT_LEFT, 3)
 
-	# 우하단 스킬 버튼 묶음
-	var base := Vector2(W - 92, H - 92)
-	# 주 공격: 검 (콤보 단계 6칸이 둘레에 켜진다)
-	var sw_c := base
-	var hot := _combo_active(p)
-	draw_circle(sw_c, 50, Color(0.03, 0.03, 0.1, 0.78))
-	draw_arc(sw_c, 50, 0, TAU, 48, Color(1, 1, 1, 0.75) if hot else Color(0.6, 0.6, 0.9, 0.6), 2.5, true)
-	if p.phantom_t > 0.0:
-		draw_arc(sw_c, 56 + sin(t * 20.0) * 1.5, 0, TAU, 48, Color(Pal.BLADE, 0.85), 3.0, true)
-	for i in 6:
-		var a := -PI * 0.5 + (i - 2.5) * 0.3
-		var lit := hot and i <= p.combo.step
-		var dp := sw_c + Vector2(cos(a), sin(a)) * 62
-		draw_circle(dp, 4.0 if lit else 3.0, Pal.BLADE if lit else Color(0.4, 0.38, 0.6, 0.7))
-	# 광선검 아이콘
-	var bc := Pal.BLADE if p.phantom_t > 0.0 else Color(1, 0.55, 0.5)
-	draw_line(sw_c + Vector2(-18, 18), sw_c + Vector2(20, -20), Color(bc, 0.35), 9.0, true)
-	draw_line(sw_c + Vector2(-18, 18), sw_c + Vector2(20, -20), bc, 4.0, true)
-	draw_line(sw_c + Vector2(-16, 16), sw_c + Vector2(18, -18), Color(1, 0.95, 0.9), 1.5, true)
-	draw_line(sw_c + Vector2(-26, 10), sw_c + Vector2(-10, 26), Color(0.8, 0.8, 0.9), 3.5, true)
-	_keycap(sw_c + Vector2(-16, 32), "LMB")
-
-	# 회피 (쿨다운 부채꼴)
-	var dc := base + Vector2(-112, 22)
-	var ready := p.dash_cd <= 0.0
-	draw_circle(dc, 32, Color(0.03, 0.03, 0.1, 0.78))
-	if not ready:
-		_pie(dc, 30, 1.0 - p.dash_cd / Player.DASH_CD, Color(Pal.CYAN, 0.28))
-	draw_arc(dc, 32 + dash_ready_pop * 8.0, 0, TAU, 40, Color(Pal.CYAN, 0.9 if ready else 0.35), 2.5 + dash_ready_pop * 2.0, true)
-	_dash_icon(dc, Pal.CYAN if ready else Color(0.4, 0.5, 0.7))
-	_keycap(dc + Vector2(-22, 26), "Space")
-
-	# 돌진 스킬 E (쿨다운 부채꼴 · 남은 초)
-	if p.tech:
-		var skc := base + Vector2(-152, -58)
-		_rush_skill(skc, 28, p)
-		_keycap(skc + Vector2(-8, 22), "E")
-
-	# 충전 레이저 (에너지 칸 = 둘레 호 3조각, 충전 중이면 안쪽에 단계 색)
-	var lc := base + Vector2(-70, -94)
-	_skill_energy(lc, 34, p)
-	_keycap(lc + Vector2(-20, 28), "L+R")
-
-	# 미사일 (남은 수)
-	var mc := base + Vector2(14, -132)
-	var mk := 1.0 + msl_pop * 0.35
-	draw_circle(mc, 28, Color(0.03, 0.03, 0.1, 0.78))
-	var have := p.missiles > 0
-	draw_arc(mc, 28, 0, TAU, 40, Color(MSL_C, 0.9 if have else 0.3), 2.5, true)
-	if p.ult_aiming:
-		draw_arc(mc, 34, 0, TAU, 40, Color(1, 0.3, 0.25, 0.6 + 0.4 * sin(t * 20.0)), 2.5, true)
-	_missile_icon(mc + Vector2(-9, -2), 10, 22, Color(MSL_C, 1.0 if have else 0.35))
-	_txt(mc + Vector2(16, 10) * mk, "%d" % (p.missiles + p.ult_queue), int(20 * mk), Color.WHITE if have else Color(0.6, 0.6, 0.7), HORIZONTAL_ALIGNMENT_CENTER, 4, 0)
-	_keycap(mc + Vector2(-8, 22), "R")
-
-	# 기본 총: 탄창 막대 (회피 버튼 왼쪽)
-	_ammo_strip(Vector2(base.x - 330, base.y + 34), 170, p, true)
+	# 우하단 장비 버튼은 RoundSkillDock 자식이 실제 상태로 그린다.
 
 
 func _rush_skill(c: Vector2, r: float, p: Player) -> void:
-	var col := BladeTech.SKILL_COL
-	var cd := p.tech.skill_cd
+	var col := LeapSlam.COL
+	var cd := p.leap.cd
 	var ready := cd <= 0.0
 	draw_circle(c, r, Color(0.03, 0.03, 0.1, 0.78))
 	if not ready:
-		_pie(c, r - 2, 1.0 - cd / BladeTech.SKILL_CD, Color(col, 0.25))
-	var aiming := p.tech.skill_aiming()
+		_pie(c, r - 2, 1.0 - cd / LeapSlam.CD, Color(col, 0.25))
+	var aiming := p.leap.aiming()
 	draw_arc(c, r + skill_ready_pop * 8.0, 0, TAU, 40, Color(col, 0.9 if ready else 0.3), 2.5 + skill_ready_pop * 2.0, true)
 	if aiming:
 		draw_arc(c, r + 6, 0, TAU, 40, Color(col, 0.6 + 0.4 * sin(t * 20.0)), 2.0, true)
-	# 아이콘: 앞으로 찌르는 화살 + 뒤로 끌리는 속도선
+	# 아이콘: 내려꽂히는 화살 + 바닥 · 퍼지는 충격선
 	var ic := col if ready else Color(0.35, 0.5, 0.5)
-	draw_line(c + Vector2(-12, 0), c + Vector2(10, 0), ic, 4.0, true)
-	draw_colored_polygon(PackedVector2Array([c + Vector2(16, 0), c + Vector2(6, -8), c + Vector2(6, 8)]), ic)
-	for i in 2:
-		var y := -7.0 + i * 14.0
-		draw_line(c + Vector2(-16, y), c + Vector2(-6, y), Color(ic, 0.6), 2.0, true)
+	draw_line(c + Vector2(0, -14), c + Vector2(0, 2), ic, 4.0, true)
+	draw_colored_polygon(PackedVector2Array([c + Vector2(0, 9), c + Vector2(-7, 0), c + Vector2(7, 0)]), ic)
+	draw_line(c + Vector2(-15, 12), c + Vector2(15, 12), ic, 2.5, true)
+	for sx: float in [-1.0, 1.0]:
+		draw_line(c + Vector2(sx * 9, 6), c + Vector2(sx * 15, 1), Color(ic, 0.6), 2.0, true)
 	if not ready:
 		_txt(c + Vector2(0, 6), "%.1f" % cd, 15, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 4, 0)
 

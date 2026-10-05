@@ -80,6 +80,10 @@ func _build() -> void:
 	_cache.pwarn = _synth(0.42, func(t, k): return (sin(TAU * lerp(2300.0, 3150.0, sqrt(k)) * t) * 0.26 + sin(TAU * 4700.0 * t) * 0.12 * pow(1.0 - k, 2.0)) * pow(1.0 - k, 1.4) * minf(1.0, k * 80.0) + (randf() * 2.0 - 1.0) * 0.3 * pow(1.0 - k, 14.0))
 	_cache.pcue = _synth(0.12, func(t, k): return (sin(TAU * 3520.0 * t) * 0.22 + sin(TAU * 5280.0 * t) * 0.1) * pow(1.0 - k, 2.0))
 	_cache.parry = _synth_filtered(1.1, 0.75, func(t, k): return (randf() * 2.0 - 1.0) * 0.9 * pow(1.0 - k, 16.0) + (sin(TAU * 1180.0 * t) * 0.3 + sin(TAU * 1763.0 * t) * 0.24 + sin(TAU * 2541.0 * t) * 0.18 + sin(TAU * 3917.0 * t) * 0.1) * pow(1.0 - k, 2.4) + sin(TAU * lerp(150.0, 42.0, k) * t) * 0.75 * pow(1.0 - k, 3.5))
+	# 타격 콤보: 랭크 도장(쨍 + 낮은 쿵) · 끝 정산(칭칭) · 끊김(깨지는 하강음)
+	_cache.crank = _synth(0.4, func(t, k): return (sin(TAU * 1568.0 * t) * 0.22 + sin(TAU * 2349.0 * t) * 0.14 + sin(TAU * 3136.0 * t) * 0.07) * pow(1.0 - k, 2.2) + sin(TAU * lerp(160.0, 60.0, k) * t) * 0.5 * pow(1.0 - k, 5.0) + (randf() * 2.0 - 1.0) * 0.35 * pow(1.0 - k, 20.0))
+	_cache.cfinish = _synth(0.45, func(t, k): return (sin(TAU * (1319.0 if t < 0.07 else 1976.0) * t) * 0.22 + sin(TAU * (2637.0 if t < 0.07 else 3951.0) * t) * 0.08) * pow(1.0 - (fmod(t, 0.07) / 0.07 if t < 0.07 else (t - 0.07) / 0.38), 1.6))
+	_cache.cbreak = _synth_filtered(0.5, 0.5, func(t, k): return (randf() * 2.0 - 1.0) * 0.5 * pow(1.0 - k, 6.0) + _saw(lerp(700.0, 90.0, sqrt(k)), t) * 0.22 * (1.0 - k) + sin(TAU * 2900.0 * t) * 0.1 * pow(1.0 - k, 4.0))
 	_cache.win = _notes([523.0, 659.0, 784.0, 1047.0], 0.12)
 	_cache.lose = _notes([392.0, 311.0, 233.0, 175.0], 0.16)
 

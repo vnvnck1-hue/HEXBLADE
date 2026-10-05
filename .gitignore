@@ -31,3 +31,11 @@ output/insects-20261002/*_frames/
 
 # 메카 플레이어 동작 캡처 프레임 (show_*.png 만 보존)
 output/mech-player-20261002/act/
+output/chomper-20261003/frames_*/
+output/chomper-v2-20261004/frames_*/
+output/grub-20261004/frames_*/
+output/partner-drone-20261004/frames/
+
+# 합체 보이스 원본 MP3 (스파랜드 약관: 원본 단독 재배포 금지 → 공개 저장소 제외, docs/drone-docking-voice-handoff.md 7절대로 다시 받는다)
+assets/audio/voices/spaland_docking/*.mp3
+assets/audio/voices/spaland_docking/*.mp3.import

@@ -102,7 +102,7 @@ func _run() -> void:
 	var max_moved := moved
 	await _secs(0.6)
 	_check(is_equal_approx(main.camera.charge_zoom, 1.0), "돌진이 끝나면 줌이 돌아온다 (%.2f)" % main.camera.charge_zoom)
-	_check(player.trail.life < 0.1, "나선이 사라진 뒤 리본 수명이 평소로 (%.3f초)" % player.trail.life)
+	_check(is_equal_approx(player.trail.life, Player.SABER_RIBBON_LIFE) and is_equal_approx(player.trail.bright, Player.SABER_RIBBON_BRIGHT), "나선이 사라진 뒤 리본 수명 · 밝기가 평소로 (%.3f초 · %.2f)" % [player.trail.life, player.trail.bright])
 
 	# ── 3. 반쯤 모으기 → 일반 돌진 ──
 	d = await _setup(4.0)

@@ -2,8 +2,9 @@ extends CameraRig
 ## 추격 보스전 카메라: 플레이어와 보스를 함께 담는 높은 쿼터뷰.
 ## 흔들림·반동·FOV 펀치는 CameraRig 것을 그대로 쓰고, 초점과 속도 진동만 따로 계산한다.
 
-const OFFSET := Vector3(0, 19.0, 11.0)
-const FOV := 50.0
+## 통일 시야(TACTICAL 62° · 화각 36°). 거대한 보스와 함께 담으려고 거리만 1.55배 (예전 (0,19,11) · 화각 50° 와 보이는 넓이가 같다)
+const OFFSET := Vector3(0, 18.0, 9.6) * 1.55
+const FOV := CameraRig.VIEW_FOV
 
 var boss: Node3D
 var speed_k := 1.0        # 흐르는 속도 비율 (진동·FOV 에 반영)

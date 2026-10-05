@@ -25,9 +25,14 @@ var _sev_vel := Vector3.ZERO
 var _sev_spin := Vector3.ZERO
 var _dirt_t := 0.0
 var eyes: Array[MeshInstance3D] = []
+## 체액 색 (피격·죽음 파편). 하위 클래스가 바꾼다 (촘퍼 = 노랑). splat_kind: 바닥 얼룩 색 (0 초록 · 1 노랑 · 2 애벌레 크림)
+var goo: Array[Color] = GOO
+var splat_kind := 0
+## 공격 빈도 배율 (벌레 아레나 위험도): 1 보다 크면 공격 쿨타임(attack_cd · roll_cd)이 그만큼 빨리 돈다
+var aggro := 1.0
 
 static var _splat_mesh: CylinderMesh
-static var _splat_mat: StandardMaterial3D
+static var _splat_mats: Array[StandardMaterial3D] = []
 static var _eye_mesh: SphereMesh
 
 
@@ -115,6 +120,10 @@ func _physics_process(dt: float) -> void:
 	if alive and not dying:
 		_rig_update(dt)
 		_eye_glow()
+		if aggro > 1.0 and landed:
+			for k: String in ["attack_cd", "roll_cd"]:
+				if k in self:
+					set(k, float(get(k)) - (aggro - 1.0) * dt)
 
 
 ## 눈 발광: core_mat 밝기를 따라 두 눈 크기를 맞춘다
@@ -155,6 +164,14 @@ func _update_entry(dt: float) -> void:
 		Sfx.play("land", 0.15, -6.0)
 
 
+## 패링 경직: Enemy 기본 동작은 드론 높이(1m)를 절대값으로 쓰므로 벌레는 바닥 기준으로 되돌린다
+func _update_stagger(dt: float) -> void:
+	super._update_stagger(dt)
+	(j.body as Node3D).position.y -= 1.0
+	if is_instance_valid(stun_halo):
+		stun_halo.position.y = hp_bar_y - 0.2
+
+
 ## 하위 클래스: 리그의 emerge_k 를 맞춘다
 func _set_emerge(_k: float) -> void:
 	pass
@@ -167,7 +184,7 @@ func _hit_spark(dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
 	if not is_inside_tree():
 		return
 	var c := (j.body as Node3D).global_position + Vector3(0, _goo_height(), 0)
-	FX.sparks(c + dir * -0.2, 4 + mini(dmg, 6), GOO, 4.5, 0.4, -16.0, 0.06)
+	FX.sparks(c + dir * -0.2, 4 + mini(dmg, 6), goo, 4.5, 0.4, -16.0, 0.06)
 	if randf() < 0.3:
 		Sfx.play("bug_chitter", 0.2, -10.0)
 
@@ -193,6 +210,7 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 	death_dir = death_dir.normalized()
 	kill_source = source
 	warn_glow = false
+	charge_on = false
 	_end_warn()
 	if is_instance_valid(hp_bar):
 		hp_bar.queue_free()
@@ -215,7 +233,7 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 	flip_side = -1.0 if l.x > 0.0 else 1.0
 	d_vel = death_dir * 3.0 + Vector3(0, 4.5, 0)
 	var c := (j.body as Node3D).global_position + Vector3(0, _goo_height(), 0)
-	FX.sparks(c, 14, GOO, 6.5, 0.5, -16.0, 0.07)
+	FX.sparks(c, 14, goo, 6.5, 0.5, -16.0, 0.07)
 	FX.flash(c, Color(0.9, 1.0, 0.6), 0.9, 0.06)
 	Sfx.play("hit", 0.1, -2.0)
 	Sfx.play("bug_chitter", 0.15, -4.0)
@@ -248,7 +266,7 @@ func _update_death(dt: float) -> void:
 	_goo_t -= dt
 	if _goo_t <= 0.0:
 		_goo_t = randf_range(0.12, 0.25)
-		FX.sparks(body.global_position + Vector3(0, 0.3, 0), 2, GOO, 2.5, 0.3, -14.0, 0.05)
+		FX.sparks(body.global_position + Vector3(0, 0.3, 0), 2, goo, 2.5, 0.3, -14.0, 0.05)
 	if is_instance_valid(_severed):
 		_update_severed(dt)
 	if death_t >= FLIP_TIME:
@@ -282,12 +300,12 @@ static func _ease_out_back(x: float) -> float:
 func _pop(k: float) -> void:
 	var body: Node3D = j.body
 	var c := body.global_position + Vector3(0, _goo_height() * 0.8, 0)
-	FX.sparks(c, int(22 * k), GOO, 8.0 * k, 0.55, -18.0, 0.09)
-	FX.puffs(c, 4, GOO, 0.7 * k, 0.6 * k, 0.55)
+	FX.sparks(c, int(22 * k), goo, 8.0 * k, 0.55, -18.0, 0.09)
+	FX.puffs(c, 4, goo, 0.7 * k, 0.6 * k, 0.55)
 	FX.flash(c, Color(0.85, 1.0, 0.55), 1.3 * k, 0.07)
 	FX.shockwave(Vector3(c.x, global_position.y + 0.05, c.z), Color(0.75, 0.95, 0.45), 2.2 * k, 0.25, 0.05)
 	Debris.burst(body, c, 5.0 * k, 4.0 * k, death_dir * 2.0)
-	splat(Vector3(c.x, global_position.y, c.z), 0.9 + k * 0.5)
+	splat(Vector3(c.x, global_position.y, c.z), 0.9 + k * 0.5, splat_kind)
 	Sfx.play("bug_squish", 0.15, -2.0)
 	Sfx.play("boom", 0.15, -12.0)
 	if Main.inst.player.global_position.distance_to(global_position) < 12.0:
@@ -313,7 +331,7 @@ func _sever() -> void:
 	_sev_vel = death_dir * 3.5 + side * 1.5 + Vector3(0, 5.5, 0)
 	_sev_spin = Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)).normalized() * randf_range(8.0, 13.0)
 	var c := xf.origin
-	FX.sparks(c, 24, GOO, 7.0, 0.6, -14.0, 0.08)
+	FX.sparks(c, 24, goo, 7.0, 0.6, -14.0, 0.08)
 	FX.sparks(c, 10, [Pal.BLADE, Color.WHITE], 6.0, 0.3, -6.0, 0.06)
 	FX.flash(c, Color(1.0, 0.85, 0.7), 1.2, 0.08)
 	Sfx.play("slash", 0.0, 2.0)
@@ -327,7 +345,7 @@ func _update_severed(dt: float) -> void:
 		p.y = floor_y
 		if _sev_vel.y < -2.5:
 			_sev_vel.y = -_sev_vel.y * 0.3
-			FX.sparks(p, 6, GOO, 3.0, 0.3, -14.0, 0.05)
+			FX.sparks(p, 6, goo, 3.0, 0.3, -14.0, 0.05)
 		else:
 			_sev_vel.y = 0.0
 		_sev_vel.x *= 0.75
@@ -338,11 +356,14 @@ func _update_severed(dt: float) -> void:
 		_severed.rotate(_sev_spin.normalized(), _sev_spin.length() * dt)
 	_goo_t -= dt * 0.5
 	if _goo_t <= 0.0:
-		FX.sparks(p, 2, GOO, 2.0, 0.3, -14.0, 0.05)
+		FX.sparks(p, 2, goo, 2.0, 0.3, -14.0, 0.05)
+
+
+const SPLAT_GROUP := "bug_splat"
 
 
 ## 바닥에 납작한 체액 얼룩을 남긴다 (몇 초 뒤 오그라들며 사라짐). 크기는 단계로 묶어 넘긴다.
-static func splat(at: Vector3, size: float) -> void:
+static func splat(at: Vector3, size: float, kind := 0) -> void:
 	if FX.root == null:
 		return
 	if _splat_mesh == null:
@@ -352,14 +373,17 @@ static func splat(at: Vector3, size: float) -> void:
 		_splat_mesh.height = 0.01
 		_splat_mesh.radial_segments = 14
 		_splat_mesh.rings = 1
-		_splat_mat = StandardMaterial3D.new()
-		_splat_mat.albedo_color = Color(0.5, 0.75, 0.22)
-		_splat_mat.roughness = 0.15
-		_splat_mat.metallic_specular = 0.8
+		for c in [Color(0.5, 0.75, 0.22), Color(1.0, 0.78, 0.16), Color(0.93, 0.9, 0.78)]:
+			var m := StandardMaterial3D.new()
+			m.albedo_color = c
+			m.roughness = 0.15
+			m.metallic_specular = 0.8
+			_splat_mats.append(m)
 	var mi := MeshInstance3D.new()
 	mi.mesh = _splat_mesh
-	mi.material_override = _splat_mat
+	mi.material_override = _splat_mats[clampi(kind, 0, _splat_mats.size() - 1)]
 	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.add_to_group(SPLAT_GROUP)        # 청소 질주(FloorVac)가 빨아들일 수 있게
 	FX.root.add_child(mi)
 	mi.global_position = at + Vector3(0, 0.015, 0)
 	mi.rotation.y = randf() * TAU
@@ -379,8 +403,13 @@ func _exit_tree() -> void:
 
 # ── 공용 이동 도우미 ───────────────────────────
 
-## 플레이어를 향한 수평 방향과 거리
+## 플레이어를 향한 수평 방향과 거리.
+## 놓쳤을 때(연기 속 은신)는 플레이어 대신 배회 목적지를, 멈춰 서 있으면 두리번거리는 쪽을 가리킨다.
 func _to_player() -> Vector3:
+	if wander.on:
+		var g := wander.goal - global_position if wander.walking else wander.face_dir() * 4.0
+		g.y = 0
+		return g
 	var d := Main.inst.player.global_position - global_position
 	d.y = 0
 	return d

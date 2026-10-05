@@ -1,0 +1,69 @@
+# 우주 출장 청소업체 — 첫 출근/첫 의뢰. 기존 구출 브리핑과 별개인 초반 시안.
+# 사장의 이름은 미정이므로 직함으로 표시. 전투 씬 전환은 이 테스트에 포함하지 않는다.
+
+== start
+@title 청소업체 격납고 · 첫 출근
+@summary 신입 파일럿은 우주 출장 청소업체에 첫 출근하고, 사장에게 첫 의뢰를 소개받았다.
+@enter owner left welcome
+@wait 0.4
+> 격납고 문이 열리자 세제 냄새와 따뜻한 커피 향이 함께 흘러나왔다.
+owner welcome: 어서 와요. 오늘부터 우리 기체를 맡아 줄 파일럿이죠?
+me: 네. 그런데… 청소 일이라고 듣고 왔는데, 저건 전투용 기체 아닌가요?
+owner welcome: 튼튼한 청소 장비라고 해 두죠.{p} 우주에서는 먼지도 제법 사납거든요.
+owner welcome: 농담이에요. 처음부터 혼자 내보내진 않아요. 먼저 오늘 할 일을 같이 볼까요?
+
+@title 첫 의뢰 · 외곽 정비 구역
+@summary 첫 의뢰는 방치된 정비 구역의 통로를 비우는 일이다. 현장의 외계생물과 증식물이 작업을 방해하고 있다.
+owner briefing: 의뢰는 폐쇄된 정비 구역의 {cyan}통로 확보{/cyan}예요. 회수팀이 들어갈 길을 만드는 거죠.
+owner briefing: 증식물만 치우면 끝날 줄 알았는데, 그걸 먹고 사는 생물까지 자리를 잡았대요.
+me: 그 생물도… 청소 대상인가요?
+owner briefing: 작업을 방해하면요. 하지만 오늘 목표는 {gold}통로를 비우고 돌아오는 것{/gold}이에요. 끝까지 쫓아갈 필요는 없어요.
+owner briefing: 출발 전에 궁금한 건 물어봐요. 현장에서 추측하는 것보다 여기서 묻는 편이 낫거든요.
+
+* 보수와 장비 비용은 어떻게 되나요? -> payment
+* 현장에서 위험해지면 어떻게 하죠? -> safety
+
+== payment
+@set asked_payment = true
+owner briefing: 기본 보수는 통로 확보를 확인한 뒤 지급해요. 추가 작업은 별도 의뢰로 정산하고요.
+owner welcome: 기체와 소모품은 회사가 준비해요. 첫날부터 장비값을 떠넘기는 사장은 아니랍니다.
+me: 그건 조금 안심되네요.
+-> preparation
+
+== safety
+@set asked_safety = true
+owner briefing: 통신을 유지하고, 기체 상태가 나빠지면 바로 물러나요. 의뢰 범위 밖에는 들어가지 말고요.
+owner welcome: 일이 남으면 다음에 가면 돼요. 사람이 돌아와야 다음 출근도 있죠.
+me: 알겠습니다. 무리하지 않을게요.
+-> preparation
+
+== preparation
+@title 출발 준비 · 안전 확인
+@summary 사장은 통신 확인과 무리하지 않는 철수를 강조했다. 기체 조작은 출격 전 훈련 구역에서 익힌다.
+owner briefing: 이제 기체 연결을 확인하고, 훈련 구역에서 이동과 장비 조작부터 익혀요.
+owner briefing: 현장에서는 통신을 켜 두고, 귀환 경로를 먼저 확인해요. 상태가 나빠지면 작업보다 철수가 우선이에요.
+owner briefing: 통로를 확보하면 보고하고 돌아오면 돼요. 오늘은 그것만 기억해요.
+me: 준비는 됐습니다. 다만…
+
+* 첫 출근이라 조금 긴장되네요. -> nervous
+* 맡겨 주세요. 깔끔하게 끝내겠습니다. -> confident
+
+== nervous
+@set opening_attitude = nervous
+owner encouragement: 긴장해도 괜찮아요. 서두르지 말고 하나씩 해 봐요.{p} 모르는 건 무전으로 물어보고요.
+-> departure
+
+== confident
+@set opening_attitude = confident
+owner encouragement: 든든하네요. 그 기세는 좋지만, {gold}깔끔한 귀환{/gold}까지가 한 세트예요.
+-> departure
+
+== departure
+@summary 첫 의뢰의 목표와 안전 수칙을 확인했다. 사장의 격려를 받고 훈련과 첫 출격을 준비한다.
+@set first_contract_ready = true
+owner encouragement: 잘하고 와요. 첫 작업이 끝나면 커피는 제가 살게요.
+me: 그럼, 다녀오겠습니다.
+owner encouragement: 좋아요. {b}무사히 돌아오는 것{/b}부터 약속이에요!
+@wait 0.3
+> 기체의 상태등이 차례로 켜졌다. 첫 작업을 준비할 시간이다.
+@end

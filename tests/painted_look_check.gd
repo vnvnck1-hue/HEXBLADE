@@ -53,8 +53,12 @@ func _count_painted(n: Node) -> int:
 
 func _run() -> void:
 	PaintedLook.game_preset = PaintedLook.NONE
+	# 브롤 룩(기본 켜짐)이 아닌 예전 화면을 기준으로 칠 질감을 확인한다 (둘은 동시에 켜지지 않는다)
+	BrawlLook.on = false
 	# 칠 머티리얼은 코드로 만든 단색 파츠용이다. 새 메카(텍스처 원본)는 바꾸지 않으므로 예전 로봇으로 확인한다
 	MechPlayer._choice = "robot"
+	# 맵 바닥·벽 칠도 예전 격자 셰이더·단색 상자를 기준으로 본다 (Claude 배경 재질은 K 칠 대상이 아님)
+	ClaudeBgDress.enabled = false
 	var scene: PackedScene = load("res://scenes/main.tscn")
 	main = scene.instantiate()
 	root.add_child(main)
