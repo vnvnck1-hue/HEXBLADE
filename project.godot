@@ -12,6 +12,7 @@ config_version=5
 
 config/name="Neon Arena (Claude)"
 run/main_scene="res://scenes/lobby.tscn"
+config/icon="res://assets/icon/hexblade.png"
 config/features=PackedStringArray("4.7", "Forward Plus")
 
 [autoload]

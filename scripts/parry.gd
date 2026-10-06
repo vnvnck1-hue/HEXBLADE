@@ -27,6 +27,19 @@ const FREEZE := 0.034         # 2프레임 정지
 const SLOW := 0.3
 const SLOW_HOLD := 0.05       # 슬로우 유지 (약 3프레임)
 const SLOW_END := 0.11        # 이때 정상 속도로 완전히 복귀
+# 히트스톱 프리셋 (실제 초). light = 연속 패링의 중간 타(parry_feel() == "light"): 멈추기만 하고 슬로우 없이 곧바로 이어진다,
+# heavy = 마지막 타 · 단발: 멈춘 뒤 몇 프레임 슬로우. scale = 멈춘 동안 시간 배율 (0.002 = 사실상 완전 정지).
+# stutter = 한 번 멈췄다 2프레임 움직이고 이 길이만큼 다시 멈춤, shiver = 멈춘 동안 화면이 이만큼(px 비율) 부들부들 떨림.
+# 허수아비 씬 보스방 P / Shift+P 로 바꾼다 (실행 인자 --parrystop=id). 씬을 다시 불러도 유지.
+const STOP_PRESETS := [
+	{"id": "hard", "ko": "HARD · 딱 멈춤", "light": 0.11, "heavy": 0.16, "scale": 0.002, "stutter": 0.0, "shiver": 0.0},
+	{"id": "shiver", "ko": "SHIVER · 멈춘 채 떨림", "light": 0.12, "heavy": 0.2, "scale": 0.002, "stutter": 0.0, "shiver": 1.0},
+	{"id": "crunch", "ko": "CRUNCH · 두 번 끊어 멈춤", "light": 0.08, "heavy": 0.11, "scale": 0.002, "stutter": 0.07, "shiver": 0.4},
+	{"id": "heavy", "ko": "HEAVY · 묵직하게 길게", "light": 0.17, "heavy": 0.28, "scale": 0.002, "stutter": 0.0, "shiver": 0.6},
+	{"id": "soft", "ko": "SOFT · 예전 (가볍게)", "light": 0.07, "heavy": 0.085, "scale": 0.06, "stutter": 0.0, "shiver": 0.0},
+]
+static var stop_i := 0
+static var _stop_args_read := false
 
 var threats: Array = []
 var lock_t := 0.0
@@ -111,6 +124,8 @@ func _physics_process(dt: float) -> void:
 
 func _success(t: Object, p: Player) -> void:
 	var kind: String = t.parry_kind()
+	var heavy: bool = not (t.has_method("parry_feel") and t.parry_feel() == "light")
+	var fk := 1.0 if heavy else 0.6
 	var at: Vector3 = t.parry_point()
 	var src: Node3D = t.parry_source()
 	unregister(t)
@@ -128,21 +143,65 @@ func _success(t: Object, p: Player) -> void:
 			contact = chest + dir * 1.0
 	p.parry_counter(foe, kind)
 	t.parry_hit(p)
-	ParryFX.burst(contact, dir, kind)
+	# 연출 (docs/parry-camera-screen-effects.md): 히트 스파크 · 임팩트 버스트 · 임팩트 프레임 · 줌 블러 · 쇼크웨이브 왜곡 ·
+	# 펀치 인 + 공격 방향 카메라 킥 + 셰이크 · 히트스톱. 중간 타는 작게, 마지막 타(단발 포함)는 크게 + 줌인 · 짧은 슬로우
+	ParryFX.burst(contact, dir, kind, fk)
 	if ParryFX.inst:
-		ParryFX.inst.play(contact, kind)
+		ParryFX.inst.play(contact, kind, fk)
 	if ImpactFrame.inst:
-		ImpactFrame.inst.parry(contact, dir)
+		ImpactFrame.inst.parry(contact, dir, not heavy)
 	var main := Main.inst
-	main.camera.parry_cine(p, src, foe)
-	main.shake(0.45)
-	main.kick(-dir * 0.5)
-	Sfx.play("parry", 0.03, 3.0)
-	print("PARRY %s t=%.2f n=%d f=%d" % [kind, main.time, count, main.capture_frame])
-	# 시간: 2프레임 멈췄다가 몇 프레임 슬로우, 곧바로 정상 속도
-	_seq_start = Parry.now_ms()
-	main.set_slowmo(SLOW)
-	main.hitstop(FREEZE)
+	main.camera.parry_impact(-dir, 1.25 if heavy else 0.75)
+	if heavy:
+		main.camera.parry_cine(p, src, foe)
+	var s := Sfx.play("parry", 0.03, 3.0 if heavy else 1.0)
+	if s and not heavy:
+		s.pitch_scale *= 1.08
+	print("PARRY %s t=%.2f n=%d f=%d %s" % [kind, main.time, count, main.capture_frame, "heavy" if heavy else "light"])
+	# 시간: 히트스톱으로 멈췄다가 — 중간 타는 곧바로 정상 속도, 마지막 타는 몇 프레임 슬로우를 거쳐 복귀
+	var pr: Dictionary = stop_preset()
+	var stop: float = pr.heavy if heavy else pr.light
+	var total := stop
+	_stutter_at = -1
+	if float(pr.stutter) > 0.0:
+		# 멈춤 → 2프레임 움직임 → 다시 멈춤 (끊어 씹히는 느낌)
+		_stutter_at = Time.get_ticks_msec() + int((stop + 0.034) * 1000.0)
+		_stutter_len = float(pr.stutter) * (1.3 if heavy else 1.0)
+		total += 0.034 + _stutter_len
+	_shiver_end = Time.get_ticks_msec() + int(total * 1000.0) if float(pr.shiver) > 0.0 else -1
+	_shiver_k = float(pr.shiver) * (1.4 if heavy else 1.0)
+	if heavy:
+		_seq_start = Parry.now_ms() + int(total * 1000.0)
+		main.set_slowmo(SLOW)
+	main.hitstop(stop, float(pr.scale))
+
+
+var _stutter_at := -1
+var _stutter_len := 0.0
+var _shiver_end := -1
+var _shiver_k := 0.0
+
+
+static func stop_preset() -> Dictionary:
+	if not _stop_args_read:
+		_stop_args_read = true
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--parrystop="):
+				use_stop(a.substr(12))
+	return STOP_PRESETS[stop_i]
+
+
+static func use_stop(id: String) -> void:
+	for i in STOP_PRESETS.size():
+		if STOP_PRESETS[i].id == id:
+			stop_i = i
+
+
+## 다음(또는 이전) 프리셋으로. 바뀐 프리셋을 돌려준다
+static func cycle_stop(back := false) -> Dictionary:
+	stop_preset()
+	stop_i = posmod(stop_i + (-1 if back else 1), STOP_PRESETS.size())
+	return STOP_PRESETS[stop_i]
 
 
 func sequence_active() -> bool:
@@ -150,6 +209,22 @@ func sequence_active() -> bool:
 
 
 func _process(_dt: float) -> void:
+	var now := Time.get_ticks_msec()
+	if _stutter_at >= 0 and now >= _stutter_at:
+		_stutter_at = -1
+		Main.inst.hitstop(_stutter_len, float(stop_preset().scale))
+	if _shiver_end >= 0:
+		var cam := get_viewport().get_camera_3d()
+		if now < _shiver_end and cam:
+			# 멈춘 화면이 부들부들 (게임 시간이 멈춰도 실제 시간으로 흔든다)
+			var a := 0.035 * _shiver_k
+			cam.h_offset = randf_range(-a, a)
+			cam.v_offset = randf_range(-a, a)
+		else:
+			_shiver_end = -1
+			if cam:
+				cam.h_offset = 0.0
+				cam.v_offset = 0.0
 	if _seq_start < 0:
 		return
 	var main := Main.inst
@@ -158,6 +233,8 @@ func _process(_dt: float) -> void:
 		# 궁극기 락온이 시간을 넘겨받는다
 		_seq_start = -1
 		return
+	if e < 0.0:
+		return                  # 아직 히트스톱 중
 	if e >= SLOW_END:
 		_seq_start = -1
 		main.set_slowmo(1.0)

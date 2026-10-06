@@ -201,6 +201,7 @@ var _pull_fx := 0.0
 var _trail_keep := []
 var _link_was := false
 var _gattai := false            ## 지금 합체 비행이 만화식 합체인가
+var maid_props: WhirlProps        ## 휠윈드 메이드 소품 흩뿌리기 (확인용 참조)
 var cutin: CanvasLayer          ## Q 합체 컷인 (DiagonalDockingCutin 또는 예전 CockpitCutin — 같은 begin/notify_dock/cancel 계약)
 ## 합체 컷인 종류: "diagonal" 사선 DOCKING(기본, docs/diagonal-docking-cutin.md) · "cockpit" 예전 조종석(폐기 예정 보관본) ·
 ## "off" 컷인 없이 예전 GattaiFX 만. --cutin=diagonal|cockpit|off, 허수아비 시험장 0 키. static 이라 씬을 다시 불러도 유지.
@@ -274,6 +275,8 @@ func _ready() -> void:
 			DiagonalDockingCutin.use_tween_id(String(a).substr(14))
 		elif String(a).begins_with("--cutin-char="):
 			DiagonalDockingCutin.char_mode = String(a).substr(13)
+		elif String(a).begins_with("--cutin-pose="):
+			DiagonalDockingCutin.pose_mode = int(String(a).substr(13))
 		elif String(a).begins_with("--cutin-chars="):
 			if String(a).substr(14) == "on":
 				DiagonalDockingCutin.hidden_chars = []
@@ -1511,6 +1514,23 @@ func _start_whirl() -> void:
 	main.shake(0.5)
 	rig.happy = 1.0
 	bark_line("whirl", true)
+	_maid_whirl()
+
+
+## 민트 메이드 컷인으로 합체했으면 회오리에 메이드 소품이 휘말려 사방으로 흩뿌려진다 (WhirlProps, 연출 전용)
+func _maid_whirl() -> void:
+	if cutin_style != "diagonal" or not is_instance_valid(main):
+		return
+	var cfg: Dictionary = {}
+	if is_instance_valid(cutin) and cutin is DiagonalDockingCutin:
+		cfg = (cutin as DiagonalDockingCutin).cfg
+	else:
+		for ch: Dictionary in DiagonalDockingCutin.CHARACTERS:
+			if ch.has("props"):
+				cfg = ch
+	if not cfg.has("props") or not DiagonalDockingCutin.char_visible(String(cfg.id)):
+		return
+	maid_props = WhirlProps.attach(main, player, cfg.props, cfg.get("sparkle"), WHIRL_TIME)
 
 
 ## 휠윈드 무적: 시작 순간부터 끝나는 순간까지. 남은 휠윈드 시간만큼만 걸어 끝난 뒤로 무적이 길게 남지 않는다 (기존 무적이 더 길면 그대로).

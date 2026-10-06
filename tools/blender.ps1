@@ -118,7 +118,7 @@ switch ($mode) {
 		$box = Join-Path $root '.tools\blender_live'
 		$alive = Join-Path $box 'alive.txt'
 		$livePid = if (Test-Path -LiteralPath $alive) { [int](Get-Content -LiteralPath $alive -TotalCount 1) } else { 0 }
-		if (-not $livePid -or -not (Get-Process -Id $livePid -ErrorAction SilentlyContinue)) { Fail 'no live Blender window: start it with tools\blender.ps1 live (or blender_live.cmd)' }
+		if (-not $livePid -or -not (Get-Process -Id $livePid -ErrorAction SilentlyContinue)) { Fail 'no live Blender window: start it with tools\blender.ps1 live (or launchers\dev\blender_live.cmd)' }
 		if ($rest.Count -lt 1 -or -not (Test-Path -LiteralPath $rest[0])) { Fail 'usage: tools\blender.ps1 send <code.py> [seconds]' }
 		$limit = if ($rest.Count -gt 1) { [double]$rest[1] } else { 120 }
 		$job = 'job_' + [DateTime]::Now.ToString('HHmmss_fff')

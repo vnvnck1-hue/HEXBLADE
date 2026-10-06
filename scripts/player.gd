@@ -122,6 +122,7 @@ var boost_idle := 0.0
 var hover := 0.0
 var hover_v := 0.0
 var puff_t := 0.0
+var ribbons: Array[BoostRibbon] = []   ## 부스터 연기 꼬리 (분사구마다 하나)
 # 높이 상태 (global_position.y 가 발 높이)
 var gy := 0.0                     # 발밑 지면 높이
 var vy := 0.0                     # 수직 속도
@@ -144,6 +145,8 @@ var laser_recoil := 0.0
 var invuln := 0.0
 var hurt_t := 0.0
 var stun_t := 0.0                 # 경직: 이동·사격·검·대시·충전이 막힌다
+var stun_soft := false            # 패링 직후의 짧은 경직: 전류 불꽃 없이 버티는 자세만
+const PARRY_RECOIL := 0.2         # 패링 성공 뒤 살짝 경직 (원거리는 60%)
 var recoil := 0.0
 ## 사격 팔 반동 스프링: 쏘는 순간 뒤로 튕겼다가 앞으로 살짝 넘쳐 되돌아온다 (연출 전용)
 var gun_kick := 0.0
@@ -416,7 +419,7 @@ func _physics_process(dt: float) -> void:
 		move_dir = Vector3.ZERO
 		if mega_t > 0.0:
 			_end_mega()
-		if randf() < 0.35:
+		if randf() < 0.35 and not stun_soft:
 			FX.sparks(global_position + Vector3(randf_range(-0.3, 0.3), randf_range(0.4, 1.4), randf_range(-0.3, 0.3)), 2, [Color.WHITE, Color("8ad8ff")], 3.0, 0.15, 0.0, 0.05)
 			tilt_v += Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)) * 3.0
 
@@ -866,6 +869,10 @@ func parry_counter(foe: Vector3, kind: String) -> void:
 	invuln = maxf(invuln, 0.7)
 	dash_cd = 0.0
 	slash_cd = 0.0
+	# 받아 낸 충격에 살짝 경직 (다음 패링 공격 전에는 풀린다)
+	if stun_t <= 0.0:
+		stun_soft = true
+	stun_t = maxf(stun_t, PARRY_RECOIL * (1.0 if kind == "melee" else 0.6))
 	_arm_phantom()
 	slash_style = 1 if slash_style == 0 else 0
 	slash_total = SLASH_TIMES[slash_style]
@@ -1727,6 +1734,7 @@ func stagger(t: float) -> void:
 	if not alive:
 		return
 	stun_t = maxf(stun_t, t)
+	stun_soft = false
 	_combo_break()
 	leap.abort()
 	whirl.stop(false)
@@ -2106,6 +2114,7 @@ func _animate_jets(dt: float, on: float) -> void:
 		var s := lerpf(n.scale.y, target, 0.5)
 		n.scale = Vector3(0.7 + on * 0.5, maxf(s, 0.001), 0.7 + on * 0.5)
 		n.visible = s > 0.02
+	_boost_ribbon(on)
 	if on > 0.0:
 		puff_t -= dt
 		if puff_t <= 0.0:
@@ -2123,6 +2132,18 @@ func _animate_jets(dt: float, on: float) -> void:
 		if boost_snd.playing and boost_snd.volume_db < -55.0:
 			boost_snd.stop()
 
+
+## 부스터 연기 꼬리: 부스터가 켜져 있는 동안 두 분사구에서 각각 회색 연기 띠를 잇는다 (--boosttrail=off 로 끔)
+func _boost_ribbon(on: float) -> void:
+	if ribbons.is_empty():
+		if Main.cmd_args.has("--boosttrail=off"):
+			return
+		for jet: Node3D in [j.jet_l, j.jet_r]:
+			var r := BoostRibbon.make(func() -> Vector3: return jet.global_position)
+			add_child(r)
+			ribbons.append(r)
+	for r in ribbons:
+		r.emitting = on > 0.3
 
 func _animate_ring(dt: float) -> void:
 	var ready_k := 1.0 - dash_cd / DASH_CD

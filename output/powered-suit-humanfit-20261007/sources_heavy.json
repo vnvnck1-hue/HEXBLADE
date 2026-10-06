@@ -1,0 +1,32 @@
+[
+  {
+    "file": "01_field_wear_heavy.png",
+    "title": "01 · 중장갑 작업 슈트",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a111d4-8919-73c3-b772-7324576b34ef\\exec-e003b21b-0a75-47ec-ab5d-c1b9ecc4c32e.png",
+    "destination": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/01_field_wear_heavy.png",
+    "reference": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/01_field_wear.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/reference_a.png"
+    ]
+  },
+  {
+    "file": "02_flex_mobility_heavy.png",
+    "title": "02 · 장갑 기동 슈트",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a111d4-8919-73c3-b772-7324576b34ef\\exec-66324a9f-f6f1-407c-940b-4987e0e9f823.png",
+    "destination": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/02_flex_mobility_heavy.png",
+    "reference": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/02_flex_mobility.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/reference_a.png"
+    ]
+  },
+  {
+    "file": "03_external_assist_heavy.png",
+    "title": "03 · 중장갑 프레임 슈트",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a111d4-8919-73c3-b772-7324576b34ef\\exec-5300eea7-c910-4f32-8312-ef34e0ac499d.png",
+    "destination": "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/03_external_assist_heavy.png",
+    "reference": [
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/03_external_assist.png",
+      "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/powered-suit-humanfit-20261007/reference_a.png"
+    ]
+  }
+]

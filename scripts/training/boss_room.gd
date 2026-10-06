@@ -180,6 +180,7 @@ func build_panel(panel: TrainingPanel) -> void:
 	panel.row("8", "크기", func(): return "플레이어 × %.1f" % float(LancasterBoss.SIZES[size_i]))
 	panel.row("9", "행동 정지", func(): return "ON" if hold else "OFF")
 	panel.row("0", "다음 패턴 시전", _next_title)
+	panel.row("P", "패링 히트스톱", func(): return String(Parry.stop_preset().ko))
 	panel.section("상태")
 	panel.row("", "체력", _hp_text)
 	panel.row("", "지금", _state_text)
@@ -267,6 +268,9 @@ func handle_key(k: int, shift: bool) -> bool:
 			if is_instance_valid(boss):
 				boss.hold_ai = hold
 			main.hud.banner("행동 정지  %s" % ("ON" if hold else "OFF"), ACCENT, "제자리에서 조준만 합니다" if hold else "")
+		KEY_P:
+			var pr := Parry.cycle_stop(shift)
+			main.hud.banner("패링 히트스톱  %s" % pr.ko, ACCENT, "중간 타 %.2f초 · 마지막 타 %.2f초%s" % [pr.light, pr.heavy, " · 두 번 끊어 멈춤" if float(pr.stutter) > 0.0 else ""])
 		KEY_0:
 			if is_instance_valid(boss) and boss.alive:
 				var id := boss.cast_next()

@@ -1,0 +1,43 @@
+{
+  "file": "mint_maid_docking_pose2.png",
+  "size": [
+    1122,
+    1402
+  ],
+  "mode": "RGBA",
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "alpha_bbox": [
+    25,
+    7,
+    1116,
+    1388
+  ],
+  "corner_alpha": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "sha256": "577fee57fd6da014f3b3148210fba74332ebc4dab4a7f9f625250497a300a462",
+  "master_copy_identical": true,
+  "game_capture": {
+    "engine": "4.7.2.stable.official.ed1daf0bf",
+    "renderer": "Forward+",
+    "scene": "res://scenes/training.tscn",
+    "trigger": "PartnerDrone.whirl_link() (Q fusion)",
+    "frames": 80,
+    "dock_time": 0.233,
+    "exit_code": 0,
+    "script_errors": 0,
+    "environment_errors": [
+      "user log rotation access",
+      "user log file write access",
+      "Windows root certificate store access"
+    ]
+  },
+  "visual_check": "Same mint maid identity and costume; both open hands have five fingers; two legs/shoes visible; dynamic twist/jump and spread-arm silhouette differs from original tray pose; no props or trails drawn.",
+  "integration": "Artwork only; new pose not connected to runtime portrait, layout, or motion masks."
+}

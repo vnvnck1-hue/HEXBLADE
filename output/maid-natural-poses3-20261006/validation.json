@@ -1,0 +1,116 @@
+[
+  {
+    "file": "01_hands_folded.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "alpha_bbox": [
+      0,
+      15,
+      975,
+      1518
+    ],
+    "opaque_content_bbox": [
+      62,
+      19,
+      970,
+      1509
+    ],
+    "outside_sample_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "7c6fd88fa6e93e1f08ba392d28fca65154dc3e88c8af403065928c6399a4c9fb",
+    "master_copy_identical": true
+  },
+  {
+    "file": "02_relaxed_hip.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "alpha_bbox": [
+      65,
+      18,
+      956,
+      1512
+    ],
+    "opaque_content_bbox": [
+      86,
+      24,
+      949,
+      1506
+    ],
+    "outside_sample_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "14fe3595cdd3c8ecb856a9e7d2590bd74bf691fbb1920a781fdb4b65e74831a7",
+    "master_copy_identical": true
+  },
+  {
+    "file": "03_gentle_greeting.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "alpha_bbox": [
+      0,
+      18,
+      1004,
+      1520
+    ],
+    "opaque_content_bbox": [
+      111,
+      24,
+      944,
+      1513
+    ],
+    "outside_sample_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "a49e1d2503d8a60e76254501e3dee41d116e7ea0647bc23281b357f6d5f03f76",
+    "master_copy_identical": true
+  }
+]

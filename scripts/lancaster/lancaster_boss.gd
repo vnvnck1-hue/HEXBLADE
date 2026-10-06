@@ -9,7 +9,9 @@ extends Enemy
 ## 패턴 (컨셉 시트 01~04)
 ##   burst  PINNING BURST     버팀(조준 레이저 · 총열 가속) → 지속 연사(추적 속도 제한, 대시로 빠져나간다) → 배기(증기 · 약점)
 ##   sweep  SWEEP SUPPRESSION 부채꼴 예고 → 옆으로 미끄러지며 110° 휩쓸기 사격 → 회복
-##   claw   CLAW CRUSH        [근접 패링] 집게를 뒤로 젖혀 하얗게 충전 → 별빛 알림 → 분사 돌진으로 정확히 0.5초 뒤 움켜쥔다
+##   claw   CLAW CHAIN        [근접 패링] 크게 젖히는 준비동작 한 번 → 2~4타가 끊김 없는 한 세트 동작으로 이어진다.
+##                             타마다 다 휘두른 자세에서 다음 타 자세로 흘러 들어가며(link) 다가오고 → 금빛 섬광 → 0.3초 뒤 닿는다.
+##                             중간 타를 패링해도 짧은 히트스탑뿐, 밀려나거나 멈추지 않고 다음 타로 이어진다. 마지막 타까지 받아 내면 STAGGER.
 ##   slug   HEAVY SLUG        [원거리 패링] 총열을 멈추고 충전 → 금빛 중탄 (되받아치면 크게 경직)
 ##   spike  PILE-DRIVER SPIKE 붉은 원 예고 → 분사 도약 → 가시를 바닥에 박는다 (박힌 동안 약점)
 ##   stomp  HEAVY STOMP       가까이 오면 발을 들어 → 내리찍어 퍼지는 충격파 고리 (뛰거나 대시로 넘는다)
@@ -26,7 +28,7 @@ enum St { DORMANT, WAKE, FIGHT, TRANSITION, STAGGER, DYING, DEAD }
 
 const Rig := preload("res://scripts/lancaster/lancaster_rig.gd")
 
-const MAX_HP := 900.0
+const MAX_HP := 2700.0           ## 예전 900 의 세 배 (사용자 요청)
 const PHASE2_AT := 0.5
 const SPEED := 7.4               ## 옆걸음 속도 (플레이어 6.8)
 const ACCEL := 44.0
@@ -117,6 +119,13 @@ var _regen_t := 0.0
 var _charge_q := -1.0
 var _steam_t := 0.0
 var _sq := 0.0                   ## 늘임(-) · 찌그러짐(+) 스프링 (임팩트 스윙 · 패링 반동)
+var _soft_hit := false           ## 중간 패링 피해: 몸이 움찔하지 않게 (rig.hit 을 아주 작게)
+## 소강: 플레이어가 공격을 멈추면 곧 거리를 벌리고 견제만 하며 잠시 숨을 돌릴 틈을 준다
+var lull_t := 0.0                ## > 0 이면 소강 중 (남은 초)
+var _pressure := 0.0             ## 플레이어가 마지막으로 보스를 때린 시각 (Main.time)
+var _lull_ready := true          ## 소강 뒤 패턴을 한 번 써야 다시 소강할 수 있다
+var _lull_spot := Vector3.ZERO   ## 소강 때 물러날 자리
+var _lull_t2 := 0.0
 var _sq_v := 0.0
 
 
@@ -433,6 +442,7 @@ func _wake(dt: float) -> void:
 		st = St.FIGHT
 		st_t = 0.0
 		rest = 0.6
+		_pressure = Main.inst.time
 		if is_instance_valid(bar):
 			bar.call("appear")
 		_bar_hp()
@@ -480,11 +490,26 @@ func _guard(_dt: float, _p: Player) -> void:
 func _fight(dt: float, p: Player) -> void:
 	var to := _to_player()
 	var dist := to.length()
-	aim_yaw = _yaw_of(to) if dist > 0.3 else aim_yaw
+	if pat == "" and phase == 1:
+		# 광폭화 전: 조준을 휙휙 꺾지 않고 묵직하게 돌린다
+		aim_yaw = lerp_angle(aim_yaw, _yaw_of(to), 1.0 - exp(-4.5 * dt)) if dist > 0.3 else aim_yaw
+	else:
+		aim_yaw = _yaw_of(to) if dist > 0.3 else aim_yaw
 	rig.aim_point = _chest()
 	if pat != "":
 		pt += dt
 		call("_p_" + pat, dt, p, to, dist)
+		return
+	# 소강: 플레이어가 한동안 때리지 않으면 거리를 벌리고 견제만 한다
+	if force_next != "":
+		lull_t = 0.0
+	elif lull_t <= 0.0 and _lull_ready and dash_t <= 0.0 and Main.inst.time - _pressure > _lull_after():
+		_begin_lull(to, dist)
+	if lull_t > 0.0:
+		lull_t -= dt
+		_lull(dt, p, to, dist)
+		if lull_t <= 0.0:
+			rest = randf_range(0.35, 0.7)
 		return
 	_neutral(dt, p, to, dist)
 	rest -= dt * tempo()
@@ -499,24 +524,25 @@ func _fight(dt: float, p: Player) -> void:
 
 
 ## 평소 움직임: 옆걸음 · 거리 맞추기 · 견제 연사 · 분사 대시 · 회피
-func _neutral(dt: float, p: Player, to: Vector3, dist: float) -> void:
+## 광폭화 전(1페이즈)은 과묵하게: 느린 옆걸음 · 방향을 자주 안 바꾸고 · 대시 · 견제 연사가 드물다
+func _neutral(dt: float, p: Player, to: Vector3, dist: float, want := 7.5, spd_k := 1.0, pin_k := 1.0) -> void:
 	var k := tempo()
+	var calm := phase == 1
 	strafe_t -= dt
 	if strafe_t <= 0.0:
-		strafe_t = randf_range(0.9, 2.2) / k
-		strafe_dir = -strafe_dir if randf() < 0.65 else strafe_dir
+		strafe_t = (randf_range(1.8, 3.6) if calm else randf_range(0.9, 2.2)) / k
+		strafe_dir = -strafe_dir if randf() < (0.45 if calm else 0.65) else strafe_dir
 	var n := to / maxf(dist, 0.01)
 	var side := Vector3(-n.z, 0, n.x) * strafe_dir
-	var want := 7.5
 	var radial := clampf((dist - want) * 0.6, -1.0, 1.0)
-	want_vel = (side * 0.9 + n * radial).normalized() * SPEED * minf(k, 1.3) * sqrt(size_k)
+	want_vel = (side * 0.9 + n * radial).normalized() * SPEED * minf(k, 1.3) * sqrt(size_k) * spd_k * (0.62 if calm else 1.0)
 	# 벽에 막히면 반대로
 	if Main.inst.is_blocked(global_position + side * (radius + 1.2)) or (room_rect.size != Vector2.ZERO and not room_rect.grow(-0.5).has_point(Vector2(global_position.x, global_position.z) + Vector2(side.x, side.z) * 1.5)):
 		strafe_dir = -strafe_dir
 	_w("gun_aim", 0.75, 8.0)
-	rig.spin = 6.0
+	rig.spin = 3.0 if calm else 6.0
 	# 견제 연사
-	pin_cd -= dt * k
+	pin_cd -= dt * k * pin_k
 	if pin_left > 0:
 		_w("gun_aim", 1.0, 20.0)
 		rig.spin = 34.0
@@ -526,21 +552,82 @@ func _neutral(dt: float, p: Player, to: Vector3, dist: float) -> void:
 			pin_left -= 1
 			_fire_round(_lead_dir(0.55), 0.05)
 	elif pin_cd <= 0.0 and dist > 3.5 and dash_t <= 0.0:
-		pin_cd = randf_range(1.3, 2.4)
-		pin_left = randi_range(4, 6) + (2 if phase >= 2 else 0)
+		pin_cd = randf_range(2.2, 3.6) if calm else randf_range(1.3, 2.4)
+		pin_left = randi_range(3, 4) if calm else randi_range(4, 6) + (2 if phase >= 2 else 0)
 		pin_t = 0.12
 	# 분사 대시: 자리 바꾸기 · 가까운 검 피하기
 	dash_cd -= dt * k
 	if dash_cd <= 0.0 and dash_t <= 0.0:
 		var close := dist < 3.4
-		if close and randf() < 0.55 or (not close and randf() < 0.35):
+		if close and randf() < (0.3 if calm else 0.55) or (not close and randf() < (0.12 if calm else 0.35)):
 			var d := side
 			if close:
 				d = (-n * 0.75 + side * 0.65).normalized()
 			elif dist > 11.0:
 				d = (n * 0.8 + side * 0.4).normalized()
 			_dash(d)
-		dash_cd = randf_range(1.4, 2.6)
+		dash_cd = randf_range(2.6, 4.2) if calm else randf_range(1.4, 2.6)
+
+
+## 소강을 시작하기까지 (플레이어가 때리지 않은 시간)
+func _lull_after() -> float:
+	return 2.4 if phase == 1 else 3.0
+
+
+func _begin_lull(to: Vector3, dist: float) -> void:
+	lull_t = randf_range(3.6, 5.0) if phase == 1 else randf_range(2.4, 3.4)
+	_lull_ready = false
+	pin_left = 0
+	pin_cd = randf_range(0.9, 1.5)
+	print("LANCASTER_LULL t=%.1f dur=%.1f" % [Main.inst.time, lull_t])
+	# 가까우면 물러날 자리 쪽으로 분사 대시해 거리부터 벌린다 (벽을 등지고 있으면 옆으로 빠진다)
+	_lull_spot = _retreat_spot()
+	if dist < 8.0:
+		var d := _lull_spot - global_position
+		d.y = 0
+		if d.length() > 0.5:
+			_dash(d.normalized())
+	if is_instance_valid(bar):
+		bar.call("set_pattern", "")
+
+
+## 소강: 멀찍이(12m) 천천히 옆걸음하며 가끔 짧은 견제 연사. 증기를 내뿜으며 숨을 고른다
+func _lull(dt: float, p: Player, to: Vector3, dist: float) -> void:
+	_neutral(dt, p, to, dist, 12.5, 0.7, 0.55)
+	if dist < 11.0:
+		# 아직 가까우면 물러날 자리로 걸어간다 (뒤가 벽이면 그냥 뒤로 가면 제자리라서)
+		_lull_t2 -= dt
+		if _lull_t2 <= 0.0:
+			_lull_t2 = 0.5
+			_lull_spot = _retreat_spot()
+		var d := _lull_spot - global_position
+		d.y = 0
+		if d.length() > 0.8:
+			want_vel = d.normalized() * SPEED * 0.8 * sqrt(size_k)
+	_w("gun_aim", 0.55 if pin_left <= 0 else 1.0, 6.0)
+	_w("heat", 0.35, 3.0)
+	_steam_t -= dt
+	if _steam_t <= 0.0:
+		_steam_t = randf_range(0.5, 0.9)
+		LancasterFX.steam(rig.at("pt_vent_l" if randf() < 0.5 else "pt_vent_r"), 0.5)
+
+
+## 방 안에서 플레이어로부터 12m 쯤 떨어진, 가장 멀고 가까운 자리 (16방향 후보 중)
+func _retreat_spot() -> Vector3:
+	var pp := Main.inst.player.global_position
+	var best := global_position
+	var bs := -INF
+	for i in 16:
+		var a := TAU * i / 16.0
+		var q := pp + Vector3(cos(a), 0, sin(a)) * 12.5
+		q = _clamp(Vector3(q.x, global_position.y, q.z))
+		var away := Vector2(q.x - pp.x, q.z - pp.z).length()
+		var walk := Vector2(q.x - global_position.x, q.z - global_position.z).length()
+		var score := away - walk * 0.35
+		if score > bs:
+			bs = score
+			best = q
+	return best
 
 
 func _dash(d: Vector3) -> void:
@@ -634,6 +721,8 @@ func _start(id: String) -> void:
 	ps = {"ph": ""}
 	last_pat = id
 	pin_left = 0
+	lull_t = 0.0
+	_lull_ready = true
 	pattern_started.emit(id)
 	if is_instance_valid(bar):
 		bar.call("set_pattern", NAMES.get(id, id))
@@ -658,7 +747,7 @@ func _end_pattern(_aborted: bool) -> void:
 	pat = ""
 	ps = {}
 	pt = 0.0
-	rest = randf_range(0.45, 1.05)
+	rest = randf_range(0.9, 1.6) if phase == 1 else randf_range(0.45, 1.05)
 	if is_instance_valid(bar):
 		bar.call("set_pattern", "")
 
@@ -831,8 +920,9 @@ func _windup_t() -> float:
 	return maxf(0.7, (0.85 if phase >= 2 else 1.0) / sqrt(tempo()))
 
 
-func _rewind_t() -> float:
-	return maxf(0.26, (0.34 if phase >= 2 else 0.42) / sqrt(tempo()))
+## 한 타가 닿은 뒤 → 다음 타 섬광까지: 다 휘두른 자세에서 다음 타 자세로 흘러 들어가는 연결 동작 (예전 0.63/0.55초보다 조금 길다)
+func _link_t() -> float:
+	return maxf(0.55, (0.68 if phase >= 2 else 0.8) / sqrt(tempo()))
 
 
 func _p_claw(dt: float, p: Player, to: Vector3, dist: float) -> void:
@@ -856,16 +946,17 @@ func _p_claw(dt: float, p: Player, to: Vector3, dist: float) -> void:
 			Sfx.play("echarge", 0.03, -1.0)
 			_snd_cue("rev", 0.8, -2.0)
 			_ph("windup")
-		"windup", "rewind":
-			var big: bool = ps.ph == "windup"
-			var dur := _windup_t() if big else _rewind_t()
+		"windup":
+			var dur := _windup_t()
 			var e := clampf(pt / dur, 0.0, 1.0)
 			if e < 0.8:
 				ps.dir = (dir.slerp(to / maxf(dist, 0.01), 1.0 - exp(-12.0 * dt))).normalized()
 			aim_yaw = _yaw_of(ps.dir)
-			_charge_anim(dt, e, big, String(ps.kinds[int(ps.n)]))
+			_charge_anim(dt, e, true, String(ps.kinds[int(ps.n)]))
 			if pt >= dur:
 				_alert_strike(p)
+		"link":
+			_link(dt, p, to, dist)
 		"hold":
 			ps.hold = float(ps.hold) - dt
 			_strike_pose(String(ps.kind))
@@ -874,28 +965,16 @@ func _p_claw(dt: float, p: Player, to: Vector3, dist: float) -> void:
 				_launch_strike()
 		"strike":
 			_strike(dt, p, dir, dist)
-		"after":
+		"finish":
+			# 마지막 타: 다 휘두른 자세로 잠깐 버틴 뒤 거둔다
 			ps.after = float(ps.after) - dt
-			if ps.has("recoil"):
-				# 패링된 스윙이 다 뻗은 다음 프레임에 튕겨 난다
-				ps.recoil = float(ps.recoil) - dt
-				if ps.recoil <= 0.0:
-					var rd: Vector3 = ps.recoil_dir
-					ps.erase("recoil")
-					vel = rd * 9.0
-					rig.kick("torso", Vector3(4.0, randf_range(-2, 2), 0))
-					rig.kick("upperarm_r", Vector3(-7.0, 0, 3.0))
-					_sq = 0.8
-			elif not rig.swinging():
+			if not rig.swinging():
+				rig.pose = _impact_pose(String(ps.get("prev", "thrust")))
+				rig.stiff = 240.0
 				_w("claw", 0.5, 10.0)
 				_w("crouch", 0.5, 12.0)
 			if ps.after <= 0.0:
-				if int(ps.n) < int(ps.total):
-					_ph("rewind")
-					rig.stiff = 420.0
-					LancasterFX.impact_star(rig.at("pt_claw"), 0.6)
-					_snd_cue("rev", 1.1, -3.0)
-				elif bool(ps.get("slug_finish", false)):
+				if bool(ps.get("slug_finish", false)):
 					# 2페이즈 콤보: 집게 연타 끝을 중탄으로 마무리
 					pat = "slug"
 					ps = {"ph": "", "combo": true}
@@ -960,6 +1039,60 @@ func _cock_pose(kind: String) -> Dictionary:
 		"swipe":
 			return {"torso": Vector3(0.1, -1.25, 0.08), "shoulder_r": Vector3(-0.2, 0, 0.35), "upperarm_r": Vector3(0.7, 0, 1.45), "forearm_r": Vector3(0.5, 0, 0), "hand_r": Vector3(0.2, 0, 0), "upperarm_l": Vector3(0.6, 0, -0.4)}
 	return {"torso": Vector3(0.22, -1.0, 0.1), "shoulder_r": Vector3(-0.3, 0, 0.3), "upperarm_r": Vector3(-0.95, 0, 0.9), "forearm_r": Vector3(1.6, 0, 0), "hand_r": Vector3(0.6, 0, 0), "upperarm_l": Vector3(0.55, 0, -0.5)}
+
+
+## 연결 동작 (타와 타 사이): 끊김 없이 이어지는 한 세트 동작.
+##   0 ~ 15%  다 휘두른 자세의 여운 (스윙 관성)
+##   15 ~ 65% 휘두른 팔을 그대로 감아올리며 다음 타의 젖힌 자세로 흘러 들어간다 · 플레이어 쪽으로 성큼 다가선다
+##   65 ~ 100% 젖힌 자세로 힘을 모은다 (흰 발광 · 금빛 입자) → 끝나면 금빛 섬광 → 0.3초 뒤 닿는다
+func _link(dt: float, p: Player, to: Vector3, dist: float) -> void:
+	var dur := _link_t()
+	var e := clampf(pt / dur, 0.0, 1.0)
+	var next := String(ps.kinds[int(ps.n)])
+	var prev := String(ps.get("prev", "thrust"))
+	var n := to / maxf(dist, 0.01)
+	if e < 0.85:
+		ps.dir = ((ps.dir as Vector3).slerp(n, 1.0 - exp(-10.0 * dt))).normalized()
+	aim_yaw = _yaw_of(ps.dir)
+	var w := smoothstep(0.15, 0.65, e)
+	if not rig.swinging():
+		var a := _impact_pose(prev)
+		var b := _cock_pose(next)
+		var out := {}
+		for key: String in a:
+			out[key] = (a[key] as Vector3).lerp(b.get(key, Vector3.ZERO), w)
+		for key: String in b:
+			if not out.has(key):
+				out[key] = Vector3.ZERO.lerp(b[key], w)
+		var hold := smoothstep(0.8, 0.9, e)
+		if hold > 0.0:
+			out.torso = (out.get("torso", Vector3.ZERO) as Vector3) + Vector3(sin(t * 83.0), sin(t * 71.0), sin(t * 97.0)) * 0.03 * hold
+		rig.pose = out
+		rig.stiff = lerpf(220.0, 420.0, w)
+		rig.damp = 21.0
+	windup_k = smoothstep(0.6, 0.95, e)
+	_w("crouch", lerpf(0.45, 0.8, w), 12.0)
+	_w("lean", -0.18 * w, 10.0)
+	_w("claw", lerpf(0.3, 1.0, w), 12.0)
+	_w("gun_aim", 0.0, 8.0)
+	_w("jet", 0.25 + 0.45 * e, 14.0)
+	# 발놀림: 다음 타가 닿을 만큼 다가선다 (힘을 모으는 끝 구간에서는 버틴다)
+	var want_d := float(REACH[next]) * size_k + p.hit_radius + 2.0
+	var radial := clampf((dist - want_d) * 1.1, -0.6, 1.0)
+	want_vel = n * radial * SPEED * 0.85 * sqrt(size_k) * (1.0 - smoothstep(0.65, 0.85, e))
+	_fx_t -= dt
+	if _fx_t <= 0.0 and e > 0.45:
+		_fx_t = lerpf(0.05, 0.02, e)
+		var c := rig.at("pt_claw")
+		var r := (1.4 * (1.0 - e) + 0.25) * size_k
+		var d := Vector3(randf_range(-1, 1), randf_range(-0.6, 1), randf_range(-1, 1)).normalized()
+		FX.flash(c + d * r, ParryFX.GOLD if randf() < 0.7 else Color.WHITE, 0.2 + 0.2 * e, 0.08)
+	if not ps.has("cued") and e > 0.5:
+		ps.cued = true
+		_snd_cue("rev", 1.1, -3.0)
+	if pt >= dur:
+		ps.erase("cued")
+		_alert_strike(p)
 
 
 ## 돌진 중 자세: 감긴 그대로 몸만 앞으로 기울여 날아든다 (스윙은 닿기 직전 몇 프레임에 몰아서)
@@ -1127,9 +1260,13 @@ func _strike_end() -> void:
 		Parry.inst.unregister(self)
 	lift_y = 0.0
 	vel = (ps.dir as Vector3) * 3.0
+	ps.prev = ps.kind
 	ps.n = int(ps.n) + 1
-	ps.after = (0.16 if int(ps.n) < int(ps.total) else 0.3) + SWING_FRAMES / 60.0
-	_ph("after")
+	if int(ps.n) < int(ps.total):
+		_ph("link")
+	else:
+		ps.after = 0.3 + SWING_FRAMES / 60.0
+		_ph("finish")
 
 
 func parry_eta() -> float:
@@ -1149,7 +1286,7 @@ func parry_eta() -> float:
 
 func parry_committed() -> bool:
 	if pat == "claw":
-		return ps.get("ph", "") in ["windup", "rewind", "hold", "strike", "after"]
+		return ps.get("ph", "") in ["windup", "link", "hold", "strike", "finish"]
 	if pat == "slug":
 		return ps.get("ph", "") in ["windup", "after"]
 	return false
@@ -1157,6 +1294,13 @@ func parry_committed() -> bool:
 
 func parry_kind() -> String:
 	return "melee"
+
+
+## Parry 연출 세기: 중간 타는 짧게("light"), 연타의 마지막 타는 크게("heavy")
+func parry_feel() -> String:
+	if pat == "claw" and int(ps.get("n", 0)) + 1 < int(ps.get("total", 1)):
+		return "light"
+	return "heavy"
 
 
 func parry_point() -> Vector3:
@@ -1177,20 +1321,18 @@ func parry_hit(p: Player) -> void:
 	d.y = 0
 	d = d.normalized()
 	if pat == "claw" and int(ps.get("n", 0)) + 1 < int(ps.get("total", 1)):
+		# 중간 타: 히트스탑(Parry 쪽)만 걸리고 세트 동작은 그대로 이어진다 — 밀려나지도 멈추지도 않는다
 		_swing_now()
-		_end_warn()
-		if Parry.inst:
-			Parry.inst.unregister(self)
-		lift_y = 0.0
-		ps.n = int(ps.n) + 1
-		ps.after = 0.2 + SWING_FRAMES / 60.0
-		ps.recoil = SWING_FRAMES / 60.0
-		ps.recoil_dir = d
-		_ph("after")
+		var c := rig.at("pt_claw")
+		_strike_end()
 		vel = Vector3.ZERO
-		LancasterFX.impact_star(rig.at("pt_claw"), 1.2)
+		rig.kick("hand_r", Vector3(-2.5, 0, 1.2))      # 부딪힌 집게만 툭 (몸은 그대로)
+		LancasterFX.impact_star(c, 1.0)
+		FX.sparks(c, 14, [Color.WHITE, ParryFX.HOT, ParryFX.GOLD], 9.0, 0.3, -12.0, 0.05)
 		Sfx.play("clank", 0.05, 2.0)
-		take_hit(3, d, rig.at("pt_claw"), "deflect")
+		_soft_hit = true
+		take_hit(3, d, c, "deflect")
+		_soft_hit = false
 		return
 	_swing_now()
 	_end_pattern(true)
@@ -1715,17 +1857,21 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	if st == St.STAGGER:
 		amount *= 2.0
 	boss_hp -= amount
+	if source != "parry" and source != "deflect":
+		_pressure = Main.inst.time
+		if lull_t > 0.6:
+			lull_t = 0.6           # 다시 때리기 시작하면 소강이 곧 끝난다
 	if immortal:
 		boss_hp = maxf(boss_hp, 1.0)
 		_regen_t = 2.5
 	_bar_hp(amount >= 6.0)
 	kill_source = source
 	var heavy := source in ["slash", "phantom", "missile", "parry", "deflect"] or amount >= 6.0
-	HitSpark.spawn(at, dir, clampf(1.0 + amount * 0.05, 1.0, 2.6), self, 1 if heavy else 0)
+	HitSpark.spawn(at, dir, clampf(1.0 + amount * 0.05, 1.0, 2.6), self, 1 if heavy else 0, source)
 	MocoFX.report(self, roundi(amount), heavy, at)
 	if Main.inst.has_method("record_hit"):
 		Main.inst.call("record_hit", self, roundi(amount), source)
-	rig.hit(dir, clampf(amount * 0.07, 0.15, 1.2))
+	rig.hit(dir, 0.1 if _soft_hit else clampf(amount * 0.07, 0.15, 1.2))
 	if heavy:
 		_flash_t = 0.06
 		_set_flash(true)

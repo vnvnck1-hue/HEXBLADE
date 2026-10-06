@@ -1309,7 +1309,7 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 		bar.call("set_hp", boss_hp / MAX_HP, amount >= 5.0)
 	kill_source = source
 	var at := fx_point(pos, dir)
-	HitSpark.spawn(at, dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self, 1 if source in ["slash", "phantom", "missile", "parry"] else 0)
+	HitSpark.spawn(at, dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self, 1 if source in ["slash", "phantom", "missile", "parry"] else 0, source)
 	MocoFX.report(self, roundi(amount), source in ["slash", "phantom", "missile", "parry"], at)
 	rig._lean_v += rig.body_xf().basis.inverse() * Vector3(dir.x, 0, dir.z) * minf(0.05 * amount, 0.6) * Vector3(1, 0, 1)
 	rig._bob_v -= minf(amount * 0.08, 1.5)

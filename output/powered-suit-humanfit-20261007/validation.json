@@ -1,0 +1,26 @@
+[
+  {
+    "File": "01_field_wear.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "CopyIdentical": true,
+    "SHA256": "C6DEBB7E2B4338383CC0DA0416E88709715B0E8FFB2F245CD75F355E35B0DCE4"
+  },
+  {
+    "File": "02_flex_mobility.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "CopyIdentical": true,
+    "SHA256": "76EB79CCC43EFAC13F38D30BE3098BB1A3D1FB7B5DB8A818A9B48795448CA21A"
+  },
+  {
+    "File": "03_external_assist.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "CopyIdentical": true,
+    "SHA256": "2FB7954819B83279BF22EACB4A4625AD034F4C5F4369F174024BDF4D53B537CF"
+  }
+]

@@ -227,11 +227,27 @@ func _run() -> void:
 	var m2 := DiagonalDockingCutin.begin(lab, null, true)
 	await process_frame
 	_check(m1.cfg.id == "mint" and m2.cfg.id == "mint" and m1.anchor.visible, "숨긴 캐릭터는 건너뛰어 민트 메이드만 (%s, %s)" % [m1.cfg.id, m2.cfg.id])
+	# 포즈: 합체마다 무작위 (직전과 다름) · 5종 모두 나옴 · 포즈마다 원화 · 마스크 · 얼굴이 바뀜
+	var poses: Array = DiagonalDockingCutin.CHARACTERS[2].poses
+	var pose_seen := {}
+	var repeat := 0
+	var last := -1
+	for pn in 40:
+		var k := DiagonalDockingCutin.pick_pose(poses.size())
+		pose_seen[k] = true
+		if k == last:
+			repeat += 1
+		last = k
+	_check(pose_seen.size() == poses.size() and repeat == 0, "민트 메이드 포즈 %d종이 무작위로 (40번에 %d종 · 연속 같은 포즈 %d번)" % [poses.size(), pose_seen.size(), repeat])
+	_check(m1.pose_i >= 0 and m1.portrait.texture == load(poses[m1.pose_i].tex) and m1.cfg.face == poses[m1.pose_i].face
+		and m1.mat.get_shader_parameter("hair_mask") == load(poses[m1.pose_i].mask), "컷인 포즈 %d (%s): 원화 · 움직임 마스크 · 얼굴 위치가 그 포즈 것" % [m1.pose_i, poses[m1.pose_i].name])
+	_check(DiagonalDockingCutin.CHARACTERS[2].tex == load(poses[0].tex), "원래 설정은 그대로 (복사본에만 포즈 덮어씀)")
 	m2.queue_free()
-	var hair := Color8(182, 213, 191)
-	_check(m1.text_col.g > m1.text_col.r and m1.text_col.g > m1.text_col.b and absf(m1.band_top_edge.h - hair.h) < 0.03
-		and m1.band_fill.g > m1.band_fill.r and absf(m1.band_fill.h - hair.h) < 0.06 and m1.band_fill.v < 0.35,
-		"민트 전용 테마 = 머리색 기준 (민트 글자 · 머리색 위 테두리 · 짙은 청록 띠)")
+	var gth: Dictionary = DiagonalDockingCutin.THEMES.green
+	var same := true
+	for k in gth:
+		same = same and DiagonalDockingCutin.THEMES.mint[k] == gth[k]
+	_check(same and m1.band_fill == gth.fill and m1.text_col == gth.text, "민트 메이드 테마 = 초록 머리 메이드 테마 그대로 (띠 · 글자 · 테두리 · 집중선)")
 	_check(float(m1.mat.get_shader_parameter("bust")) == 0.0 and float(m1.mat.get_shader_parameter("motion")) == 1.0, "가슴 모핑 끔 · 치마/옷 움직임 켬")
 	var ri_back := m1.root.get_children().find(m1.scatter.back)
 	var ri_anchor := m1.root.get_children().find(m1.anchor)
@@ -272,8 +288,18 @@ func _run() -> void:
 	print("  mint skirt %.1f · cloth %.1f px · shadow +%.3f side a %.2f · props %d far %.2fW bounces %d · sparks %d (vx %.0f, out %d/%d)" % [m1.skirt_peak, m1.cloth_peak, sh_right, sh_a, live_props, far, m1.scatter.bounces, m1.scatter.spark_total, sp_vx / maxf(sp_n, 1), sp_outside, m1.scatter.spark_out])
 	_check(m1.skirt_peak > 6.0 and m1.cloth_peak > 8.0 and flutter_max > DiagonalDockingCutin.FLUTTER.x, "치마 · 리본 꼬리가 관성으로 흔들림 (%.0f / %.0f px)" % [m1.skirt_peak, m1.cloth_peak])
 	_check(sh_right > 0.01 and sh_right < 0.045 and sh_a > 0.4, "그림자가 캐릭터 바로 오른쪽에 자라남 (+%.3f side)" % sh_right)
-	_check(live_props == 10 and left_start and far > 0.5 and m1.scatter.bounces >= 10,
+	var spd: Array = []
+	for q: Dictionary in m1.scatter.props:
+		spd.append(float(q.cruise) / m1.vs.x)
+	spd.sort()
+	var tiers_n := [0, 0, 0]
+	for q: Dictionary in m1.scatter.props:
+		tiers_n[int(q.tier)] += 1
+	print("  prop speeds %s W/s · tiers %s" % [str(spd.map(func(v): return snappedf(v, 0.01))), str(tiers_n)])
+	_check(live_props == 10 and left_start and far > 0.25 and m1.scatter.bounces >= 6,
 		"소품 10개가 왼쪽 밖에서 오른쪽으로 튀며 날아감 (평균 %.2f W까지 · 튐 %d)" % [far, m1.scatter.bounces])
+	_check(tiers_n[0] >= 2 and tiers_n[2] >= 2 and float(spd[0]) < 0.35 and float(spd[-1]) > 0.95,
+		"소품 속도가 섞임: 느린 것 %d개(최저 %.2f W/s) · 빠른 것 %d개(최고 %.2f W/s)" % [tiers_n[0], spd[0], tiers_n[2], spd[-1]])
 	var near_n := m1.scatter.props.filter(func(q): return q.near).size()
 	var ri_front := m1.root.get_children().find(m1.scatter.front)
 	print("  near props %d · lowest band pos %.2f · far %.2fW" % [near_n, near_min, near_far])
@@ -281,6 +307,9 @@ func _run() -> void:
 		"소품 셋은 캐릭터 앞을 지나감 (앞 층 · 띠 아래쪽 절반에서만 · 오른쪽까지)")
 	_check(m1.scatter.spark_total > 15 and sp_vx / maxf(sp_n, 1) > 0.0 and sp_outside == 0 and m1.scatter.spark_out == 0,
 		"금빛 반짝이는 띠 안에서만 오른쪽으로 (%d개)" % m1.scatter.spark_total)
+	var sp_avg := sp_vx / maxf(sp_n, 1) / m1.vs.x
+	_check(sp_avg > 0.0 and sp_avg < 0.15, "별빛은 아주 천천히 흐름 (평균 %.3f W/s)" % sp_avg)
+	_check(m1.scatter.face_total >= 5, "얼굴 둘레 반짝이 (%d개)" % m1.scatter.face_total)
 	for x in _of(DiagonalDockingCutin):
 		x.queue_free()
 	await process_frame

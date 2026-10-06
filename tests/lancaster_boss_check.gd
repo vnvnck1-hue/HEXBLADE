@@ -140,12 +140,15 @@ func _run() -> void:
 	_put_player(8.0)
 	var steps := 0
 	var max_foot := 0.0
+	var since_dash := 1.0
 	for i in 150:
 		await physics_frame
 		steps += b.rig.stepped
+		# 분사 대시 직후는 발이 따라 내려앉는 중이라 뺀다
+		since_dash = 0.0 if b.dash_t > 0.0 else since_dash + 1.0 / 60.0
 		for s in ["l", "r"]:
 			var L: Dictionary = b.rig.legs[s]
-			if not L.stepping and b.dash_t <= 0.0 and b.rig.air < 0.05:
+			if not L.stepping and since_dash > 0.3 and b.rig.air < 0.05:
 				var fy: float = b.rig.at("pt_foot_" + s).y
 				max_foot = maxf(max_foot, fy)
 	_check(steps >= 4, "옆걸음 2.5초에 %d 걸음" % steps)
@@ -162,12 +165,28 @@ func _run() -> void:
 	var total := int(b.ps.get("total", 0))
 	_check(total >= 2, "연속 %d타" % total)
 	if opened:
+		var away := b.global_position - p.global_position
+		away.y = 0
+		away = away.normalized()
+		var pos0 := b.global_position
+		_check(b.parry_feel() == "light", "중간 타 패링은 가벼운 연출(히트스탑만)")
+		_check(Parry.stop_preset().id == "hard", "기본 패링 히트스톱 프리셋은 HARD")
 		_check(Parry.inst.try_parry(p), "첫 타 패링 성공")
+		_check(Engine.time_scale < 0.01, "패링 순간 하드 히트스톱: 시간이 사실상 멈춘다 (배율 %.3f)" % Engine.time_scale)
 		await _frames(2)
-		_check(b.st == LancasterBoss.St.FIGHT and b.pat == "claw", "중간 타를 패링하면 튕겨 났다가 연타를 이어 간다")
+		_check(b.st == LancasterBoss.St.FIGHT and b.pat == "claw" and b.ps.get("ph", "") == "link", "중간 타를 패링해도 멈추지 않고 연결 동작(link)으로 이어진다")
+		_check(p.stun_t > 0.0 and p.stun_t <= Player.PARRY_RECOIL and p.stun_soft, "패링 성공 뒤 플레이어가 살짝 경직 (%.2f초)" % p.stun_t)
 		var t1 := Main.inst.time
-		var again := await _wait(func(): return Parry.inst.best_threat() == b, 2.0)
-		_check(again and Main.inst.time - t1 < 0.9, "다음 타가 곧바로 온다 (%.2f초 뒤 판정 창)" % (Main.inst.time - t1))
+		var back := 0.0
+		var again := false
+		for i in 120:
+			back = maxf(back, (b.global_position - pos0).dot(away))
+			if Parry.inst.best_threat() == b:
+				again = true
+				break
+			await physics_frame
+		_check(back < 0.35, "패링당해도 뒤로 밀려나지 않는다 (최대 %.2fm)" % back)
+		_check(again and Main.inst.time - t1 > 0.75 and Main.inst.time - t1 < 1.15, "다음 타는 한 세트로 이어서 온다 (%.2f초 뒤 판정 창, 예전 0.73초)" % (Main.inst.time - t1))
 		# 섬광 → 타격이 빠르다: 판정 창이 열린 뒤 닿기까지
 		_check(b.parry_eta() < 0.3, "섬광 뒤 0.3초 안에 닿는다 (남은 %.2f초)" % b.parry_eta())
 		for i in total - 1:
@@ -216,6 +235,35 @@ func _run() -> void:
 		if pl.playing and pl.stream == Sfx.inst.streams.get("boost"):
 			looping += 1
 	_check(looping == 0, "분사 대시 1.2초 뒤 부스터 소리가 남아 있지 않다 (%d개)" % looping)
+
+	# 패링 히트스톱 프리셋 (보스방 P 키)
+	var ids := []
+	for i in Parry.STOP_PRESETS.size():
+		room.handle_key(KEY_P, false)
+		ids.append(Parry.stop_preset().id)
+	_check(ids.size() == 5 and ids[-1] == "hard" and ids.has("crunch") and ids.has("soft"), "P 키로 히트스톱 프리셋 %d종을 돌아 다시 HARD (%s)" % [ids.size(), ", ".join(ids)])
+	room.handle_key(KEY_P, true)
+	_check(Parry.stop_preset().id == "soft", "Shift+P 는 거꾸로")
+	Parry.use_stop("hard")
+
+	# 소강: 한동안 때리지 않으면 거리를 벌리고 견제만 한다. 다시 때리면 곧 끝난다
+	_check(is_equal_approx(LancasterBoss.MAX_HP, 2700.0), "보스 체력 2700 (예전 900 의 세 배)")
+	_put_player(5.0)
+	b._pressure = Main.inst.time - 10.0
+	b.rest = 0.3
+	var lulled := await _wait(func(): return b.lull_t > 0.0, 2.0)
+	_check(lulled, "공격을 멈추면 보스가 소강 상태에 들어간다")
+	var d0 := b._to_player().length()
+	var quiet := true
+	for i in 120:
+		if b.pat != "" and b.pat != "pods":
+			quiet = false
+		await physics_frame
+	_check(quiet and b._to_player().length() > d0 + 2.0, "소강 동안 패턴 없이 거리를 벌린다 (%.1fm → %.1fm)" % [d0, b._to_player().length()])
+	b.take_hit(1, Vector3.FORWARD, b.global_position + Vector3(0, 2, 0), "bullet")
+	_check(b.lull_t <= 0.6, "다시 때리면 소강이 곧 끝난다 (남은 %.2f초)" % b.lull_t)
+	await _wait(func(): return b.pat != "", 3.0)
+	b._end_pattern(true)
 
 	# 5. 광폭화 · 처치 · 재기동 · 프리셋 키
 	b.take_hit(int(LancasterBoss.MAX_HP * 0.6), Vector3.FORWARD, b.global_position + Vector3(0, 2, 0), "bullet")

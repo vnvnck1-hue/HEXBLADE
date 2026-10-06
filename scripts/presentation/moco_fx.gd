@@ -11,6 +11,19 @@ extends MeshInstance3D
 
 static var on := not OS.get_cmdline_user_args().has("--vfx=old")
 
+## 타격 버스트 프리셋 (허수아비 8 / --hitfx=id). misfitz = MISFITZ 레퍼런스 3갈래 마젠타 별 (docs/misfitz-hit-vfx.md), moco = 예전 별·쐐기
+const STYLES := ["misfitz", "moco"]
+const STYLE_NAMES := {"misfitz": "MISFITZ · 근접 보라 / 원거리 노랑", "moco": "MO.CO · 별·쐐기"}
+static var style := _arg_style()
+static var slow := 1.0        # 버스트만 느리게 보기 (허수아비 Shift+8 = 0.2). 판정·게임 시간과 무관
+
+
+static func _arg_style() -> String:
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--hitfx=") and STYLES.has(a.substr(8)):
+			return a.substr(8)
+	return STYLES[0]
+
 # ── 색 (정확한 sRGB HEX, palette_and_presets.json). 꼭짓점 색은 변환 없이 쓰이므로 선형으로 한 번만 바꿔 둔다 ──
 const CORE := Color("ffffff")
 const ATTACK := Color("ff3cbd")
@@ -123,7 +136,7 @@ func _setup_layer() -> void:
 # ═══════════════════════════════════════════════════
 
 ## pos: 접촉점 · dir: 맞은 방향 · width: 대상 몸체 폭(m) · heavy: 강타 · k: 세기(1 이상, 크기 범위 안에서만 반영)
-func hit(pos: Vector3, dir: Vector3, width: float, heavy: bool, k := 1.0, key: Object = null) -> void:
+func hit(pos: Vector3, dir: Vector3, width: float, heavy: bool, k := 1.0, key: Object = null, source := "") -> void:
 	var now := Time.get_ticks_msec() * 0.001
 	if key != null:
 		var id := key.get_instance_id()
@@ -134,6 +147,9 @@ func hit(pos: Vector3, dir: Vector3, width: float, heavy: bool, k := 1.0, key: O
 			_last_hit.clear()
 	if _bursts.size() >= MAX_BURSTS:
 		_bursts.pop_front()
+	if style == "misfitz":
+		_bursts.append(MisfitzHit.make(pos, dir, width, heavy, k, key, "yellow" if MisfitzHit.RANGED.has(source) else "purple"))
+		return
 	var w := clampf(width, 0.8, 2.2)       # 큰 보스도 무제한 커지지 않게
 	var kk := clampf((k - 1.0) / 0.8, 0.0, 1.0)
 	var dia := w * (lerpf(1.2, 1.6, kk) if heavy else lerpf(0.75, 0.9, kk))
@@ -196,7 +212,7 @@ func _draw_bursts(dt: float) -> void:
 	var i := 0
 	while i < _bursts.size():
 		var b: Dictionary = _bursts[i]
-		b.age = float(b.age) + dt
+		b.age = float(b.age) + dt * slow
 		if float(b.age) >= float(b.end):
 			_bursts.remove_at(i)
 		else:
@@ -205,7 +221,10 @@ func _draw_bursts(dt: float) -> void:
 		return
 	_im.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
 	for b: Dictionary in _bursts:
-		_emit_burst(b)
+		if b.has("mz"):
+			MisfitzHit.emit(self, b)
+		else:
+			_emit_burst(b)
 	_im.surface_end()
 
 
@@ -220,6 +239,16 @@ func _tri(a: Vector3, b: Vector3, c: Vector3, col: Color) -> void:
 	_im.surface_set_color(col)
 	_im.surface_add_vertex(b)
 	_im.surface_set_color(col)
+	_im.surface_add_vertex(c)
+
+
+## 꼭짓점마다 다른 색 (광채 그라데이션)
+func _tri3(a: Vector3, b: Vector3, c: Vector3, ca: Color, cb: Color, cc: Color) -> void:
+	_im.surface_set_color(ca)
+	_im.surface_add_vertex(a)
+	_im.surface_set_color(cb)
+	_im.surface_add_vertex(b)
+	_im.surface_set_color(cc)
 	_im.surface_add_vertex(c)
 
 

@@ -3,7 +3,7 @@ extends Main
 ## 높은 벽으로 밀폐된 넓은 갱도. 보스는 벽과 구멍, 끝없이 솟은 기둥 사이를 오가며 공격한다.
 ##  - 거미줄: 바닥에 떨어진 거미줄 판 위는 느려지고(감속 지대), 직격하면 칭칭 감겨 크게 느려진다. 대시(Space)로 끊는다.
 ##  - 새끼 거미: 산란 · 굴에서 몰려나온다. 처치하면 가끔 미사일 · 에너지를 떨어뜨린다.
-## 실행: spider_boss.cmd · 인자 --phase2 (2페이즈부터) · --godmode · --show (공격 없이 돌아다니는 모습만 관찰) · --bot
+## 실행: launchers/scenes/spider_boss.cmd · 인자 --phase2 (2페이즈부터) · --godmode · --show (공격 없이 돌아다니는 모습만 관찰) · --bot
 
 const Stage := preload("res://scripts/spider/spider_stage.gd")
 const Boss := preload("res://scripts/spider/spider_boss.gd")

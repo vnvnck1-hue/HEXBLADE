@@ -18,22 +18,23 @@
 
 | 하고 싶은 것 | 명령 |
 |---|---|
-| 게임 실행 (로비) | `run_game.cmd` |
-| 편집기 | `open_editor.cmd` |
-| 새 PC 첫 준비 | `setup_godot.cmd` |
-| 테스트 전체 | `run_tests.cmd` 또는 `powershell -File tools\run_tests.ps1 [이름...]` |
+| 게임 실행 (로비) | 루트의 **`HEXBLADE.exe`** (아이콘 달린 실행기, 원본 `tools/launcher/` · 다시 빌드 `tools\launcher\build_launcher.cmd`) 또는 `launchers\dev\run_game.cmd` |
+| 편집기 | `launchers\dev\open_editor.cmd` |
+| 새 PC 첫 준비 | `launchers\dev\setup_godot.cmd` |
+| 테스트 전체 | `launchers\dev\run_tests.cmd` 또는 `powershell -File tools\run_tests.ps1 [이름...]` |
 | 자동 플레이·캡처 등 임의 인자 | `powershell -File tools\godot.ps1 wait <Godot 인자...>` (`--path` 는 자동) |
-| Blender (모델링) | `setup_blender.cmd` · `blender_live.cmd` · `powershell -File tools\blender.ps1 model models\src\<이름>.py` — [docs/blender-modeling.md](docs/blender-modeling.md) |
-| 씬 바로 실행 | `training.cmd`(허수아비 전투 테스트) · `dialogue_test.cmd`(캐릭터 대화) · `gimmick_test.cmd`(필드 기믹) · `fluid_smoke_test.cmd`(유체 연기) · `sector_run.cmd` · `boss_battle.cmd` · `forge_battle.cmd` · `abyss_battle.cmd` · `spider_boss.cmd`(거미 보스) · `mammoth_death_test.cmd` · `reference_mech_studio.cmd` |
+| Blender (모델링) | `launchers\dev\setup_blender.cmd` · `launchers\dev\blender_live.cmd` · `powershell -File tools\blender.ps1 model models\src\<이름>.py` — [docs/blender-modeling.md](docs/blender-modeling.md) |
+| 씬 바로 실행 | `launchers\scenes\` 아래: `training.cmd`(허수아비 전투 테스트) · `dialogue_test.cmd`(캐릭터 대화) · `gimmick_test.cmd`(필드 기믹) · `fluid_smoke_test.cmd`(유체 연기) · `sector_run.cmd` · `boss_battle.cmd` · `forge_battle.cmd` · `abyss_battle.cmd` · `spider_boss.cmd`(거미 보스) · `mammoth_death_test.cmd` · `reference_mech_studio.cmd` 등 |
 
-**버전을 올릴 때**: `godot-version.txt` 와 `project.godot` 의 `config/features` 를 함께 바꾸고 → `setup_godot.cmd` →
+**프로젝트 루트에는 `HEXBLADE.exe` 와 문서·설정 파일만 둔다.** 새 실행기 `.cmd` 는 `launchers\scenes\`(씬) 또는 `launchers\dev\`(개발 도구)에 만들고, 프로젝트 루트는 `%~dp0..\..\` 로 가리킨다. 다른 문서에서 `○○.cmd` 로만 적힌 실행기는 이 두 폴더에 있다.
+**버전을 올릴 때**: `godot-version.txt` 와 `project.godot` 의 `config/features` 를 함께 바꾸고 → `launchers\dev\setup_godot.cmd` →
 `--headless --import` 로 다시 임포트 → `run_tests.cmd` 통과 확인 → 바뀐 `.import`/`.uid` 파일까지 한 커밋으로 올린다.
 
 ## 2. 새 PC에서 시작할 때
 
 1. `git clone` (또는 `git pull`) 후 `git status` 로 브랜치 확인 — 아래 "현재 상태"의 브랜치 현황을 본다.
-2. `setup_godot.cmd` → `run_tests.cmd` 가 모두 PASS 인지 확인.
-3. `run_game.cmd` 로 로비가 뜨는지 확인.
+2. `launchers\dev\setup_godot.cmd` → `launchers\dev\run_tests.cmd` 가 모두 PASS 인지 확인.
+3. 루트의 `HEXBLADE.exe` 로 로비가 뜨는지 확인.
 
 ## 3. git 규칙
 
@@ -56,7 +57,7 @@
 
 ## 5. 현재 상태 (작업을 마칠 때 갱신한다)
 
-마지막 갱신: 2026-10-06
+마지막 갱신: 2026-10-07
 
 ### 재개 메모 — 메이드 합체 컷인 소품 (2026-10-06)
 
@@ -84,6 +85,36 @@
 **남은 작업/재개 순서**: 다음 사용자 요청에 따라 에셋 수정 또는 게임 적용을 진행한다. 적용 요청이 오면 현행 컷인 코드와 [기존 사선 컷인 문서](docs/diagonal-docking-cutin.md)를 먼저 확인하고, 최신 PNG의 개별 크기·등장 위치·속도·회전·수명·뒤쪽 레이어를 맞춘다. 이 수치와 실제 리소스 적용 경로는 아직 미결정이다. 현재 출력 폴더는 `.gdignore`로 임포트 제외되어 있으므로 적용 시 필요한 PNG를 리소스 폴더로 복사하고 임포트 파일도 관리한다. 코드 변경 시 고정 Godot 실행기 및 프로젝트 검증 규칙을 따른다. 이전 `output/maid-cutin-prop-assets-20261005/` 8종은 구 그림체 자료로 최신 세트와 혼동하지 않는다. 기존 시안·다른 작업 보존, 커밋/푸시는 사용자 요청 시에만 한다.
 
 ### 작업 기록
+
+- 2026-10-07 (Claude): **LANCASTER 4차 — 집게 연타를 하나의 세트 타격기로 · 패링 연출 재정비 · 소강 · 체력 3배** (사용자: 3프레임 돌진은 너무 빠르다 → 원복). [docs/lancaster-boss.md](docs/lancaster-boss.md) CLAW CHAIN · 소강 · 패링 성공 연출 절, 용어 [docs/parry-camera-screen-effects.md](docs/parry-camera-screen-effects.md). ① 돌진 속도는 3차(섬광 → 0.3초 동안 날아옴)로 원복. ② 연타 사이 `after`(멈춤)+`rewind`(재장전) → **연결 동작 `link`** 0.8초(2페이즈 0.68): 다 휘두른 자세에서 다음 타 자세로 관절을 섞어 흘러 들어가며 다가섬 → 힘 모음 → 섬광. 다음 판정 창까지 0.73초 → 약 0.85초. 중간 타 패링은 `_strike_end()` 로 그대로 link 에 들어가 **넉백 · 반동 · 멈춤 없음**(`_soft_hit` 로 rig.hit 도 작게), 마지막 타 패링만 STAGGER. 마지막 타 뒤는 `finish`. ③ 공통 `Parry._success`: 적의 `parry_feel()`("light"/"heavy", 없으면 heavy) — light = 히트스톱 0.07초만(슬로우 없음) · 임팩트 프레임 반전 1프레임 · 연출 ×0.6, heavy = 히트스톱 0.085 → 슬로우 → 줌인. `ParryFX` 오버레이에 **줌 블러 · 쇼크웨이브 왜곡 고리** 추가(`play(.., k)`), `ParryFX.burst(.., k)` 에 반격 방향 불꽃 · `Distortion.burst`, 새 `CameraRig.parry_impact`(FOV 펄스 · 다가섬 · 공격 방향 킥 · 셰이크, 기존 main.shake/kick 대체), `ImpactFrame.parry(.., light)`. ④ `Player.parry_counter` → 패링 뒤 **살짝 경직** `PARRY_RECOIL` 0.2초(원거리 0.12, `stun_soft` 는 전류 불꽃 없음) — 모든 적의 패링에 적용. ⑤ 소강: 2.4초(2페이즈 3초) 동안 보스를 안 때리면 `lull_t` 3.6~5초(2.4~3.4) 거리 12.5m 로 벌리고 견제만, 다시 때리면 0.6초 안에 끝, 패턴 한 번 뒤에야 다시 소강. ⑥ `MAX_HP` 900 → 2700. 1페이즈는 과묵하게(옆걸음 ×0.62 · 방향 전환 드묾 · 조준 천천히 · 견제 · 대시 드묾 · 패턴 사이 휴식 0.9~1.6초). `lancaster_boss_check` 에 중간 패링 link 지속 · 뒤로 안 밀림(0.00m) · 플레이어 경직 · 다음 타 간격 · 소강(5→9.7m) · 체력 검사 추가, `_capture/lancaster_parry_show.gd` 는 rewind → link, 캡처 `output/lancaster-boss-20261006/parry_v3/`. ⑦ 히트스톱을 하드하게 + 프리셋 5종 Parry.STOP_PRESETS(hard 기본: 중간 0.11/마지막 0.16초 시간 배율 0.002 완전 정지 · shiver 멈춘 채 화면 떨림 · crunch 두 번 끊어 멈춤 · heavy 길게 · soft 예전), 보스방 P/Shift+P · --parrystop=id, Main.hitstop(sec, scale). ⑧ 덤: LancasterRig 디딘 발이 수평으로 다리 길이 밖이면 발을 안쪽으로 미끄러뜨림(예전엔 IK 가 발을 0.2~0.34m 들어 올려 테스트 간헐 실패), 소강 때 방 안 후퇴 지점(_retreat_spot)으로 빠짐(벽을 등지면 제자리던 문제). 고정 Godot 전체 48종 PASS, lancaster_boss_check 3회 연속 PASS(발 0.01m · 소강 5→12.3m), 패링 세트 bot 60초 ERROR 0. 이 작업 중 다른 작업자의 partner_drone.gd 가 잠시 컴파일 실패(CHARACTERS) → 그쪽이 고친 뒤 재검증. 사용자 요청으로 작업 폴더의 다른 작업(Codex 등 미커밋분) 전체와 함께 `feature/round-skill-hud` 에 커밋·푸시.
+
+
+- 2026-10-07 (플레이어 강화슈트 디벨롭 3안 및 중장갑 수정, Codex): 사용자 기존 A안은 좋지만 로봇같다고 평가 → 선택 A원화 직접참조/내장 image_gen 독립3회로 사람 얼굴·직접착용·패브릭 관절을 강조한 `output/powered-suit-humanfit-20261007/01_field_wear.png`·`02_flex_mobility.png`·`03_external_assist.png` 제작. 후속 **"좀 더 장갑이 두꺼운 기체느낌"** 피드백으로 초기3장+A원화 각2입력/내장imagegen 편집3회 → **최신 `01_field_wear_heavy.png`(중장갑 작업)·`02_flex_mobility_heavy.png`(장갑 기동)·`03_external_assist_heavy.png`(중장갑 프레임)**. 크림/세이지/주황바이저/민트전원/붉은검/굵은선·셀명암 유지, 어깨·흉갑·전완·허벅지·정강이·부츠 외장 두껍게, 얼굴/목/유연한허리/인체관절축 유지. 각1536×1024 RGB·PNG디코딩/원본복사SHA동일·외형/정후면/착용구조/동작 육안확인. 1번주전신검없음/동작칸검있음. 선택A사본/실제prompts 및 prompts_heavy/sources/validation/README/.gdignore 보존. **최종3안 선택미정·착용자얼굴은 임시표현/주인공설정확정아님·단면/장갑두께 공학검증아님**. 원화까지만, 게임모델/코드/리소스연결/엔진실행/커밋/푸시없음, 초기안·기존자료·타작업파일보존.
+
+- 2026-10-07 (미커밋, Claude): **민트 메이드 컷인 포즈 5종 무작위** — 사용자 제공 투명 포즈 4장 → `tools/cutin_mint_poses.py` → `assets/portraits/mint_maid/mint-maid-pose1~4.png`·`-motion.png`(**`.import` 같이 올릴 것**, 원화 밉맵 켬). `CHARACTERS.mint.poses`(기존 트레이 + 4장), 합체마다 직전과 다른 포즈 무작위(`pick_pose`, `--cutin-pose=n` 고정), 포즈 tex/mask 는 경로로 두고 load(preload 하면 새 PNG 임포트 전 컴파일 실패로 임포트가 막힘). 덤: 컷인 앞 소품은 항상 빠름 등급(속도 검사 간헐 실패 수정). [docs](docs/diagonal-docking-cutin.md) "포즈 5종". 검증 중 다른 작업자가 편집하던 `lancaster_boss.gd`(627줄 `dt` 미선언)로 전체 컴파일이 잠시 깨짐 — 그 파일은 건드리지 않음. 커밋·푸시 없음.
+
+- 2026-10-07 (민트 메이드 감정3종, Codex): 사용자 "다양한 감정 표현으로 3가지 더" → 같은첨부 직접참조/내장imagegen 독립3회, `output/maid-emotion-poses3-20261007/01_joy.png`(환한웃음/웃는눈/가슴앞작은주먹), `02_shy.png`(붉은볼/내린시선/손끝모으기), `03_pout.png`(부푼볼/오므린입/옆눈/뒷손). 각1122×1402 투명RGBA, 민트머리/가린앞머리/분홍눈/흑백·분홍의상/큰머리비율/굵은선·셀명암 유지, 전신자세는 자연스럽게 접지. PNG디코딩/알파0~255/모서리0/원본바이트SHA동일 및 표정·의상·손발 육안확인. 실제prompts.json/첨부참조/sources.json/README.txt/validation.json/validate.py/`.gdignore` 보관. **원화까지만, 본편연결/포즈별마스크·정사각가공 미작업**. 게임코드변경/엔진실행/커밋/푸시없음, 기존시안·타작업파일 보존.
+
+- 2026-10-07 (미커밋, Claude): **민트 메이드 컷인 테마 = 초록 머리 메이드 테마 그대로** — 사용자: 2차 맑은 청록 · 흰 글자가 너무 쨍하고 촌스러움. `THEMES.mint` 를 `THEMES.green` 값으로(그림자 `sil` 만 슬레이트 남색 추가), 앞 소품 그림자도 슬레이트. `diagonal_cutin_check` 테마 검사를 "green 과 같음"으로, 관련 2종 PASS. 커밋·푸시 없음.
+
+- 2026-10-06 (미커밋, Claude): **휠윈드 메이드 소품 2차** — `WhirlProps` 개수 · 크기 절반, 수명 30%, 소품마다 바닥 그림자(그림 모양을 바닥에 눕힘), 기체가 네모로 뚫려 보이던 버그 수정(반투명 판의 `depth_draw_always` 가 깊이 미리 그리기에 네모를 써서 → `depth_draw_never`. **반투명 빌보드에 depth_draw_always 쓰지 말 것**), 금빛 별 글로우 좁게(컷인 2D · 휠윈드 3D). `whirl_props_check` 에 그림자 · 수명 · 깊이 · 크기 검사 추가, 관련 4종 PASS · training bot 40초 ERROR 0. 커밋·푸시 없음.
+
+- 2026-10-06 (자연스러운 민트 메이드 포즈3종, Codex): 사용자 후속 "좀 더 자연스러운 포즈들 세개 더" → 같은 첨부 직접참조/내장imagegen 독립3회, `output/maid-natural-poses3-20261006/01_hands_folded.png`(앞치마에 두 손 가볍게 포개기), `02_relaxed_hip.png`(한 손 허리/다른 팔 내림/편안한 체중 이동), `03_gentle_greeting.png`(살짝 숙여 인사/한 손 가슴·다른 손 앞치마). 각1024×1536 투명RGBA, 어깨/손목/팔꿈치 힘을 빼고 머리카락은 자연스럽게 내림, 기존캐릭터·흑백/분홍의상·굵은선/셀명암 유지. PNG디코딩/알파0~254/모서리 및 외부표본4점0/원본바이트SHA동일·3장육안 확인. 1번 배경제거 점검1회 추가했으나 광채처럼 보인 외부RGB가 alpha0임을 확인하여 최종은 첫생성원본 유지(알파무시뷰어에서는 해당RGB가 보일수있음). 실제프롬프트prompts.json/점검프롬프트/첨부참조/sources/README/validation/validate.py/`.gdignore` 보관. **원화제작까지만, 게임연결·포즈별마스크 미작업**. 코드변경/엔진재실행/커밋/푸시없음, 기존시안·타작업 보존.
+
+- 2026-10-07 (미커밋, Claude): **MISFITZ 타격 VFX 2차 — 크기 절반 · 노랑 버전 · 근접/원거리 색 분리** — 별 반경 몸 폭×0.8→0.4. `MisfitzHit.PALETTES` purple(레퍼런스, 근접) · yellow(같은 명암 구조 노랑·주황, 원거리), `RANGED` = bullet/laser/missile. `HitSpark.spawn`·`MocoFX.hit` 에 `source` 인자 추가, Enemy · boss_enemy · forge · spider · warden · lancaster 호출부가 source 전달. 캡처 시트는 총/미사일/검 3줄. moco_vfx_check · training_ui_toggle_check PASS, training · main · boss 30초 bot ERROR 0. 커밋·푸시 없음.
+
+- 2026-10-06 (미커밋, Claude): **MISFITZ 식 타격 VFX (기본 타격 버스트)** — [docs/misfitz-hit-vfx.md](docs/misfitz-hit-vfx.md). 사용자 레퍼런스(정지 1장, 'Hit' 정점 A · 소멸 B 두 단계)를 확대 분석: 비대칭 3갈래 별(흰 심지 · 연분홍 면 · 마젠타 테두리 · 가지 한쪽 짙은 베벨) + 계단 잔상 2겹 + 보라 덩어리 · 광선 · 광채 · 네모 픽셀 → 가는 선 별 + 속 빈 윤곽 파편 3개, 일반 0.30초/강타 1.3배 크기 · 1.25배 시간. 새 `scripts/presentation/misfitz_hit.gd`(`MisfitzHit`, MocoFX ImmediateMesh 에 그림), `MocoFX.style`(misfitz 기본 · moco 예전, `--hitfx=moco`) · `MocoFX.slow` · `_tri3`. 허수아비 **8** 전환 · **Shift+8** 0.2배속, 패널 행. 캡처 `_capture/misfitz_hit_show.gd` → `output/misfitz-hit-20261006/`(`.gdignore`, frames/ git 제외). `moco_vfx_check` · `training_ui_toggle_check` PASS, training 30초 bot ERROR 0. 새 class_name 이라 처음엔 `--import`. 커밋·푸시 없음.
+
+- 2026-10-06 (미커밋, Claude): **민트 메이드 컷인 4차 · Q 휠윈드 소품 흩뿌리기** — [docs/diagonal-docking-cutin.md](docs/diagonal-docking-cutin.md) "4차". ① `THEMES.mint` 산뜻하게(맑은 청록 띠 · 흰빛 민트 글자 · 분홍 하단 테두리/강조). ② `CutinScatter.TIERS` 소품 속도 느림/보통/빠름 섞음. ③ 별빛 아주 느리게(`SPARK_DRIFT`) + 가산 후광 · 흰 심 · 반짝임(`_twinkle`), 얼굴 둘레 반짝이(`face_sparks`). ④ 새 `scripts/drone/whirl_props.gd`(`WhirlProps`, 새 class_name → 처음엔 `--import`): 휠윈드 동안 메이드 소품이 회오리를 돌다 사방으로 내팽개쳐져 통통 튐 + 금빛 가산 별, `PartnerDrone._maid_whirl`(`_start_whirl` 끝 한 줄). 테스트 `tests/whirl_props_check.gd` 추가, `diagonal_cutin_check` 3e 갱신(테마 · 속도 섞임 · 느린 별빛 · 얼굴 반짝이), 관련 5종 PASS · training/main bot 40초 ERROR 0. 캡처 `_capture/maid_whirl_show.gd` → `output/maid-whirl-20261006/`(`.gdignore`, `frames/` git 제외). 커밋·푸시 없음.
+
+- 2026-10-06~07 (미커밋, Claude): **부스터 연기 꼬리 `BoostRibbon`** (사용자 레퍼런스 MISFITZ GOLDEN GOOSE 의 리본 꼬리). 새 `scripts/presentation/boost_ribbon.gd`: **분사구마다 한 줄(두 줄)**, 머리 = 불꽃이 나오는 분사구 원점(`j.jet_l/r.global_position`, 매 프레임 머리 점을 현재 위치로 붙임). 지나간 분사구 위치를 0.05m 마다 기록해 카메라를 보는 띠(ImmediateMesh)로 잇고, 셰이더: 회색 연기(밝은 회색 심 → 짙은 회보라 가장자리) · 머리 가장 두껍고(폭 0.66m) 꼬리로 갈수록 가늘게 · 가장자리 부드럽게 · 끝으로 갈수록 투명도 (1−나이)^1.3 로 서서히 0 · 띠에 붙은 결 노이즈(UV2.x = 쌓인 거리). 짧은 꼬리 수명 0.26초, 게임 시간, 흐르는 씬은 도로 따라. `player.gd` `_boost_ribbon`(`_animate_jets` 에서 호출, `ribbons` 배열). `--boosttrail=off`. 경과: 발자국 먼지 `BoostTrail`(삭제) → 노란 한 줄 리본 → 사용자 정정(분사구에 정확히 · 머리 두껍게 · 두 줄 · 더 짧게 · 회색 연기 · 끝 부드럽게)으로 지금 형태. 캡처·검사 `_capture/boost_trail_show.gd` 6항목 PASS(두 줄 · 머리-분사구 거리 0 · 등 뒤 · 0.3초 안 사라짐) → `output/boost-trail-20261006/`(`.gdignore`), main bot 30초 ERROR 0, mech_player/terrain_jump/partner_drone PASS. 다른 작업자의 동시 변경(`DiagonalDockingCutin.CHARACTERS` · 새 `WhirlProps`/`MisfitzHit`)으로 재임포트 첫 회에 컴파일 오류가 잠깐 찍힘. 커밋·푸시 없음.
+
+- 2026-10-06 (합체 컷인 추가 포즈 3종, Codex): 사용자 후속 요청 "또 다른 포즈 3개, 뒷모습 포함". 같은 첨부 민트메이드 직접참조/내장imagegen 독립3회 → `output/maid-docking-poses3-20261006/01_front_ready.png`(정면 팔짱/넓은 발), `02_side_dash.png`(오른쪽 옆달리기/앞뒤로 굽힌 팔/올린 무릎), `03_rear_lookback.png`(등·허리 흰리본·신발 뒤축이 보이는 후면3/4, 어깨너머 얼굴/손인사). 각1122×1402 투명RGBA, 기존트레이·양팔도약과 실루엣구분, 민트머리/분홍눈/가린앞머리/흑백·분홍의상/굵은선·셀명암 유지. PNG디코딩/알파0~255/모서리0/원본바이트SHA동일 검증, 3장육안확인. 같은폴더에 실제prompt개별txt+prompts.json/원화참조/sources.json/README.txt/validation.json/validate.py/`.gdignore`. **본편 연결/포즈별 가공·움직임마스크 미작업**, 게임코드수정/엔진재실행/커밋/푸시없음. 현재연출 실제확인은 앞선 pose2 기록, 기존자료·타작업파일 보존.
+
+- 2026-10-06 (합체 컷인 실제 확인·추가 포즈, Codex): 사용자 첨부 민트 메이드로 현재 연출을 먼저 게임에서 확인하고 확연히 다른 포즈 1장 제작. 고정 `tools/godot.ps1` Godot4.7.2 Forward+ + 기존 `_capture/diagonal_cutin_show.gd`: 허수아비 시험장 실제 Q합체(`whirl_link`, preview 아님), 현재 민트 테마 사선 DOCKING/트레이 원화/튀는 소품 확인, 80프레임·dock_t0.233·DOCKED·진입/체류/퇴장·종료0·SCRIPT ERROR0(로그 접근2/루트인증서1 환경ERROR 있음). 내장imagegen 첨부 직접참조 → `output/maid-docking-pose2-20261006/mint_maid_docking_pose2.png`1122×1402 투명RGBA: 양팔을 위/앞으로 크게 펼치고 몸을 비틀어 한 다리를 접는 도약 포즈, 원래 입가손+트레이와 상체 실루엣부터 다름. 민트머리/분홍눈/가린앞머리/흑백의상/분홍포인트/굵은선 유지, 트레이/소품/빛궤적 없음. PNG디코딩/알파0~255/모서리0/원본바이트SHA일치·손발전체 육안확인. 같은 폴더에 실제게임 `current_game_hold.png`/타임라인/첨부원본/prompt.txt/README.txt/validation.json/validate.py/`.gdignore`, 프레임은 git제외 `_capture/maid-pose2-review-20261006/`. **새 포즈 본편 연결·새 움직임 마스크 미작업**(추가 적용 요청 때 새 포즈 좌표에 맞게 제작), 게임코드 변경/커밋/푸시없음. 기존변경·타작업 미추적파일 보존.
+
+- 2026-10-06 (문서 작성, Codex): **패링 카메라·화면 효과 용어집** [docs/parry-camera-screen-effects.md](docs/parry-camera-screen-effects.md). 사용자 요청으로 펀치 인/돌리 인/FOV 펄스·카메라 킥/셰이크/임펄스·리프레이밍/오비트·블러/색수차/임팩트 프레임/디밍/왜곡·히트스톱/시간 배율을 정리했다. 개념 구분·조합 순서·제작 지시 예문·공식 엔진 문서 출처 포함. ZZZ 공식 내부 명칭/실측 사양이 아닌 일반 용어집임을 명시. 게임 코드 변경·적용·엔진 실행·커밋·푸시 없음. 기존 변경 및 다른 작업 파일 보존.
+
 
 - 2026-10-06 (계획만, Claude): **부스터 입구 불꽃 시트 애니메이션 — 미착수, 계획 문서** [docs/boost-flame-plan.md](docs/boost-flame-plan.md). 사용자 레퍼런스 'BOOST PROCESS' 4프레임 2톤 노랑 불꽃(물방울 → 늘어남 → 끊김 → 터짐). 사용자가 "지금 하지 말고 계획만" 이라 멈춤. 초안 생성기 `tools/fx/boost_flame_sheet.py` 와 결과 `output/boost-flame-20261006/draft_sheet.png`·미리보기만 있음(`assets/` 미배치, 게임 코드 변경 없음). 적용 계획: `BoostFlame` 모듈 · 분사구 축 정렬 카메라 판 · 초당 14프레임 · 알파 잘라 내기 · `player.gd` `_animate_jets` 한 줄, 기존 원뿔 불꽃 처리는 사용자 확인.
 

@@ -1,0 +1,80 @@
+[
+  {
+    "file": "01_joy.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bbox": [
+      25,
+      8,
+      1056,
+      1382
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "0ff73e7e2579688b4dcbe6c4c12cfbb9490e71693cc9662d7b86b95c2ebc0cf6",
+    "master_copy_identical": true
+  },
+  {
+    "file": "02_shy.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bbox": [
+      107,
+      0,
+      1068,
+      1402
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "ad56d0e9bbc0a91c7e84bf803530973a88e8ce78e48c3da05bd4c788f3932f42",
+    "master_copy_identical": true
+  },
+  {
+    "file": "03_pout.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bbox": [
+      51,
+      0,
+      1107,
+      1378
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "d8814eaf561fd32fbb6108bad2f345e095e27ffa77e4f3ea9f7dc299ad4079b9",
+    "master_copy_identical": true
+  }
+]

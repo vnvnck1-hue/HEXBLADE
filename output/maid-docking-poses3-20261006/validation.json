@@ -1,0 +1,80 @@
+[
+  {
+    "file": "01_front_ready.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bbox": [
+      25,
+      0,
+      1090,
+      1402
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "8bc9cdba04d1ea25c2a46aefd957ecbb06c3cb8365174a55ac0b7e74bdae2ca1",
+    "master_copy_identical": true
+  },
+  {
+    "file": "02_side_dash.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bbox": [
+      23,
+      17,
+      1104,
+      1358
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "5769d226aa559fabc618e169def784236df4b778638950f163c965861a9cdbf1",
+    "master_copy_identical": true
+  },
+  {
+    "file": "03_rear_lookback.png",
+    "size": [
+      1122,
+      1402
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "alpha_bbox": [
+      25,
+      8,
+      1052,
+      1386
+    ],
+    "corner_alpha": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "sha256": "490ce079c646651b6c3987302aff20db0cfb5a4b8ed042b85766e19ccd659d4d",
+    "master_copy_identical": true
+  }
+]

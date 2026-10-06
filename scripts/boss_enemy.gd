@@ -895,7 +895,7 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 	kill_source = source
 	if source == "laser":
 		_laser_lift(dmg, dir)
-	HitSpark.spawn(fx_point(pos, dir), dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self, 1 if source in ["slash", "phantom", "missile", "parry"] else 0)
+	HitSpark.spawn(fx_point(pos, dir), dir, clampf(1.0 + amount * 0.06, 1.0, 2.4), self, 1 if source in ["slash", "phantom", "missile", "parry"] else 0, source)
 	MocoFX.report(self, roundi(amount), source in ["slash", "phantom", "missile", "parry"], fx_point(pos, dir))
 	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
 	wob2_v += Vector2(l.z, -l.x) * minf(0.05 * amount, 0.8)

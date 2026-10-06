@@ -121,9 +121,9 @@ func _run() -> void:
 	Parry.inst.try_parry(p)
 	await _frames(3)
 	await _shot("claw_deflect")
-	await _wait_phase("claw", "rewind")
+	await _wait_phase("claw", "link")
 	await _frames(8)
-	await _shot("claw_rewind")
+	await _shot("claw_link")
 	while Parry.inst.best_threat() != boss and boss.pat == "claw":
 		await physics_frame
 	await _frames(4)

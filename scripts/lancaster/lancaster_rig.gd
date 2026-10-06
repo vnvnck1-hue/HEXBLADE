@@ -419,6 +419,15 @@ func _legs(dt: float, spd: float) -> void:
 		var d := tp - h
 		var lmax := (float(L.l1) + float(L.l2)) * 0.985
 		var hz := Vector2(d.x, d.z).length()
+		if hz > lmax * 0.94 and not L.stepping:
+			# 디딘 발이 수평으로 다리 길이 밖에 남았다 (옆 발이 걷는 중이라 못 뗐다):
+			# 골반을 낮춰도 닿지 않아 IK 가 발을 공중으로 끌어올리므로, 발을 안쪽으로 미끄러뜨려 바닥에 붙인다
+			var pull := Vector3(d.x, 0, d.z).normalized() * (hz - lmax * 0.94)
+			var np := (L.plant as Vector3) - model.global_basis * pull
+			np.y = (L.plant as Vector3).y
+			L.plant = np
+			d -= pull
+			hz = lmax * 0.94
 		if d.length() > lmax and hz < lmax:
 			drop = maxf(drop, -d.y - sqrt(lmax * lmax - hz * hz))
 	pelvis.position.y -= minf(drop, 0.6)

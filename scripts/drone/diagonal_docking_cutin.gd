@@ -50,14 +50,13 @@ const THEMES := {
 		"low_dark": Color(0.17, 0.08, 0.27), "bottom_edge": Color(0.52, 0.34, 0.74), "shadow": Color(0.09, 0.05, 0.14, 0.7),
 		"text": Color(0.82, 0.63, 1.0), "accent": Color(0.76, 0.52, 1.0), "accent_hi": Color(0.92, 0.82, 1.0, 0.9), "ghost": Color(0.88, 0.76, 1.0),
 	},
-	## 민트 메이드 전용: 머리카락 색에서 뽑음 — 옅은 민트(182,213,191) · 그늘(142,174,157) · 짙은 그늘(118,149,135).
-	## 띠 = 짙은 그늘을 더 어둡게 낮춘 청록 · 위 테두리 = 머리 밝은 면 · 그 아래 줄 = 그늘 · 글자 = 머리 밝은 면을 조금 더 맑게 ·
-	## 하단 테두리 = 머리 민트를 살짝 진하게 · 캐릭터 그림자 = 짙은 청록
+	## 민트 메이드 전용 (2026-10-07 3차: 2차의 맑은 청록 · 흰 글자는 너무 쨍하고 촌스럽다는 피드백 →
+	## 사용자 지시로 초록 머리 메이드의 "green" 테마 값을 그대로 씀). sil = 같은 모양 그림자 색(슬레이트 남색, green 테마엔 없는 칸)
 	"mint": {
-		"fill": Color(0.14, 0.24, 0.195, 0.9), "top_edge": Color(0.71, 0.84, 0.75), "top_hi": Color(0.56, 0.68, 0.62),
-		"low_dark": Color(0.07, 0.13, 0.12), "bottom_edge": Color(0.60, 0.85, 0.71), "shadow": Color(0.03, 0.07, 0.06, 0.7),
-		"text": Color(0.78, 0.95, 0.84), "accent": Color(0.56, 0.80, 0.69), "accent_hi": Color(0.90, 1.0, 0.94, 0.9), "ghost": Color(0.80, 0.95, 0.86),
-		"sil": Color(0.07, 0.16, 0.12, 0.62),
+		"fill": Color(0.305, 0.318, 0.424, 0.88), "top_edge": Color(0.27, 0.61, 0.49), "top_hi": Color(0.38, 0.51, 0.58),
+		"low_dark": Color(0.09, 0.18, 0.26), "bottom_edge": Color(0.27, 0.55, 0.45), "shadow": Color(0.06, 0.09, 0.13, 0.7),
+		"text": Color(0.369, 1.0, 0.733), "accent": Color("5cf2b4"), "accent_hi": Color(0.75, 1.0, 0.9, 0.9), "ghost": Color(0.75, 1.0, 0.92),
+		"sil": Color(0.12, 0.15, 0.22, 0.6),
 	},
 }
 const BAND_LOW_WHITE := Color(0.97, 0.99, 1.0)
@@ -109,13 +108,36 @@ const CHARACTERS := [
 			{"tex": preload("res://assets/vfx/maid_props/09_silver_spoon.png"), "dim": 270, "size": 0.19},
 			{"tex": preload("res://assets/vfx/maid_props/10_service_bell.png"), "dim": 212, "size": 0.15},
 		],
-		"sparkle": preload("res://assets/vfx/maid_props/11_gold_sparkle.png")},
+		"sparkle": preload("res://assets/vfx/maid_props/11_gold_sparkle.png"),
+		## 포즈: 합체마다 무작위 하나(직전과 다르게). 모두 같은 틀(1402² · 키 1352px · 위 여백 15)이라 크기 · 하단선(무릎)이 같다.
+		## 얼굴 · 기준점 x 는 포즈마다 얼굴 x 에 맞춰 화면에서 얼굴이 같은 자리에 오게. 추가 4장은 tools/cutin_mint_poses.py 가공.
+		## tex · mask 는 경로(쓸 때 load) — preload 면 새 PNG 를 임포트하기 전에 이 스크립트가 컴파일되지 않아 임포트가 막힌다.
+		"poses": [
+			{"name": "트레이", "tex": "res://assets/portraits/mint_maid/mint-maid-docking.png",
+				"mask": "res://assets/portraits/mint_maid/mint-maid-motionmask.png",
+				"anchor": Vector2(0.50, 0.76), "face": Vector2(0.50, 0.235), "hair_root": Vector2(0.47, 0.086)},
+			{"name": "수줍게", "tex": "res://assets/portraits/mint_maid/mint-maid-pose1.png",
+				"mask": "res://assets/portraits/mint_maid/mint-maid-pose1-motion.png",
+				"anchor": Vector2(0.496, 0.77), "face": Vector2(0.496, 0.25), "hair_root": Vector2(0.43, 0.093)},
+			{"name": "가슴에 손", "tex": "res://assets/portraits/mint_maid/mint-maid-pose2.png",
+				"mask": "res://assets/portraits/mint_maid/mint-maid-pose2-motion.png",
+				"anchor": Vector2(0.546, 0.77), "face": Vector2(0.546, 0.246), "hair_root": Vector2(0.457, 0.086)},
+			{"name": "허리에 손", "tex": "res://assets/portraits/mint_maid/mint-maid-pose3.png",
+				"mask": "res://assets/portraits/mint_maid/mint-maid-pose3-motion.png",
+				"anchor": Vector2(0.524, 0.75), "face": Vector2(0.524, 0.25), "hair_root": Vector2(0.435, 0.093)},
+			{"name": "신남", "tex": "res://assets/portraits/mint_maid/mint-maid-pose4.png",
+				"mask": "res://assets/portraits/mint_maid/mint-maid-pose4-motion.png",
+				"anchor": Vector2(0.52, 0.75), "face": Vector2(0.52, 0.257), "hair_root": Vector2(0.435, 0.093)},
+		]},
 ]
 static var char_mode := "alt"    ## "alt" = 합체마다 번갈아(숨긴 캐릭터는 건너뜀) · 캐릭터 id = 고정. --cutin-char=alt|purple|green|mint, 허수아비 [ 키
 ## 숨긴 캐릭터: 원화 · 잔상 · 그림자 · 말풍선 팝업 · 서류 종이 · 소품을 그리지 않는다(계산은 그대로). 보라 정비사 · 초록 메이드는
 ## 지금 작업 중인 장소에 안 맞아 잠시 숨김(사용자 요청 2026-10-06) — 다시 보이려면 이 목록에서 빼거나 --cutin-chars=on (모두 보임).
 ## 띠 · DOCKING 글자 · 집중선 · 슬로우모션 · 보이스는 숨겨도 그대로.
 static var hidden_chars: Array = ["purple", "green"]
+## 포즈가 여럿인 캐릭터(민트 메이드): -1 = 합체마다 무작위(직전과 다르게) · 0 이상 = 그 포즈 고정 (--cutin-pose=n)
+static var pose_mode := -1
+static var _last_pose := -1
 static var _next_char := 0
 ## 글자: 회전하지 않고 세운 채 세로로만 비스듬히(Y 기울이기 — 세로획은 수직, 윗변·아랫변이 하단선 8°를 따름).
 ## 세로로 길쭉 · 가로로 눌림 (레퍼런스 폭/높이 ≈ 0.6, 원 글꼴 ≈ 0.9). 높이 0.27H, 바닥은 하단선에서 띠 높이의 21% 위.
@@ -349,15 +371,34 @@ static func prewarm(scene: Node) -> void:
 	for i in CHARACTERS.size():
 		if not char_visible(CHARACTERS[i].id):
 			continue
-		var c := DiagonalDockingCutin.new()
-		c.main = scene
-		c.preview = true
-		c._warm = 3
-		c.char_i = i
-		scene.add_child(c)
+		# 포즈가 여럿이면 포즈마다 한 번씩 (원화 · 마스크 업로드)
+		for pk in maxi(1, (CHARACTERS[i].get("poses", []) as Array).size()):
+			var c := DiagonalDockingCutin.new()
+			c.main = scene
+			c.preview = true
+			c._warm = 3
+			c.char_i = i
+			c.pose_force = pk if CHARACTERS[i].has("poses") else -1
+			scene.add_child(c)
 
 
 var _warm := 0
+var pose_i := -1                ## 이번 컷인의 포즈 (포즈 없는 캐릭터는 -1)
+var pose_force := -1            ## prewarm · 검사용: 이 포즈로 고정
+
+
+## 다음 포즈: 고정(pose_mode) 아니면 무작위 — 직전 포즈는 빼고
+static func pick_pose(n: int) -> int:
+	if n <= 1:
+		return 0
+	if pose_mode >= 0:
+		return mini(pose_mode, n - 1)
+	var k := randi() % (n - 1)
+	if _last_pose >= 0 and k >= _last_pose:
+		k += 1
+	k = clampi(k, 0, n - 1)
+	_last_pose = k
+	return k
 
 
 func _ready() -> void:
@@ -454,6 +495,14 @@ func _ready() -> void:
 func _use_character(i: int) -> void:
 	char_i = clampi(i, 0, CHARACTERS.size() - 1)
 	cfg = CHARACTERS[char_i]
+	pose_i = -1
+	if cfg.has("poses"):
+		var poses: Array = cfg.poses
+		pose_i = pose_force if pose_force >= 0 else pick_pose(poses.size())
+		cfg = cfg.duplicate()
+		var pd: Dictionary = poses[clampi(pose_i, 0, poses.size() - 1)]
+		for k in pd:
+			cfg[k] = load(pd[k]) if pd[k] is String and String(pd[k]).begins_with("res://") else pd[k]
 	art = cfg.art
 	anchor_uv = cfg.anchor
 	hair_uv = cfg.hair_top

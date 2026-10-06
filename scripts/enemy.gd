@@ -573,7 +573,7 @@ func _hit_spark(dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
 		"parry": k = 2.0
 		"laser": k = 0.8
 	var heavy := dmg >= 4 or source in ["slash", "phantom", "missile", "parry"]     # _hurt 의 무거운 공격 분류와 같다
-	HitSpark.spawn(at, dir, maxf(k, 1.0 + dmg * 0.08), self, 1 if heavy else 0)
+	HitSpark.spawn(at, dir, maxf(k, 1.0 + dmg * 0.08), self, 1 if heavy else 0, source)
 	if not get("prop"):
 		MocoFX.report(self, dmg, heavy, at)
 

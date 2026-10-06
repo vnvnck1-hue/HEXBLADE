@@ -251,6 +251,19 @@ func _fov_kick_springs(dt: float) -> void:
 		kick_pos += kick_v * h
 
 
+## 패링 임팩트 (docs/parry-camera-screen-effects.md): 펀치 인(FOV 펄스 + 살짝 다가섬) · 공격 방향으로 툭 밀리는 카메라 킥 ·
+## 짧은 임팩트 셰이크. 모두 스프링이라 저절로 원래 구도로 돌아온다 (연속 패링에도 누적되지 않게 한 번만큼씩).
+## 히트스탑 동안은 카메라 시간도 멈추므로, 멈춘 자세가 끝나는 순간 툭 튀어 나간다.
+func parry_impact(attack_dir: Vector3, k: float) -> void:
+	fov_v = minf(fov_v, 0.0) - 34.0 * k
+	zoom_v = minf(zoom_v, 0.0) - 1.8 * k
+	var d := Vector3(attack_dir.x, 0, attack_dir.z)
+	if d.length() > 0.01:
+		kick_v += d.normalized() * 2.6 * k
+	roll += randf_range(-0.012, 0.012) * k
+	shake(0.22 * k)
+
+
 ## 패링 성공: 적당한 줌인
 func parry_cine(player: Player, foe: Node3D, foe_pos: Vector3) -> void:
 	cine_start = Parry.now_ms()

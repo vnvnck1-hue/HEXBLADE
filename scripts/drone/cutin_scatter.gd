@@ -15,19 +15,33 @@ const GRAVITY := 5600.0                     ## 소품 낙하 (px/s², 800 높이
 const BOUNCE := 0.18                        ## 띠 아래 선에서 튀는 정도 (낮게 · 자주: 우당탕)
 const HOP := Vector2(260.0, 560.0)          ## 튈 때 보태는 위 방향 속도 (우당탕: 매번 다르게)
 const HOP_MAX := 820.0                      ## 튀어 오르는 속도 상한 → 0.15~0.3초마다 한 번씩 튐
-const SPEED := Vector2(1.0, 1.55)           ## 가로 속도 (×W/초)
+## 가로 속도 등급 (×W/초, 2026-10-06 사용자: 너무 빨리 지나감 → 빠른 것 · 느린 것 섞음). 소품마다 무작위로 하나:
+##   SLOW 둥실 떠가듯(중력 약하게 · 천천히 구름) · MID · FAST 우당탕. 느린 것은 들어올 때만 ENTER_KICK 으로 밀려 들어왔다가 느려진다.
+const TIERS := [
+	{"w": 0.38, "vx": Vector2(0.16, 0.3), "grav": 0.32, "spin": Vector2(1.2, 3.0), "hop": 0.55},
+	{"w": 0.34, "vx": Vector2(0.48, 0.72), "grav": 0.7, "spin": Vector2(3.0, 6.0), "hop": 0.8},
+	{"w": 0.28, "vx": Vector2(1.0, 1.4), "grav": 1.0, "spin": Vector2(5.0, 11.0), "hop": 1.0},
+]
+const ENTER_KICK := 0.55                    ## 느린 소품이 들어올 때 더 받는 속도 (×W/초, 금방 줄어듦)
+const CRUISE_K := 3.5                       ## 들어온 뒤 제 속도로 돌아가는 빠르기 (1/초)
 const LAUNCH := Vector2(0.0, 0.42)          ## 던지는 시각 범위 (초)
-const SPARK_RATE := 22.0                    ## 띠 곳곳 반짝이 (초당)
-const TRAIL_RATE := 7.0                     ## 날아가는 소품 하나가 흘리는 반짝이 (초당)
-const SPARK_MAX := 70
-const DUST_MAX := 90
+const SPARK_RATE := 16.0                    ## 띠 곳곳 반짝이 (초당)
+const TRAIL_RATE := 5.0                     ## 날아가는 소품 하나가 흘리는 반짝이 (초당)
+const SPARK_MAX := 90
+const DUST_MAX := 110
+const SPARK_DRIFT := Vector2(0.025, 0.09)   ## 별빛이 흘러가는 속도 (×W/초) — 아주 천천히 (예전 0.25~0.6)
+const SPARK_LIFE := Vector2(0.75, 1.15)
+const FACE_RATE := 11.0                     ## 얼굴 둘레 반짝이 (초당)
+const FACE_RING := Vector2(0.11, 0.2)       ## 얼굴 중심에서의 거리 (×side) — 얼굴 자체는 가리지 않는다
+const FACE_MAX := 16
 const GOLD := Color(1.0, 0.82, 0.32)
+const HOT := Color(1.0, 0.96, 0.78)         ## 가산 별 심 (뜨거운 흰 금빛)
 const STAR_DIM := 194.0                     ## 별 PNG 안 그림의 긴 변(px)
 const FRONT_EVERY := 3                      ## 던지는 순서에서 이 간격마다 하나(1 · 4 · 7번째)가 캐릭터 앞으로
 const NEAR := 1.22                          ## 앞 소품: 가까우니 더 크게
 const NEAR_SPEED := 1.18                    ## 앞 소품: 가까우니 더 빠르게 (시차)
 const NEAR_TOP := 0.48                      ## 앞 소품이 올라갈 수 있는 띠 높이 (0 = 위 선) — 얼굴 · 트레이 보호
-const NEAR_SHADOW := Color(0.04, 0.10, 0.08, 0.34)   ## 앞 소품 그림자 (짙은 청록 · 옅게)
+const NEAR_SHADOW := Color(0.08, 0.10, 0.16, 0.32)   ## 앞 소품 그림자 (띠와 같은 슬레이트 남색 · 옅게)
 const NEAR_SHADOW_OFF := Vector2(12.0, 20.0)         ## 그림자 어긋남 (px, 800 높이 기준)
 
 static var _glow_tex: Texture2D
@@ -40,7 +54,10 @@ var front := Node2D.new()
 var front_glow := Node2D.new()
 var props: Array = []
 var sparks: Array = []
+var face_sparks: Array = []  ## 얼굴 둘레 반짝이: 얼굴 중심 기준 오프셋(×side)이라 캐릭터를 따라 움직인다
 var dust: Array = []
+var _face_acc := 0.0
+var face_total := 0         ## 확인용
 var star_tex: Texture2D
 var _spawn := 0.0
 var _prev_ap := Vector2.ZERO
@@ -85,16 +102,42 @@ func _init(cutin: Node, cfg_props: Array, star: Texture2D) -> void:
 	var n := cfg_props.size()
 	var order := range(n)
 	order.shuffle()
+	# 속도 등급: 느림 · 보통 · 빠름이 늘 섞이게 (모두 같은 등급으로 몰리지 않게 가중치 순으로 나눠 준 뒤 섞음)
+	var tiers: Array = []
+	for ti in TIERS.size():
+		for q in roundi(float(TIERS[ti].w) * n):
+			tiers.append(ti)
+	while tiers.size() < n:
+		tiers.append(1)
+	tiers.resize(n)
+	tiers.shuffle()
+	# 앞을 지나가는 소품은 빠름(가까우니 시차로 빨리 휙 — 얼굴 앞에 오래 머물지 않게): 빠름 칸을 앞 자리로 옮긴다
+	for k in n:
+		if k % FRONT_EVERY == 1 and tiers[k] != 2:
+			for j in n:
+				if j % FRONT_EVERY != 1 and tiers[j] == 2:
+					tiers[j] = tiers[k]
+					tiers[k] = 2
+					break
+			if tiers[k] != 2:
+				tiers[k] = 2
 	for k in n:
 		var pd: Dictionary = cfg_props[order[k]]
 		var near := k % FRONT_EVERY == 1
+		var tier: int = tiers[k]
+		var td: Dictionary = TIERS[tier]
+		var born := lerpf(LAUNCH.x, LAUNCH.y, float(k) / maxf(n - 1, 1)) + rng.randf_range(0.0, 0.03)
+		if tier == 0:
+			born *= 0.35         # 느린 것은 일찍 던져야 화면을 지나간다
+		var sp := (1.0 if rng.randf() < 0.75 else -1.0) * rng.randf_range(td.spin.x, td.spin.y)
 		props.append({
-			"near": near,
+			"near": near, "tier": tier,
 			"cfg": pd, "tex": pd.tex, "alive": false,
-			"born": lerpf(LAUNCH.x, LAUNCH.y, float(k) / maxf(n - 1, 1)) + rng.randf_range(0.0, 0.03),
+			"born": born,
 			"lane": rng.randf_range(0.65, 0.9) if near else rng.randf_range(0.35, 0.85),   ## 띠 안 높이 (0 = 위 선, 1 = 아래 선)
-			"pos": Vector2.ZERO, "vel": Vector2.ZERO,
-			"rot": rng.randf_range(-PI, PI), "rot_v": rng.randf_range(5.0, 11.0) * (1.0 if rng.randf() < 0.75 else -1.0),
+			"pos": Vector2.ZERO, "vel": Vector2.ZERO, "cruise": 0.0,
+			"grav": float(td.grav), "hop": float(td.hop), "spin_max": float(td.spin.y) * 1.5,
+			"rot": rng.randf_range(-PI, PI), "rot_v": sp,
 			"squash": 0.0, "age": 0.0, "trail": 0.0,
 		})
 		max_x.append(-INF)
@@ -149,29 +192,38 @@ func update(dt: float) -> void:
 			var x0 := -r - rng.randf_range(0.0, 0.06) * vs.x
 			var y0 := lerpf(band_top(x0) + r * 0.6, band_bottom(x0) - r * 0.6, float(p.lane))
 			p.pos = Vector2(x0, y0)
-			var vx := rng.randf_range(SPEED.x, SPEED.y) * vs.x + minf(maxf(_av.x, 0.0) * 0.08, 0.25 * vs.x)   ## 캐릭터 속도는 조금만 (진입 초반엔 매우 빠름)
+			var td: Dictionary = TIERS[int(p.tier)]
+			var vx := rng.randf_range(td.vx.x, td.vx.y) * vs.x
 			if bool(p.near):
 				vx *= NEAR_SPEED
-			p.vel = Vector2(vx, -rng.randf_range(150.0, 600.0) * u)
+			p.cruise = vx
+			if int(p.tier) == 0:
+				vx += ENTER_KICK * vs.x                          ## 밀려 들어왔다가 둥실 느려짐
+			vx += minf(maxf(_av.x, 0.0) * 0.04, 0.12 * vs.x)       ## 캐릭터 속도는 조금만 (진입 초반엔 매우 빠름)
+			p.vel = Vector2(vx, -rng.randf_range(150.0, 600.0) * u * float(p.grav))
 		p.age = float(p.age) + dt
 		var pos: Vector2 = p.pos
 		var vel: Vector2 = p.vel
 		var rad := _prop_px(p) * 0.36
+		var g := float(p.grav)
 		for k in n:
-			vel.y += GRAVITY * u * h
+			vel.y += GRAVITY * g * u * h
 			if leaving:
 				vel.x += (vs.x * 3.2 - vel.x) * 6.0 * h          ## 돌풍
+			else:
+				vel.x += (float(p.cruise) - vel.x) * minf(1.0, CRUISE_K * h)
 			pos += vel * h
 			var bot := band_bottom(pos.x) - rad
 			if pos.y > bot and vel.y > 0.0:
 				pos.y = bot
-				vel.y = -minf(absf(vel.y) * BOUNCE + rng.randf_range(HOP.x, HOP.y) * u, HOP_MAX * u)
+				var hk := float(p.hop)
+				vel.y = -minf(absf(vel.y) * BOUNCE + rng.randf_range(HOP.x, HOP.y) * u * hk, HOP_MAX * u * hk)
 				vel.x *= rng.randf_range(0.88, 1.08)
 				if rng.randf() < 0.35:
 					p.rot_v = float(p.rot_v) * rng.randf_range(-1.3, -0.6)
 				else:
 					p.rot_v = float(p.rot_v) * rng.randf_range(0.9, 1.3)
-				p.rot_v = clampf(float(p.rot_v), -16.0, 16.0)
+				p.rot_v = clampf(float(p.rot_v), -float(p.spin_max), float(p.spin_max))
 				p.squash = 1.0
 				bounces += 1
 			var top := band_top(pos.x) + rad * 0.5
@@ -194,15 +246,21 @@ func update(dt: float) -> void:
 			while float(p.trail) >= 1.0:
 				p.trail = float(p.trail) - 1.0
 				var back_pt := pos - vel.normalized() * rad * rng.randf_range(0.6, 1.2)
-				_new_spark(back_pt + Vector2(rng.randf_range(-1, 1), rng.randf_range(-1, 1)) * rad * 0.5, vel * rng.randf_range(0.25, 0.5))
-	# ── 반짝이: 띠 안 곳곳 (진입 ~ 체류)
+				_new_spark(back_pt + Vector2(rng.randf_range(-1, 1), rng.randf_range(-1, 1)) * rad * 0.5, vel * rng.randf_range(0.04, 0.1))
+	# ── 반짝이: 띠 안 곳곳 (진입 ~ 체류) — 천천히 떠 흐른다
 	if not leaving and float(c.done_t) < 0.0:
 		_spawn += SPARK_RATE * dt
 		while _spawn >= 1.0:
 			_spawn -= 1.0
-			var x := rng.randf_range(-0.02, 0.85) * vs.x
+			var x := rng.randf_range(-0.02, 0.92) * vs.x
 			var y := lerpf(band_top(x), band_bottom(x), rng.randf_range(0.08, 0.92))
-			_new_spark(Vector2(x, y), Vector2(rng.randf_range(0.25, 0.6) * vs.x, rng.randf_range(-60.0, 40.0) * u))
+			_new_spark(Vector2(x, y), Vector2(rng.randf_range(SPARK_DRIFT.x, SPARK_DRIFT.y) * vs.x, rng.randf_range(-20.0, 12.0) * u))
+		# 얼굴 둘레 반짝이 (띠 밖이어도 됨 — 얼굴을 빛내는 장식)
+		_face_acc += FACE_RATE * dt
+		while _face_acc >= 1.0:
+			_face_acc -= 1.0
+			_new_face_spark()
+	_update_face_sparks(dt)
 	var j := sparks.size() - 1
 	while j >= 0:
 		var s: Dictionary = sparks[j]
@@ -212,21 +270,21 @@ func update(dt: float) -> void:
 			j -= 1
 			continue
 		var v: Vector2 = s.vel
-		var wind := Vector2(0.3 * vs.x, 0.0)
+		var wind := Vector2(float(s.drift), 0.0)
 		if leaving:
-			wind.x = vs.x * 2.0
+			wind.x = vs.x * 0.5
 		v += (wind - v) * minf(1.0, 2.2 * dt)
-		v.y += sin(float(s.age) * 7.0 + float(s.ph)) * 90.0 * u * dt     ## 휘날림
+		v.y += sin(float(s.age) * 3.0 + float(s.ph)) * 30.0 * u * dt     ## 살랑살랑
 		s.vel = v
 		var np := Vector2(s.pos) + v * dt
 		np.y = clampf(np.y, band_top(np.x) + 4.0 * u, band_bottom(np.x) - 4.0 * u)   ## 띠 밖으로 나가지 않게
 		s.pos = np
-		s.dust_acc = float(s.dust_acc) + dt * 9.0
+		s.dust_acc = float(s.dust_acc) + dt * 5.0
 		while float(s.dust_acc) >= 1.0 and dust.size() < DUST_MAX:
 			s.dust_acc = float(s.dust_acc) - 1.0
 			dust.append({"pos": np + Vector2(rng.randf_range(-6, 6), rng.randf_range(-6, 6)) * u,
-				"vel": v * 0.35 + Vector2(rng.randf_range(-40, 40), rng.randf_range(-30, 30)) * u,
-				"age": 0.0, "life": rng.randf_range(0.2, 0.36), "size": rng.randf_range(7.0, 13.0), "front": s.front,
+				"vel": v * 0.35 + Vector2(rng.randf_range(-22, 22), rng.randf_range(-18, 18)) * u,
+				"age": 0.0, "life": rng.randf_range(0.35, 0.6), "size": rng.randf_range(7.0, 13.0), "front": s.front,
 				"star": rng.randf() < 0.55})
 		j -= 1
 	var di := dust.size() - 1
@@ -259,9 +317,46 @@ func _new_spark(pos: Vector2, vel: Vector2, big := false) -> void:
 		spark_out += 1
 	var lower := (pos.y - top) / maxf(bot - top, 1.0) > 0.6
 	spark_total += 1
-	sparks.append({"pos": pos, "vel": vel, "age": 0.0, "life": rng.randf_range(0.4, 0.7),
-		"size": rng.randf_range(20.0, 40.0) * u * (1.4 if big else 1.0), "ph": rng.randf() * TAU,
-		"spin": rng.randf_range(-1.6, 1.6), "front": lower and rng.randf() < 0.45, "dust_acc": rng.randf()})
+	sparks.append({"pos": pos, "vel": vel, "age": 0.0, "life": rng.randf_range(SPARK_LIFE.x, SPARK_LIFE.y),
+		"drift": rng.randf_range(SPARK_DRIFT.x, SPARK_DRIFT.y) * float(c.vs.x),
+		"size": rng.randf_range(22.0, 42.0) * u * (1.4 if big else 1.0), "ph": rng.randf() * TAU,
+		"tw": rng.randf_range(7.0, 12.0),
+		"spin": rng.randf_range(-0.8, 0.8), "front": lower and rng.randf() < 0.45, "dust_acc": rng.randf()})
+
+
+## 얼굴 둘레 반짝이: 얼굴 중심에서 FACE_RING 거리, 아래쪽(목 · 트레이 쪽)은 피해 위 · 옆 반원에만
+func _new_face_spark() -> void:
+	if face_sparks.size() >= FACE_MAX:
+		return
+	var a := rng.randf_range(PI * 0.8, PI * 2.2)          # 화면 좌표: 위쪽 반원 + 옆 조금 (아래 = PI/2 근처 제외)
+	var r := rng.randf_range(FACE_RING.x, FACE_RING.y)
+	face_total += 1
+	face_sparks.append({"off": Vector2(cos(a) * 1.15, sin(a)) * r, "age": 0.0, "life": rng.randf_range(0.6, 1.0),
+		"size": rng.randf_range(24.0, 44.0) * _u(), "ph": rng.randf() * TAU, "tw": rng.randf_range(8.0, 13.0),
+		"spin": rng.randf_range(-0.7, 0.7), "rise": rng.randf_range(0.01, 0.035)})
+
+
+func _update_face_sparks(dt: float) -> void:
+	var i := face_sparks.size() - 1
+	while i >= 0:
+		var f: Dictionary = face_sparks[i]
+		f.age = float(f.age) + dt
+		if float(f.age) > float(f.life):
+			face_sparks.remove_at(i)
+		else:
+			f.off = Vector2(f.off) + Vector2(0.0, -float(f.rise)) * dt   # 아주 천천히 떠오름
+		i -= 1
+
+
+## 얼굴 중심 (화면 좌표)
+func face_center() -> Vector2:
+	return c.anchor.position + (Vector2(c.cfg.face) - Vector2(c.anchor_uv)) * float(c.side)
+
+
+## 반짝임 세기: 기본 밝기 위로 가끔 번쩍 (가산 층 · 별 크기에 같이 쓴다)
+static func _twinkle(age: float, tw: float, ph: float) -> float:
+	var s := 0.5 + 0.5 * sin(age * tw + ph)
+	return 0.55 + 0.45 * s + 0.6 * pow(s, 12.0)
 
 
 ## 합체 순간: 소품이 위로 통 튀고, 띠 안 캐릭터 둘레에서 반짝이가 한 번에 터진다
@@ -277,7 +372,7 @@ func dock_burst() -> void:
 		var x := ap.x + rng.randf_range(-0.3, 0.3) * float(c.side)
 		var y := lerpf(band_top(x), band_bottom(x), rng.randf_range(0.1, 0.9))
 		var a := rng.randf_range(-1.2, 1.2)
-		_new_spark(Vector2(x, y), Vector2(cos(a), sin(a) * 0.5) * rng.randf_range(400.0, 900.0) * u, true)
+		_new_spark(Vector2(x, y), Vector2(cos(a), sin(a) * 0.5) * rng.randf_range(90.0, 220.0) * u, true)
 
 
 # ── 그리기 ─────────────────────────────────────────
@@ -333,9 +428,9 @@ func _draw_front() -> void:
 
 ## 카툰 별 크기: 뿅 넘치며 커짐 → 말랑하게 두근 → 끝에서 쏙 작아짐
 func _star_k(age: float, life: float, ph: float) -> float:
-	var grow := _back_out(clampf(age / 0.12, 0.0, 1.0))
+	var grow := _back_out(clampf(age / 0.16, 0.0, 1.0))
 	var end := 1.0 - smoothstep(life * 0.7, life, age)
-	var beat := 1.0 + 0.12 * sin(age * 11.0 + ph)
+	var beat := 1.0 + 0.12 * sin(age * 6.0 + ph)
 	return maxf(grow, 0.0) * end * beat
 
 
@@ -356,9 +451,33 @@ func _draw_sparks(ci: CanvasItem, front_layer: bool, a: float) -> void:
 			continue
 		ci.draw_set_transform(s.pos, float(s.spin) * float(s.age), Vector2.ONE * (sz / STAR_DIM))
 		ci.draw_texture(star_tex, -star_tex.get_size() * 0.5, Color(1, 1, 1, a))
+	if front_layer:
+		var fc := face_center()
+		var side := float(c.side)
+		for f: Dictionary in face_sparks:
+			var sz := float(f.size) * _star_k(float(f.age), float(f.life), float(f.ph))
+			if sz < 0.5:
+				continue
+			ci.draw_set_transform(fc + Vector2(f.off) * side, float(f.spin) * float(f.age), Vector2.ONE * (sz / STAR_DIM))
+			ci.draw_texture(star_tex, -star_tex.get_size() * 0.5, Color(1, 1, 1, a))
 
 
-## 가산 층: 별 뒤 은은한 둥근 광채 · 둥근 금빛 가루 (가늘고 날카로운 플레어는 쓰지 않는다)
+## 가산 층 (에디티브 머티리얼): 별마다 좁은 금빛 후광(별 크기의 1.55배, 2차: 넓다는 피드백으로 2.8 → 1.55) + 뜨거운 흰 심 + 별 모양 자체를 한 번 더 더해 번쩍이게.
+## 세기는 _twinkle 로 반짝반짝 오르내린다. 가늘고 날카로운 플레어는 쓰지 않는다(2차 피드백).
+func _glow_star(ci: Node2D, pos: Vector2, size: float, k: float, tw: float, spin: float, a: float) -> void:
+	var gc := GOLD
+	gc.a = a * 0.6 * minf(k, 1.0) * tw
+	ci.draw_set_transform(pos, 0.0, Vector2.ONE * (size * 1.55 * k / 64.0))
+	ci.draw_texture(_glow_tex, Vector2(-32, -32), gc)
+	var hc := HOT
+	hc.a = a * 0.75 * minf(k, 1.0) * tw
+	ci.draw_set_transform(pos, 0.0, Vector2.ONE * (size * 0.7 * k / 64.0))
+	ci.draw_texture(_glow_tex, Vector2(-32, -32), hc)
+	var sc := Color(1.0, 0.9, 0.55, a * 0.85 * minf(k, 1.0) * clampf(tw - 0.35, 0.0, 1.0))
+	ci.draw_set_transform(pos, spin, Vector2.ONE * (size * k * 1.08 / STAR_DIM))
+	ci.draw_texture(star_tex, -star_tex.get_size() * 0.5, sc)
+
+
 func _draw_glow(front_layer: bool) -> void:
 	var ci: Node2D = front_glow if front_layer else back_glow
 	var a := _alpha()
@@ -367,15 +486,18 @@ func _draw_glow(front_layer: bool) -> void:
 		if bool(s.front) != front_layer:
 			continue
 		var k := clampf(_star_k(float(s.age), float(s.life), float(s.ph)), 0.0, 1.2)
-		var gc := GOLD
-		gc.a = a * 0.3 * minf(k, 1.0)
-		ci.draw_set_transform(s.pos, 0.0, Vector2.ONE * (float(s.size) * 1.9 * k / 64.0))
-		ci.draw_texture(_glow_tex, Vector2(-32, -32), gc)
+		_glow_star(ci, s.pos, float(s.size), k, _twinkle(float(s.age), float(s.tw), float(s.ph)), float(s.spin) * float(s.age), a)
+	if front_layer:
+		var fc := face_center()
+		var side := float(c.side)
+		for f: Dictionary in face_sparks:
+			var k := clampf(_star_k(float(f.age), float(f.life), float(f.ph)), 0.0, 1.2)
+			_glow_star(ci, fc + Vector2(f.off) * side, float(f.size), k, _twinkle(float(f.age), float(f.tw), float(f.ph)), float(f.spin) * float(f.age), a)
 	ci.draw_set_transform_matrix(Transform2D.IDENTITY)
 	for d: Dictionary in dust:
 		if bool(d.front) != front_layer or bool(d.star):
 			continue
 		var k := float(d.age) / float(d.life)
 		var col := GOLD.lerp(Color(1, 0.97, 0.85), 0.4)
-		col.a = a * (1.0 - k) * 0.85
-		ci.draw_circle(d.pos, float(d.size) * 0.32 * u * (1.0 - 0.5 * k), col)
+		col.a = a * (1.0 - k) * 0.95
+		ci.draw_circle(d.pos, float(d.size) * 0.36 * u * (1.0 - 0.5 * k), col)

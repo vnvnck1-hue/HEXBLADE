@@ -47,10 +47,11 @@
 
 게임 중 **Esc** 를 누르면 로비로 돌아옵니다(섹터 런은 중단됩니다).
 
-- `run_game.cmd` 더블클릭: **`godot-version.txt`에 고정한 Godot 버전(현재 4.7.2-stable)으로만** 실행합니다. 다른 버전이 PC에 깔려 있어도 쓰지 않습니다.
-- 새 PC에서 처음 실행하면 프로젝트 안 `.tools/godot/`(git 제외)에 그 버전을 자동으로 준비합니다. 같은 버전이 이미 설치된 곳(winget, 옆 폴더 `.tools/godot`, 환경 변수 `GODOT_HOME`)이 있으면 복사하고, 없으면 공식 릴리스에서 내려받아 SHA512로 검증합니다. 미리 해 두려면 `setup_godot.cmd`.
-- `open_editor.cmd`: 편집기로 엽니다. 편집기에서 F5를 누르면 실행됩니다.
-- `run_tests.cmd`: `tests/*.gd` 전체를 고정 버전으로 헤드리스 실행합니다.
+- 프로젝트 폴더 맨 위의 **`HEXBLADE.exe`** 더블클릭(육각 광선검 아이콘): **`godot-version.txt`에 고정한 Godot 버전(현재 4.7.2-stable)으로만** 로비를 실행합니다. 다른 버전이 PC에 깔려 있어도 쓰지 않습니다. 실행기 원본·아이콘은 `tools/launcher/`(`build_launcher.cmd` 로 다시 빌드, `make_icon.py` 로 아이콘 다시 그림), 게임 창 아이콘은 `assets/icon/hexblade.png`.
+- 새 PC에서 처음 실행하면 프로젝트 안 `.tools/godot/`(git 제외)에 그 버전을 자동으로 준비합니다(이때는 진행 상황 콘솔 창이 뜸). 같은 버전이 이미 설치된 곳(winget, 옆 폴더 `.tools/godot`, 환경 변수 `GODOT_HOME`)이 있으면 복사하고, 없으면 공식 릴리스에서 내려받아 SHA512로 검증합니다. 미리 해 두려면 `launchers/dev/setup_godot.cmd`.
+- 그 밖의 실행기는 `launchers/` 에 있습니다. **`launchers/scenes/`** = 씬 바로 실행(`training.cmd` · `boss_battle.cmd` · `spider_boss.cmd` 등, 이 문서에서 `○○.cmd` 로 적은 것), **`launchers/dev/`** = 개발용(`run_game.cmd` · `open_editor.cmd` · `run_tests.cmd` · `setup_godot.cmd` · Blender).
+- `launchers/dev/open_editor.cmd`: 편집기로 엽니다. 편집기에서 F5를 누르면 실행됩니다.
+- `launchers/dev/run_tests.cmd`: `tests/*.gd` 전체를 고정 버전으로 헤드리스 실행합니다.
 - 다른 PC로 작업을 옮길 때의 규칙과 주의점은 [AGENTS.md](AGENTS.md)에 있습니다.
 - 렌더러는 Forward+(Vulkan)입니다.
 
@@ -101,6 +102,7 @@
 | 5 | 좌우 이동: 기준 자리를 중심으로 좌우 3.2m 왕복 |
 | 6 | 재화 무한(기본 ON): 에너지 · 미사일 · 부스터 · 드론 합체 게이지(Q 합체 휠윈드 무제한). 탄창은 그대로라 재장전 동작도 볼 수 있습니다 |
 | 7 | 플레이어 무적(기본 ON) |
+| 8 / Shift+8 | **타격 VFX 프리셋**: MISFITZ 3갈래 별(새, 기본 — 근접은 보라, 총·레이저·미사일은 노랑) ↔ MO.CO 별·쐐기(예전) · Shift+8 은 버스트만 0.2배속 느리게 보기. `--hitfx=moco` 로 시작 ([설명](docs/misfitz-hit-vfx.md)) |
 | F1 | 왼쪽 위 설정 패널 · 하단 조작 안내 숨기기 ↔ 보이기 |
 | F2 | 모든 UI 숨기기 ↔ 보이기 (HUD · 드론 패널 · 피해 숫자 · 드론 말풍선 · 적 체력바. 씬을 나가면 풀림) |
 | 0 / Shift+0 | **합체 컷인 종류**: 사선 DOCKING(새, 기본) → 조종석(예전 · 폐기 예정) → 끔. Q 합체 때 나옵니다 ([사선 DOCKING 컷인](docs/diagonal-docking-cutin.md)) |
@@ -110,7 +112,7 @@
 | = / Shift+= | **바닥 파괴 스타일** 바꾸기 (CRUMBLE 깨짐 튐(기본) · SLAB 판 들림 · SPIKE 암석 솟음 · BUCKLE 찌그러짐 · SCATTER 파편 튐 · MIX 대파괴 · OFF) → 바로 미리보기. E 내려찍기 · 무거운 검 일격 · 미사일 착탄에 나옴, 돌진·휠윈드(2단 대시 · Q 합체)가 지나간 자리엔 살짝 찌그러진 흔적과 작은 파편 ([설명](docs/ground-break.md)) |
 | F4 / Shift+F4 | 조준점 바닥에 바닥 파괴 미리보기 크게 / 작게 (판정 없음) |
 
-왼쪽 위 **설정 패널**(`scripts/training/training_panel.gd`) 한 장에 허수아비 · 플레이어 · 연출 프리셋(J 피해 숫자 · H HUD · = 바닥 파괴 · 0 합체 컷인 · [ 컷인 캐릭터 · - 컷인 트위닝) · 미리보기 키와 현재 값이 정리되어 있습니다 (ON 민트 · OFF 흐림).
+왼쪽 위 **설정 패널**(`scripts/training/training_panel.gd`) 한 장에 허수아비 · 플레이어 · 연출 프리셋(8 타격 VFX · J 피해 숫자 · H HUD · = 바닥 파괴 · 0 합체 컷인 · [ 컷인 캐릭터 · - 컷인 트위닝) · 미리보기 키와 현재 값이 정리되어 있습니다 (ON 민트 · OFF 흐림).
 
 확인용 실행 인자: `-- --bot --layout=0~3 --killable --counter --moving` (봇은 가까운 허수아비에게 붙어 검 연타 → 사격 → 충전 레이저 → 미사일을 돌아가며 씁니다).
 

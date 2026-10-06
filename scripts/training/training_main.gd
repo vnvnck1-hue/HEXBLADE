@@ -317,6 +317,7 @@ func _build_panel() -> void:
 		panel.row("6", "재화 무한", func(): return _onoff(infinite))
 		panel.row("7", "무적", func(): return _onoff(god))
 		panel.section("연출 프리셋")
+		panel.row("8", "타격 VFX", func(): return MocoFX.STYLE_NAMES[MocoFX.style] + ("  ×0.2" if MocoFX.slow < 1.0 else ""))
 		panel.row("J", "피해 숫자", func(): return DamageLog.preset.to_upper())
 		panel.row("H", "HUD", func(): return HudPresets.NAMES[HudPresets.current])
 		panel.row("=", "바닥 파괴", func(): return String(GroundBreak.current().name))
@@ -329,6 +330,17 @@ func _build_panel() -> void:
 ## 상속 씬이 패널 아래에 덧붙이는 글자 (기본 없음)
 func _panel_text() -> String:
 	return ""
+
+
+## 8 = 타격 VFX 프리셋 전환 · Shift+8 = 버스트만 0.2 배속으로 느리게 보기 (프레임 확인용)
+func _set_hitfx(slow_toggle: bool) -> void:
+	if slow_toggle:
+		MocoFX.slow = 1.0 if MocoFX.slow < 1.0 else 0.2
+		hud.banner("타격 VFX 느리게  %s" % _onoff(MocoFX.slow < 1.0), Color(1.0, 0.45, 0.95), "버스트만 0.2 배속 (게임 시간은 그대로)")
+		return
+	var i := (MocoFX.STYLES.find(MocoFX.style) + 1) % MocoFX.STYLES.size()
+	MocoFX.style = MocoFX.STYLES[i]
+	hud.banner("타격 VFX  %s" % MocoFX.STYLE_NAMES[MocoFX.style], Color(1.0, 0.45, 0.95), "허수아비를 때려 보세요 · Shift+8 느리게 보기")
 
 
 func _ground_title() -> String:
@@ -454,6 +466,8 @@ func _unhandled_input(event: InputEvent) -> void:
 				if not god:
 					player.invuln = 0.0
 				hud.banner("플레이어 무적  %s" % _onoff(god), Color(0.8, 0.9, 1.0), "")
+			KEY_8:
+				_set_hitfx((event as InputEventKey).shift_pressed)
 			KEY_0:
 				_set_cutin(-1 if (event as InputEventKey).shift_pressed else 1)
 			KEY_F3:

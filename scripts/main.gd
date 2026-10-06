@@ -993,8 +993,9 @@ func dramatic(on: bool) -> void:
 		ImpactFrame.inst.after(hud.screen_flash.bind(Color(0.85, 1.0, 1.0), 0.55))
 
 
-func hitstop(sec: float) -> void:
-	Engine.time_scale = minf(0.06, slowmo * 0.5)
+## scale: 멈춘 동안의 시간 배율 (기본 0.06 = 아주 느리게, 0.002 = 사실상 정지 — 패링 하드 히트스톱)
+func hitstop(sec: float, scale := 0.06) -> void:
+	Engine.time_scale = minf(scale, slowmo * 0.5)
 	hitstop_until = max(hitstop_until, Time.get_ticks_msec() + int(sec * 1000.0))
 
 

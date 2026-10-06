@@ -135,6 +135,6 @@ func _run() -> void:
 	var in_lobby := false
 	for entry in Lobby.TEST_SCENES:
 		in_lobby = in_lobby or entry.scene == "res://scenes/coworker_dialogue.tscn"
-	_check(in_lobby and FileAccess.file_exists("res://coworker_dialogue.cmd"), "로비 항목과 직접 실행기 있음")
+	_check(in_lobby and FileAccess.file_exists("res://launchers/scenes/coworker_dialogue.cmd"), "로비 항목과 직접 실행기 있음")
 	print("RESULT coworker_dialogue_check: %s (%d fails)" % ["PASS" if fails == 0 else "FAIL", fails])
 	quit(1 if fails > 0 else 0)

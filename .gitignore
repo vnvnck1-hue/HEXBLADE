@@ -44,3 +44,6 @@ assets/audio/voices/spaland_docking/*.mp3.import
 output/lancaster-boss-20261006/*/
 # 같은 폴더 PNG 의 중복 묶음 (75MB, GitHub 50MB 경고 초과)
 output/hearthstone-prop-textures-20261006/hearthstone_prop_textures_3concepts.zip
+output/maid-whirl-20261006/frames/
+
+output/misfitz-hit-20261006/frames/

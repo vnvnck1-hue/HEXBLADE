@@ -103,9 +103,12 @@ func mega(origin: Vector3, dir: Vector3) -> void:
 	_play(origin, dir, [[34, 0.0, 1.0], [34, 1.0, 1.5]])
 
 
-## 패링: 원판 1프레임 → 반전·굵은 선 1프레임 (전투 속도를 끊지 않게 짧게)
-func parry(origin: Vector3, dir: Vector3) -> void:
-	_play(origin, dir, [[17, 0.0, 1.3], [17, 1.0, 1.8]])
+## 패링: 원판 1프레임 → 반전·굵은 선 1프레임 (전투 속도를 끊지 않게 짧게). light = 연속 패링의 중간 타: 반전 한 프레임만
+func parry(origin: Vector3, dir: Vector3, light := false) -> void:
+	if light:
+		_play(origin, dir, [[17, 1.0, 1.2]])
+	else:
+		_play(origin, dir, [[17, 0.0, 1.3], [17, 1.0, 1.8]])
 
 
 ## 재생 길이(초). 호출 쪽이 히트스탑 길이를 맞출 때 쓴다

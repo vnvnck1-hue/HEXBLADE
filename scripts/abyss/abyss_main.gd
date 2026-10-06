@@ -8,7 +8,7 @@ extends Main
 ##   4 참회의 열주 — 기둥 엄폐물 · 갑각 참회자(허스크 호위) · 함정 둘 다
 ##   5 후광의 파수자 1페이즈 / 6 2페이즈(전장이 십자로 줄어든다)
 ## 처치하면 공명 결정이 떨어지고, 모으면 공명 단계(점수 배율)가 오른다. 맞으면 한 단계 떨어진다.
-## 실행: abyss_battle.cmd · 인자 --phase=N (1~6 에서 시작) · --godmode · --nopost (후처리 끔)
+## 실행: launchers/scenes/abyss_battle.cmd · 인자 --phase=N (1~6 에서 시작) · --godmode · --nopost (후처리 끔)
 
 const Stage := preload("res://scripts/abyss/abyss_stage.gd")
 const Hazards := preload("res://scripts/abyss/abyss_hazards.gd")

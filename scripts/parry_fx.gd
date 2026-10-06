@@ -32,6 +32,7 @@ var _start := -1
 var _contact := Vector3.ZERO
 var _kind := "melee"
 var _tilt := 0.0
+var _k := 1.0                   ## 세기 (연속 패링 중간 타 0.6 · 마지막/단발 1)
 
 const SHADER := """
 shader_type canvas_item;
@@ -42,6 +43,9 @@ uniform float seed = 0.0;
 uniform float lines = 0.0;
 uniform float chroma = 0.0;
 uniform float flash = 0.0;
+uniform float blur = 0.0;       // 줌 블러: 접촉점을 향해 늘어나는 흐림
+uniform float wave_r = 0.0;     // 쇼크웨이브 왜곡 고리 반경 (화면 높이 기준)
+uniform float wave_k = 0.0;
 
 float hash(float n) { return fract(sin(n * 127.1 + seed * 311.7) * 43758.5453); }
 
@@ -52,9 +56,23 @@ void fragment() {
 	p.x *= aspect;
 	float r = length(p);
 	vec2 rd = to_c / max(length(to_c), 1e-4);
+	// 쇼크웨이브 왜곡: 접촉점에서 퍼지는 고리 근처만 굴절시킨다
+	float ring = exp(-pow((r - wave_r) / 0.04, 2.0)) * wave_k;
+	uv -= rd * ring * 0.02;
+	// 줌 블러: 접촉점 쪽으로 여러 번 샘플 (접촉점 근처는 또렷, 멀수록 길게 늘어난다)
+	float bk = blur * smoothstep(0.02, 0.55, r);
+	vec3 acc = vec3(0.0);
+	float wsum = 0.0;
+	for (int i = 0; i < 8; i++) {
+		float fi = float(i) / 7.0;
+		float wgt = 1.0 - fi * 0.65;
+		acc += texture(screen_tex, mix(uv, center, fi * bk * 0.1)).rgb * wgt;
+		wsum += wgt;
+	}
+	vec3 bl = acc / wsum;
 	// 접촉점을 향한 색수차
 	float ca = chroma * 0.01 * smoothstep(0.03, 0.7, r);
-	vec3 c = vec3(texture(screen_tex, uv - rd * ca).r, texture(screen_tex, uv).g, texture(screen_tex, uv + rd * ca).b);
+	vec3 c = vec3(mix(bl.r, texture(screen_tex, uv - rd * ca).r, step(1e-5, ca)), bl.g, mix(bl.b, texture(screen_tex, uv + rd * ca).b, step(1e-5, ca)));
 	// 집중선: 접촉점에서 뻗는 흰 쐐기. 프레임마다 배치가 바뀐다
 	float a = atan(p.y, p.x) / 6.2831853 + 0.5;
 	float n = 140.0;
@@ -175,8 +193,9 @@ func _hide() -> void:
 	_start = -1
 
 
-## 성공 순간 재생 (contact: 부딪힌 월드 지점)
-func play(contact: Vector3, kind: String) -> void:
+## 성공 순간 재생 (contact: 부딪힌 월드 지점, k: 세기)
+func play(contact: Vector3, kind: String, k := 1.0) -> void:
+	_k = k
 	_start = Parry.now_ms()
 	_contact = contact
 	_kind = kind
@@ -206,9 +225,12 @@ func _process(_dt: float) -> void:
 	mat.set_shader_parameter("aspect", vs.x / maxf(vs.y, 1.0))
 	if Engine.get_process_frames() % 2 == 0:
 		mat.set_shader_parameter("seed", randf() * 100.0)
-	mat.set_shader_parameter("flash", (1.0 - smoothstep(0.0, 0.05, e)) * 0.35)
-	mat.set_shader_parameter("lines", 1.0 - smoothstep(0.02, 0.16, e))
-	mat.set_shader_parameter("chroma", 1.0 - smoothstep(0.0, 0.14, e))
+	mat.set_shader_parameter("flash", (1.0 - smoothstep(0.0, 0.05, e)) * 0.35 * _k)
+	mat.set_shader_parameter("lines", (1.0 - smoothstep(0.02, 0.16, e)) * minf(1.0, _k * 1.2))
+	mat.set_shader_parameter("chroma", (1.0 - smoothstep(0.0, 0.14, e)) * _k)
+	mat.set_shader_parameter("blur", (1.0 - smoothstep(0.0, 0.13, e)) * _k)
+	mat.set_shader_parameter("wave_r", 0.04 + (1.0 - pow(1.0 - clampf(e / 0.22, 0.0, 1.0), 2.0)) * 0.55 * (0.7 + 0.3 * _k))
+	mat.set_shader_parameter("wave_k", (1.0 - smoothstep(0.06, 0.22, e)) * _k)
 	# 섬광선: 접촉점 높이에서 화면 폭의 대부분을 순식간에 긋고, 길이는 남긴 채 가늘어지며 사라진다
 	var grow := 1.0 - pow(1.0 - clampf(e / 0.04, 0.0, 1.0), 3.0)
 	var thin := 1.0 - smoothstep(0.07, 0.28, e)
@@ -221,7 +243,7 @@ func _process(_dt: float) -> void:
 		for q in 17:
 			pts.append(mid - half + half * 2.0 * (q / 16.0))
 		l.points = pts
-		l.width = (16.0 if i == 0 else 3.5) * thin
+		l.width = (16.0 if i == 0 else 3.5) * thin * (0.6 + 0.4 * _k)
 		l.visible = thin > 0.02
 
 
@@ -335,18 +357,22 @@ static func cue(pos: Vector3) -> void:
 	Sfx.play("pcue", 0.0, -2.0)
 
 
-## 패링 성공 폭발 (접촉점 · 반격 방향)
-static func burst(pos: Vector3, dir: Vector3, kind: String) -> void:
+## 패링 성공 폭발 (접촉점 · 반격 방향, k: 세기 — 연속 패링 중간 타 0.6)
+## 히트 스파크(접촉점 불꽃) + 임팩트 버스트(방사형 별 · 충격파 고리) + 반격 빛줄기 + 순간 조명 + 화면 굴절 충격파
+static func burst(pos: Vector3, dir: Vector3, kind: String, k := 1.0) -> void:
 	# 슬로우모션은 몇 프레임뿐이라 거의 정상 속도로 재생된다: 번쩍 터지고 빠르게 걷힌다
-	glint(pos, 3.4, GOLD, 0.16)
+	glint(pos, 3.4 * (0.7 + 0.3 * k), GOLD, 0.16)
 	glint(pos, 1.9, HOT, 0.1)
 	FX.flash(pos, Color.WHITE, 0.8, 0.05)
-	FX.flash(pos, GOLD, 0.5, 0.09)
-	FX.ring(Vector3(pos.x, Main.gy(pos), pos.z), 2.2, [GOLD, Color(1.0, 0.5, 0.1), HOT], 0.3)
-	for i in 3:
-		FX.shockwave(pos, [HOT, GOLD, Color(1.0, 0.5, 0.15)][i], 3.5 + i * 2.0, 0.25 + i * 0.1, 0.08 - i * 0.02)
-	FX.sparks(pos, 40, [Color.WHITE, HOT, GOLD, Color(1.0, 0.45, 0.1)], 18.0, 0.4, -9.0, 0.04)
-	FX.sparks(pos, 10, [Color.WHITE, GOLD], 9.0, 0.5, -3.0, 0.06)
+	FX.flash(pos, GOLD, 0.5 * k, 0.09)
+	FX.ring(Vector3(pos.x, Main.gy(pos), pos.z), 2.2 * (0.6 + 0.4 * k), [GOLD, Color(1.0, 0.5, 0.1), HOT], 0.3)
+	for i in (3 if k >= 1.0 else 2):
+		FX.shockwave(pos, [HOT, GOLD, Color(1.0, 0.5, 0.15)][i], (3.5 + i * 2.0) * (0.6 + 0.4 * k), 0.25 + i * 0.1, 0.08 - i * 0.02)
+	FX.sparks(pos, int(40 * k), [Color.WHITE, HOT, GOLD, Color(1.0, 0.45, 0.1)], 18.0, 0.4, -9.0, 0.04)
+	FX.sparks(pos, int(10 * k), [Color.WHITE, GOLD], 9.0, 0.5, -3.0, 0.06)
+	# 반격 방향으로 쏟아지는 불꽃 (공격이 튕겨 나간 쪽)
+	FX.sparks(pos + dir * 0.3, int(14 * k) + 4, [Color.WHITE, HOT], 14.0, 0.25, -6.0, 0.035)
+	Distortion.burst(pos, 2.0 + 2.6 * k, 0.32, 0.6 + 0.6 * k)
 	# 반격 궤적: 접촉점을 가로지르는 날카로운 빛줄기
 	var side := Vector3(-dir.z, 0, dir.x)
 	for i in 2:
