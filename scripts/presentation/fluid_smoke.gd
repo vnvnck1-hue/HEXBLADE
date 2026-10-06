@@ -25,10 +25,18 @@ const MAX_SPEED := 38.0         # m/s
 const VORT := 9.0               # 소용돌이 보강 세기
 const BLAST_LIFE := 0.32        # 폭발 바람이 이어지는 시간
 const FIX := 1000.0             # 합계 고정소수 배율 (GPU atomicAdd 는 정수)
+const EXHAUST_GAS := 6.0         # 부스터 연소가스: 분사구 아래 초당 배기 밀도 (전용 Ch.EXHAUST — 그을음 없음)
+const EXHAUST_R := 0.7          # 뿜는 반경 (m)
+const EXHAUST_DECAY := 2.4       # 배기 초당 감쇠 — 짙은 핵(≈1)이 가장자리 문턱(0.06)까지 약 1.2초
+const EXHAUST_PUFF_T := 0.12     # 켜는 순간 이만큼 동안 세게 뿜는다 (한 번 '퐁')
+const EXHAUST_PULSE := 7.0       # 초당 뿜는 박자 — 끊어 뿜어서 꼬리가 둥근 뭉게 덩어리 줄이 된다 (만화식 배기)
+const EXHAUST_BACK := 1.8        # 분사 바람: 분사구 방향(뒤)으로 m/s, 여기에 달리는 반대쪽으로 끌리는 몫을 더한다
+const TOX_THIN := 0.02          # 독가스가 칸마다 이보다 옅으면(화면에 거의 안 보임) 찌꺼기로 보고 천천히 날려 보낸다
+const TOX_THIN_DECAY := 0.5     # 그 찌꺼기의 초당 감쇠 (짙은 독가스는 그대로 고인다)
 
-enum Kind { PUSH, RADIAL, SWIRL, PART }
+enum Kind { PUSH, RADIAL, SWIRL, PART, FADE }
 enum Mode { ADVECT, VORT, DIV, JACOBI, PROJECT }
-enum Ch { MIST, PUFF, TOXIC, STEAM }
+enum Ch { MIST, PUFF, TOXIC, STEAM, EXHAUST }   # EXHAUST = 상태 텍스처 z 칸 (부스터 배기 전용, 염료 4채널 밖)
 
 ## 그리기 품질: LOW = 절반 해상도 24걸음, HIGH = 절반 해상도 40걸음, FULL = 원래 해상도 40걸음 (비교용)
 enum Quality { LOW, HIGH, FULL }
@@ -87,6 +95,7 @@ var stat_toxic := 0.0           ## 격자 전체 독가스 양
 var stat_all := 0.0             ## 격자 전체 밀도 (그을음 포함)
 var stat_eaten := 0.0           ## 아직 가져가지 않은 빨아 먹은 독가스 양 (consume_eaten 으로 가져간다)
 var stat_count := 0             ## 합계가 들어온 횟수
+var toxic_purge := 0.0          ## 격자 전체 독가스 초당 걷어 내기 (FluidField 가 정화 뒤 몇 초 동안 매 프레임 정한다)
 
 var _rd: RenderingDevice
 var _shader := RID()
@@ -97,7 +106,8 @@ var _p: Array[RID] = []         # 압력 두 장
 var _div := RID()
 var _obs := RID()
 var _disp := RID()              # 화면용 A (높이 단면, 결 세기, 결 속도, 전체 밀도)
-var _disp2 := RID()             # 화면용 B (스타일 비율 — 나머지는 그을음)
+var _disp2 := RID()             # 화면용 B (스타일 비율 — 나머지는 그을음 · 배기)
+var _disp3 := RID()             # 화면용 C (배기 밀도 r16f — 카툰 색 단계용)
 var _ebuf := RID()
 var _stats := RID()
 var _sets := {}                 # Vector2i(s 쪽, p 쪽) → 유니폼 세트
@@ -113,6 +123,10 @@ var _t := 0.0
 var _pending_clear := false
 var _pending_fill := 0.0
 var _busy_t := 0.0              # 연기를 넣는 방출기가 마지막으로 있던 뒤 지난 시간
+var exhaust_on := true          ## false 면 부스터 연소가스를 내지 않는다 (--exhaust=off)
+var _was_boost := false
+var _boost_age := 0.0
+var _purge_now := 0.0           # 이번 계산에 쓰는 toxic_purge (렌더 스레드)
 
 
 ## 씬에 붙인다. center = 격자 가운데(월드), size = 가로·세로 (m)
@@ -199,6 +213,7 @@ func res_scale() -> int:
 func _ready() -> void:
 	inst = self
 	_blasts.clear()
+	exhaust_on = not Main.cmd_args.has("--exhaust=off")
 	_rd = RenderingServer.get_rendering_device()
 	if _rd == null:
 		return
@@ -208,6 +223,7 @@ func _ready() -> void:
 		_fx = FluidSmokeFX.new()
 		_fx.smoke_a = _disp
 		_fx.smoke_b = _disp2
+		_fx.smoke_c = _disp3
 		_hook_camera()
 
 
@@ -262,6 +278,7 @@ func _init_gpu() -> void:
 	_div = _make_tex(RenderingDevice.DATA_FORMAT_R32_SFLOAT, 4)
 	_disp = _make_tex(RenderingDevice.DATA_FORMAT_R16G16B16A16_SFLOAT, 8)
 	_disp2 = _make_tex(RenderingDevice.DATA_FORMAT_R16G16B16A16_SFLOAT, 8)
+	_disp3 = _make_tex(RenderingDevice.DATA_FORMAT_R16_SFLOAT, 2)
 	_obs = _make_tex(RenderingDevice.DATA_FORMAT_R32_SFLOAT, 4, _obstacles())
 	var zero := PackedByteArray()
 	zero.resize((HEAD + MAX_EMIT * 2) * 16)
@@ -311,6 +328,7 @@ func _make_set(s: int, p: int) -> RID:
 	u.append(_image(8, _d[s]))
 	u.append(_image(9, _d[1 - s]))
 	u.append(_image(10, _disp2))
+	u.append(_image(12, _disp3))
 	u.append(_buffer(11, _stats))
 	return _rd.uniform_set_create(u, _shader, 0)
 
@@ -320,7 +338,7 @@ func _free_gpu() -> void:
 		if st.is_valid():
 			_rd.free_rid(st)
 	_sets.clear()
-	for r in _s + _d + _p + [_div, _obs, _disp, _disp2, _ebuf, _stats]:
+	for r in _s + _d + _p + [_div, _obs, _disp, _disp2, _disp3, _ebuf, _stats]:
 		if r.is_valid():
 			_rd.free_rid(r)
 	_s.clear()
@@ -388,14 +406,15 @@ func _process(delta: float) -> void:
 	if gpu_compute and not idle:
 		var bytes := _emit_bytes()
 		var n := mini(emitters.size(), MAX_EMIT)
-		RenderingServer.call_on_render_thread(_step.bind(dt, n, bytes, _pending_clear, _pending_fill))
+		RenderingServer.call_on_render_thread(_step.bind(dt, n, bytes, _pending_clear, _pending_fill, toxic_purge))
 		_pending_clear = false
 		_pending_fill = 0.0
 		frames += 1
 	cpu_usec = Time.get_ticks_usec() - t0
 
 
-func _step(dt: float, n: int, bytes: PackedByteArray, wipe: bool, fill_k: float) -> void:
+func _step(dt: float, n: int, bytes: PackedByteArray, wipe: bool, fill_k: float, purge := 0.0) -> void:
+	_purge_now = purge
 	if wipe:
 		var z := PackedByteArray()
 		z.resize(nx * ny * 16)
@@ -432,7 +451,7 @@ func _on_stats(data: PackedByteArray) -> void:
 
 
 func _pass(mode: int, key: Vector2i, dt: float, n: int, extra := 0.0) -> void:
-	var pc := PackedFloat32Array([mode, dt, n, _t, nx, ny, cell, VORT, VEL_DAMP, SOOT_DECAY, MAX_SPEED, extra, 0, 0, 0, 0])
+	var pc := PackedFloat32Array([mode, dt, n, _t, nx, ny, cell, VORT, VEL_DAMP, SOOT_DECAY, MAX_SPEED, extra, _purge_now, TOX_THIN_DECAY, TOX_THIN, EXHAUST_DECAY])
 	var cl := _rd.compute_list_begin()
 	_rd.compute_list_bind_compute_pipeline(cl, _pipe)
 	_rd.compute_list_bind_uniform_set(cl, _sets[key], 0)
@@ -473,6 +492,31 @@ func _span_ms(from: String, to: String) -> float:
 ## 확인용: 그 자리 전체 밀도 (GPU 에서 화면용 텍스처를 통째로 읽어 온다 — 느리니 검사에서만)
 func density_at(p: Vector3, r := 0.0) -> float:
 	return _avg_at(_read(_disp), PackedByteArray(), p, r, 3)
+
+
+## 확인용: 그 자리(반경 r) 부스터 배기 밀도의 최댓값 (GPU 에서 통째로 읽어 온다 — 검사에서만)
+func exhaust_at(p: Vector3, r := 0.0) -> float:
+	var data := _read(_disp3)
+	if data.is_empty():
+		return 0.0
+	var c := to_cell(p)
+	var rc := maxf(r / cell, 0.0)
+	var best := 0.0
+	for y in range(floori(c.y - rc), floori(c.y + rc) + 1):
+		for x in range(floori(c.x - rc), floori(c.x + rc) + 1):
+			if x < 0 or y < 0 or x >= nx or y >= ny or Vector2(x, y).distance_to(c) > rc + 0.71:
+				continue
+			best = maxf(best, data.decode_half((y * nx + x) * 2))
+	return best
+
+
+## 확인용: 격자 전체 부스터 배기 합
+func total_exhaust() -> float:
+	var data := _read(_disp3)
+	var sum := 0.0
+	for i in range(0, data.size(), 2):
+		sum += data.decode_half(i)
+	return sum
 
 
 ## 확인용: 그 자리 스타일 si 의 밀도
@@ -559,11 +603,12 @@ func _emit_bytes() -> PackedByteArray:
 ## RADIAL(a = 바깥 속력(음수 = 빨아들임) · b = 그을음 추가 · c = 가운데 먹어 치우기(모든 채널) · d = 밀도 추가 → 채널 ch)
 ## PART(a, b = 진행 방향(단위) · c = 길 양옆으로 밀어내는 속력) — 몸이 지나가며 연기를 가른다
 ## SWIRL(a = 접선 속력(음수 = 휠윈드와 같은 쪽, yaw + 방향) · b = 바깥 속력 · c = 초당 따라잡기)
+## FADE(a = 채널 ch 를 초당 걷어 내는 세기 — 정화 뒤 남은 독가스를 서서히 지운다, 빨아 먹은 양으로 치지 않음)
 func _gather(dt: float) -> void:
 	emitters.clear()
 	var main: Main = Main.inst if is_instance_valid(Main.inst) else null
 	var player: Player = main.player if main else null
-	# 다른 모듈이 넣은 방출기 (독가스 구름 생성 · 안개 둑 · 정화 마무리)
+	# 다른 모듈이 넣은 방출기 (독가스 구름 생성 · 안개 둑 · 정화 뒤 걷어 내기)
 	for e in extra_emitters:
 		_emit(e[0], e[1], e[2], e[3], e[4], e[5], e[6], e[7])
 	extra_emitters.clear()
@@ -609,6 +654,7 @@ func _gather(dt: float) -> void:
 	if spd > 1.5:
 		var m := pv / spd
 		_emit(Kind.PART, pp - m * 0.3, 1.1 + minf(spd * 0.04, 0.7), m.x, m.z, minf(spd * 0.75, 16.0), 0.0)
+	_exhaust(player)
 	# 광선검: 칼끝·칼 가운데가 휘두르는 속도로 공기를 가른다
 	if player.trail and is_instance_valid(player.trail.blade) and player.trail.blade.is_visible_in_tree():
 		var bl: Node3D = player.trail.blade
@@ -665,6 +711,40 @@ func _gather(dt: float) -> void:
 			_prev.erase(id)
 
 
+## 부스터 연소가스: 등 뒤 분사구 두 개가 바닥 쪽으로 뿜는 뜨거운 배기 (전용 칸 Ch.EXHAUST, 그을음 없음).
+## 분사구 불꽃 방향(-basis.y)을 바닥에 내린 자리에서 조금씩 뿜고, 분사 바람이 뒤로 · 달리는 반대쪽으로 끌어 짧은 꼬리를 남긴다.
+## 배기는 EXHAUST_DECAY 로 빨리 사그라지고, 그리기에서 짙기에 따라 노랑 → 주황 → 분홍 → 보라 카툰 색 단계로 칠해진다
+## (막 나온 짙은 배기가 뜨거운 색, 옅어지며 식은 색 — 시간에 따른 그라데이션). 켜는 순간엔 짧게 세게 '퐁'.
+## 기 모으기 돌진의 불꽃(tech.jet_k)도 세기만큼 같이.
+func _exhaust(player: Player) -> void:
+	var on := 1.0 if player.boosting else 0.0
+	if player.tech:
+		on = maxf(on, minf(player.tech.jet_k(), 2.0) * 0.6)
+	var jl: Node3D = player.j.get("jet_l")
+	var jr: Node3D = player.j.get("jet_r")
+	if not exhaust_on or on <= 0.0 or not is_instance_valid(jl) or not is_instance_valid(jr):
+		_was_boost = false
+		_boost_age = 0.0
+		return
+	_boost_age += get_process_delta_time()
+	var mid := (jl.global_position + jr.global_position) * 0.5
+	var flame := -(jl.global_basis.y.normalized() + jr.global_basis.y.normalized())
+	var back := Vector3(flame.x, 0, flame.z)
+	back = back.normalized() if back.length() > 0.05 else -player.aim_dir
+	var v := player.velocity
+	v.y = 0
+	var at := Vector3(mid.x, 0, mid.z) + back * 0.35
+	# 바람은 약하게: 뿜은 덩어리가 길게 끌려 늘어지지 않고 거의 그 자리에 남아 부풀게
+	var wind := back * EXHAUST_BACK - v * 0.12
+	var puff := 2.2 if _boost_age < EXHAUST_PUFF_T else 0.4 + 1.6 * pow(maxf(0.0, sin(_boost_age * TAU * EXHAUST_PULSE)), 4.0)
+	# 분사 바람은 몸의 가르기(PART)보다 뒤에 넣고 세게 따라잡게 → 막 나온 배기가 옆으로 흩어지지 않고 분사구 뒤에 붙어 나온다
+	_emit(Kind.PUSH, at, 0.9, wind.x * on, wind.z * on, 30.0, 0.0)
+	_emit(Kind.RADIAL, at, EXHAUST_R * (1.4 if _boost_age < EXHAUST_PUFF_T else 1.0), 1.8 * on * minf(puff, 1.5), 0.0, 0.0, EXHAUST_GAS * on * puff, Ch.EXHAUST)
+	if player.boosting and not _was_boost:
+		blast(at, 0.6, 0.35, 0.0)
+	_was_boost = player.boosting
+
+
 # ── 셰이더 ─────────────────────────────────────────────
 
 const SOLVER := """#version 450
@@ -681,6 +761,7 @@ layout(set = 0, binding = 8, rgba32f) uniform restrict readonly image2D d_in;
 layout(set = 0, binding = 9, rgba32f) uniform restrict writeonly image2D d_out;
 layout(set = 0, binding = 10, rgba16f) uniform restrict writeonly image2D disp2;
 layout(set = 0, binding = 11, std430) buffer Stats { uint v[4]; } st;
+layout(set = 0, binding = 12, r16f) uniform restrict writeonly image2D disp3;
 layout(push_constant, std430) uniform Params { vec4 a; vec4 b; vec4 c; vec4 d; } pc;
 
 shared float sh_eat[64];
@@ -747,7 +828,11 @@ void main() {
 		vec4 g = sampleD(back);
 		o.xy *= exp(-dt * pc.c.x);
 		o.w *= exp(-dt * pc.c.y);
+		o.z *= exp(-dt * pc.d.w);   // 부스터 배기: 빨리 사그라짐
 		g *= exp(-dt * H_decay);
+		// 독가스: 아주 옅게 퍼진 찌꺼기(보이지 않을 만큼)만 천천히 날아가고 (d.y 초당 · d.z 이하일 때),
+		// 정화가 끝나면 d.x 로 격자 전체 독가스를 몇 초에 걸쳐 걷어 낸다 (FluidField 가 정한다)
+		g.z *= exp(-dt * (pc.d.y * (1.0 - smoothstep(pc.d.z * 0.25, pc.d.z, g.z)) + pc.d.x));
 		// 압축·팽창 (∂ρ/∂t = -ρ∇·v): 거슬러 가져오기만으로는 고른 연기가 퍼지는 바람에도 고른 채로 남는다.
 		// 압력을 뺀 뒤 넣은 폭발·가르기·흡입 흐름에만 발산이 있어서, 그 자리 연기가 비고 둘레에 쌓인다.
 		float dv = 0.5 * ((V(c + ivec2(1, 0)).x - V(c - ivec2(1, 0)).x) + (V(c + ivec2(0, 1)).y - V(c - ivec2(0, 1)).y)) / h;
@@ -755,6 +840,7 @@ void main() {
 		dv = sign(dv) * max(abs(dv) - 1.2, 0.0);
 		float ex = exp(-clamp(dv * dt, -0.35, 0.6));
 		o.w *= ex;
+		o.z *= ex;
 		g *= ex;
 		// 아주 약한 확산: 갈라진 자리가 천천히 메워진다
 		// 벽 칸은 빼고 평균 (벽으로 새어 나가 독가스가 저절로 줄지 않게)
@@ -762,16 +848,20 @@ void main() {
 		vec4 gn = vec4(0.0);
 		float wn = 0.0;
 		float on = 0.0;
+		float oz = 0.0;
 		ivec2 nb4[4] = ivec2[4](ivec2(1, 0), ivec2(-1, 0), ivec2(0, 1), ivec2(0, -1));
 		for (int k = 0; k < 4; k++) {
 			ivec2 q = c + nb4[k];
 			if (solid(q)) continue;
 			gn += D(q);
-			on += S(q).w;
+			vec4 sq = S(q);
+			on += sq.w;
+			oz += sq.z;
 			wn += 1.0;
 		}
 		if (wn > 0.0) {
 			o.w = mix(o.w, on / wn, kd);
+			o.z = mix(o.z, oz / wn, kd);
 			g = mix(g, gn / wn, kd);
 		}
 		// 채우기 (확인용): 크기 = 양, 10 단위 = 고정 스타일 + 1 (0 = 격자를 넷으로 나눠 스타일 0~3), 부호 = 결/고르게
@@ -788,7 +878,6 @@ void main() {
 			}
 			g[ch] += add;
 		}
-		o.z = 0.0;
 		if (solid(c)) { o = vec4(0.0); g = vec4(0.0); }
 		imageStore(s_out, c, o);
 		imageStore(d_out, c, g);
@@ -829,16 +918,21 @@ void main() {
 			vec2 dir = l > 1e-4 ? d / l : vec2(0.0);
 			int code = int(A.w + 0.5);
 			int kind = code % 8;
-			int ch = clamp(code / 8, 0, 3);
+			int ch = clamp(code / 8, 0, 4);
+			// 넣을 칸: 염료 0~3 또는 4 = 부스터 배기(상태 z)
+			vec4 add = ch < 4 ? vec4(equal(ivec4(0, 1, 2, 3), ivec4(ch))) : vec4(0.0);
+			float add_ex = ch == 4 ? 1.0 : 0.0;
 			if (kind == 0) {
 				o.xy = mix(o.xy, B.xy, clamp(w * B.z * dt, 0.0, 1.0));
-				g[ch] += B.w * w * dt;
+				g += add * (B.w * w * dt);
+				o.z += add_ex * B.w * w * dt;
 			} else if (kind == 1) {
 				float want = B.x * u;
 				float now = dot(o.xy, dir);
 				if (B.x > 0.0) o.xy += dir * max(0.0, want - now);
 				else o.xy += dir * min(0.0, want - now);
-				g[ch] += B.w * w * dt;
+				g += add * (B.w * w * dt);
+				o.z += add_ex * B.w * w * dt;
 				o.w += B.y * w * dt;
 				if (B.z > 0.0) {
 					float core = clamp(1.6 - 1.6 * l / max(A.z * 0.5, 1.0), 0.0, 1.0);
@@ -846,10 +940,16 @@ void main() {
 					eaten += g[2] * (1.0 - keep);
 					g *= keep;
 					o.w *= keep;
+					o.z *= keep;
 				}
 			} else if (kind == 2) {
 				vec2 tgt = vec2(-dir.y, dir.x) * B.x + dir * B.y;
 				o.xy = mix(o.xy, tgt * u, clamp(w * B.z * dt, 0.0, 1.0));
+			} else if (kind == 4) {
+				// 걷어 내기: 그 채널을 초당 B.x 로 서서히 지운다 (빨아 먹은 양으로 치지 않음)
+				float f = exp(-B.x * w * dt);
+				g = mix(g, g * f, add);
+				o.z *= mix(1.0, f, add_ex);
 			} else {
 				// 길 양옆으로: 진행 방향에 수직인 바깥쪽
 				vec2 m = B.xy;
@@ -864,20 +964,22 @@ void main() {
 		if (sp > pc.c.z) o.xy *= pc.c.z / sp;
 		g = max(g, vec4(0.0));
 		o.w = max(o.w, 0.0);
-		float tot = dot(g, vec4(1.0)) + o.w;
-		if (tot > 3.0) { g *= 3.0 / tot; o.w *= 3.0 / tot; tot = 3.0; }
+		o.z = max(o.z, 0.0);
+		float tot = dot(g, vec4(1.0)) + o.w + o.z;
+		if (tot > 3.0) { g *= 3.0 / tot; o.w *= 3.0 / tot; o.z *= 3.0 / tot; tot = 3.0; }
 		if (solid(c)) { o = vec4(0.0); g = vec4(0.0); tot = 0.0; }
-		o.z = 0.0;
 		imageStore(s_out, c, o);
 		imageStore(d_out, c, g);
 		// 화면용으로 미리 굽기: A = 행진 중 읽는 값 (높이 단면, 결 세기, 결 속도, 밀도) · B = 닿은 곳 색칠용 스타일 비율
 		vec4 wts = tot > 1e-4 ? g / tot : vec4(0.0);
 		float soot = tot > 1e-4 ? o.w / tot : 0.0;
-		float hk = dot(wts, H_height) + soot * 0.85;
-		float lk = (dot(wts, H_lump) + soot * 0.3) * smoothstep(0.1, 0.7, tot);
-		float ls = dot(wts, H_lspd) + soot;
+		float exf = tot > 1e-4 ? o.z / tot : 0.0;   // 부스터 배기 몫 (높이 0.7 · 결 약하게 · 빠른 결)
+		float hk = dot(wts, H_height) + soot * 0.85 + exf * 0.7;
+		float lk = (dot(wts, H_lump) + soot * 0.3 + exf * 0.2) * smoothstep(0.1, 0.7, tot);
+		float ls = dot(wts, H_lspd) + soot + exf * 2.0;
 		imageStore(disp, c, vec4(hk * sqrt(smoothstep(0.03, 1.25, tot)), lk, ls, tot));
 		imageStore(disp2, c, wts);
+		imageStore(disp3, c, vec4(o.z));
 		// 합계: 빨아 먹은 독가스 · 남은 독가스 · 전체 밀도 (작업 묶음마다 합쳐 한 번만 더한다)
 		uint li = gl_LocalInvocationIndex;
 		sh_eat[li] = eaten;

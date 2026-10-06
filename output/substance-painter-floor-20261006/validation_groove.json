@@ -1,0 +1,14 @@
+{
+  "file": "floor_4m_chunky_groove.png",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGB",
+  "original_copy_sha256": "d6d7b03cbb7c2e66db929a36c452618dda0362281bd60e9645677bfd60d0872d",
+  "outside_groove_mean_abs_rgb_difference": 1.7907278628948127,
+  "visual_review": "Exactly one new thick recessed diagonal gouge in the lower-central area of the top-left panel; other three panels have no new groove. Layout, color and brush treatment visually retained.",
+  "generator": "built-in imagegen",
+  "pixel_identical_outside_edit": false,
+  "game_applied": false
+}

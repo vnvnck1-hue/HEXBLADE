@@ -1,0 +1,585 @@
+{
+  "date": "2026-10-06",
+  "generated_masters": 42,
+  "final_basecolor_pngs": 42,
+  "models": 14,
+  "variants": 3,
+  "format": "2048x2048 RGB PNG",
+  "native_master_sizes": [
+    "1254x1254"
+  ],
+  "source_copy_sha256_equal": true,
+  "original_glb_sha256_unchanged": true,
+  "maximum_absolute_mean_hsv_value_delta": 0.0018935115542831338,
+  "maximum_absolute_mean_hsv_saturation_delta": 0.0007540714320014019,
+  "maximum_tiny_uv_baseline_fallback_fraction": 0.005192779636797673,
+  "floor_edges": [
+    {
+      "variant": "A",
+      "max_opposite_edge_rgb_delta": 0
+    },
+    {
+      "variant": "B",
+      "max_opposite_edge_rgb_delta": 0
+    },
+    {
+      "variant": "C",
+      "max_opposite_edge_rgb_delta": 0
+    }
+  ],
+  "preview_captures": 16,
+  "preview_error_count": 0,
+  "godot": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "game_applied": false,
+  "regression": {
+    "count": 46,
+    "failed": [
+      "diagonal_cutin_check",
+      "infest_check",
+      "terrain_jump_check"
+    ],
+    "exit_code": 1,
+    "headless_error_count": 19,
+    "notes": "Current untouched gameplay baseline: missing docking voice files; infest push-out assertion; terrain step assertions. Asset studio is separate."
+  },
+  "baseline_bot": {
+    "seconds": 30,
+    "seed": 4,
+    "exit_code": 0,
+    "error_count": 0,
+    "script_error_count": 0,
+    "exit_warning": "1 ObjectDB instance leaked"
+  },
+  "assets": [
+    {
+      "file": "png/A/bg_claude_f01_floor_4m_v3.png",
+      "sha256": "a48d8d2c6fa2d5e96fcc9ea88f340e05589751eebbc256a465b7c786fa8b1731",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_f01_floor_4m_v3.png",
+      "sha256": "7352f0558cc6d0838af6819b7dc34393cdd0ce5370fca09349fbb54c23426869",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_f01_floor_4m_v3.png",
+      "sha256": "0de406343deaa63f714635c5670dcfa0f2339cabd307492b10a83a539c7e722e",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_w01_bg_claude_w01_albedo.png",
+      "sha256": "ebe3aecfbcccf8228a37cfe5b1a35bd1eaee961e2cee2aef62846ba151dd11b1",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_w01_bg_claude_w01_albedo.png",
+      "sha256": "25201f58ca240a5116e8dfc6db2561df3b22d52f49ae5408f6e963507d2e74fd",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_w01_bg_claude_w01_albedo.png",
+      "sha256": "035724615e5ed5eb349d0661e2c0cf7bf7c8c37a7ed4f2f79711e6c065e0f34f",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_w01_half_bg_claude_w01_half_albedo.png",
+      "sha256": "08c0b7dbccd9ed9973f1222591f427f8289843c56d555c56f11b295939edebbb",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_w01_half_bg_claude_w01_half_albedo.png",
+      "sha256": "8b8d7bde44c9ddd69683e0bddcb65f8bd5b3a8e44e46d58cff3501ade1c59121",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_w01_half_bg_claude_w01_half_albedo.png",
+      "sha256": "3074d039521d22f2c0218aa86255570a67b96da58b2a93d02b1e82166965cd54",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_block_wall_bg_claude_block_wall_albedo.png",
+      "sha256": "16805187ec7bb320bd1d6cca7cb942f5fbc68efe712c239596ace050eec0a3aa",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_block_wall_bg_claude_block_wall_albedo.png",
+      "sha256": "524d3a68b7b2a42c04eaf5abcf6b7ef7ef236a7618883827eaedd37ab49f603e",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_block_wall_bg_claude_block_wall_albedo.png",
+      "sha256": "c3b71adde7dda74a14f2a5d87a508039f54c4bee62acace273bcadfc9439cd4f",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_block_cover_bg_claude_block_cover_albedo.png",
+      "sha256": "7b33e477f85c8d925e33f85711567308502fb9a9ccaa90bc8f7c6cadcf42f880",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_block_cover_bg_claude_block_cover_albedo.png",
+      "sha256": "6475bf49261b7deeae5a93373bbc687a2868bb04a4dab9728f03698bbdcdea0c",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_block_cover_bg_claude_block_cover_albedo.png",
+      "sha256": "1f252e414c35300538870f77f260f2e122559b1ccd4d41c5fa6a8a8fe6869936",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_block_pillar_bg_claude_block_pillar_albedo.png",
+      "sha256": "b15b51c38a5454b529e5e15557dc2920d7e6f4d49e5ffd9af8c964d01ed9d6ac",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_block_pillar_bg_claude_block_pillar_albedo.png",
+      "sha256": "3e0d6539e44214c9af8997c39bb14798de70c6cd793cddd392167328c7d6d6fc",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_block_pillar_bg_claude_block_pillar_albedo.png",
+      "sha256": "bc7a501df3ad38aa17a0585f836b6bf8c8e4505da96728dc493aee1a8485c36c",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_jamb_bg_claude_jamb_albedo.png",
+      "sha256": "e3ec575e571f8f6b71369c6de82f13447c0a04a68a91a18a0de68697b9c87056",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_jamb_bg_claude_jamb_albedo.png",
+      "sha256": "636de9ddbf856ea332e792f89a5c6b97695c3be4d30f60c8460df2a78b62aaa5",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_jamb_bg_claude_jamb_albedo.png",
+      "sha256": "92b1288aa14812e70d069d21864c196d216c122e6bc03ac09e86705cdda82d89",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_a01_bg_claude_a01_albedo.png",
+      "sha256": "76fd3b4ee645a5c8bca7263d955712e8b38fa9f50f02523d7b18e4dce07e9c68",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_a01_bg_claude_a01_albedo.png",
+      "sha256": "01cec8bdd2bc5d0b0cfa4c855d349ff5b1b7bef2987531154c87d280fdb5b7dc",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_a01_bg_claude_a01_albedo.png",
+      "sha256": "44e72266a1a54a33636dba7312b0997b28c9976e69ebed38dff3110d7ed1bcd2",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_a02_bg_claude_a02_albedo.png",
+      "sha256": "f2baab7588867b67feeda5667b23a051ad8ec4e4fb27e30ad697ed02736edc19",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_a02_bg_claude_a02_albedo.png",
+      "sha256": "f4c9880f825fd02e40cc90c41a0dda2b530c53ee00557790e7717bd9a4746cd8",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_a02_bg_claude_a02_albedo.png",
+      "sha256": "cbbcb09f555833620cd9c537963879f17f203f3bb3356187bae87cfe9196098e",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_service_s01_vent_bg_claude_service_s01_vent_albedo.png",
+      "sha256": "f9272e990fa638c8ab7a7f56721278ad0ca0cb2f1d4275659fc4996b62cf2d2d",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_service_s01_vent_bg_claude_service_s01_vent_albedo.png",
+      "sha256": "fb91897fc3b5611e87f697167dabfb6efcc51ff0bbbda32a127b5980edfd6b60",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_service_s01_vent_bg_claude_service_s01_vent_albedo.png",
+      "sha256": "f0c33ab52e6ccf418539bdb1bbc17e79fb5fe493ac0cdc8bbff1b0f11e4da553",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_service_s02_tank_bg_claude_service_s02_tank_albedo.png",
+      "sha256": "a9e9a7116cf9990a3c3dc0b6d350143877e8cb9b5f746ba1ec9ba7f68676f6c0",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_service_s02_tank_bg_claude_service_s02_tank_albedo.png",
+      "sha256": "c72aad1f0b608a7a638dfb966b235fc993750a32f77377f37f158b4d5167bcb8",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_service_s02_tank_bg_claude_service_s02_tank_albedo.png",
+      "sha256": "1391fe3a02cc878e4d9a6f706ab27d4b1bb6dd47ecc0c54d7defab0bfc1553d9",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_service_s03_pipe_bg_claude_service_s03_pipe_albedo.png",
+      "sha256": "619c687f82c9de624c450affa3962844e0922b1eec1c52451d8e57163a9d819c",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_service_s03_pipe_bg_claude_service_s03_pipe_albedo.png",
+      "sha256": "b78b88e0b330a1352fabc6c47c9fbb6faede8b0afb7dcd4b6ef4a225329d05fd",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_service_s03_pipe_bg_claude_service_s03_pipe_albedo.png",
+      "sha256": "876a99c52ae0e821e89e6b7e0c893be4532a752991f1a14b5f7623cc4ec08d88",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_service_s04_elbow_bg_claude_service_s04_elbow_albedo.png",
+      "sha256": "b60215877a04ebb778ffcfaf47b666041945c06a246ce73485a658d3e0198265",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_service_s04_elbow_bg_claude_service_s04_elbow_albedo.png",
+      "sha256": "fab4dd753dafa92cf2803bfada8586e6dce881977e62baa32acff232d1f15194",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_service_s04_elbow_bg_claude_service_s04_elbow_albedo.png",
+      "sha256": "17953005aa45478a844d73cfcd760c3cb60f37c5c4835c9541ac9d16f3374eb0",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/A/bg_claude_service_s05_column_bg_claude_service_s05_column_albedo.png",
+      "sha256": "c275551181144039bd4b4ea6a15dc459ba20c95629d25732c9bc3fb3a124afcb",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/B/bg_claude_service_s05_column_bg_claude_service_s05_column_albedo.png",
+      "sha256": "88e97013c36848f968dba29cc1d06b8849b0538f6dfb0c1dd156154054bffc06",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    },
+    {
+      "file": "png/C/bg_claude_service_s05_column_bg_claude_service_s05_column_albedo.png",
+      "sha256": "b62cc10b8e977aadd50711cd9fe587af187a8d6d80e6d3b4195a4c400f5094b3",
+      "width": 2048,
+      "height": 2048,
+      "channels": 3
+    }
+  ],
+  "emissions": [
+    {
+      "file": "shared_emission/bg_claude_service_s01_vent_bg_claude_service_s01_vent_emit.png",
+      "sha256": "462c81e773c80192fdc7770616d416020b64d4811bdbfde78829675a9526173e"
+    },
+    {
+      "file": "shared_emission/bg_claude_service_s02_tank_bg_claude_service_s02_tank_emit.png",
+      "sha256": "18eda54916981b8e9757247d51296c60803d90a2d052d094b073fd080ff5ceac"
+    },
+    {
+      "file": "shared_emission/bg_claude_service_s05_column_bg_claude_service_s05_column_emit.png",
+      "sha256": "a778f0d56850fe59dfc8af66bd640cabd6042f6bce5b6974b0b74b4a9c7c7e27"
+    }
+  ],
+  "masters": [
+    {
+      "variant": "A",
+      "model": "bg_claude_f01",
+      "source_sha256": "500add94dff9e0bd4ddce22511f29e4c45c6eafc50aa8cde695d7115548c6594"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_w01",
+      "source_sha256": "8ff747b7bc9885e902ad382153ea2457d83c1ed0f3c04fd9396d546e53fee30e"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_w01_half",
+      "source_sha256": "5d6dd4d1b9f28eb63b99b9ffc80ed022ac223516a56335aa52ebf1beffb90e6b"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_block_wall",
+      "source_sha256": "593436c216305aa2f58dcf6a699ce60d5edc03209d68f9789852efd73d771081"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_block_cover",
+      "source_sha256": "d555210588d05e3e1051798e84cc00a2aa4fc7084696bb71c918f599f6876937"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_block_pillar",
+      "source_sha256": "31fdfdfb8e91858e6e3e071f0f8d399aeb04649b10bcd71ad0e9bb5488822378"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_jamb",
+      "source_sha256": "e4caf06b490763989806a6083910dc0e916254d981edd31bae9f58a002aecfed"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_a01",
+      "source_sha256": "169e1b16d2eb3db032f39bc3d506d559b7ffd97f76bd889fb6c649ffd69734d0"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_a02",
+      "source_sha256": "d5bc4451321f0f50e6e93ae7a2176be6cbb64a7d6fe24512bd4213be82bab7f2"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_service_s01_vent",
+      "source_sha256": "6d58e723aebc8eb12e0c66b6d32b850caa45751bf8bf6fcc1046a27245743227"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_service_s02_tank",
+      "source_sha256": "06579931005ef7b7e097db37e44914c1a1c181d1c157eec2d661bb714146dc8d"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_service_s03_pipe",
+      "source_sha256": "b2ecc78e8d940637969f826b540bb35665302e47b18db25f736a959bec640292"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_service_s04_elbow",
+      "source_sha256": "119c65eb0112b1573ea0843a0bebb7394875d3481235087d14d305baada7565a"
+    },
+    {
+      "variant": "A",
+      "model": "bg_claude_service_s05_column",
+      "source_sha256": "888dd4b0bde41e9956aab87ed228b866f2a896f335ebc337cfa3212871888101"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_f01",
+      "source_sha256": "1efd6ec0a4bdf7c819d824262a8882553dbae6d7699397528815c86d0e6d6399"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_w01",
+      "source_sha256": "de5fdf15fbb3d94b0bdd63512e14018c17c15507165375e5b3e393a719b86ba4"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_w01_half",
+      "source_sha256": "169c8b4c9bd05d40e72d70ac1bf7e382634df1c132bde5d580dce86a51e2fa26"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_block_wall",
+      "source_sha256": "05f58ca3e786991d955bb2703fb0e43d59c114f5b68f0f72abda0469b6e6e3d0"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_block_cover",
+      "source_sha256": "1ba9f36e32836e5173b5a903b9b13024b83276f060810ff85b1dc9576adee2be"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_block_pillar",
+      "source_sha256": "a1f592a2ef3019b2cd8153453969f391743c1977caa5b1504db9011c12a4247d"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_jamb",
+      "source_sha256": "7d1fcd2578401204fe28cf06c7dfc4573ad8e08f7226be7194d50fbf2874dd3f"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_a01",
+      "source_sha256": "d79dc031cbeb8f69605aa2b3d37b1418b41f1a8dd0090ce054a885d869d86a74"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_a02",
+      "source_sha256": "0250b1dc0f6db4ab7bfeeae3c44e19a87c8308584df3a60c401f2ce52fc9a059"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_service_s01_vent",
+      "source_sha256": "1bd1da3adb7d6aee64ff286311a17f84aa66b214acf919e1d35ee29aaacdb5ef"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_service_s02_tank",
+      "source_sha256": "444fad00951562c03063cc2f38d03999bb9ca42fdfe743dec91b878daaba2995"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_service_s03_pipe",
+      "source_sha256": "7597994815ac4012eeab0a57185573466930b40c7ada9445c99301412fc9187b"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_service_s04_elbow",
+      "source_sha256": "b233b4049ac3d174bc27e080a44dd0336e009b362bf65af14b67f8adedbd2638"
+    },
+    {
+      "variant": "B",
+      "model": "bg_claude_service_s05_column",
+      "source_sha256": "3851033e300b323f509b5d796f0534f9ffb89ffb039ad01121ed0e78ade55828"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_f01",
+      "source_sha256": "c060bb62ef7fd4d92eb72f9af26f4019503ab9847fab3f213ba02aea9e4124fd"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_w01",
+      "source_sha256": "5752feb0bfd05a99d01647734b3453ed09a6fb6779972909796a63bb58dfa4ad"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_w01_half",
+      "source_sha256": "535409e4ab30d1e6837ddab95d87c8ec1415577c5228be31ec639dcab921c3e5"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_block_wall",
+      "source_sha256": "230b5751f19805fbb4acadf7391919520bc7153d4fd6f55da9413c3439084d8c"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_block_cover",
+      "source_sha256": "06e62486c77ebb35d16450521f2cc64237dc97befa4d76dfc956bcdc8ca3f252"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_block_pillar",
+      "source_sha256": "9db3cac879509a5936f1e9b97303384054960b55fa4c78a121695ba9e422583c"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_jamb",
+      "source_sha256": "b4ce289fe78558cccc70a0e32a01839cebd4b2ee9a5fdfc1b402523fcc5a9c4b"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_a01",
+      "source_sha256": "11d6524d1922ba9391c904d7a5f33e74827bec5fc7dbd8660e9f679efe1f7da7"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_a02",
+      "source_sha256": "1b97365afef4b57a4c97e2e31129af5675ef63299f84d24cf4058179eccdbd7a"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_service_s01_vent",
+      "source_sha256": "11d1651d586fad640a1170bec25ae67bdb3a422dec177c0758fd0c7e137f7f9d"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_service_s02_tank",
+      "source_sha256": "8ba433f6e1997675606ba5e64c815ff1bce1c8b25b45438468d1dd7d23beb3ad"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_service_s03_pipe",
+      "source_sha256": "37e3ddf55fe2732009454527cb0f06481a1949fe9980afea9299b54269e40d54"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_service_s04_elbow",
+      "source_sha256": "159055356764692cd5d23a6f8c51ce26054fa1d6430eefacdfe455fd1f878c8e"
+    },
+    {
+      "variant": "C",
+      "model": "bg_claude_service_s05_column",
+      "source_sha256": "b4bd2c0996357e6ff0ba910a9d198ca4b7b5a7d9def80c28c243783250ae61eb"
+    }
+  ]
+}

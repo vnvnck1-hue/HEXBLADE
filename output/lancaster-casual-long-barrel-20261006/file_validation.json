@@ -1,0 +1,23 @@
+[
+  {
+    "File": "01_front_tpose.png",
+    "Width": 1942,
+    "Height": 809,
+    "SHA256": "A47D8B175427F15E044DA09758D2D2AD8C4B66F2209BC384B2600D9663412F50",
+    "SourceCopyMatches": true
+  },
+  {
+    "File": "02_right_side_tpose.png",
+    "Width": 1774,
+    "Height": 887,
+    "SHA256": "F529567A3703EBCA2C41315B41A8B83DE061B544C4550370D7A6D140E93E04CC",
+    "SourceCopyMatches": true
+  },
+  {
+    "File": "03_back_tpose.png",
+    "Width": 1944,
+    "Height": 809,
+    "SHA256": "C90C30A6486333E511672B97AA71AD8D1328EE21702D23C701EEACAA9EF68FF8",
+    "SourceCopyMatches": true
+  }
+]

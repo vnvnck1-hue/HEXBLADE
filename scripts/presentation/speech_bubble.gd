@@ -189,7 +189,12 @@ func _process(_dt: float) -> void:
 			rot += vr * h
 	rise += drift * dt
 	_place()
-	queue_redraw()
+	# 모양은 한 번 만들어 두고 크기·기울기는 Control 변환이 맡는다. 스프링이 멈추고 효과선도 끝나면 다시 그리지 않는다
+	# (말풍선마다 오목한 다각형 3개를 매 프레임 삼각형으로 다시 쪼개던 것)
+	var moving := leaving >= 0.0 or absf(vx) + absf(vy) + absf(vr) > 0.02 			or absf(1.0 - sx) + absf(1.0 - sy) > 0.002 or (_lines_t >= 0.0 and _lines_t < 0.12)
+	if moving or not _still_drawn:
+		queue_redraw()
+		_still_drawn = not moving
 
 
 func _place() -> void:
@@ -273,6 +278,7 @@ func _build_shape() -> void:
 
 
 var _lines_t := -1.0
+var _still_drawn := false
 var _lines := []
 
 

@@ -44,6 +44,11 @@ func _exit_tree() -> void:
 func _ready() -> void:
 	inst = self
 	map = main.map
+	# 첫 포낭이 터질 때의 준비 비용(셰이더 · 액체 시트 텍스처 · 효과음 합성, 약 30ms)을 씬을 불러오는 동안 치른다
+	InfestMesh.goo_mat()
+	InfestSound.ensure()
+	for k in LiquidFX.KIND_FILES.size():
+		LiquidFX.material(k, "wine")
 	rng.seed = hash([main.map_seed, map.rooms.size(), "infest"]) if main.map_seed >= 0 else randi()
 	# Gimmicks 배치(같은 프레임 deferred)가 끝난 뒤에 — 가스통·연기·레일 자리를 피한다
 	_layout.call_deferred()

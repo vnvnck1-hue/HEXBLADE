@@ -116,7 +116,8 @@ func _moco_checks() -> void:
 			if pm == null:
 				continue
 			bg_n += 1
-			if float(pm.get_shader_parameter("pool_on")) > 0.5 and (pm.get_shader_parameter("pool_pos") as Vector3).distance_to(pp) < 0.5:
+			var ps := BrawlLook.pool_state()
+			if float(pm.get_shader_parameter("pool_use")) > 0.5 and ps.w > 0.5 and Vector3(ps.x, ps.y, ps.z).distance_to(pp) < 0.5:
 				bg_ok += 1
 		_check(bg_n > 0 and bg_ok == bg_n, "조명 풀: 배경 재질이 플레이어 위치를 받음 (%d/%d)" % [bg_ok, bg_n])
 		var char_tracked := 0

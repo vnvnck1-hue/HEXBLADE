@@ -1,0 +1,30 @@
+[
+  {
+    "File": "01_purge_fire.png",
+    "Width": 1536,
+    "Height": 1024,
+    "SHA256": "7B96D8AFBF1962A6D6C4FEA3A17AA42B7E2E7DC06C3B3D5DB36C69DC0681F7AB",
+    "SourceCopyMatches": true
+  },
+  {
+    "File": "02_close_purge.png",
+    "Width": 1536,
+    "Height": 1024,
+    "SHA256": "EC971A472416B4826E89DDBFC92D61FECD88EE8BD17D03E0BB7ED2778D801AA9",
+    "SourceCopyMatches": true
+  },
+  {
+    "File": "03_area_lockdown.png",
+    "Width": 1536,
+    "Height": 1024,
+    "SHA256": "FD9DC76D8D2A891F00ABD0BE5F90FA06A46A9DB0EEA33F0397D6456E77CFBB7E",
+    "SourceCopyMatches": true
+  },
+  {
+    "File": "04_threat_motion.png",
+    "Width": 1536,
+    "Height": 1024,
+    "SHA256": "DBF919F639E79292799524B2CA08278AD4673F3894F943746922FCADFB6E92FD",
+    "SourceCopyMatches": true
+  }
+]

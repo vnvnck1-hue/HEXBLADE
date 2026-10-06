@@ -1,0 +1,10 @@
+Use case: precise-object-edit.
+Asset type: game environment floor base-color texture, four 2m painted metal plates in a 4m square, viewed perfectly flat.
+Input 1 is the edit target: the latest Hearthstone-style floor that became visually TOO BUSY when tiled over the game.
+Input 2 is a color and visual-restraint reference: the previous quiet game floor.
+Redraw input 1 MUCH MORE CONSERVATIVELY. Maintain the 2x2 plate layout but give at least 95% of each plate quiet uninterrupted muted blue-purple coating.
+REMOVE ALL SIXTEEN BOLTS and their circular sockets completely. REMOVE ALL large rounded dimples. Remove all five large exposed-silver corner clusters. Remove dark chunky craggy borders, thick black outlines and sharp polygon facet networks.
+Keep the stylized Hearthstone / Blizzard hand-painted material feeling through only TWO OR THREE very broad, softly joined thick brush masses on each plate, with extremely subtle value differences. Brush size is large, not fine grain. Keep plate centers nearly calm, and suppress decorative diagonal stripes. Thin modest bevels and narrow readable seams only; do not make thick frames.
+Add only ONE tiny shallow low-contrast nick near an edge on one plate and ONE very small dull gray-blue paint chip near a different plate edge, together less than 0.5 percent of total image area. These sparse details should be unobtrusive when repeated and viewed at gameplay camera distance. No silver spot anywhere else. No rivets, screws, holes, round dots or dense scratches.
+Match reference 2's subdued blue-purple hue, average brightness and saturation (HSV V about 0.49, S about 0.40). Do not make it gray, bright, saturated or shiny. Do not introduce realistic grain, noise, rock cracks or crisp bevel highlights.
+Return ONE opaque square full-bleed usable basecolor PNG with the same four-panel organization. No scene rendering, perspective, labels, caption or montage.

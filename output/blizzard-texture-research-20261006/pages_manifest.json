@@ -1,0 +1,50 @@
+﻿[
+    {
+        "status":  "failed",
+        "page_url":  "https://tiffachiu.artstation.com/projects/8wAA0O",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "01_tinker"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://benthompsonart.artstation.com/projects/d88Ro1",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "02_box"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://jayaxer.artstation.com/projects/3dq2D2",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "03_scholomance"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://craze.artstation.com/projects/r91NJL",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "04_nathria"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://mrjackart.artstation.com/projects/L3Qo9r",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "05_classrooms"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://patrickburke.artstation.com/projects/8wnE9x",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "06_vault"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://teddybeartoast.artstation.com/projects/w6qrvV",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "07_bastion"
+    },
+    {
+        "status":  "failed",
+        "page_url":  "https://robindao.artstation.com/projects/9Eb1WQ",
+        "error":  "원격 서버에서 (403) 사용할 수 없음 오류를 반환했습니다.",
+        "id":  "08_nathria_3d"
+    }
+]

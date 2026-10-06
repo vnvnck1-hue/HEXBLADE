@@ -1,0 +1,46 @@
+[
+  {
+    "id": "metal_plate",
+    "file": "06_mechagon_15.jpg",
+    "box": {
+      "left": 735,
+      "top": 723,
+      "width": 317,
+      "height": 275
+    },
+    "label": "Mechagon / 판금 · 큰 반사 면"
+  },
+  {
+    "id": "rivets",
+    "file": "06_mechagon_15.jpg",
+    "box": {
+      "left": 1063,
+      "top": 723,
+      "width": 306,
+      "height": 275
+    },
+    "label": "Mechagon / 볼트 · 접합부 · 마모"
+  },
+  {
+    "id": "holes",
+    "file": "06_mechagon_15.jpg",
+    "box": {
+      "left": 1392,
+      "top": 722,
+      "width": 308,
+      "height": 276
+    },
+    "label": "Mechagon / 구멍의 안쪽 깊이"
+  },
+  {
+    "id": "box_bevel",
+    "file": "02_box_02.jpg",
+    "box": {
+      "left": 710,
+      "top": 100,
+      "width": 740,
+      "height": 540
+    },
+    "label": "Hearthstone / 베벨의 밝고 어두운 면"
+  }
+]

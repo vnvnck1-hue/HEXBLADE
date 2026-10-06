@@ -33,6 +33,7 @@ class Cyst:
 	var dead := 0.0
 	var phase := 0.0
 	var sent := Vector4(-1, -1, -1, -1)
+	var still := false        ## 스프링이 멈춰 자세를 이미 써 둠 (다시 맞거나 부풀 때까지 건너뛴다)
 
 	func center() -> Vector3:
 		return pivot.global_position + up * 0.14 * s
@@ -71,6 +72,11 @@ func _ready() -> void:
 	max_hp = maxi(hp_sum, 1)          # Enemy 체력바는 만들지 않는다 (_init_hp 를 건너뜀)
 
 
+## 카메라에서 이보다 먼 둥지는 그리지 않는다 (그림자 포함). 화면 가장자리는 궁극기 조준으로 시야가 옮겨 가도 약 37m.
+## 맵 전체 둥지(혹 약 300개 · 50만 삼각형 · 그림자 200개)가 BrawlLook 그림자 거리 70m 안에서 그림자 맵에 그려지던 것
+const VIEW_RANGE := 48.0
+
+
 func _build(v: Node3D) -> Dictionary:
 	var body := Build.pivot(v, Vector3.ZERO, "Body")
 	var rng := RandomNumberGenerator.new()
@@ -80,6 +86,7 @@ func _build(v: Node3D) -> Dictionary:
 		mi.mesh = InfestMesh.membrane(int(m.v))
 		mi.material_override = InfestMesh.membrane_mat(int(m.v))
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.visibility_range_end = VIEW_RANGE
 		var sc: Vector3 = m.scale
 		var b: Basis = m.basis
 		mi.transform = Transform3D(Basis(b.x * sc.x, b.y * sc.y, b.z * sc.z), m.pos)
@@ -101,6 +108,7 @@ func _build(v: Node3D) -> Dictionary:
 		cy.mi.material_override = InfestMesh.cyst_mat()
 		cy.mi.scale = Vector3.ONE * cy.s
 		cy.mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if cy.s > 0.55 else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		cy.mi.visibility_range_end = VIEW_RANGE
 		cy.phase = rng.randf() * TAU
 		cy.mi.set_instance_shader_parameter("phase", cy.phase)
 		cy.pivot.add_child(cy.mi)
@@ -156,6 +164,11 @@ func _tick_cyst(c: Cyst, dt: float, ag: float, ag_changed: bool) -> void:
 	c.punch_v += (-c.punch * 240.0 - c.punch_v * 11.0) * dt
 	c.punch += c.punch_v * dt
 	c.hit = maxf(0.0, c.hit - dt * 9.0)
+	# 멈춘 혹은 자세·셰이더 값을 다시 쓰지 않는다 (맵 전체 둥지의 혹 수백 개가 매 틱 변환을 쓰던 것)
+	var rest := absf(c.punch) < 0.0005 and absf(c.punch_v) < 0.005 and swell == 0.0 and c.hit == 0.0 and c.sent.z == snappedf(c.dead, 0.05)
+	if rest and c.still and not ag_changed:
+		return
+	c.still = rest
 	var pk := c.punch
 	var sw := 1.0 + swell * 0.22
 	if c.popped:

@@ -64,10 +64,14 @@ const POOL_R0 := 3.5        # 이 안은 완전히 밝다 (m)
 const POOL_R1 := 10.5       # 여기서 가장 어둡다 (BRAWL 화면 가장자리쯤)
 const POOL_DARK := 0.2      # 가장 어두운 곳에 남는 해·환경광 비율
 
-## 플레이어 조명 풀 (배경 재질만 pool_on = 1). fragment 에서 v_pool 을 쓰고 light() 가 해의 빛에 곱한다. 환경광은 AO 로 줄인다
+## 플레이어 조명 풀 (배경 재질만 pool_use = 1). fragment 에서 v_pool 을 쓰고 light() 가 해의 빛에 곱한다. 환경광은 AO 로 줄인다
 const POOL := """
-uniform float pool_on = 0.0;
-uniform vec3 pool_pos = vec3(0.0);
+// 플레이어 위치·켜짐은 전역 셰이더 값 하나(bl_pool = xyz 위치, w 켜짐)로 매 프레임 한 번만 넣는다 (예전엔 추적하는 배경 재질마다 두 값씩).
+// pool_use = 이 재질이 조명 풀을 쓰는지 (track_pool 이 1 로). 아래 #define 덕에 셰이더 본문은 예전 이름(pool_on · pool_pos) 그대로.
+global uniform vec4 bl_pool;
+uniform float pool_use = 0.0;
+#define pool_on (pool_use * bl_pool.w)
+#define pool_pos (bl_pool.xyz)
 uniform float pool_r0 = 6.5;
 uniform float pool_r1 = 14.0;
 uniform float pool_dark = 0.28;
@@ -469,23 +473,28 @@ static var _pool_mats := {}     # 재질 id → WeakRef (배경 재질만. 원�
 ## 조명 풀을 받을 배경 재질 등록 (BrawlLook 배경 재질 · 설비 바닥)
 static func track_pool(m: ShaderMaterial) -> void:
 	_pool_mats[m.get_instance_id()] = weakref(m)
+	m.set_shader_parameter("pool_use", 1.0)
 	m.set_shader_parameter("pool_r0", POOL_R0)
 	m.set_shader_parameter("pool_r1", POOL_R1)
 	m.set_shader_parameter("pool_dark", POOL_DARK)
 
 
-## 매 프레임: 플레이어 위치를 배경 재질에 넣는다. 룩이 꺼지거나 풀이 꺼져 있으면 0 (어둠 없음)
+## 매 프레임: 플레이어 위치를 배경 재질에 넣는다. 룩이 꺼지거나 풀이 꺼져 있으면 0 (어둠 없음).
+## 전역 셰이더 값 하나만 바꾼다 (재질 수와 무관). _pool_mats 는 어떤 재질이 풀을 쓰는지 기록·검사용으로만 남는다.
+static var _pool_last := Vector4(INF, 0, 0, -1)
+
+
 static func update_pool(pos: Vector3, on_now: bool) -> void:
-	var dead: Array = []
-	for id in _pool_mats:
-		var m := (_pool_mats[id] as WeakRef).get_ref() as ShaderMaterial
-		if m == null:
-			dead.append(id)
-			continue
-		m.set_shader_parameter("pool_on", 1.0 if on_now else 0.0)
-		m.set_shader_parameter("pool_pos", pos)
-	for id in dead:
-		_pool_mats.erase(id)
+	var v := Vector4(pos.x, pos.y, pos.z, 1.0 if on_now else 0.0)
+	if v.is_equal_approx(_pool_last):
+		return
+	_pool_last = v
+	RenderingServer.global_shader_parameter_set(&"bl_pool", v)
+
+
+## 검사용: 마지막으로 셰이더에 넣은 (위치, 켜짐)
+static func pool_state() -> Vector4:
+	return _pool_last
 
 
 static func _floor_for(src: ShaderMaterial) -> ShaderMaterial:
@@ -511,7 +520,7 @@ static func _floor_for(src: ShaderMaterial) -> ShaderMaterial:
 			m.set_shader_parameter("detail_mean", FLOOR_DETAIL_MEAN)
 		BLUE_PAINT.configure(m, false)
 		if BLUE_PAINT.enabled:
-			m.set_shader_parameter("lift", 0.82)
+			m.set_shader_parameter("lift", BLUE_PAINT.FLOOR_LIFT if BLUE_PAINT.direct_floor else 0.82)
 		track_pool(m)
 		_floor_mats[id] = m
 	return _floor_mats[id]
@@ -722,8 +731,16 @@ class Watcher extends Node:
 			if BrawlLook.on:
 				_late_multi.call_deferred(n)
 		elif n is MeshInstance3D:
-			if (n as MeshInstance3D).material_override == Pal.flat() or n is Blob:
+			var mi := n as MeshInstance3D
+			if mi.material_override == Pal.flat() or n is Blob:
 				return
+			# 이펙트(총구 · 착탄 · 잔상 · 파편 …)는 초당 수백 개씩 생기는데 대부분 셰이더·투명 재질이라 바꿀 것이 없다.
+			# convert_one 이 그대로 돌려보낼 노드는 지연 호출을 아예 만들지 않는다
+			var ov := mi.material_override
+			if ov != null and not mi.has_meta("bl_orig") and not BrawlLook.convertible(ov):
+				var sm := ov as ShaderMaterial
+				if sm == null or sm.shader != ClaudeBgDress.FLOOR_SHADER:
+					return
 			if BrawlLook.on:
 				_late.call_deferred(n)
 		elif n is Enemy:

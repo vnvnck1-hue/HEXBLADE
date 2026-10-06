@@ -39,3 +39,8 @@ output/partner-drone-20261004/frames/
 # 합체 보이스 원본 MP3 (스파랜드 약관: 원본 단독 재배포 금지 → 공개 저장소 제외, docs/drone-docking-voice-handoff.md 7절대로 다시 받는다)
 assets/audio/voices/spaland_docking/*.mp3
 assets/audio/voices/spaland_docking/*.mp3.import
+
+# 랭커스터 보스 캡처 프레임 (합친 시트만 올린다)
+output/lancaster-boss-20261006/*/
+# 같은 폴더 PNG 의 중복 묶음 (75MB, GitHub 50MB 경고 초과)
+output/hearthstone-prop-textures-20261006/hearthstone_prop_textures_3concepts.zip

@@ -139,6 +139,28 @@ func _run() -> void:
 	p.whirl.start()
 	await _frames(2)
 	_check(p.whirl.active() and _kinds(FluidSmoke.Kind.SWIRL).any(func(e): return e[4] > 0.0), "2단 대시 휠윈드: 바깥으로 흩뿌리는 소용돌이")
+	# 부스터 연소가스: 켜면 등 뒤에서 전용 배기 칸(그을음 없음), 끄면 없음
+	for i in 60:
+		await physics_frame
+	var exhaust := func(): return smoke.emitters.filter(func(e): return e[0] == FluidSmoke.Kind.RADIAL and e[7] == FluidSmoke.Ch.EXHAUST and e[6] > 0.0)
+	_check(exhaust.call().is_empty(), "부스터 안 쓰면 연소가스 없음")
+	p.infinite_boost = false
+	p.boost = 1.0
+	Input.action_press("boost")
+	for i in 10:
+		await physics_frame
+	_check(p.boosting and exhaust.call().size() == 1, "부스터 쓰면 등 뒤 연소가스 (전용 배기 칸 하나)")
+	_check(exhaust.call().all(func(e): return e[4] == 0.0 and e[6] <= FluidSmoke.EXHAUST_GAS * 3.41), "끊어 뿜는 박자 최대치 안 · 그을음(회색) 없음")
+	if p.boosting and not exhaust.call().is_empty():
+		var e: Array = exhaust.call()[0]
+		var at := Vector3(smoke.origin.x + (e[1].x + 0.5) * smoke.cell, 0, smoke.origin.y + (e[1].y + 0.5) * smoke.cell)
+		var flat := Vector3(p.velocity.x, 0, p.velocity.z)
+		var off := at - Vector3(p.global_position.x, 0, p.global_position.z)
+		_check(flat.length() < 1.0 or off.dot(flat) < 0.0, "연소가스는 달리는 반대쪽(뒤)에서 나옴")
+	Input.action_release("boost")
+	for i in 10:
+		await physics_frame
+	_check(exhaust.call().is_empty(), "부스터를 끄면 연소가스도 끝")
 	# 정리
 	main.queue_free()
 	await _frames(3)
@@ -176,6 +198,18 @@ func _run() -> void:
 		ff.smoke.stat_eaten = s.m0 * 0.5
 		await create_timer(3.0).timeout
 		_check(s.state == FluidField.St.CLEARED and absf(dr2.gauge - s.value) <= 1.5, "다 빨아들이면 정화 · 게이지 합 %.0f (받은 %.1f)" % [s.value, dr2.gauge])
+		# 정화 뒤 걷어 내기: 남은 세트가 없으면 격자 전체, 있으면 정화된 구름 자리 둘레만
+		ff._fades = [{"spots": [s.clouds[0].pos], "t": 0.5}]
+		await _frames(2)
+		_check(ff.fading() and ff.smoke.toxic_purge > 0.0, "남은 세트 없음: 격자 전체 독가스를 서서히 걷어 냄 (초당 %.2f)" % ff.smoke.toxic_purge)
+		_check(not ff.smoke.emitters.any(func(e): return e[0] == FluidSmoke.Kind.FADE), "격자 전체일 땐 자리 걷어 내기 없음")
+		ff.add_toxic([s.clouds[0].pos + Vector3(30, 0, 0)])
+		await _frames(2)
+		_check(ff.smoke.toxic_purge == 0.0, "다른 세트가 있으면 격자 전체는 건드리지 않음")
+		_check(ff.smoke.emitters.any(func(e): return e[0] == FluidSmoke.Kind.FADE and e[7] == FluidSmoke.Ch.TOXIC), "대신 정화된 자리 둘레 독가스만 걷어 냄 (FADE)")
+		ff._fades.clear()
+		await _frames(2)
+		_check(ff.smoke.toxic_purge == 0.0 and not ff.smoke.emitters.any(func(e): return e[0] == FluidSmoke.Kind.FADE), "걷어 내기가 끝나면 둘 다 멈춤")
 	tm.queue_free()
 	await _frames(3)
 	# 방 탐색: 전투방이 열리면 (always) 독가스 세트 2~3개 · 안개

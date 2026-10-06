@@ -1,0 +1,37 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS  허수아비 씬에 보스방이 있다
+PASS  보스방은 홀 왼쪽 (방 오른쪽 끝 -23.0 < 홀 가운데 0.5)
+PASS  홀과 보스방 사이 통로가 뚫려 있다
+PASS  들어가기 전엔 정지(DORMANT) · is_boss
+PASS  방 밖에서는 허수아비 패널
+PASS  보스 키 3.46m = 플레이어 1.91m × 1.81 (두 배)
+PASS  입구에 서면 보스방 안
+PASS  패널이 보스 프리셋으로 바뀐다
+PASS  기동 연출 뒤 전투 시작
+PASS  상체만 0.9rad 비틀림 (twist 0.90, 하체 그대로)
+PASS  torso 와 다리는 골반 아래 따로
+PASS  옆걸음 2.5초에 18 걸음
+PASS  디딘 발은 바닥에 붙어 있다 (분사 대시 밖, 발바닥 최고 0.00m)
+LANCASTER_PATTERN claw t=6.6 hp=900 phase=1
+PASS  집게 돌진에 근접 패링 판정 창이 열린다
+PARRY melee t=7.67 n=1 f=0
+PASS  그 순간 대시 = 패링 성공
+PASS  패링당하면 경직(STAGGER)
+LANCASTER_PATTERN slug t=10.0 hp=868 phase=1
+PASS  중탄은 패링 탄(ParryOrb)으로 나간다
+LANCASTER_PATTERN burst t=11.4 hp=868 phase=1
+PASS  제압 연사 예광탄이 플레이어를 맞힌다 (체력 4)
+PASS  체력 50% 에서 광폭화 연출 (체력이 50% 에서 멈춘다)
+PASS  2페이즈 OVERDRIVE 로 전투 재개
+PASS  8 키: 크기 플레이어 × 1.5
+PASS  8 키 세 번: 다시 × 2.0
+PASS  2 키: 패턴 세트 바꿈
+PASS  쓰러지면 정지(SHUTDOWN) 연출
+PASS  처치 가능이면 5초 뒤 다시 소환
+PASS  다시 기동해 싸운다
+PASS  방을 나가면 허수아비 패널로 돌아온다
+PASS  방 밖이면 보스는 공격하지 않고 지킨다
+RESULT OK (0 fails)
+WARNING: 3 ObjectDB instances were leaked at exit (run with `--verbose` for details).
+   at: cleanup (core/object/object.cpp:2536)

@@ -10,7 +10,8 @@ extends Main
 ##  0 합체 컷인 · [ 컷인 캐릭터 · - 컷인 트위닝 · F3 컷인 미리보기 · J 피해 숫자 프리셋 · H HUD 프리셋 (Main)
 ##  = / Shift+= 바닥 파괴 스타일 (CRUMBLE 깨짐 튐 기본 · SLAB 판 들림 · SPIKE 암석 솟음 · BUCKLE 찌그러짐 · SCATTER 파편 튐 · MIX 대파괴 · OFF)   F4 / Shift+F4 조준점에 바닥 파괴 크게 / 작게
 ##  F1 왼쪽 설명(설정 패널·하단 조작 안내) 잠시 숨기기 ↔ 보이기   F2 모든 UI 숨기기 ↔ 보이기 (HUD·드론 패널·피해 숫자·말풍선·적 체력바)
-## 확인용 실행 인자: --layout=0~3 --killable --counter --moving (봇: --bot)
+## 왼쪽 통로 끝에는 보스 체험방(TrainingBossRoom)이 있다: 들어가면 LANCASTER 가 기동하고 패널 · 숫자 키가 보스 프리셋으로 바뀐다.
+## 확인용 실행 인자: --layout=0~3 --killable --counter --moving (봇: --bot) · --bossroom (보스방 입구에서 시작) · --bossroom=off
 
 const ROOM_SIZE := Vector2i(30, 22)
 const RESPAWN := 2.0
@@ -43,6 +44,8 @@ var _respawns: Array = []       # [남은 시간, 자리]
 var _bot_t := 0.0
 var show_help := true           # F1: 왼쪽 설명
 var _numbers: CanvasLayer       # MocoFX 의 피해 숫자 층 (F2 로 같이 숨김)
+var boss_room: TrainingBossRoom # 왼쪽 보스 체험방 (이 씬 자체일 때만. 상속 씬은 없음)
+var _boss_room_id := -1
 
 
 func _ready() -> void:
@@ -68,6 +71,12 @@ func _ready() -> void:
 		elif a == "--moving":
 			moving = true
 	_place()
+	if _boss_room_id >= 0:
+		boss_room = TrainingBossRoom.new()
+		boss_room.name = "BossRoom"
+		boss_room.main = self
+		add_child(boss_room)
+		boss_room.setup(_boss_room_id)
 	FX.victory(player.global_position)
 	hud.banner("TRAINING", Color(0.7, 0.95, 1.0), "허수아비를 마음껏 때려 보세요 · 숫자 키로 설정 · Esc 로비")
 
@@ -78,7 +87,28 @@ func _build_arena() -> void:
 	world.add_child(map)
 	map.terrain = false
 	map.generate_single(map_seed if map_seed >= 0 else 7, ArenaMap.Shape.RECT, false, ROOM_SIZE)
+	if _wants_boss_room():
+		_boss_room_id = TrainingBossRoom.carve(map)
 	map.build()
+
+
+## 보스 체험방은 허수아비 씬 자체에만 (드론 · 유체 · 배경 시험장 같은 상속 씬은 그대로)
+func _wants_boss_room() -> bool:
+	if Main.cmd_args.has("--bossroom=off"):
+		return false
+	var sc := get_script() as Script
+	return sc != null and sc.resource_path == "res://scripts/training/training_main.gd"
+
+
+## 감염 오염물은 허수아비 홀에만 (보스방은 비워 둔다)
+func infest_layout(inf: Node) -> void:
+	if _boss_room_id < 0:
+		inf.call("_reserve")
+		for r in map.rooms:
+			inf.call("_populate", r.id)
+		return
+	inf.call("_reserve")
+	inf.call("_populate", map.start_room)
 
 
 func combat_rooms() -> int:
@@ -150,7 +180,7 @@ func _reset_stats() -> void:
 # ── 피해 기록 ───────────────────────────────────────────
 
 ## TrainingDummy.take_hit 이 부른다: 숫자를 띄우고 DPS·연속 피해를 센다
-func record_hit(d: TrainingDummy, dmg: int, source: String) -> void:
+func record_hit(d: Node3D, dmg: int, source: String) -> void:
 	if time - last_hit_t > CHAIN_GAP:
 		chain_dmg = 0
 	last_hit_t = time
@@ -166,7 +196,7 @@ func record_hit(d: TrainingDummy, dmg: int, source: String) -> void:
 
 
 ## 맞은 자리 위로 튀어 오르며 사라지는 피해 숫자 (큰 피해일수록 크다)
-func _damage_number(d: TrainingDummy, dmg: int, source: String) -> void:
+func _damage_number(d: Node3D, dmg: int, source: String) -> void:
 	var l := Label3D.new()
 	l.text = str(dmg)
 	l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -262,8 +292,19 @@ func _onoff(v: bool) -> String:
 	return "ON" if v else "OFF"
 
 
+## 보스방 출입 때 패널을 그 자리에 맞게 다시 채운다
+func rebuild_panel() -> void:
+	if panel == null:
+		return
+	panel.clear()
+	_build_panel()
+
+
 ## 설정 패널: 묶음별 [키] 이름 ··· 값 (값은 매 프레임 갱신)
 func _build_panel() -> void:
+	if boss_room and boss_room.inside:
+		boss_room.build_panel(panel)
+		return
 	panel.title("TRAINING")
 	if panel_rows:
 		panel.section("허수아비")
@@ -374,6 +415,9 @@ func _set_tween(step: int) -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		var k := (event as InputEventKey).physical_keycode
+		if boss_room and boss_room.inside and boss_room.handle_key(k, (event as InputEventKey).shift_pressed):
+			get_viewport().set_input_as_handled()
+			return
 		var handled := true
 		match k:
 			KEY_F1:
@@ -439,6 +483,8 @@ func _unhandled_input(event: InputEvent) -> void:
 ## 가장 가까운 허수아비 앞에 붙어 검 연타 → 사격 → 충전 레이저 → 미사일을 돌아가며 쓴다
 func bot_input(p: Player) -> Dictionary:
 	var out := {"move": Vector3.ZERO, "aim": p.global_position - Vector3(0, 0, 3), "fire": false, "slash": false, "dash": false, "charge": false, "boost": false, "jump": false}
+	if boss_room and (boss_room.inside or Main.cmd_args.has("--bossroom")):
+		return boss_room.bot_input(p, out)
 	var best: TrainingDummy = null
 	var bd := 1e9
 	for d in dummies:

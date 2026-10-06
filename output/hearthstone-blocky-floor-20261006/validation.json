@@ -1,0 +1,51 @@
+{
+  "generator": "built-in imagegen",
+  "file": "floor_4m_final.png",
+  "original_copy_equal": true,
+  "comparison_size": [
+    2488,
+    924
+  ],
+  "comparison_color_edit": false,
+  "pixel_layout_verified": true,
+  "inputs": [
+    {
+      "source": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\hearthstone-blocky-floor-20261006\\current_effective.png",
+      "native_size": [
+        2048,
+        2048
+      ],
+      "mode": "RGB",
+      "sha256": "1c5b3564c04571029cf1be2564e26ad30e8a28c49ff87bfa529912bb277bc980",
+      "mean_v": 0.49245207262974156,
+      "mean_s": 0.4040374715749651
+    },
+    {
+      "source": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\substance-painter-floor-20261006\\floor_4m_chunky_groove.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "d6d7b03cbb7c2e66db929a36c452618dda0362281bd60e9645677bfd60d0872d",
+      "mean_v": 0.48560292213617057,
+      "mean_s": 0.4462760280021253
+    },
+    {
+      "source": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\hearthstone-blocky-floor-20261006\\floor_4m_final.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "mode": "RGB",
+      "sha256": "6ed0e8862196a48810d3b033fa435dfd7799f5b1a371de066caf1d3c84e8707d",
+      "mean_v": 0.4748474918101772,
+      "mean_s": 0.4191905748848855
+    }
+  ],
+  "user_reference_sha256": "0e914c146c11b0deb2fcfab3b9dcee45d976ee16560d1bd343f6c93da4ab17a1",
+  "visual_review": "Hearthstone-like broad blue-purple facets, thick uneven chamfers and rounded dimples; exact 2x2 plates with four corner bolts each; no fine-brush blanket, words or margins.",
+  "game_applied": false,
+  "pixel_repeat_seam_verified": false,
+  "model_render_verified": false
+}

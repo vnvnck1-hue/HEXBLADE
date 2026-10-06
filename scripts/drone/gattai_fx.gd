@@ -109,11 +109,13 @@ func _draw_all() -> void:
 	_star(c0, rad * 1.12, rad * 0.78, 14, 0.2, INK, Color(0, 0, 0, 0))            # 검은 테두리
 	_star(c0, rad, rad * 0.7, 14, 0.2, BURST, Color(0, 0, 0, 0))
 	_star(c0, rad * 0.62, rad * 0.45, 10, -0.3 + t * 2.0, BURST2.lightened(0.3), Color(0, 0, 0, 0))
-	var fs := int(vs.y * 0.085 * pop)
-	if fs < 4 or font == null:
+	# 글꼴은 화면 높이로 정한 고정 크기(8px 단위)로만 굽고 팝은 변환 배율로 준다 (매 프레임 새 크기의 글리프를 굽지 않게)
+	var fs := maxi(8, int(snappedf(vs.y * 0.085, 8.0)))
+	var sc := vs.y * 0.085 * pop / float(fs)
+	if sc * fs < 4.0 or font == null:
 		return
 	var tw := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x
-	canvas.draw_set_transform(c0, -0.12, Vector2.ONE)
+	canvas.draw_set_transform(c0, -0.12, Vector2.ONE * sc)
 	var base := Vector2(-tw * 0.5, fs * 0.35)
 	canvas.draw_string_outline(font, base + Vector2(5, 6), text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, int(fs * 0.32), INK)
 	canvas.draw_string_outline(font, base, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, int(fs * 0.22), INK)

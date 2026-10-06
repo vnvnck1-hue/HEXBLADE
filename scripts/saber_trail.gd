@@ -258,14 +258,16 @@ func _rebuild() -> void:
 	(material_override as ShaderMaterial).set_shader_parameter("fire", tint)
 	(material_override as ShaderMaterial).set_shader_parameter("bright", bright)
 	_im.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
+	# 휠윈드·TEMPEST 처럼 틱마다 표본이 10여 개씩 들어와 점이 촘촘하면 곡선 보간 분할이 필요 없다 (정점 수 1/3)
+	var sub := SUBDIV if n <= 48 else 1
 	for i in n - 1:
 		var p0: Array = _pts[maxi(i - 1, 0)]
 		var p1: Array = _pts[i]
 		var p2: Array = _pts[i + 1]
 		var p3: Array = _pts[mini(i + 2, n - 1)]
-		var steps := SUBDIV if i < n - 2 else SUBDIV + 1
+		var steps := sub if i < n - 2 else sub + 1
 		for s in steps:
-			var f := float(s) / SUBDIV
+			var f := float(s) / sub
 			# 손잡이는 곡선 보간, 칼 방향은 단위 벡터를 곡선 보간 후 정규화 → 칼 길이를 지키며 호를 그린다
 			var h := _cr(p0[0], p1[0], p2[0], p3[0], f)
 			var d0: Vector3 = p0[1] - p0[0]

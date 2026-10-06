@@ -1,0 +1,6 @@
+Use case: lighting-weather.
+Edit the supplied latest Hearthstone-style blue-purple FLOOR texture with ONE targeted change: LOWER THE CONTRAST MODERATELY, about 25–30% less tonal separation.
+Keep EXACTLY the same four panels in 2x2, every bolt, broad faceted shapes, all rounded dents, chipped metal corners, bevel silhouettes and framing. Preserve the Hearthstone hand-painted style and muted periwinkle/indigo hue.
+Bring the large light facets slightly darker toward the plate's midtone, and the dark facets/dent interiors slightly lighter toward that same midtone. Soften the bevel and bolt highlight/shadow contrast similarly, but leave the panel seams readable. The surface should feel calmer and more softly painted; the large facets and recessed dimples must still read.
+Keep overall average brightness and saturation essentially unchanged: current overall HSV V~0.475 and S~0.419. This is a LOCAL CONTRAST compression, not a whole-image darkening or lightening, desaturation, grey/white fog overlay, blur, or new lighting. Maintain clean large shapes with no fine texture added.
+Do not repaint or change shapes, add/remove details, add marks or introduce a new palette. No perspective, margins, captions, labels, watermark or image montage. Return ONE complete opaque square floor texture of the same size.

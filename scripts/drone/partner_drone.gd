@@ -274,8 +274,12 @@ func _ready() -> void:
 			DiagonalDockingCutin.use_tween_id(String(a).substr(14))
 		elif String(a).begins_with("--cutin-char="):
 			DiagonalDockingCutin.char_mode = String(a).substr(13)
+		elif String(a).begins_with("--cutin-chars="):
+			if String(a).substr(14) == "on":
+				DiagonalDockingCutin.hidden_chars = []
 	if cutin_style == "diagonal":
 		DiagonalDockingCutin.prewarm.call_deferred(main)
+		DockingVoice.warm()
 	visual = Node3D.new()
 	add_child(visual)
 	model = (load(MODEL) as PackedScene).instantiate()

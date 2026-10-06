@@ -13,6 +13,26 @@ const SPLAT_MAX := 180            ## 동시에 남는 얼룩 상한 (넘으면 �
 const DROP_MAX := 70
 
 static var _splats: Array = []
+## 한 물리 프레임에 새로 만드는 방울·얼룩 노드 상한. 작은 혹이 연쇄로 한꺼번에 터지면 한 프레임에 노드 500여 개가 생겨 끊겼다.
+## 넘는 몫은 그냥 생략한다 (큰 덩어리·왕관 시트는 먼저 만들어지므로 모양은 그대로 읽힌다)
+const FRAME_DROPS := 90
+const FRAME_SPLATS := 36
+static var _frame := -1
+static var _frame_drops := 0
+static var _frame_splats := 0
+
+
+static func _budget(splat: bool) -> bool:
+	var f := Engine.get_physics_frames()
+	if f != _frame:
+		_frame = f
+		_frame_drops = 0
+		_frame_splats = 0
+	if splat:
+		_frame_splats += 1
+		return _frame_splats <= FRAME_SPLATS
+	_frame_drops += 1
+	return _frame_drops <= FRAME_DROPS
 
 var drops: Array = []             ## {n, v, r, strand, anchor, snap}
 var drips: Array = []             ## 벽을 타고 흐르는 방울 {n, v, life, floor}
@@ -102,7 +122,7 @@ func _flaps(normal: Vector3, k: float) -> void:
 
 
 func _drop(v: Vector3, r: float) -> Dictionary:
-	if drops.size() >= DROP_MAX:
+	if drops.size() >= DROP_MAX or not _budget(false):
 		return {}
 	var mi := MeshInstance3D.new()
 	mi.mesh = InfestMesh.drop_mesh()
@@ -276,7 +296,7 @@ func _wall_hit(at: Vector3, v: Vector3, r: float) -> void:
 
 ## 얼룩: normal 면에 납작하게 붙는다. 속도가 빠를수록 진행 방향으로 길쭉하다
 func _splat(at: Vector3, normal: Vector3, r: float, v: Vector3) -> void:
-	if FX.root == null:
+	if FX.root == null or not _budget(true):
 		return
 	var mi := MeshInstance3D.new()
 	mi.mesh = InfestMesh.splat(randi())

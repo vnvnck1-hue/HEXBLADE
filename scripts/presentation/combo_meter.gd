@@ -279,6 +279,13 @@ func _process(dt: float) -> void:
 	var now := Time.get_ticks_usec()
 	var rdt := clampf((now - _last_us) / 1000000.0, 0.0, 0.1)
 	_last_us = now
+	# 쉬는 동안(콤보 없음 · 스프링 · 조각 다 멈춤)은 계산도 다시 그리기도 하지 않는다
+	if phase == Phase.IDLE and _quiet():
+		if not _idle_drawn:
+			_idle_drawn = true
+			queue_redraw()
+		return
+	_idle_drawn = false
 	if phase == Phase.LIVE:
 		window -= dt                    # 게임 시간 (히트스탑 · 슬로우모션 동안은 천천히 준다)
 		if window <= 0.0:
@@ -321,6 +328,20 @@ func _process(dt: float) -> void:
 		s.r = float(s.r) + float(s.vr) * rdt
 	visible = not Main.ui_hidden
 	queue_redraw()
+
+
+var _idle_drawn := false
+
+
+func _quiet() -> bool:
+	if not (_streaks.is_empty() and _rings.is_empty() and _chips.is_empty() and _shards.is_empty()):
+		return false
+	if _flash > 0.0 or _chroma > 0.0 or _bar_flash > 0.0 or _stamp_flash > 0.0 or absf(_shake) > 0.01:
+		return false
+	for sp: Array in [_pop, _tilt, _stamp, _spop, _mpop]:
+		if absf(float(sp[0])) > 0.001 or absf(float(sp[1])) > 0.01:
+			return false
+	return true
 
 
 func _spring(s: Array, k: float, d: float, h: float) -> void:

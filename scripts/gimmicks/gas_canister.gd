@@ -121,6 +121,9 @@ func _physics_process(dt: float) -> void:
 			Sfx.play("clank", 0.1, -4.0)
 			Main.inst.shake(0.15)
 		return
+	# 화면 밖 먼 통은 흔들림·경고등을 쉰다 (도화선이 붙었거나 맞은 직후는 계속)
+	if fuse < 0.0 and flash_t <= 0.0 and punch <= 0.0 and _wob.length_squared() < 1e-6 and Cull.far(global_position):
+		return
 	# 흔들림 스프링 (맞으면 기우뚱)
 	_wob_v += (-_wob * 160.0 - _wob_v * 9.0) * dt
 	_wob += _wob_v * dt

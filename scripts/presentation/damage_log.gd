@@ -288,7 +288,11 @@ func _draw() -> void:
 		var sq_y := 1.0 + (SQUASH + HEAT_SQUASH * h) * maxf(0.0, 1.0 - t / SQUASH_T)
 		var sq_x := 1.0 / maxf(0.55, sq_y)
 		var base := SIZE_STATUS if e.status else (SIZE_BIG if e.big else SIZE)
-		var sz := maxi(8, roundi(base * (1.0 + HEAT_SIZE * h) * pop * shrink))
+		# 보이는 크기는 연속으로 변하지만 글꼴은 몇 가지 크기로만 래스터한다 (sz). 나머지는 변환 배율(sc)로.
+		# 예전엔 팝·줄어듦·열기마다 정수 크기와 외곽선 굵기가 달라져 새 글리프를 계속 굽고 아틀라스에 올렸다 (끊김 · 글꼴 캐시 증가)
+		var want := maxf(8.0, base * (1.0 + HEAT_SIZE * h) * pop * shrink)
+		var sz: int = roundi(base) if want < base * 1.3 else roundi(base * 1.6)
+		var sc := want / float(sz)
 		var a := 1.0 - smoothstep(fade_from, 1.0, k)
 		var text: String = e.text
 		var tw := f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x
@@ -297,20 +301,20 @@ func _draw() -> void:
 		if h > 0.0 and t < 0.2:          # 달아오를수록 생긴 직후 살짝 떤다
 			p += Vector2(randf_range(-1, 1), randf_range(-1, 1)) * HEAT_SHAKE * h * (1.0 - t / 0.2)
 		# 화면 밖으로 나가지 않게 (가장자리의 적도 숫자는 읽힌다)
-		var hw := tw * 0.5 + EDGE
-		var hh := sz * 0.5 + EDGE
+		var hw := tw * sc * 0.5 + EDGE
+		var hh := want * 0.5 + EDGE
 		if p.x < -200 or p.y < -200 or p.x > vp.x + 200 or p.y > vp.y + 200:
 			continue
 		p.x = clampf(p.x, hw, maxf(hw, vp.x - hw))
 		p.y = clampf(p.y, hh, maxf(hh, vp.y - hh))
 		var ol := maxi(4, roundi(sz * OUTLINE))
-		draw_set_transform(p, float(e.rot), Vector2(sq_x, sq_y))
+		draw_set_transform(p, float(e.rot), Vector2(sq_x, sq_y) * sc)
 		# 1) 아래 그림자 (외곽선 모양 그대로 내려서)
 		draw_string_outline(f, at + Vector2(0, sz * SHADOW_OFF), text, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, ol, Color(SHADOW, SHADOW.a * a))
-		# 2) 열기 후광 (외곽선 바깥으로 번지는 주황, 생긴 직후 더 밝게)
+		# 2) 열기 후광 (외곽선 바깥으로 번지는 주황, 생긴 직후 더 밝게). 굵기는 4단계로 묶는다
 		if h > 0.05:
 			var ga := HEAT_GLOW_A * (0.6 + 0.4 * maxf(0.0, 1.0 - t / 0.25)) * h * a
-			draw_string_outline(f, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, ol + roundi(sz * HEAT_GLOW_W * h) + 2, Color(HEAT_GLOW, ga))
+			draw_string_outline(f, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, ol + roundi(sz * HEAT_GLOW_W * snappedf(h, 0.25)) + 2, Color(HEAT_GLOW, ga))
 		# 3) 외곽선 · 4) 글자
 		draw_string_outline(f, at, text, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, ol, Color(INK.lerp(HEAT_INK, h), a))
 		var c: Color = e.col

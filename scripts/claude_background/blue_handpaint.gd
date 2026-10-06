@@ -1,18 +1,22 @@
 extends RefCounted
-## 승인한 청보라 A안. 기존 메시/UV 음영 유지, 새 붓질을 월드 투영한다.
-## --bgpaint=old 로 변경 전 재질 비교. 캐시는 텍스처 두 개만 보관한다.
-const FLOOR_PATH := "res://assets/textures/handpaint_blue/floor_brush.png"
+## 바닥은 승인한 하스스톤풍 PNG 직접 투영, 벽은 기존 붓 혼합 유지.
+## --bgfloor=previous: 직전 바닥만 비교. --bgpaint=old: 최초 청보라 적용 전.
+const FLOOR_PATH := "res://assets/textures/handpaint_blue/floor_hearthstone.png"
+const PREVIOUS_FLOOR_PATH := "res://assets/textures/handpaint_blue/floor_brush.png"
 const WALL_PATH := "res://assets/textures/handpaint_blue/wall_brush.png"
 const FLOOR_TEXTURE := preload(FLOOR_PATH)
+const PREVIOUS_FLOOR_TEXTURE := preload(PREVIOUS_FLOOR_PATH)
 const WALL_TEXTURE := preload(WALL_PATH)
 static var enabled := not OS.get_cmdline_user_args().has("--bgpaint=old")
+static var direct_floor := not OS.get_cmdline_user_args().has("--bgfloor=previous")
+const FLOOR_LIFT := 1.18
 static var _means := {}
 
 static func texture_for(wall: bool) -> Texture2D:
-	return WALL_TEXTURE if wall else FLOOR_TEXTURE
+	return WALL_TEXTURE if wall else (FLOOR_TEXTURE if direct_floor else PREVIOUS_FLOOR_TEXTURE)
 
 static func mean_for(wall: bool) -> Vector3:
-	var path := WALL_PATH if wall else FLOOR_PATH
+	var path := WALL_PATH if wall else (FLOOR_PATH if direct_floor else PREVIOUS_FLOOR_PATH)
 	if not _means.has(path):
 		# Imported texture data remains available in an exported PCK; raw source PNG does not.
 		var img := texture_for(wall).get_image()
@@ -30,6 +34,8 @@ static func mean_for(wall: bool) -> Vector3:
 
 static func configure(mat: ShaderMaterial, wall: bool) -> void:
 	mat.set_shader_parameter("handpaint", enabled)
+	if not wall:
+		mat.set_shader_parameter("floor_direct", direct_floor)
 	if enabled:
 		mat.set_shader_parameter("paint_tex", texture_for(wall))
 		mat.set_shader_parameter("paint_mean", mean_for(wall))

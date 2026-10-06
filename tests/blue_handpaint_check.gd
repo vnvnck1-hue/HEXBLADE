@@ -42,6 +42,8 @@ func _run() -> void:
 				_check((sm.get_shader_parameter("handpaint") == true) == PAINT.enabled, "방 바닥 선택한 재질 적용")
 				if PAINT.enabled:
 					_check(sm.get_shader_parameter("paint_tex") == PAINT.texture_for(false), "새 바닥 붓질 리소스 직접 사용")
+					_check((sm.get_shader_parameter("floor_direct") == true) == PAINT.direct_floor, "승인 PNG 직접 투영 / 직전 붓 혼합 비교 분기")
+					_check(is_equal_approx(float(sm.get_shader_parameter("lift")), PAINT.FLOOR_LIFT if PAINT.direct_floor else 0.82), "기존 바닥 톤에 맞춘 밝기 배율")
 				if mi.get_parent() == main.map:
 					var phase: Vector2 = sm.get_shader_parameter("offset")
 					var bounds := mi.global_transform * mi.get_aabb()
@@ -68,6 +70,8 @@ func _run() -> void:
 				var burst: GroundBreak.Burst = GroundBreak.inst.bursts[0]
 				var material := burst.fmat as ShaderMaterial
 				_check(material != null and (material.get_shader_parameter("handpaint") == true) == PAINT.enabled, "바닥 파괴도 선택한 바닥 재질 상속")
+				if material != null and PAINT.enabled:
+					_check(material.get_shader_parameter("paint_tex") == PAINT.texture_for(false) and (material.get_shader_parameter("floor_direct") == true) == PAINT.direct_floor, "파괴 조각도 승인 PNG 직접 투영 상속")
 		main.queue_free()
 		await _frames(5)
 	_check(floor_count > 0 and wall_count > 0, "본편에 실제 방 바닥·블록 검증 대상 존재")

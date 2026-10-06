@@ -1,7 +1,12 @@
+// Preserve the approved four-panel PNG without brush mixing or extra damage.
+uniform bool floor_direct = false;
 float hp_hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
 }
 vec3 hp_floor(vec2 uv, vec3 pos, vec3 normal, vec2 phase) {
+	if (floor_direct) {
+		return textureGrad(paint_tex, uv, dFdx(uv), dFdy(uv)).rgb;
+	}
 	vec3 col = hp_sample(uv);
 	if (abs(normal.y) >= 0.5) {
 		vec2 g = (pos.xz - phase) / 2.0;

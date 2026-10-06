@@ -174,6 +174,8 @@ static func impact_body(pos: Vector3, fwd: Vector3, body_c: Color, k := 1.0) -> 
 func _spray(pos: Vector3, dir: Vector3, count: int, spread: float, speed: float, life: float) -> void:
 	if count <= 0:
 		return
+	if FX.burst_particles(pos, _streak_mesh, _spray_pm(dir, spread, speed), count, life):
+		return
 	var p := GPUParticles3D.new()
 	p.amount = count
 	p.one_shot = true

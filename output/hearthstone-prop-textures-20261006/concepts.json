@@ -1,0 +1,17 @@
+[
+  {
+    "key": "A",
+    "name": "부드러운 도장 금속",
+    "detail": "Concept A — soft enamel-coated industrial metal. Gentle brushed value pooling, soft matte paint with broad hand-painted gradients, rounded painted volume, restrained short bevel accents and tiny sparse pressed corner dents. Very subtle edge wear. Quiet and clean. Most important: stay close to the edit target's mean brightness/saturation."
+  },
+  {
+    "key": "B",
+    "name": "둥근 베벨·두꺼운 도장",
+    "detail": "Concept B — chunky rounded hand-painted metal. Give existing borders thicker-looking rounded paint volume through smooth broad bevel highlight/shadow pairs (without moving geometry or UVs). Soft slightly scalloped brush edges, a few shallow depressed tool marks, sculpted-feeling thick coat. Keep the face centers calm, distribute light/shadow so average brightness stays the same. No new rims or ornaments."
+  },
+  {
+    "key": "C",
+    "name": "선택적 마모·정비 흔적",
+    "detail": "Concept C — maintained industrial paint with selective repairs. Distinct asymmetric small worn corner patches exposing muted blue-gray undercoat, a few shallow short dents/tool grooves and narrow scuffed islands near fasteners, soft directional brush repairs. Each large panel has different sparse wear placement. Absolutely no rust, orange/copper, deep cracks, repetitive fine scratching, all-over damage. Balance tiny light accents with soft dark cavities to keep target brightness."
+  }
+]

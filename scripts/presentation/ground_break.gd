@@ -84,12 +84,14 @@ class Burst:
 	var creases := 6
 	var phase := 0.0
 	var built_final := false
+	var rb_acc := 0.0               ## 마지막으로 다시 만든 뒤 흐른 시간 (찌그러짐을 매 프레임이 아니라 일정 간격으로 다시 만든다)
 	var rings := 14
 	var segs := 40
 	var trail := false
 	var light := Vector3.UP         # 해 쪽 방향 (주름 명암 계산)
 
 
+const REBUILD_MAX := 8
 var bursts: Array[Burst] = []
 var _budget := BUDGET
 var _trail_budget := TRAIL_BUDGET
@@ -741,6 +743,19 @@ static func follow(p: Player, dt: float) -> void:
 	inst._follow(p, dt, src)
 
 
+## 씬 시작 때(FxWarm) 부른다: 노드 · 바닥에서 파생한 조각/찌그러짐/금 재질을 미리 만들어 돌려준다
+## (첫 흔적 · 첫 내려찍기 때 셰이더를 만들고 파싱하느라 18ms 안팎 끊겼다). 돌려준 재질은 FxWarm 이 한 번 그려 데운다
+static func warm(at: Vector3) -> Array:
+	if str(STYLES[style].id) == "off" or not is_instance_valid(Main.inst):
+		return []
+	if not is_instance_valid(inst):
+		inst = GroundBreak.new()
+		inst.name = "GroundBreak"
+		Main.inst.add_child(inst)
+	var fm := inst._floor_mat(at)
+	return [inst._piece_mat(fm), inst._buckle_mat(fm), _decal_material()]
+
+
 func _follow(p: Player, dt: float, src: Dictionary) -> void:
 	for k in _trail_last.keys():
 		if not src.has(k):
@@ -823,9 +838,11 @@ func _process(dt: float) -> void:
 	_budget = minf(BUDGET, _budget + dt * BUDGET)
 	_trail_budget = minf(TRAIL_BUDGET, _trail_budget + dt * TRAIL_BUDGET)
 	var i := 0
+	var rebuilds := 0
 	while i < bursts.size():
 		var b := bursts[i]
 		b.t += dt
+		b.rb_acc += dt
 		if b.t >= b.life:
 			_free_burst(b)
 			bursts.remove_at(i)
@@ -840,10 +857,15 @@ func _process(dt: float) -> void:
 			b.decal.set_instance_shader_parameter("fade", (1.0 - e) * minf(b.t / 0.04, 1.0))
 		if b.im:
 			# 움직이는 동안(물결·굳음·펴짐)만 다시 만든다
+			# 다시 만드는 간격: 큰 찌그러짐 30Hz · 지나간 자리 흔적 20Hz, 한 프레임에 REBUILD_MAX 개까지
+			# (흔적은 수명 내내 '움직이는 중'이라 대시·휠윈드 동안 수십 개를 매 프레임 GDScript 로 다시 짜던 것)
 			var moving := b.t < 0.6 or b.t > b.life - SINK - 0.4
-			if moving or not b.built_final:
+			var gap := 0.05 if b.trail else 0.033
+			if (moving and b.rb_acc >= gap or not moving and not b.built_final) and rebuilds < REBUILD_MAX:
 				_buckle_mesh(b)
 				b.built_final = not moving
+				b.rb_acc = 0.0
+				rebuilds += 1
 		i += 1
 
 

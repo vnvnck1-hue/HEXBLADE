@@ -77,6 +77,13 @@ func _exit_tree() -> void:
 	_set_duck(0.0)
 
 
+## 씬 시작 때 부른다: 보이스 파일과 전용 버스를 미리 준비해 첫 합체 순간에 오디오 서버를 잠그지 않게
+static func warm() -> void:
+	if VOICES.is_empty():
+		return
+	ensure_bus()
+
+
 ## 보이스 전용 버스 (없으면 만든다 · 한 번만)
 static func ensure_bus() -> int:
 	var i := AudioServer.get_bus_index(BUS)
@@ -134,6 +141,7 @@ func _play() -> void:
 	player.volume_db = VOLUME_DB + float(GAIN_DB[i])
 	player.set_meta("gain", float(GAIN_DB[i]))
 	player.play()
+	set_process(true)
 	plays += 1
 	last_name = NAMES[i]
 	print("DOCK_VOICE %s (%d)" % [last_name, plays])
@@ -149,6 +157,8 @@ func _process(dt: float) -> void:
 		duck = maxf(target, duck - rdt / DUCK_RELEASE)
 	_set_duck(duck)
 	if not player.playing:
+		if duck <= 0.0:
+			set_process(false)              # 덕킹까지 끝나면 다음 재생 때까지 쉰다
 		return
 	# 재생 중 M 음소거 → 바로 무음, 풀면 다시 들림
 	var muted := Sfx.inst != null and Sfx.inst.muted

@@ -1,0 +1,46 @@
+model: lancaster
+size (m)  x 4.566  y(fwd) 3.473  z(up) 3.598
+bounds    min (-2.283, -1.737, 0.000)  max (2.283, 1.737, 3.598)
+triangles 9122
+parts:
+  lights                        9 tris  parent=torso  origin=(0.00, -0.45, 1.81)
+  torso                      1883 tris  parent=pelvis  origin=(0.00, -0.45, 1.81)
+  thigh_l                     236 tris  parent=pelvis  origin=(-0.60, -0.47, 1.42)
+  shoulder_l                  646 tris  parent=torso  origin=(-0.99, -0.71, 2.47)
+  shoulder_r                  650 tris  parent=torso  origin=(1.16, -0.72, 2.47)
+  claw_a                      136 tris  parent=hand_r  origin=(1.87, -0.58, 1.08)
+  hand_r                      470 tris  parent=forearm_r  origin=(1.89, -0.41, 1.26)
+  pelvis                      442 tris  parent=-  origin=(0.00, -0.48, 1.42)
+  shin_r                      360 tris  parent=thigh_r  origin=(0.81, -0.47, 0.94)
+  shin_l                      364 tris  parent=thigh_l  origin=(-0.63, -0.46, 0.91)
+  upperarm_r                   84 tris  parent=shoulder_r  origin=(1.16, -0.72, 2.47)
+  vent_r                      188 tris  parent=torso  origin=(0.76, -0.57, 2.23)
+  vent_l                      190 tris  parent=torso  origin=(-0.59, -0.57, 2.23)
+  pod_l                       236 tris  parent=torso  origin=(-0.87, -0.42, 2.74)
+  foot_l                      580 tris  parent=shin_l  origin=(-0.78, -0.73, 0.33)
+  upperarm_l                  218 tris  parent=shoulder_l  origin=(-0.99, -0.71, 2.47)
+  foot_r                      562 tris  parent=shin_r  origin=(1.02, -0.73, 0.34)
+  barrel_l                    250 tris  parent=forearm_l  origin=(-1.94, 0.63, 1.20)
+  pod_r                       232 tris  parent=torso  origin=(1.21, -0.40, 2.69)
+  claw_b                       70 tris  parent=hand_r  origin=(2.08, -0.19, 1.21)
+  thigh_r                     234 tris  parent=pelvis  origin=(0.77, -0.48, 1.42)
+  forearm_l                   752 tris  parent=upperarm_l  origin=(-1.67, -0.54, 1.90)
+  forearm_r                   330 tris  parent=upperarm_r  origin=(1.82, -0.73, 1.86)
+attachment points:
+  pt_muzzle                (-2.12, 1.70, 0.79)  parent=barrel_l
+  pt_eject                 (-2.30, 0.03, 1.50)  parent=forearm_l
+  pt_claw                  (2.12, -0.26, 0.78)  parent=hand_r
+  pt_spike                 (1.63, -0.05, 0.80)  parent=hand_r
+  pt_jet_l                 (-0.56, -1.74, 2.33)  parent=torso
+  pt_vent_l                (-0.45, -0.75, 3.60)  parent=torso
+  pt_lens_l                (-0.87, 0.09, 3.00)  parent=pod_l
+  pt_foot_l                (-0.78, -0.61, 0.00)  parent=foot_l
+  pt_jet_r                 (0.73, -1.74, 2.38)  parent=torso
+  pt_vent_r                (0.64, -0.75, 3.60)  parent=torso
+  pt_lens_r                (1.21, 0.00, 2.94)  parent=pod_r
+  pt_foot_r                (1.02, -0.61, 0.00)  parent=foot_r
+  pt_eye_1                 (-0.01, 0.16, 2.17)  parent=torso
+  pt_eye_2                 (0.08, 0.13, 2.31)  parent=torso
+  pt_eye_3                 (0.18, 0.16, 2.17)  parent=torso
+  pt_chest                 (0.00, 0.20, 2.20)  parent=torso
+glb: assets\models\lancaster.glb

@@ -1,0 +1,41 @@
+{
+  "generator": "built-in imagegen",
+  "file": "floor_4m_chunky.png",
+  "unchanged_original": true,
+  "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-90a14cb8-b941-4c3c-b8f2-bb4ea4870009.png",
+  "generated": {
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "sha256": "312336e151ca39b867f24c215952df2baccd6a32caf3179d6795a8025a2637ba",
+    "mean_hsv_value": 0.4828951321122504,
+    "mean_hsv_saturation": 0.44877444294658736,
+    "alpha_extrema": null
+  },
+  "reference": {
+    "size": [
+      2048,
+      2048
+    ],
+    "mode": "RGBA",
+    "sha256": "23c9b437bc63d04b740374d4ab0fcabca3fc8ad03fd469ff86fd4c3617b7c317",
+    "mean_hsv_value": 0.49245207262974156,
+    "mean_hsv_saturation": 0.4040374715749651,
+    "alpha_extrema": [
+      255,
+      255
+    ]
+  },
+  "delta_v": -0.009556940517491175,
+  "delta_s": 0.04473697137162225,
+  "research_images_decoded_and_hash_verified": 4,
+  "research_before_generation": true,
+  "visual_review": "2x2 indigo steel plates with visibly wider blunt brush swaths, blocky shaded fasteners and interrupted rough bevel planes; no words/margins. Fine bristle lines remain within some broad strokes.",
+  "actual_painter_project": false,
+  "pbr_channel_set": false,
+  "game_applied": false,
+  "model_render_verified": false,
+  "pixel_seam_verified": false
+}

@@ -1,0 +1,95 @@
+{
+  "flat_albedo": {
+    "before": {
+      "pixels": 4194304,
+      "mean_rgb": [
+        74.8666968362579,
+        81.76559543531295,
+        125.57527851428901
+      ],
+      "hue_of_mean_rgb_degrees": 231.8370046598516,
+      "mean_hsv_v": 0.49245207262974156,
+      "mean_hsv_s": 0.4040374715749651,
+      "mean_srgb_luma": 0.32730175965533537
+    },
+    "after": {
+      "pixels": 4194304,
+      "mean_rgb": [
+        75.04199075758483,
+        84.38097810476455,
+        128.22511172855937
+      ],
+      "hue_of_mean_rgb_degrees": 229.46396468276848,
+      "mean_hsv_v": 0.5028435753841026,
+      "mean_hsv_s": 0.41505523935337635,
+      "mean_srgb_luma": 0.3355335523285585
+    },
+    "hue_of_mean_rgb_delta_degrees": -2.373039977083124,
+    "v_delta_percentage_points": 1.039150275436107,
+    "s_delta_percentage_points": 1.1017767778411236,
+    "luma_delta_percent": 2.5150468735309017
+  },
+  "game_0120": {
+    "before": {
+      "pixels": 1326938,
+      "mean_rgb": [
+        66.7253880742086,
+        70.57973921926275,
+        110.92616007691618
+      ],
+      "hue_of_mean_rgb_degrees": 234.76794050816392,
+      "mean_hsv_v": 0.4350045493208173,
+      "mean_hsv_s": 0.4049589980987438,
+      "mean_srgb_luma": 0.28499339510432375
+    },
+    "after": {
+      "pixels": 1326938,
+      "mean_rgb": [
+        65.26842625673552,
+        71.3842704031699,
+        111.43444305653799
+      ],
+      "hue_of_mean_rgb_degrees": 232.0514986082223,
+      "mean_hsv_v": 0.43699781590634773,
+      "mean_hsv_s": 0.42167304715674037,
+      "mean_srgb_luma": 0.2861790760902315
+    },
+    "hue_of_mean_rgb_delta_degrees": -2.7164418999416284,
+    "v_delta_percentage_points": 0.1993266585530451,
+    "s_delta_percentage_points": 1.671404905799656,
+    "luma_delta_percent": 0.4160380578201561
+  },
+  "game_0480": {
+    "before": {
+      "pixels": 1353251,
+      "mean_rgb": [
+        66.99426270544441,
+        70.89042683149975,
+        111.31491275473233
+      ],
+      "hue_of_mean_rgb_degrees": 234.72548693885693,
+      "mean_hsv_v": 0.43652906962566435,
+      "mean_hsv_s": 0.4046280486191159,
+      "mean_srgb_luma": 0.28619902047764395
+    },
+    "after": {
+      "pixels": 1353251,
+      "mean_rgb": [
+        65.49227674707598,
+        71.62787391275327,
+        111.78773487004656
+      ],
+      "hue_of_mean_rgb_degrees": 232.04812210816036,
+      "mean_hsv_v": 0.4383832739983703,
+      "mean_hsv_s": 0.42150404119676355,
+      "mean_srgb_luma": 0.287148972220434
+    },
+    "hue_of_mean_rgb_delta_degrees": -2.6773648306965754,
+    "v_delta_percentage_points": 0.18542043727059476,
+    "s_delta_percentage_points": 1.6875992577647658,
+    "luma_delta_percent": 0.3319199839344922
+  },
+  "asset_sha256": "0b6b19b45baf60fe57cf732d6b5126dca3bb793abfb2f5e10ac71363e88ac0ea",
+  "asset_byte_identical_to_approved_png": true,
+  "method": "Same paused main.tscn snapshots: only floor texture, direct sampling flag, old paint_mean and lift switched. Visible floor selected with magenta shader mask, eroded 2px. Fluid off only for reproducible comparison."
+}

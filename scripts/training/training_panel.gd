@@ -62,7 +62,10 @@ func section(text: String) -> void:
 func row(key: String, label: String, value := Callable()) -> void:
 	if _grid == null:
 		section("")
-	_grid.add_child(_key_chip(key))
+	if key == "":
+		_grid.add_child(Control.new())
+	else:
+		_grid.add_child(_key_chip(key))
 	var n := _label(label, 13, NAME)
 	n.custom_minimum_size = Vector2(NAME_W, 0)
 	_grid.add_child(n)
@@ -71,6 +74,16 @@ func row(key: String, label: String, value := Callable()) -> void:
 	_grid.add_child(v)
 	if value.is_valid():
 		_rows.append([v, value])
+
+
+## 내용을 모두 지운다 (보스방 출입 때 다른 설정으로 다시 채운다)
+func clear() -> void:
+	for c in _box.get_children():
+		_box.remove_child(c)
+		c.queue_free()
+	_grid = null
+	_rows.clear()
+	extra = null
 
 
 func footer(text: String) -> void:

@@ -432,8 +432,10 @@ func draw_map(canvas: Control, area: Rect2) -> void:
 	var to_map := func(p: Vector3) -> Vector2:
 		var c := Vector2(p.x / ArenaMap.CELL + ArenaMap.W * 0.5, p.z / ArenaMap.CELL + ArenaMap.H * 0.5)
 		return area.position + c * k
-	for e in get_tree().get_nodes_in_group("enemies"):
-		if e.get("prop"):
+	for e in Enemy.live(get_tree()):
+		if not is_instance_valid(e):
+			continue
+		if e is Enemy and (e as Enemy).prop:
 			canvas.draw_circle(to_map.call((e as Node3D).global_position), 1.6, Color(1, 0.65, 0.2))
 		else:
 			canvas.draw_circle(to_map.call((e as Node3D).global_position), 2.2, Color(1, 0.35, 0.45))

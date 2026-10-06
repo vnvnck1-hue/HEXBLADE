@@ -148,8 +148,14 @@ class Suction extends Node3D:
 		if not is_instance_valid(nozzle):
 			visible = false
 			return
+		# 꺼져 있고 날아가는 알갱이도 없으면 할 일이 없다 (드론에 흡입 줄기가 10개 붙어 있어 쉬는 동안의 비용을 없앤다)
+		if on <= 0.01 and not _bits_live:
+			if visible:
+				visible = false
+			return
 		var to := nozzle.global_position
 		visible = on > 0.01 or _any_bits()
+		_bits_live = visible
 		cone.visible = on > 0.01
 		if cone.visible:
 			var d := to - from
@@ -195,6 +201,8 @@ class Suction extends Node3D:
 			mi.scale = Vector3.ONE * lerpf(0.16, 0.05, e)
 			if k >= 1.0:
 				mi.visible = false
+
+	var _bits_live := true
 
 	func _any_bits() -> bool:
 		for b: Array in bits:

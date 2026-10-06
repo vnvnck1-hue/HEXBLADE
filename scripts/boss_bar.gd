@@ -144,5 +144,5 @@ func _draw_bar() -> void:
 	# 페이즈 경계 (40%)
 	var px := W * threshold
 	frame.draw_line(Vector2(px, -8), Vector2(px, H + 8), Color(1, 0.95, 0.6) if phase == 1 else Color(1, 1, 1, 0.3), 3.0)
-	frame.draw_string(font, Vector2(px - 14, H + 22), "40%", HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.95, 0.7, 0.9 if phase == 1 else 0.3))
+	frame.draw_string(font, Vector2(px - 14, H + 22), "%d%%" % roundi(threshold * 100.0), HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(1, 0.95, 0.7, 0.9 if phase == 1 else 0.3))
 	frame.draw_string(font, Vector2(W - 64, H + 22), "%d%%" % int(ceil(hp * 100.0)), HORIZONTAL_ALIGNMENT_RIGHT, 64, 15, Color(1, 1, 1, 0.95))

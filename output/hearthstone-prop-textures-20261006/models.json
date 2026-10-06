@@ -1,0 +1,156 @@
+[
+	{
+		"glb": "assets/models/bg_claude_f01.glb",
+		"mapping": "world_xz_4m",
+		"model": "bg_claude_f01",
+		"reference": "references/bg_claude_f01_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_f01_floor_4m_v3.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_w01.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_w01",
+		"reference": "references/bg_claude_w01_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_w01_bg_claude_w01_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_w01_half.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_w01_half",
+		"reference": "references/bg_claude_w01_half_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_w01_half_bg_claude_w01_half_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_block_wall.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_block_wall",
+		"reference": "references/bg_claude_block_wall_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_block_wall_bg_claude_block_wall_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_block_cover.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_block_cover",
+		"reference": "references/bg_claude_block_cover_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_block_cover_bg_claude_block_cover_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_block_pillar.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_block_pillar",
+		"reference": "references/bg_claude_block_pillar_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_block_pillar_bg_claude_block_pillar_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_jamb.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_jamb",
+		"reference": "references/bg_claude_jamb_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_jamb_bg_claude_jamb_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_a01.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_a01",
+		"reference": "references/bg_claude_a01_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_a01_bg_claude_a01_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_a02.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_a02",
+		"reference": "references/bg_claude_a02_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_a02_bg_claude_a02_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_service_s01_vent.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_service_s01_vent",
+		"reference": "references/bg_claude_service_s01_vent_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_service_s01_vent_bg_claude_service_s01_vent_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_service_s02_tank.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_service_s02_tank",
+		"reference": "references/bg_claude_service_s02_tank_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_service_s02_tank_bg_claude_service_s02_tank_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_service_s03_pipe.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_service_s03_pipe",
+		"reference": "references/bg_claude_service_s03_pipe_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_service_s03_pipe_bg_claude_service_s03_pipe_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_service_s04_elbow.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_service_s04_elbow",
+		"reference": "references/bg_claude_service_s04_elbow_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_service_s04_elbow_bg_claude_service_s04_elbow_albedo.png"
+	},
+	{
+		"glb": "assets/models/bg_claude_service_s05_column.glb",
+		"mapping": "original_uv",
+		"model": "bg_claude_service_s05_column",
+		"reference": "references/bg_claude_service_s05_column_current.png",
+		"size": [
+			2048,
+			2048
+		],
+		"source_texture": "res://assets/models/bg_claude_service_s05_column_bg_claude_service_s05_column_albedo.png"
+	}
+]

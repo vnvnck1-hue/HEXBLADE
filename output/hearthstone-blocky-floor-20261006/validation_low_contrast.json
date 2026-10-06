@@ -1,0 +1,39 @@
+{
+  "before": {
+    "path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\hearthstone-blocky-floor-20261006\\floor_4m_final.png",
+    "sha256": "6ed0e8862196a48810d3b033fa435dfd7799f5b1a371de066caf1d3c84e8707d",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "mean_hsv_v": 0.4748474918101772,
+    "mean_hsv_s": 0.4191905748848855,
+    "global_luma_std": 0.051937850150439724,
+    "panel_interior_luma_std": 0.022024260953190208,
+    "panel_interior_p95_p05": 0.06165960784313723
+  },
+  "after": {
+    "path": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\hearthstone-blocky-floor-20261006\\floor_4m_low_contrast.png",
+    "sha256": "d9de5e1234178566034875abcfa2eb5120ac5d445b136895563fa183f67f1fec",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "mean_hsv_v": 0.48389789381612447,
+    "mean_hsv_s": 0.39136849046955535,
+    "global_luma_std": 0.05200253116322399,
+    "panel_interior_luma_std": 0.02060872137463812,
+    "panel_interior_p95_p05": 0.05465019607843136
+  },
+  "generated_source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-9314d54d-c5be-4844-a259-4bf5dcf1213b.png",
+  "generated_copy_sha_equal": true,
+  "interior_contrast_reduction_percent": 11.367914928258871,
+  "metric_note": "sRGB weighted luma, four 480-square plate interior regions; read-only pixel analysis",
+  "game_applied": false,
+  "model_uv_verified": false,
+  "seamless_repeat_verified": false
+}

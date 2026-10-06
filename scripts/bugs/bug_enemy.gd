@@ -34,6 +34,44 @@ var aggro := 1.0
 static var _splat_mesh: CylinderMesh
 static var _splat_mats: Array[StandardMaterial3D] = []
 static var _eye_mesh: SphereMesh
+## 모델 PackedScene 캐시. 마지막 개체가 사라지면 리소스가 풀려 다음 등장 때 디스크에서 다시 읽는다
+## (촘퍼 = 2048 텍스처 포함 약 75ms 끊김) — 정적으로 붙잡아 두고, 벌레 아레나는 씬을 불러올 때 미리 읽는다.
+static var _scenes := {}
+const MODELS: Array[String] = ["res://assets/models/bug_grub.glb", "res://assets/models/bug_chomper.glb",
+	"res://assets/models/bug_ant.glb", "res://assets/models/bug_pillbug.glb"]
+
+
+## 벌레 모델을 미리 읽어 붙잡아 둔다 (전투 중 첫 등장 끊김 방지). 씬을 불러오는 중에 부른다 — 4종 합쳐 약 90ms
+static func warm() -> void:
+	for p in MODELS:
+		model_scene(p)
+
+
+## 첫 등장 때 한 번 계산하는 리그 캐시(애벌레 스키닝 약 38ms · 공벌레 말림 높이표 약 12ms)를 미리 만든다.
+## 씬을 불러오는 첫 프레임에 부른다 (보이지 않는 곳에서 끊김을 치른다)
+static func warm_rigs() -> void:
+	BugSound.ensure()        # 벌레 효과음 합성 (첫 벌레 등장 때 수십 ms)
+	SlimeTrail._material()
+	if GrubRig._skin_mesh == null:
+		var gm := model_scene(BugGrub.MODEL).instantiate() as Node3D
+		var body := gm.find_child("body", true, false) as MeshInstance3D
+		if body and body.mesh is ArrayMesh:
+			GrubRig._build_skin(body.mesh as ArrayMesh)
+		gm.free()
+	if PillRig._LIFT.is_empty():
+		var roller := Node3D.new()
+		var pm := model_scene(BugPill.MODEL).instantiate() as Node3D
+		roller.add_child(pm)
+		PillRig.new().setup(pm, roller)
+		roller.free()
+
+
+static func model_scene(path: String) -> PackedScene:
+	var ps: PackedScene = _scenes.get(path)
+	if ps == null:
+		ps = load(path) as PackedScene
+		_scenes[path] = ps
+	return ps
 
 
 ## 하위 클래스가 덮어쓴다
@@ -68,7 +106,7 @@ func _build(v: Node3D) -> Dictionary:
 	pose = Node3D.new()
 	pose.name = "pose"
 	body.add_child(pose)
-	model = (load(_model_path()) as PackedScene).instantiate() as Node3D
+	model = model_scene(_model_path()).instantiate() as Node3D
 	_attach_model(pose, model)
 	for mi: MeshInstance3D in model.find_children("*", "MeshInstance3D", true, false):
 		mi.set_meta("keep_mat", true)      # 파편(Debris)이 원래 색을 쓰게

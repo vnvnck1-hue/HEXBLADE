@@ -305,12 +305,20 @@ func _ready() -> void:
 
 ## 모양 하나를 띄운다. axis: 축 정렬 모양의 길이 방향. o: vel, drag, grav, grow, delay, anchor, spin, seed, tint2, manual
 func spawn(shape: int, pos: Vector3, dur: float, frames: float, size: Vector2, tint: Color, energy: float, axis := Vector3.ZERO, o := {}) -> MeshInstance3D:
-	var mi := MeshInstance3D.new()
-	mi.mesh = _quad
+	# 다 쓴 모양은 지우지 않고 _free 에 모아 다시 쓴다 (총알 한 발마다 15~25 개씩 만들고 지우던 것).
+	# 셰이더 값은 아래에서 전부 다시 넣으므로 이전 모양의 값이 남지 않는다
+	var mi: MeshInstance3D = null
+	while not _free.is_empty() and mi == null:
+		mi = _free.pop_back()
+		if not is_instance_valid(mi):
+			mi = null
+	if mi == null:
+		mi = MeshInstance3D.new()
+		mi.mesh = _quad
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mi.custom_aabb = AABB(Vector3(-8, -8, -8), Vector3(16, 16, 16))
+		add_child(mi)
 	mi.material_override = _mats[shape]
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mi.custom_aabb = AABB(Vector3(-8, -8, -8), Vector3(16, 16, 16))
-	add_child(mi)
 	mi.global_transform = Transform3D(axis_basis(axis) if axis != Vector3.ZERO else Basis.IDENTITY, pos)
 	mi.set_instance_shader_parameter("seed", o.get("seed", randf() * 100.0))
 	mi.set_instance_shader_parameter("frames", frames)
@@ -338,6 +346,19 @@ func fade_out(mi: MeshInstance3D, dur: float) -> void:
 	_live.append({"mi": mi, "t": 0.0, "dur": dur, "vel": Vector3.ZERO, "drag": 0.0, "grav": 0.0, "size": Vector2.ZERO, "grow": 0.0})
 
 
+const FREE_MAX := 600
+var _free: Array[MeshInstance3D] = []
+
+
+func _recycle(mi: MeshInstance3D) -> void:
+	# 다른 노드로 옮겨 간 것(예광 머리는 탄에 붙는다)이나 너무 많이 모인 것은 그냥 지운다
+	if mi.get_parent() != self or _free.size() >= FREE_MAX:
+		mi.queue_free()
+		return
+	mi.visible = false
+	_free.append(mi)
+
+
 static func axis_basis(axis: Vector3) -> Basis:
 	var y := axis.normalized()
 	var ref := Vector3.UP if absf(y.dot(Vector3.UP)) < 0.98 else Vector3.RIGHT
@@ -356,7 +377,7 @@ func _process(dt: float) -> void:
 			continue
 		s.t += dt / float(s.dur)
 		if s.t >= 1.0:
-			mi.queue_free()
+			_recycle(mi)
 			_live.remove_at(i)
 			i -= 1
 			continue

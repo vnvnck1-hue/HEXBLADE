@@ -1,0 +1,212 @@
+[
+  {
+    "variant": "A",
+    "model": "bg_claude_f01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-3be99d59-43a0-41d0-813b-9e7039f57d34.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_w01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-f3061d22-af69-4007-a795-c43eec7dc252.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_w01_half",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-1d1f735d-76a1-4deb-80e3-fad33808f318.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_block_wall",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-2442a1bc-46a2-4b80-ac51-2f8f0e3a69eb.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_block_cover",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-7137df9b-7099-47fd-b126-c6c3fb22230d.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_block_pillar",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-9ee0a70d-ca58-4e41-a71b-fbdbf9e080b8.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_jamb",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-0a4027c2-bc34-4ae2-b534-3de745281231.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_a01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-8da89f6d-5803-4b9a-94eb-a6316c5dbbc3.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_a02",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-117f0e24-0311-430a-aff9-aeee3c791ef0.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_service_s01_vent",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-68d8aa83-4f8e-4d71-ab5f-603b7082a4b4.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_service_s02_tank",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-adb89785-499a-4173-b24b-1b223c42a863.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_service_s03_pipe",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-5c981843-6540-478c-8c7b-556c6cf07649.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_service_s04_elbow",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-5d10ab3d-04ca-4b7c-9c0e-da6511267bfb.png"
+  },
+  {
+    "variant": "A",
+    "model": "bg_claude_service_s05_column",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-cfdb6f79-9ae6-4288-aed8-9b77e1bb1f90.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_f01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-e2b17c41-d7c3-42d0-9721-65bb9329ac10.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_w01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-76f81f0f-f379-416a-b280-139f73f8e0b1.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_w01_half",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-a49dbcab-7dea-4cb4-b765-67c15bf526d7.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_block_wall",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-4de760b0-15ba-4d02-b6e7-021074821f06.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_block_cover",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-c195b4c1-f4cc-49dd-8ffc-933eb086c3ab.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_block_pillar",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-fae09549-a519-44a0-8795-d5d11148f463.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_jamb",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-61d5b2e9-d55f-4621-bffc-34077b711927.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_a01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-e5548352-f227-466f-8a6f-286510d8aa19.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_a02",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-02ab7a14-da09-4826-af79-4553d8c03004.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_service_s01_vent",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-6dd36fd3-5ca0-48b1-b40c-d7c54646a125.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_service_s02_tank",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-8a5d3ca7-000a-444d-a7e6-696c0d844eb0.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_service_s03_pipe",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-2933d472-e2c7-4c67-b357-f843bce33235.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_service_s04_elbow",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-c03e34d4-98fd-4a66-a02d-07701e7f6855.png"
+  },
+  {
+    "variant": "B",
+    "model": "bg_claude_service_s05_column",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-eb4fcbef-b51f-4113-8069-529ca253917e.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_f01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-3dfc9ada-d4bd-4a30-b96f-fbe61c75d585.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_w01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-5c7cf447-b1cc-438b-92ad-5803fd67b0be.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_w01_half",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-24044dd9-878b-41f0-b65a-a6a76eb8c8e8.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_block_wall",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-4599d409-4901-4055-8800-da4fc384b7f1.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_block_cover",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-eeeeff63-30cf-4088-9813-03d910278cdb.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_block_pillar",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-85f7a25f-e54d-47c5-89e8-fef7d4e1520b.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_jamb",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-1492cc00-8d48-47d3-9cd9-eb44b49ad4d7.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_a01",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-0e34fd35-ac9a-469a-ab51-f53458bc06a5.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_a02",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-33981591-a9d9-4d59-b3b9-fd7c91e1dae7.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_service_s01_vent",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-b2d7302a-8792-465c-81eb-18dcc41aa113.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_service_s02_tank",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-3fa900ba-9ede-4aa5-9e9f-78c8ca3fe00f.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_service_s03_pipe",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-ea2d522d-24f0-45a7-be3e-6615aa6c83db.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_service_s04_elbow",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-cc0ebe6f-5f8f-4c66-8ccd-c15c46bc2657.png"
+  },
+  {
+    "variant": "C",
+    "model": "bg_claude_service_s05_column",
+    "generated": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a10f3b-ca50-7d30-a074-786eade5dbac\\exec-d4b4491f-72f6-4368-8d85-72902e522cba.png"
+  }
+]

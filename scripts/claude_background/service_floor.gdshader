@@ -14,9 +14,11 @@ uniform float detail_strength = 0.10;
 uniform float detail_mean = 0.06699;
 uniform vec3 cool = vec3(0.92, 1.0, 1.3);   // 화면에서 시안의 푸른 남색이 나오게 (해가 따뜻해 회색으로 기움)
 uniform bool old_tone = false;
-// 플레이어 조명 풀 (BrawlLook.track_pool 이 매 프레임 위치를 넣는다)
-uniform float pool_on = 0.0;
-uniform vec3 pool_pos = vec3(0.0);
+// 플레이어 조명 풀 (BrawlLook.track_pool 이 pool_use = 1, 위치는 전역 값 bl_pool)
+global uniform vec4 bl_pool;      // BrawlLook.update_pool: xyz 플레이어 위치, w 켜짐
+uniform float pool_use = 0.0;
+#define pool_on (pool_use * bl_pool.w)
+#define pool_pos (bl_pool.xyz)
 uniform float pool_r0 = 6.5;
 uniform float pool_r1 = 14.0;
 uniform float pool_dark = 0.28;               // 예전 톤 비교용 (--bgtone=old → ClaudeServiceDress.floor_material)

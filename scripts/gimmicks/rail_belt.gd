@@ -99,6 +99,8 @@ func _ready() -> void:
 
 
 func _process(dt: float) -> void:
+	if Cull.far(global_position, length * 0.5):
+		return
 	# 롤러는 띠 속도에 맞춰 돈다
 	for r in _rollers:
 		r.rotate_object_local(Vector3.UP, speed / 0.16 * dt)

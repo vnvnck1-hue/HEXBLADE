@@ -1,0 +1,6 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.329 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070
+
+BIG_ROOM id=3 shape=3 scale=2.0 r=21.5 cells=1105
+BIG_ROOM id=6 shape=4 scale=2.5 r=29.2 cells=1425
+BIG_ROOM id=9 shape=6 scale=3.0 r=26.9 cells=2061

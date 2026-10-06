@@ -220,8 +220,85 @@ func _run() -> void:
 		x.queue_free()
 	await process_frame
 
-	# 3d. 캐릭터: 합체마다 번갈아 · 캐릭터마다 테마 색 · 머리카락이 흔들림 · [ 키로 고정
-	_check(DiagonalDockingCutin.char_mode == "alt", "기본은 캐릭터 번갈아")
+	# 3e. 민트 메이드 (기본): 보라 · 초록은 숨김이라 번갈아도 민트만 · 전용 테마 · 가슴 모핑 없음 · 치마/리본 흔들림 · 오른쪽 그림자 ·
+	#     소품이 띠 안을 왼쪽 → 오른쪽으로 튀며 날아감 · 금빛 반짝이는 띠 안에서만 오른쪽으로 · 소품은 캐릭터 뒤 층
+	_check(DiagonalDockingCutin.char_mode == "alt" and DiagonalDockingCutin.hidden_chars == ["purple", "green"], "기본: 번갈아 · 보라/초록 숨김")
+	var m1 := DiagonalDockingCutin.begin(lab, null, true)
+	var m2 := DiagonalDockingCutin.begin(lab, null, true)
+	await process_frame
+	_check(m1.cfg.id == "mint" and m2.cfg.id == "mint" and m1.anchor.visible, "숨긴 캐릭터는 건너뛰어 민트 메이드만 (%s, %s)" % [m1.cfg.id, m2.cfg.id])
+	m2.queue_free()
+	var hair := Color8(182, 213, 191)
+	_check(m1.text_col.g > m1.text_col.r and m1.text_col.g > m1.text_col.b and absf(m1.band_top_edge.h - hair.h) < 0.03
+		and m1.band_fill.g > m1.band_fill.r and absf(m1.band_fill.h - hair.h) < 0.06 and m1.band_fill.v < 0.35,
+		"민트 전용 테마 = 머리색 기준 (민트 글자 · 머리색 위 테두리 · 짙은 청록 띠)")
+	_check(float(m1.mat.get_shader_parameter("bust")) == 0.0 and float(m1.mat.get_shader_parameter("motion")) == 1.0, "가슴 모핑 끔 · 치마/옷 움직임 켬")
+	var ri_back := m1.root.get_children().find(m1.scatter.back)
+	var ri_anchor := m1.root.get_children().find(m1.anchor)
+	_check(m1.scatter != null and ri_back >= 0 and ri_back < ri_anchor and m1.shadow.get_index() < m1.portrait.get_index(), "소품 · 그림자는 캐릭터 뒤 층")
+	var sh_right := 0.0
+	var sh_a := 0.0
+	var flutter_max := 0.0
+	var sp_vx := 0.0
+	var sp_n := 0
+	var live_props := 0
+	var sp_outside := 0
+	var near_min := 1.0
+	var near_far := 0.0
+	while is_instance_valid(m1) and m1.t < 0.85:
+		for q: Dictionary in m1.scatter.props:
+			if q.alive and q.near:
+				var qp: Vector2 = q.pos
+				if qp.x > 0.0 and qp.x < m1.vs.x:
+					var top := m1.scatter.band_top(qp.x)
+					near_min = minf(near_min, (qp.y - top) / (m1.scatter.band_bottom(qp.x) - top))
+				near_far = maxf(near_far, qp.x / m1.vs.x)
+		for sp: Dictionary in m1.scatter.sparks:
+			if not m1.scatter.in_band(sp.pos, 1.0):
+				sp_outside += 1
+		if m1.shadow_k >= 1.0:
+			sh_right = maxf(sh_right, (m1.shadow.position.x - m1.portrait.position.x) / m1.side)
+			sh_a = maxf(sh_a, m1.shadow.modulate.a)
+		flutter_max = maxf(flutter_max, float(m1.mat.get_shader_parameter("flutter")))
+		for sp: Dictionary in m1.scatter.sparks:
+			sp_vx += (sp.vel as Vector2).x
+			sp_n += 1
+		live_props = m1.scatter.props.filter(func(q): return q.alive).size()
+		await process_frame
+	var left_start := m1.scatter.min_x.all(func(x): return float(x) < 0.0)
+	var far := 0.0
+	for x in m1.scatter.max_x:
+		far += float(x) / m1.vs.x / m1.scatter.max_x.size()
+	print("  mint skirt %.1f · cloth %.1f px · shadow +%.3f side a %.2f · props %d far %.2fW bounces %d · sparks %d (vx %.0f, out %d/%d)" % [m1.skirt_peak, m1.cloth_peak, sh_right, sh_a, live_props, far, m1.scatter.bounces, m1.scatter.spark_total, sp_vx / maxf(sp_n, 1), sp_outside, m1.scatter.spark_out])
+	_check(m1.skirt_peak > 6.0 and m1.cloth_peak > 8.0 and flutter_max > DiagonalDockingCutin.FLUTTER.x, "치마 · 리본 꼬리가 관성으로 흔들림 (%.0f / %.0f px)" % [m1.skirt_peak, m1.cloth_peak])
+	_check(sh_right > 0.01 and sh_right < 0.045 and sh_a > 0.4, "그림자가 캐릭터 바로 오른쪽에 자라남 (+%.3f side)" % sh_right)
+	_check(live_props == 10 and left_start and far > 0.5 and m1.scatter.bounces >= 10,
+		"소품 10개가 왼쪽 밖에서 오른쪽으로 튀며 날아감 (평균 %.2f W까지 · 튐 %d)" % [far, m1.scatter.bounces])
+	var near_n := m1.scatter.props.filter(func(q): return q.near).size()
+	var ri_front := m1.root.get_children().find(m1.scatter.front)
+	print("  near props %d · lowest band pos %.2f · far %.2fW" % [near_n, near_min, near_far])
+	_check(near_n == 3 and ri_front > ri_anchor and near_min >= CutinScatter.NEAR_TOP - 0.01 and near_far > 0.5,
+		"소품 셋은 캐릭터 앞을 지나감 (앞 층 · 띠 아래쪽 절반에서만 · 오른쪽까지)")
+	_check(m1.scatter.spark_total > 15 and sp_vx / maxf(sp_n, 1) > 0.0 and sp_outside == 0 and m1.scatter.spark_out == 0,
+		"금빛 반짝이는 띠 안에서만 오른쪽으로 (%d개)" % m1.scatter.spark_total)
+	for x in _of(DiagonalDockingCutin):
+		x.queue_free()
+	await process_frame
+	var mh := DiagonalDockingCutin.hidden_chars
+	DiagonalDockingCutin.hidden_chars = ["purple"]
+	var hp := DiagonalDockingCutin.begin(lab, null, true)
+	DiagonalDockingCutin.char_mode = "purple"
+	var hq := DiagonalDockingCutin.begin(lab, null, true)
+	DiagonalDockingCutin.char_mode = "alt"
+	await process_frame
+	_check(hq.cfg.id == "purple" and not hq.anchor.visible and not hq.paper_front.visible and hq.front.visible, "숨긴 캐릭터를 고정하면 원화 · 종이 안 그림 (집중선은 그림)")
+	hp.queue_free()
+	hq.queue_free()
+	await process_frame
+
+	# 3d. 캐릭터: 합체마다 번갈아 · 캐릭터마다 테마 색 · 머리카락이 흔들림 · [ 키로 고정 (예전 두 캐릭터 — 숨김을 풀고 검사)
+	DiagonalDockingCutin.hidden_chars = ["mint"]
+	DiagonalDockingCutin._next_char = 0
 	var ca := DiagonalDockingCutin.begin(lab, null, true)
 	var cb := DiagonalDockingCutin.begin(lab, null, true)
 	await process_frame
@@ -276,6 +353,7 @@ func _run() -> void:
 	await process_frame
 	_check(fixed_id != "alt" and f1.cfg.id == fixed_id and f2.cfg.id == fixed_id, "[ 키로 캐릭터 고정 (%s)" % fixed_id)
 	DiagonalDockingCutin.char_mode = "alt"
+	DiagonalDockingCutin.hidden_chars = mh
 	for x in _of(DiagonalDockingCutin):
 		x.queue_free()
 	await process_frame

@@ -249,6 +249,9 @@ func _process(dt: float) -> void:
 		return
 	var p := 1.0 - work / work_max
 	sucking = move_toward(sucking, 0.0, dt * 4.0)
+	# 화면 밖 먼 오염은 꿀렁임·연기·거품을 쉰다 (빨아들이는 중이면 계속). 최대 40개가 매 프레임 돌던 것
+	if sucking <= 0.0 and Cull.far(global_position):
+		return
 	if stain:
 		stain.transparency = p * 0.8
 	for b: Array in blobs:

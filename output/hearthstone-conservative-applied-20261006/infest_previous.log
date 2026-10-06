@@ -1,0 +1,24 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+BIG_ROOM id=3 shape=4 scale=2.0 r=22.8 cells=857
+BIG_ROOM id=6 shape=7 scale=2.5 r=26.4 cells=1010
+BIG_ROOM id=9 shape=6 scale=3.0 r=26.9 cells=2061
+PASS  본편: 방마다 무더기 배치 (27곳)
+PASS  무더기는 방 안 · 벽 붙은 자리
+PASS  포낭 크기 다양 (0.30 ~ 2.88)
+PASS  벽에 붙은 포낭 61 · 벽 연결막 38
+PASS  무더기는 prop (판정은 받고 처치 수·방 진행에선 빠짐)
+PASS  꿀렁임: 포낭·막 셰이더 TIME 맥동
+PASS  플레이어 탄이 포낭에 맞음 (체력 44 → 38)
+PASS  터질 때 체액 방울 (InfestSplash)
+PASS  체액 얼룩이 바닥·벽에 남음 (180개)
+PASS  다 터진 무더기는 적 판정에서 빠짐
+PASS  처치 수에 세지 않음
+PASS  잔해(청소 대상) · 껍질/막 조각 23개
+PASS  청소 절반: 조각 12개 빨려 감
+PASS  청소 완료
+PASS  치운 잔해는 사라짐
+ROOM_ENTER id=9 shape=6 scale=3.0 wave=true t=5.4
+PASS  드론이 잔해를 스스로 청소 (2.9초)
+PASS  큰 포낭은 플레이어를 밀어냄 (1.07m)
+RESULT OK (0 fails)

@@ -22,7 +22,11 @@ const CLOUD_R := 1.8               # 독가스 구름 반경 (m)
 const CLOUD_RATE := 9.0            # 생성 중 초당 밀도
 const FORM_T := 0.55               # 구름을 만드는 시간
 const SETTLE_T := 0.35             # 만든 뒤 양을 재기까지 기다림 (GPU 합계가 몇 프레임 늦게 온다)
-const CLEAR_LEFT := 0.07           # 이만큼 남으면 정화 완료 (나머지는 터뜨려 지운다)
+const CLEAR_LEFT := 0.07           # 이만큼 남으면 정화 완료 (나머지는 FADE_T 초에 걸쳐 서서히 걷어 낸다)
+const FADE_T := 3.2                # 정화 뒤 남은 독가스가 걷히는 시간
+const FADE_RATE := 1.4             # 그동안 초당 걷어 내는 세기 (처음 1초는 0 에서 서서히 올라감 → 1.5초 약 25% · 3.2초 약 2%)
+const FADE_R := 6.5                # 구름 자리마다 걷어 내는 반경 (흩어진 찌꺼기까지)
+const RESIDUE_PURGE := 0.6         # 독가스 세트가 하나도 없을 때 격자 어디에 남은 독가스든 초당 걷어 내기
 const TICK := 0.05                 # 도트 한 번 간격 (초)
 const MIST_LIFE := 26.0
 const RESPAWN_T := 6.0             # 시험장: 정화 뒤 다시 생기기까지
@@ -52,7 +56,7 @@ var _chain_t := 0.0
 var _chain_sum := 0
 var _dot_at := Vector3.ZERO
 var _respawn := -1.0
-var _poofs: Array = []             # {pos, t}
+var _fades: Array = []             # 정화된 세트의 걷어 내기 {spots: [Vector3], t}
 var _first_mist := false
 
 
@@ -142,6 +146,16 @@ func add_toxic(spots: Array) -> Dictionary:
 func training_spots() -> Array:
 	var c: Vector3 = (main as TrainingMain).center
 	return [c + Vector3(7.5, 0, 3.5), c + Vector3(10.0, 0, 1.2), c + Vector3(9.8, 0, 5.4)]
+
+
+## 아직 정화되지 않은 세트가 있는가 (만드는 중 포함)
+func live_sets() -> bool:
+	return sets.any(func(s): return s.state != St.CLEARED)
+
+
+## 확인용: 정화 뒤 걷어 내는 중인가
+func fading() -> bool:
+	return not _fades.is_empty()
 
 
 func active_sets() -> Array:
@@ -288,16 +302,27 @@ func _update_sets(dt: float) -> void:
 						lt.light_energy = lerpf(lt.light_energy, 0.9 * sqrt(l), 1.0 - exp(-4.0 * dt))
 				if l < CLEAR_LEFT:
 					_clear(s)
-	# 정화 마무리: 남은 찌꺼기를 터뜨려 지운다
+	# 정화 마무리: 남은 독가스를 몇 초에 걸쳐 서서히 걷어 낸다 (빨아 먹은 양으로 치지 않는다)
 	var keep: Array = []
-	for p in _poofs:
-		p.t += dt
-		if p.t < 0.45:
-			smoke.push_emitter(FluidSmoke.Kind.RADIAL, p.pos, CLOUD_R * 1.7, 0.0, 0.0, 18.0, 0.0)
-			keep.append(p)
-	_poofs = keep
-	if not _poofs.is_empty():
-		smoke.consume_eaten()       # 마무리로 지운 양은 게이지로 치지 않는다
+	var fade_k := 0.0
+	for f in _fades:
+		f.t += dt
+		if f.t < FADE_T:
+			var k := FADE_RATE * smoothstep(0.0, 1.0, f.t)
+			fade_k = maxf(fade_k, k)
+			keep.append(f)
+	_fades = keep
+	if live_sets():
+		# 다른 세트가 남아 있으면 정화된 구름 자리 둘레만 걷어 낸다
+		smoke.toxic_purge = 0.0
+		for f in _fades:
+			var k := FADE_RATE * smoothstep(0.0, 1.0, f.t)
+			for p in f.spots:
+				smoke.push_emitter(FluidSmoke.Kind.FADE, p, FADE_R, k, 0.0, 0.0, 0.0, FluidSmoke.Ch.TOXIC)
+	else:
+		# 남은 세트가 없으면 격자 전체에서 걷어 낸다 (멀리 흩어진 찌꺼기까지 · 다음 세트의 양 재기에 섞이지 않게).
+		# 걷어 내는 동안은 같은 세기로 서서히, 끝나면 남은 찌꺼기만 RESIDUE_PURGE 로
+		smoke.toxic_purge = fade_k if not _fades.is_empty() else RESIDUE_PURGE
 	# 빨아 먹은 양 → 가장 가까운 활성 세트 → 도트로 쌓기
 	var e := smoke.consume_eaten()
 	if e > 0.0:
@@ -334,14 +359,16 @@ func _clear(s: Dictionary) -> void:
 	var rest: float = maxf(s.value - s.paid, 0.0)
 	s.paid = s.value
 	_acc += rest
+	var spots: Array = []
 	for c in s.clouds:
-		_poofs.append({"pos": c.pos, "t": 0.0})
+		spots.append(c.pos)
 		var lt: OmniLight3D = c.light
 		if is_instance_valid(lt):
 			var tw := lt.create_tween()
-			tw.tween_property(lt, "light_energy", 0.0, 0.6)
+			tw.tween_property(lt, "light_energy", 0.0, FADE_T * 0.7).set_ease(Tween.EASE_IN_OUT)
 			tw.tween_callback(lt.queue_free)
 		DroneFX.twinkle(c.pos + Vector3(0, 0.6, 0), 1.2)
+	_fades.append({"spots": spots, "t": 0.0})
 	var mid: Vector3 = s.clouds[0].pos
 	FX.ring(mid + Vector3(0, 0.1, 0), 4.0, [Color(0.9, 1.0, 0.8), TOXIC_COL, Color(0.3, 0.7, 0.3)] as Array[Color], 0.5)
 	if is_instance_valid(main.hud):

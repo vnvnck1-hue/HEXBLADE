@@ -165,6 +165,8 @@ func _tail(c: float) -> void:
 
 ## 말림 c 일 때 공 중심을 들어 올릴 높이 (표에서 보간)
 func lift_at(c: float) -> float:
+	if _LIFT.size() < 2:
+		return 0.0          # 표를 아직 못 만들었으면 (메시 정점을 못 읽은 경우) 들지 않는다
 	var x := clampf(c, 0.0, 1.0) * (_LIFT.size() - 1)
 	var i := mini(int(x), _LIFT.size() - 2)
 	return lerpf(_LIFT[i], _LIFT[i + 1], x - i)

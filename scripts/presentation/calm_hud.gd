@@ -61,8 +61,8 @@ func _process(dt: float) -> void:
 		return
 	elapsed += dt / maxf(Engine.time_scale, 0.01)
 	has_boss = false
-	for e in get_tree().get_nodes_in_group("enemies"):
-		if e is Enemy and e.is_boss:
+	for e in Enemy.live(get_tree()):         # 프레임마다 한 번만 조회한 목록 (그룹 배열을 새로 만들지 않음)
+		if is_instance_valid(e) and e is Enemy and e.is_boss:
 			has_boss = true
 			break
 	queue_redraw()
@@ -212,7 +212,9 @@ func _draw_enemies() -> void:
 	var protected := [hero_rect(), status_rect().grow(4), minimap_rect(), RoundSkillDock.dock_rect(size).grow(5)]
 	if is_instance_valid(PartnerDrone.inst):
 		protected.append(DroneHud.panel_rect(size))
-	for node in get_tree().get_nodes_in_group("enemies"):
+	for node in Enemy.live(get_tree()):
+		if not is_instance_valid(node):
+			continue
 		var e := node as Enemy
 		if e == null or not e.alive or not e.landed or e.is_boss or e.prop or not is_instance_valid(e.hp_bar):
 			continue

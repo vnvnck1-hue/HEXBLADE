@@ -9,6 +9,9 @@ extends CanvasLayer
 ## 가슴은 diagonal_cutin.gdshader 의 UV 모핑: 포트레이트 이동 가속도의 관성 + 합체 충격으로 출렁인다.
 ## 캐릭터 2명(CHARACTERS)이 합체마다 번갈아 나오고, 캐릭터마다 컷인 전체 테마 색(띠·테두리·글자·집중선·잔상)이 다르다:
 ## 보라 양갈래 정비사 = 퍼플 톤, 초록 머리 메이드 = 그린 톤. 머리카락은 마스크 영역만 관성 + 잔잔한 물결로 흔들린다.
+## 민트 메이드(2026-10-06): 머리색 테마(옅은 민트 #B6D5BF · 그늘 #8EAE9D · 짙은 그늘 #769587 에서 뽑은 짙은 청록 띠 · 민트 글자),
+## 가슴 모핑 대신 머리카락 · 치마 · 리본 꼬리가 각자 스프링으로 흔들리고, 바로 오른쪽 뒤에 같은 모양 그림자가 자라나며,
+## 확정 시안의 소품 10종이 띠 안을 왼쪽 → 오른쪽으로 우당탕탕 튀며 날아가고 카툰 금빛 별이 띠 안에서 휘날린다(CutinScatter).
 
 const FONT := preload("res://assets/fonts/ARCO.otf")
 const SHADER := preload("res://scripts/drone/diagonal_cutin.gdshader")
@@ -47,6 +50,15 @@ const THEMES := {
 		"low_dark": Color(0.17, 0.08, 0.27), "bottom_edge": Color(0.52, 0.34, 0.74), "shadow": Color(0.09, 0.05, 0.14, 0.7),
 		"text": Color(0.82, 0.63, 1.0), "accent": Color(0.76, 0.52, 1.0), "accent_hi": Color(0.92, 0.82, 1.0, 0.9), "ghost": Color(0.88, 0.76, 1.0),
 	},
+	## 민트 메이드 전용: 머리카락 색에서 뽑음 — 옅은 민트(182,213,191) · 그늘(142,174,157) · 짙은 그늘(118,149,135).
+	## 띠 = 짙은 그늘을 더 어둡게 낮춘 청록 · 위 테두리 = 머리 밝은 면 · 그 아래 줄 = 그늘 · 글자 = 머리 밝은 면을 조금 더 맑게 ·
+	## 하단 테두리 = 머리 민트를 살짝 진하게 · 캐릭터 그림자 = 짙은 청록
+	"mint": {
+		"fill": Color(0.14, 0.24, 0.195, 0.9), "top_edge": Color(0.71, 0.84, 0.75), "top_hi": Color(0.56, 0.68, 0.62),
+		"low_dark": Color(0.07, 0.13, 0.12), "bottom_edge": Color(0.60, 0.85, 0.71), "shadow": Color(0.03, 0.07, 0.06, 0.7),
+		"text": Color(0.78, 0.95, 0.84), "accent": Color(0.56, 0.80, 0.69), "accent_hi": Color(0.90, 1.0, 0.94, 0.9), "ghost": Color(0.80, 0.95, 0.86),
+		"sil": Color(0.07, 0.16, 0.12, 0.62),
+	},
 }
 const BAND_LOW_WHITE := Color(0.97, 0.99, 1.0)
 ## 캐릭터 (원화는 투명 정사각 · tools/cutin_portraits.py 로 가공). art = 원화 한 변 px
@@ -75,8 +87,35 @@ const CHARACTERS := [
 			{"tex": preload("res://assets/portraits/green_maid/green-maid-sparkle-b.png"), "px": Vector2(115.0, 463.5), "at": 0.39, "kind": "sparkle"},
 		],
 		"papers": 16},
+	## 민트 메이드: 전신(1122×1402 → 가운데 정렬 1402²) · 무릎 높이가 하단선 · bust=false(가슴 모핑 없음) · motion=true(치마 · 리본 흔들림) ·
+	## shadow: 바로 오른쪽 뒤에 자라는 같은 모양 그림자(off ×side) · props: 확정 시안(output/maid-bold-cutin-props-20261005/concept_gold_no_trails.png)의
+	## 소품 — 띠 안을 왼쪽 → 오른쪽으로 날아감, size = 그림 긴 변 ×side, dim = PNG 안 그림의 긴 변(px)
+	{"id": "mint", "ko": "민트 메이드", "theme": "mint", "art": 1402.0,
+		"tex": preload("res://assets/portraits/mint_maid/mint-maid-docking.png"),
+		"mask": preload("res://assets/portraits/mint_maid/mint-maid-motionmask.png"),
+		"anchor": Vector2(0.50, 0.76), "hair_top": 0.004, "hair_screen": 0.05, "side_max_h": 1.0,
+		"c_l": Vector2(0.45, 0.42), "c_r": Vector2(0.55, 0.42), "r": 0.06, "tilt": 0.0, "bust": false, "motion": true,
+		"hair_root": Vector2(0.47, 0.086), "hair_len": 0.7, "hair_k": 1.35, "face": Vector2(0.50, 0.235),
+		"shadow": {"off": Vector2(0.032, -0.006), "scale": 0.01},
+		"props": [
+			{"tex": preload("res://assets/vfx/maid_props/01_coffee_cup.png"), "dim": 342, "size": 0.25},
+			{"tex": preload("res://assets/vfx/maid_props/02_coffee_saucer.png"), "dim": 251, "size": 0.2},
+			{"tex": preload("res://assets/vfx/maid_props/03_black_pink_ribbon.png"), "dim": 300, "size": 0.18},
+			{"tex": preload("res://assets/vfx/maid_props/04_cherries.png"), "dim": 261, "size": 0.14},
+			{"tex": preload("res://assets/vfx/maid_props/05_white_napkin.png"), "dim": 286, "size": 0.2},
+			{"tex": preload("res://assets/vfx/maid_props/06_teapot.png"), "dim": 310, "size": 0.26},
+			{"tex": preload("res://assets/vfx/maid_props/07_cherry_cake.png"), "dim": 284, "size": 0.19},
+			{"tex": preload("res://assets/vfx/maid_props/08_pink_macaron.png"), "dim": 269, "size": 0.15},
+			{"tex": preload("res://assets/vfx/maid_props/09_silver_spoon.png"), "dim": 270, "size": 0.19},
+			{"tex": preload("res://assets/vfx/maid_props/10_service_bell.png"), "dim": 212, "size": 0.15},
+		],
+		"sparkle": preload("res://assets/vfx/maid_props/11_gold_sparkle.png")},
 ]
-static var char_mode := "alt"    ## "alt" = 합체마다 번갈아 · 캐릭터 id = 고정. --cutin-char=alt|purple|green, 허수아비 [ 키
+static var char_mode := "alt"    ## "alt" = 합체마다 번갈아(숨긴 캐릭터는 건너뜀) · 캐릭터 id = 고정. --cutin-char=alt|purple|green|mint, 허수아비 [ 키
+## 숨긴 캐릭터: 원화 · 잔상 · 그림자 · 말풍선 팝업 · 서류 종이 · 소품을 그리지 않는다(계산은 그대로). 보라 정비사 · 초록 메이드는
+## 지금 작업 중인 장소에 안 맞아 잠시 숨김(사용자 요청 2026-10-06) — 다시 보이려면 이 목록에서 빼거나 --cutin-chars=on (모두 보임).
+## 띠 · DOCKING 글자 · 집중선 · 슬로우모션 · 보이스는 숨겨도 그대로.
+static var hidden_chars: Array = ["purple", "green"]
 static var _next_char := 0
 ## 글자: 회전하지 않고 세운 채 세로로만 비스듬히(Y 기울이기 — 세로획은 수직, 윗변·아랫변이 하단선 8°를 따름).
 ## 세로로 길쭉 · 가로로 눌림 (레퍼런스 폭/높이 ≈ 0.6, 원 글꼴 ≈ 0.9). 높이 0.27H, 바닥은 하단선에서 띠 높이의 21% 위.
@@ -148,6 +187,23 @@ const HAIR_ZETA := 0.28
 const HAIR_GAIN := 0.22
 const HAIR_MAX := 46.0
 const HAIR_DOCK_KICK := -420.0   ## 합체 충격에 몸이 앞으로 밀리며 머리는 뒤(왼쪽)로
+## 치마 · 리본 꼬리 스프링 (민트 메이드, 원화 px · 가로 위주). 치마는 머리카락보다 빠르고 무겁게, 리본은 더 가볍게 · 한 박자 늦게(JIG_LAG 가속도).
+## 달려오면 뒤(왼쪽)로 날렸다 멈추면 앞으로 넘어가며 출렁, 흔들릴수록 밑단이 들린다(lift). 펄럭임 = 이동 속도 · 합체 펄스에 비례한 잔물결
+const SKIRT_HZ := 2.1
+const SKIRT_ZETA := 0.3
+const SKIRT_GAIN := 0.2
+const SKIRT_MAX := 36.0
+const SKIRT_LIFT := 0.3
+const SKIRT_DOCK_KICK := -420.0
+const CLOTH_HZ := 2.7
+const CLOTH_ZETA := 0.2
+const CLOTH_GAIN := 0.32
+const CLOTH_MAX := 52.0
+const CLOTH_DOCK_KICK := -640.0
+const FLUTTER := Vector3(0.0012, 0.0035, 0.004)   ## 펄럭임 UV 크기: 기본 · 이동 속도 최대 · 합체 펄스
+## 그림자: 진입 후반에 캐릭터 자리에서 바로 오른쪽 뒤(off ×side, 머리카락 한 가닥 폭쯤)로 자라난다(넘침 → 자리). 이동 중엔 속도만큼 조금 뒤로 끌리고, 퇴장 때 살짝 벌어지며 사라짐
+const SHADOW_GROW := Vector2(0.10, 0.42)          ## 자라기 시작 · 끝 (초)
+const SHADOW_DRAG := 0.0015
 const JIG_R_DETUNE := 1.05
 const JIG_LAG := 0.05
 
@@ -235,6 +291,17 @@ var pops: Array = []
 var papers: Array = []
 var paper_back: Node2D
 var paper_front: Node2D
+## 민트 메이드: 치마 · 리본 스프링 (원화 px), 그림자, 소품 · 반짝이
+var skirt := Vector2.ZERO
+var skirt_v := Vector2.ZERO
+var cloth := Vector2.ZERO
+var cloth_v := Vector2.ZERO
+var skirt_peak := 0.0            ## 확인용
+var cloth_peak := 0.0
+var shadow: Sprite2D
+var shadow_mat: ShaderMaterial
+var shadow_k := 0.0              ## 확인용: 그림자 자람 0~1
+var scatter: CutinScatter
 
 
 static func begin(scene: Node, owner_drone: Node, is_preview := false) -> DiagonalDockingCutin:
@@ -247,15 +314,24 @@ static func begin(scene: Node, owner_drone: Node, is_preview := false) -> Diagon
 	return c
 
 
-## 다음 합체에 나올 캐릭터: 번갈아(alt) 또는 고정
+## 다음 합체에 나올 캐릭터: 번갈아(alt, 숨긴 캐릭터는 건너뜀 — 모두 숨겼으면 전부 대상) 또는 고정
 static func pick_character() -> int:
 	if char_mode != "alt":
 		for i in CHARACTERS.size():
 			if CHARACTERS[i].id == char_mode:
 				return i
-	var i := _next_char % CHARACTERS.size()
-	_next_char = (i + 1) % CHARACTERS.size()
-	return i
+	var n := CHARACTERS.size()
+	var any := CHARACTERS.any(func(ch): return char_visible(ch.id))
+	for k in n:
+		var i := (_next_char + k) % n
+		if not any or char_visible(CHARACTERS[i].id):
+			_next_char = (i + 1) % n
+			return i
+	return 0
+
+
+static func char_visible(id: String) -> bool:
+	return not hidden_chars.has(id)
 
 
 static func character_title(mode: String) -> String:
@@ -271,6 +347,8 @@ static func character_title(mode: String) -> String:
 ## 첫 합체 컷인에서 한 번 튀던 프레임을 줄인다. 슬로우모션·드론 검사 없음.
 static func prewarm(scene: Node) -> void:
 	for i in CHARACTERS.size():
+		if not char_visible(CHARACTERS[i].id):
+			continue
 		var c := DiagonalDockingCutin.new()
 		c.main = scene
 		c.preview = true
@@ -305,6 +383,23 @@ func _ready() -> void:
 	mat = ShaderMaterial.new()
 	mat.shader = SHADER
 	_use_character(char_i if char_i >= 0 else 0)
+	var vis := char_visible(String(cfg.id))
+	# 같은 모양 그림자 (캐릭터 맨 뒤): 같은 셰이더 · 같은 변형을 단색으로
+	if cfg.has("shadow"):
+		shadow_mat = ShaderMaterial.new()
+		shadow_mat.shader = SHADER
+		shadow_mat.set_shader_parameter("silhouette", 1.0)
+		shadow_mat.set_shader_parameter("sil_color", THEMES[cfg.theme].sil)
+		for k in ["c_l", "c_r", "r_l", "r_r", "tilt", "hair_mask", "hair_root", "hair_len", "bust", "motion"]:
+			shadow_mat.set_shader_parameter(k, mat.get_shader_parameter(k))
+		shadow = _portrait_sprite()
+		shadow.material = shadow_mat
+		shadow.modulate.a = 0.0
+	if cfg.has("props") and vis:
+		scatter = CutinScatter.new(self, cfg.props, cfg.sparkle)
+		root.add_child(scatter.back)
+		root.add_child(scatter.back_glow)
+		root.move_child(anchor, -1)
 	for i in 2:
 		var g := _portrait_sprite()
 		var gc: Color = THEMES[cfg.theme].ghost
@@ -323,8 +418,15 @@ func _ready() -> void:
 	paper_front = Node2D.new()
 	paper_front.draw.connect(_draw_papers.bind(true))
 	root.add_child(paper_front)
+	if scatter:
+		root.add_child(scatter.front)
+		root.add_child(scatter.front_glow)
 	for i in int(cfg.get("papers", 0)):
 		papers.append(_new_paper(i, int(cfg.get("papers", 0))))
+	# 숨겨도 계산(이동 · 흔들림 · 팝업 · 종이)은 그대로 돌고 그리기만 끈다
+	anchor.visible = vis
+	paper_back.visible = vis
+	paper_front.visible = vis
 	front = Node2D.new()
 	front.draw.connect(_draw_front)
 	root.add_child(front)
@@ -375,6 +477,15 @@ func _use_character(i: int) -> void:
 	mat.set_shader_parameter("hair_mask", cfg.mask)
 	mat.set_shader_parameter("hair_root", cfg.hair_root)
 	mat.set_shader_parameter("hair_len", cfg.hair_len)
+	mat.set_shader_parameter("bust", 1.0 if bool(cfg.get("bust", true)) else 0.0)
+	mat.set_shader_parameter("motion", 1.0 if bool(cfg.get("motion", false)) else 0.0)
+
+
+## 포트레이트와 그림자 셰이더에 같은 값을 (그림자는 같은 변형을 따라 한다)
+func _mp(key: String, v: Variant) -> void:
+	mat.set_shader_parameter(key, v)
+	if shadow_mat:
+		shadow_mat.set_shader_parameter(key, v)
 
 
 func _portrait_sprite() -> Sprite2D:
@@ -396,6 +507,10 @@ func notify_dock() -> void:
 		ph = Ph.HOLD if t >= SETTLE else ph
 	_pulse = 1.0
 	hair_v.x += HAIR_DOCK_KICK
+	skirt_v.x += SKIRT_DOCK_KICK
+	cloth_v.x += CLOTH_DOCK_KICK
+	if scatter:
+		scatter.dock_burst()
 	# 미리보기(F3)의 합체 순간 보이스. 본편은 PartnerDrone._gattai_impact 가 한 번 부른다(겹치지 않게 여기선 미리보기만).
 	if preview and _warm <= 0:
 		DockingVoice.play(main)
@@ -600,9 +715,10 @@ func _apply(dt: float) -> void:
 	_band_k = clampf(t / BAND_IN, 0.0, 1.0)
 	_fade = 1.0 if done_t < 0.0 else clampf(1.0 - (t - done_t) / CLEAN, 0.0, 1.0)
 	_pulse = maxf(0.0, _pulse - dt * 4.0)
-	mat.set_shader_parameter("clip_origin", origin)
-	mat.set_shader_parameter("clip_normal", normal)
+	_mp("clip_origin", origin)
+	_mp("clip_normal", normal)
 	mat.set_shader_parameter("flash", 0.32 * _pulse * _pulse)
+	_update_shadow()
 	text_mat.set_shader_parameter("bottom_origin", origin)
 	text_mat.set_shader_parameter("bottom_normal", normal)
 	text_mat.set_shader_parameter("top_origin", _top_origin_now())
@@ -612,6 +728,8 @@ func _apply(dt: float) -> void:
 	_update_pops()
 	_update_papers(dt)
 	_jiggle(dt)
+	if scatter:
+		scatter.update(dt)
 	back.queue_redraw()
 	text_track.queue_redraw()
 	front.queue_redraw()
@@ -871,7 +989,7 @@ func _update_lines(dt: float) -> void:
 			var l: Dictionary = arr[j]
 			if float(l.age) < 0.0 or float(l.age) > float(l.life):
 				var nl := _new_line(front_pick)
-				if front_pick and face.has_point(_point(float(nl.s), float(nl.q))):
+				if front_pick and char_visible(String(cfg.id)) and face.has_point(_point(float(nl.s), float(nl.q))):
 					break
 				arr[j] = nl
 				break
@@ -930,13 +1048,56 @@ func _jiggle(dt: float) -> void:
 		hair_v.x += fh * h
 		hair.x += hair_v.x * h
 	var hx := HAIR_MAX * tanh(hair.x / HAIR_MAX)
-	mat.set_shader_parameter("hair_off", Vector2(hx, -absf(hx) * 0.18) / art)
-	mat.set_shader_parameter("hair_time", t)
-	mat.set_shader_parameter("off_l", l * jig_scale / art)
-	mat.set_shader_parameter("off_r", r * jig_scale / art)
+	hx *= float(cfg.get("hair_k", 1.0))
+	_mp("hair_off", Vector2(hx, -absf(hx) * 0.18) / art)
+	_mp("hair_time", t)
+	_mp("off_l", l * jig_scale / art)
+	_mp("off_r", r * jig_scale / art)
 	# 아래로 처지면 세로로 늘어지고, 들리면 눌린다
-	mat.set_shader_parameter("sq_l", clampf(l.y / JIG_MAX * JIG_SQ, -JIG_SQ, JIG_SQ))
-	mat.set_shader_parameter("sq_r", clampf(r.y / JIG_MAX * JIG_SQ, -JIG_SQ, JIG_SQ))
+	_mp("sq_l", clampf(l.y / JIG_MAX * JIG_SQ, -JIG_SQ, JIG_SQ))
+	_mp("sq_r", clampf(r.y / JIG_MAX * JIG_SQ, -JIG_SQ, JIG_SQ))
+	if bool(cfg.get("motion", false)):
+		_cloth_springs(acc, acc_r, n, h)
+
+
+## 치마 · 리본 꼬리: 가로 관성 스프링(리본은 한 박자 늦은 가속도) → 셰이더의 G · B 영역. 흔들릴수록 밑단이 들린다.
+func _cloth_springs(acc: Vector2, acc_r: Vector2, n: int, h: float) -> void:
+	var ws := TAU * SKIRT_HZ
+	var wc := TAU * CLOTH_HZ
+	for i in n:
+		skirt_v.x += (-ws * ws * skirt.x - 2.0 * SKIRT_ZETA * ws * skirt_v.x - acc.x * SKIRT_GAIN) * h
+		skirt.x += skirt_v.x * h
+		cloth_v.x += (-wc * wc * cloth.x - 2.0 * CLOTH_ZETA * wc * cloth_v.x - acc_r.x * CLOTH_GAIN) * h
+		cloth.x += cloth_v.x * h
+	var sx := SKIRT_MAX * tanh(skirt.x / SKIRT_MAX)
+	var cx := CLOTH_MAX * tanh(cloth.x / CLOTH_MAX)
+	skirt_peak = maxf(skirt_peak, absf(sx))
+	cloth_peak = maxf(cloth_peak, absf(cx))
+	_mp("skirt_off", Vector2(sx, -absf(sx) * SKIRT_LIFT) / art)
+	_mp("cloth_off", Vector2(cx, -absf(cx) * 0.2) / art)
+	var speed := clampf(absf(s_vel) * tangent.x / maxf(vs.x * 3.0, 1.0), 0.0, 1.0)
+	_mp("flutter", FLUTTER.x + FLUTTER.y * speed + FLUTTER.z * _pulse)
+
+
+## 그림자: 캐릭터 자리에서 오른쪽으로 자라남(back-out 넘침) · 이동 중엔 속도만큼 뒤로 끌림 · 퇴장 때 더 벌어지며 흐려짐
+func _update_shadow() -> void:
+	if shadow == null:
+		return
+	var sc: Dictionary = cfg.shadow
+	var k := clampf((t - SHADOW_GROW.x) / (SHADOW_GROW.y - SHADOW_GROW.x), 0.0, 1.0)
+	var g := _back_out(k, 1.8) if k > 0.0 else 0.0
+	var alpha := smoothstep(0.0, 0.35, k)
+	if exit_t >= 0.0:
+		var e := clampf((t - exit_t) / EXIT, 0.0, 1.0)
+		g += 0.4 * e
+		alpha *= 1.0 - e
+	shadow_k = k
+	var off: Vector2 = sc.off
+	var lag := (tangent * s_vel * SHADOW_DRAG).rotated(-anchor.rotation) / anchor.scale
+	var grow := 1.0 + float(sc.scale) * g
+	shadow.scale = portrait.scale * grow
+	shadow.position = portrait.position * grow + off * side * g - lag
+	shadow.modulate.a = alpha * _fade
 
 
 

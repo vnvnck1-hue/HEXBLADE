@@ -1,0 +1,33 @@
+{
+	"basecolor": "direct PNG, no procedural repaint",
+	"captures": [
+		"current_walls_lit",
+		"current_walls_direct",
+		"current_service_lit",
+		"current_service_direct",
+		"A_walls_lit",
+		"A_walls_direct",
+		"A_service_lit",
+		"A_service_direct",
+		"B_walls_lit",
+		"B_walls_direct",
+		"B_service_lit",
+		"B_service_direct",
+		"C_walls_lit",
+		"C_walls_direct",
+		"C_service_lit",
+		"C_service_direct"
+	],
+	"godot": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"lights": "BrawlLook constants, pool off for equal comparison"
+}

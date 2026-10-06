@@ -60,6 +60,10 @@ var fov_v := 0.0
 var zoom := 1.0          # 오프셋 배율 (1보다 크면 줌아웃)
 var zoom_v := 0.0
 var charge_zoom := 1.0   # 광선검 기 모으기: 단계마다 계단식으로 줌아웃 (BladeTech 가 정한다)
+var frame_bias := Vector3.ZERO   # 장면이 정하는 시선 이동 (보스방: 보스 쪽으로). 부드럽게 따라간다
+var frame_zoom := 1.0            # 장면이 정하는 줌아웃 배율 (보스방: 큰 보스를 함께 담는다)
+var _frame_bias := Vector3.ZERO
+var _frame_zoom := 1.0
 var roll := 0.0
 var pull := Vector3.ZERO  # 격파 지점 쪽으로 잠깐 끌림
 var pull_t := 0.0
@@ -278,6 +282,8 @@ func update(dt: float, player: Player) -> void:
 		target += look.limit_length(6.0) * float(p.look) * (0.25 if beam_on else 1.0)
 		lead = lead.lerp(hv * float(p.lead) * 0.35, 1.0 - exp(-3.0 * dt))
 		target += lead
+	_frame_bias = _frame_bias.lerp(frame_bias, 1.0 - exp(-3.0 * dt))
+	target += _frame_bias
 	# 강력 레이저: 발사 방향으로 시야를 터 준다
 	var bias_target := beam_dir * 2.8 if beam_on else Vector3.ZERO
 	beam_bias = beam_bias.lerp(bias_target, 1.0 - exp(-(2.5 if beam_on else 3.5) * dt))
@@ -307,6 +313,8 @@ func update(dt: float, player: Player) -> void:
 	if beam_on:
 		zoom_target = 1.35
 	zoom_target = lerpf(zoom_target, 1.75, ult_k)
+	_frame_zoom = lerpf(_frame_zoom, frame_zoom, 1.0 - exp(-2.5 * dt))
+	zoom_target *= _frame_zoom
 	zoom_target = maxf(zoom_target, charge_zoom)
 	_zoom_spring(dt, zoom_target)
 	zoom = clampf(zoom, 0.82, 1.9)

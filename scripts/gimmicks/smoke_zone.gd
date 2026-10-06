@@ -177,6 +177,9 @@ func _new_wisp(at: Vector3, vel: Vector3) -> Dictionary:
 
 
 func _process(dt: float) -> void:
+	# 화면 밖 먼 구역은 덩이를 멈춰 둔다 (맵 전체 구역이 매 프레임 덩이 100여 개씩 계산·업로드하던 것)
+	if not _was_in and _trail_t <= 0.0 and Cull.far(global_position, radius):
+		return
 	_t += dt
 	var player: Player = Main.inst.player if is_instance_valid(Main.inst) else null
 	var pp := Vector3.INF

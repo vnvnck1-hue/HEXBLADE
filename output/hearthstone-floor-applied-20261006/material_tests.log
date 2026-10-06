@@ -1,0 +1,9 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== blue_handpaint_check
+  RESULT OK (0 fails)
+=== brawl_look_check
+  RESULT  OK  (0 fail)
+=== ground_break_check
+  RESULT ground_break_check: OK (0 fails)
+
+ALL 3 TESTS PASSED

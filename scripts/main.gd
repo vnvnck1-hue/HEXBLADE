@@ -126,6 +126,10 @@ func _ready() -> void:
 	_parse_args()
 	# 방 탐색 아레나(이 스크립트 그대로 쓰는 main.tscn)만 벌레 아레나. 상속한 씬(섹터 런·시험장·보스전)은 그대로. --enemies=classic 이면 예전 기계 적
 	bug_arena = (get_script() as Script).resource_path == "res://scripts/main.gd" and not cmd_args.has("--enemies=classic")
+	if bug_arena:
+		BugEnemy.warm()
+		BugEnemy.warm_rigs.call_deferred()
+	FxWarm.attach(self)          # 첫 교전 끊김 방지: 전투 연출 셰이더·글꼴을 씬 시작 때 데운다 (presentation/fx_warm.gd)
 	_setup_input()
 	world = Node3D.new()
 	add_child(world)

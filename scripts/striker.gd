@@ -210,8 +210,8 @@ func _move(dt: float, dir: Vector3, dist: float) -> void:
 		want += dir * 1.2
 	elif dist < desired - 1.0:
 		want -= dir * 1.2
-	for o in get_tree().get_nodes_in_group("enemies"):
-		if o == self:
+	for o in Enemy.live(get_tree()):
+		if o == self or not is_instance_valid(o):
 			continue
 		var d: Vector3 = global_position - (o as Node3D).global_position
 		d.y = 0

@@ -11,6 +11,7 @@ const PARAMS := 33
 
 var smoke_a := RID()
 var smoke_b := RID()
+var smoke_c := RID()            # 부스터 배기 밀도 (r16f)
 var params := PackedFloat32Array()
 var measure := false
 
@@ -116,7 +117,7 @@ func _u(type: int, binding: int, ids: Array) -> RDUniform:
 
 
 func _render_callback(_type: int, render_data: RenderData) -> void:
-	if not enabled or not _pipe.is_valid() or not smoke_a.is_valid() or params.size() < PARAMS * 4:
+	if not enabled or not _pipe.is_valid() or not smoke_a.is_valid() or not smoke_c.is_valid() or params.size() < PARAMS * 4:
 		return
 	var rsb := render_data.get_render_scene_buffers() as RenderSceneBuffersRD
 	var sd := render_data.get_render_scene_data() as RenderSceneDataRD
@@ -145,6 +146,7 @@ func _render_callback(_type: int, render_data: RenderData) -> void:
 			_u(RenderingDevice.UNIFORM_TYPE_IMAGE, 5, [_hrd]),
 			_u(RenderingDevice.UNIFORM_TYPE_IMAGE, 6, [color]),
 			_u(RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER, 7, [_pbuf]),
+			_u(RenderingDevice.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE, 8, [_lin, smoke_c]),
 		]
 		var set := UniformSetCacheRD.get_cache(_shader, 0, us)
 		for mode in 2:
@@ -177,6 +179,7 @@ layout(r32f, set = 0, binding = 5) uniform image2D hr_depth;
 layout(rgba16f, set = 0, binding = 6) uniform image2D color_img;
 layout(set = 0, binding = 7, std430) restrict readonly buffer Params { vec4 p[]; } prm;
 layout(push_constant, std430) uniform PC { vec4 a; } pc;
+layout(set = 0, binding = 8) uniform sampler2D smoke_c;
 
 float hash(vec2 q) { return fract(sin(dot(q, vec2(127.1, 311.7))) * 43758.5453); }
 float noise(vec2 q) {
@@ -191,6 +194,60 @@ mat4 M(int k) { int b = 4 + k * 4; return mat4(prm.p[b], prm.p[b + 1], prm.p[b +
 vec4 SV(int k) { return prm.p[24 + k]; }   // 0 soft 1 line_k 2 rim 3 spec 4 glow_k 5 alo 6 ahi 7 lump_spd
 
 vec2 uv_of(vec2 xz) { return (xz - ORIGIN()) / SIZE(); }
+
+// ── 독가스 속 알갱이: 작은 둥근 점이 드문드문, 천천히 흔들리며 떠다니고 숨쉬듯 커졌다 작아진다 ──
+// 세계 좌표 격자(MOTE_CELL)마다 많아야 하나 (칸의 MOTE_FILL 만), 밝은 점 / 어두운 점.
+// 따로 칠한 색이 아니라 그 자리 독가스 색을 살짝 밝히거나 어둡게 해서 은은하게 (x = 밝은 점 덮임, y = 어두운 점)
+const float MOTE_CELL = 0.85;
+const float MOTE_FILL = 0.42;
+vec2 motes(vec2 xz) {
+	vec2 base = floor(xz / MOTE_CELL);
+	vec2 res = vec2(0.0);
+	float t = TIME();
+	for (int j = -1; j <= 1; j++) {
+		for (int i = -1; i <= 1; i++) {
+			vec2 id = base + vec2(float(i), float(j));
+			float h = hash(id * 1.37 + 11.0);
+			if (h > MOTE_FILL) continue;
+			float h2 = hash(id + 3.1);
+			float h3 = hash(id + 7.7);
+			float h4 = hash(id + 5.3);
+			vec2 c = (id + vec2(0.2 + 0.6 * h2, 0.2 + 0.6 * h3)) * MOTE_CELL
+				+ vec2(sin(t * (0.25 + 0.2 * h4) + h2 * 6.283), cos(t * (0.2 + 0.18 * h2) + h3 * 6.283)) * 0.24;
+			float r = mix(0.05, 0.11, h4 * h4) * (0.8 + 0.2 * sin(t * (0.4 + 0.3 * h3) + h4 * 6.283));
+			float k = 1.0 - smoothstep(r - 0.022, r + 0.01, length(xz - c));
+			if (h < MOTE_FILL * 0.55) res.x = max(res.x, k); else res.y = max(res.y, k);
+		}
+	}
+	return res;
+}
+// 미리 곱한 색에 알갱이를 얹는다 (tox = 그 자리 독가스 짙기 — 옅은 가장자리에선 사라짐)
+vec4 with_motes(vec4 src, vec2 xz, float tox) {
+	float pres = smoothstep(0.1, 0.4, tox);
+	if (pres <= 0.0 || src.a <= 0.0) return src;
+	vec2 m = motes(xz) * pres;
+	vec3 c = src.rgb;
+	c = mix(c, mix(src.rgb * 1.3, vec3(0.78, 1.0, 0.8) * src.a, 0.5), m.x * 0.85);   // 밝은 점: 옅은 흰빛 연두
+	c = mix(c, src.rgb * 0.45, m.y * 0.8);
+	return vec4(c, src.a);
+}
+
+// ── 부스터 배기: 짙기에 따라 부드러운 색 그라데이션 (막 나온 짙은 배기 = 뜨거운 색 → 옅어지며 식은 색), 옅은 반투명 ──
+vec3 lin(vec3 s) { return pow(s, vec3(2.2)); }
+float ex_at(vec2 xz) { return textureLod(smoke_c, uv_of(xz), 0.0).r; }
+vec3 ex_band(float v) {
+	vec3 c = lin(vec3(0.66, 0.46, 0.96));                              // 보라 (식은 가장자리)
+	c = mix(c, lin(vec3(1.0, 0.50, 0.70)), smoothstep(0.04, 0.14, v)); // 분홍
+	c = mix(c, lin(vec3(1.0, 0.66, 0.36)), smoothstep(0.12, 0.26, v)); // 주황
+	c = mix(c, lin(vec3(1.0, 0.92, 0.66)), smoothstep(0.24, 0.45, v)); // 크림 노랑
+	return c;
+}
+// 미리 곱한 색 + 투명도: 외곽선 · 명암 단계 없이 가장자리까지 부드럽게 사그라진다
+vec4 ex_toon(vec2 xz) {
+	float v = ex_at(xz);
+	float al = smoothstep(0.01, 0.2, v) * 0.68;
+	return vec4(ex_band(v) * al, al);
+}
 float lump_at(vec2 xz, float spd) {
 	float tt = TIME() * spd;
 	return noise(xz * 0.55 + vec2(tt * 0.05, -tt * 0.04)) * 0.75 + noise(xz * 1.4 - tt * 0.07) * 0.25;
@@ -245,8 +302,19 @@ vec4 march(ivec2 fp, vec2 full) {
 		vec3 fq = cam + dir * t1;
 		vec4 a = textureLod(smoke_a, uv_of(fq.xz), 0.0);
 		vec4 w = textureLod(smoke_b, uv_of(fq.xz), 0.0);
-		float al = clamp(a.w * 1.5, 0.0, 0.9);
-		return vec4((M(0) * w).rgb * clamp(a.w, 0.0, 1.0) * al, al);
+		float ex = textureLod(smoke_c, uv_of(fq.xz), 0.0).r;
+		// 배기를 뺀 나머지 연기: 스타일 비율을 배기 몫을 뺀 것으로 다시 맞춘다 (안 그러면 배기가 그을음처럼 검게 섞임)
+		float rest = max(a.w - ex, 0.0);
+		vec4 wb = w * (a.w / max(rest, 1e-4));
+		float al = clamp(rest * 1.5, 0.0, 0.9);
+		// 장면 점이 그 자리 연기 윗면보다 높으면(위에 떠 있는 오염 입자 · 서 있는 몸의 윗부분) 연기가 덮지 않는다
+		float gtop = HMAX() * a.x;
+		float under = 1.0 - smoothstep(gtop + 0.1, gtop + 0.45, fq.y);
+		al *= under;
+		vec4 base = vec4((M(0) * wb).rgb * clamp(rest, 0.0, 1.0) * al, al);
+		base = with_motes(base, fq.xz, w.z * a.w);
+		vec4 exl = ex > 0.02 ? ex_toon(fq.xz) * under : vec4(0.0);
+		return exl + base * (1.0 - exl.a);
 	}
 	int steps = int(prm.p[1].z);
 	int bisect = int(prm.p[1].w);
@@ -273,7 +341,9 @@ vec4 march(ivec2 fp, vec2 full) {
 	vec4 w = textureLod(smoke_b, uv_of(q.xz), 0.0);
 	float wsum = max(dot(w, vec4(1.0)), 1e-4);
 	vec4 wn = w / wsum;
-	float soot = clamp(1.0 - dot(w, vec4(1.0)), 0.0, 1.0);
+	float exq = textureLod(smoke_c, uv_of(q.xz), 0.0).r;
+	float exf = clamp(exq / max(a.w, 1e-4), 0.0, 1.0);
+	float soot = clamp(1.0 - dot(w, vec4(1.0)) - exf, 0.0, 1.0);
 	vec3 L = normalize(prm.p[2].xyz);
 	float ndl = dot(nrm, L);
 	float soft = dot(wn, SV(0)) + 0.02;
@@ -296,13 +366,16 @@ vec4 march(ivec2 fp, vec2 full) {
 	col += (M(4) * wn).rgb * dot(wn, SV(4)) * smoothstep(0.25, 1.4, a.w) * (0.7 + 0.3 * sin(TIME() * 2.6 + lump * 9.0));
 	// 그을음
 	col = mix(col, prm.p[32].rgb * mix(0.85, 1.2, step(0.3, ndl)), soot * 0.85);
+	// 부스터 배기: 짙기 색 그라데이션 (명암 단계 없음)
+	col = mix(col, ex_band(exq), exf);
 	// 실루엣 외곽선
-	float lk = dot(wn, SV(1)) * (1.0 - soot) + soot * 0.5;
+	float sty = clamp(1.0 - soot - exf, 0.0, 1.0);   // 스타일 연기 몫
+	float lk = dot(wn, SV(1)) * sty + soot * 0.5;
 	col = mix(col, (M(3) * wn).rgb, step(facing, 0.2) * lk);
-	float alo = dot(wn, SV(5)) * (1.0 - soot) + soot * 0.5;
-	float ahi = dot(wn, SV(6)) * (1.0 - soot) + soot * 0.8;
+	float alo = dot(wn, SV(5)) * sty + soot * 0.5 + exf * 0.2;
+	float ahi = dot(wn, SV(6)) * sty + soot * 0.8 + exf * 0.5;
 	float alpha = smoothstep(0.02, 0.16, a.w) * mix(alo, ahi, smoothstep(0.15, 1.1, a.w));
-	return vec4(col * alpha, alpha);
+	return with_motes(vec4(col * alpha, alpha), q.xz, w.z * a.w);
 }
 
 void main() {

@@ -1,0 +1,103 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== abyss_check
+  RESULT OK (0 fail)
+=== ammo_check
+  RESULT OK (0 fails)
+=== blade_tech_check
+  RESULT OK (0 fails)
+=== blender_models_check
+  RESULT OK (0 fails)
+=== blue_handpaint_check
+  RESULT OK (0 fails)
+=== brawl_look_check
+  RESULT  OK  (0 fail)
+=== bug_arena_check
+  BUG_ARENA_CHECK OK
+=== bug_chomper_check
+  BUG_CHOMPER_CHECK OK
+=== bug_enemies_check
+  BUG_ENEMIES_CHECK OK
+=== bug_grub_check
+  BUG_GRUB_CHECK OK
+=== claude_background_check
+  RESULT  OK  (0 fail)
+=== claude_service_check
+  RESULT claude_service_check fails=0
+=== cockpit_cutin_check
+  RESULT: OK (0 fails)
+=== codex_background_check
+  CODEX_BACKGROUND_CHECK 67 checks 0 fails
+=== combo_meter_check
+  combo_meter_check: 0 fails
+=== coworker_dialogue_check
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== dash_moves_check
+  RESULT OK (0 fails)
+=== diagonal_cutin_check
+  FAIL  선택 보이스 9개 로드
+  FAIL  실제 합체 순간 보이스 1회 ()
+  FAIL  한 합체에 보이스는 한 번만 (휠윈드·분리에 추가 없음)
+  FAIL  Shift+F3: 첫 번째 보이스부터 순서대로 ()
+  FAIL  무작위 보이스: 직전 파일 연속 없음 · 여러 파일이 고루 (40번에 1종)
+  FAIL  보이스 동안 다른 소리는 -10dB (보이스 버스는 상쇄해 그대로)
+  FAIL  긴 보이스는 끝까지 재생 (0.20초)
+  RESULT: FAILED (7 fails)
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== enemy_wander_check
+  RESULT enemy_wander_check fails=0
+=== fluid_smoke_check
+  RESULT FLUID_SMOKE_OK (0 fails)
+=== gimmicks_check
+  RESULT gimmicks_check fails=0
+=== ground_break_check
+  RESULT ground_break_check: OK (0 fails)
+=== gun_sound_check
+  RESULT gun_sound_check fails=0
+=== hit_react_check
+  RESULT hit_react_check fails=0
+=== hud_preset_check
+  RESULT  OK  (0 fail)
+=== infest_check
+  FAIL  큰 포낭은 플레이어를 밀어냄 (0.17m)
+  RESULT FAILED (1 fails)
+=== input_buffer_check
+  RESULT OK (0 fails)
+=== leap_slam_check
+  RESULT OK (0 fails)
+=== mammoth_death_lab_check
+  MAMMOTH_DEATH_LAB_CHECK_OK: 30/60/144fps, 10 resets and seeks, floor contact, cue/completion once, pause/rate, reduced motion, unchanged run, real lobby button and return
+=== mammoth_ingame_check
+  RESULT mammoth_ingame_check fails=0
+=== mech_player_check
+  RESULT mech_player_check fails=0
+=== missile_check
+  RESULT OK (0 fails)
+=== moco_vfx_check
+  RESULT moco_vfx_check fails=0
+=== painted_look_check
+  RESULT  OK  (0 fail)
+=== parry_commit_check
+  RESULT parry_commit_check fails=0
+=== partner_drone_check
+  RESULT partner_drone_check fails=0
+=== room_wave_check
+  RESULT OK (0 fail)
+=== space_sweep_check
+  RESULT OK (0 fails)
+=== speech_bubble_check
+  RESULT: OK (0 fails)
+=== spider_check
+  SPIDER_CHECK OK
+=== terrain_jump_check
+  TERRAIN_JUMP_CHECK OK (0 fails)
+=== training_ui_toggle_check
+  RESULT: OK (0 fails)
+=== training_whirl_check
+  RESULT: OK (0 fails)
+=== whirl_pull_check
+  RESULT OK (0 fails)
+=== world_flow_check
+  RESULT world_flow_check fails=0
+
+FAILED: diagonal_cutin_check, infest_check

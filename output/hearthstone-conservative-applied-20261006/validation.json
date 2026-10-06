@@ -1,0 +1,141 @@
+{
+  "game_applied": true,
+  "asset_sha256": "95f43d022a1e0e6c91f4650dc11aab8c9dfdb2f73c9582865ea2c7776f2dfd58",
+  "approved_png_byte_identical": true,
+  "sampling": "direct 4m world XZ, no brush blending or procedural damage",
+  "floor_linear_lift": 1.18,
+  "prior_floor_render_sha_identical": true,
+  "wall_png_sha_unchanged": true,
+  "tone": {
+    "flat_albedo": {
+      "before": {
+        "pixels": 4194304,
+        "mean_rgb": [
+          74.8666968362579,
+          81.76559543531295,
+          125.57527851428901
+        ],
+        "hue_of_mean_rgb_degrees": 231.8370046598516,
+        "mean_hsv_v": 0.49245207262974156,
+        "mean_hsv_s": 0.4040374715749651,
+        "mean_srgb_luma": 0.32730175965533537
+      },
+      "after": {
+        "pixels": 4194304,
+        "mean_rgb": [
+          75.02601838223566,
+          82.63952874978571,
+          126.29432821362131
+        ],
+        "hue_of_mean_rgb_degrees": 231.0898053094516,
+        "mean_hsv_v": 0.4952718753440707,
+        "mean_hsv_s": 0.405725012509363,
+        "mean_srgb_luma": 0.33008930575595186
+      },
+      "hue_of_mean_rgb_delta_degrees": -0.7471993503999954,
+      "v_delta_percentage_points": 0.2819802714329134,
+      "s_delta_percentage_points": 0.16875409343978798,
+      "luma_delta_percent": 0.8516746453034463
+    },
+    "game_0090": {
+      "before": {
+        "pixels": 821135,
+        "mean_rgb": [
+          67.64321335711232,
+          71.69770744131867,
+          112.84418640032828
+        ],
+        "hue_of_mean_rgb_degrees": 234.6180440668878,
+        "mean_hsv_v": 0.4425262211785528,
+        "mean_hsv_s": 0.4064366146173342,
+        "mean_srgb_luma": 0.2894372461961725
+      },
+      "after": {
+        "pixels": 821135,
+        "mean_rgb": [
+          66.30184561614847,
+          71.10697997260252,
+          111.84296735588212
+        ],
+        "hue_of_mean_rgb_degrees": 233.66928063311843,
+        "mean_hsv_v": 0.438599871984939,
+        "mean_hsv_s": 0.41296768965076186,
+        "mean_srgb_luma": 0.2863786145007084
+      },
+      "hue_of_mean_rgb_delta_degrees": -0.9487634337693578,
+      "v_delta_percentage_points": -0.39263491936137873,
+      "s_delta_percentage_points": 0.6531075033427647,
+      "luma_delta_percent": -1.056751242509768
+    },
+    "game_0120": {
+      "before": {
+        "pixels": 591459,
+        "mean_rgb": [
+          62.21825012386246,
+          65.94674356129322,
+          104.72003469383316
+        ],
+        "hue_of_mean_rgb_degrees": 234.736465574109,
+        "mean_hsv_v": 0.41066680272104783,
+        "mean_hsv_s": 0.41149580450163115,
+        "mean_srgb_luma": 0.2664843038283959
+      },
+      "after": {
+        "pixels": 591459,
+        "mean_rgb": [
+          60.96899869648077,
+          65.39341188483769,
+          103.78498932299195
+        ],
+        "hue_of_mean_rgb_degrees": 233.7998680535715,
+        "mean_hsv_v": 0.4069999581294631,
+        "mean_hsv_s": 0.4183353020240093,
+        "mean_srgb_luma": 0.2636260922824644
+      },
+      "hue_of_mean_rgb_delta_degrees": -0.9365975205375037,
+      "v_delta_percentage_points": -0.3666844591584728,
+      "s_delta_percentage_points": 0.6839497522378168,
+      "luma_delta_percent": -1.0725628132199572
+    },
+    "asset_sha256": "95f43d022a1e0e6c91f4650dc11aab8c9dfdb2f73c9582865ea2c7776f2dfd58",
+    "asset_byte_identical_to_approved_png": true,
+    "method": "Same paused main.tscn snapshots: only floor texture, direct sampling flag, old paint_mean and lift switched. Visible floor selected with magenta shader mask, eroded 2px. Fluid off only for reproducible comparison."
+  },
+  "checks_run": 47,
+  "checks_failed": [
+    "diagonal_cutin_check",
+    "lancaster_boss_check"
+  ],
+  "relevant_checks_passed": [
+    "blue_handpaint_check",
+    "brawl_look_check",
+    "ground_break_check"
+  ],
+  "runtime": {
+    "import": {
+      "error_count": 0
+    },
+    "game_compare": {
+      "error_count": 0
+    },
+    "flat_before": {
+      "error_count": 0
+    },
+    "flat_after": {
+      "error_count": 0
+    },
+    "bot_main": {
+      "error_count": 0
+    },
+    "bot_run": {
+      "error_count": 0
+    }
+  },
+  "validation_scope": "Default current game material; same paused scene/camera/lighting at two gameplay positions plus entire 4m shader albedo. Separate 30 game-second main/run bot processes exited 0.",
+  "note": "Full suite exceptions are reported rather than hidden. No commit/push; other authors changes preserved.",
+  "lancaster_recheck": {
+    "current_floor_passed": true,
+    "previous_floor_passed": true,
+    "note": "Initial full suite foot-contact failure is retained; both isolated rechecks passed. Logs also contain an existing ObjectDB cleanup warning."
+  }
+}

@@ -247,6 +247,8 @@ static func puffs(pos: Vector3, count: int, colors: Array[Color], spread: float,
 
 
 static func sparks(pos: Vector3, count: int, colors: Array[Color], speed := 6.0, life := 0.45, gravity := -14.0, box := 0.09) -> void:
+	if burst_particles(pos, _spark_mesh, _spark_pm(colors, speed, gravity, box), count, life):
+		return
 	var p := GPUParticles3D.new()
 	p.amount = count
 	p.one_shot = true
@@ -260,6 +262,59 @@ static func sparks(pos: Vector3, count: int, colors: Array[Color], speed := 6.0,
 	_add(p, pos, WorldFlow.AIR)
 	p.emitting = true
 	p.get_tree().create_timer(life + 0.3).timeout.connect(p.queue_free)
+
+
+# ── 한 번 터지는 파티클 풀 ──────────────────────────
+# 불꽃·착탄 스프레이는 초당 수십~수백 번 나온다. 예전엔 매번 GPUParticles3D 를 새로 만들고(GPU 버퍼 할당) 타이머로 지웠다.
+# 이제 (그리는 메시, 개수 단위)별로 노드를 모아 두고 끝난 것을 다시 쓴다. 개수는 2의 거듭제곱 단위로 버퍼를 잡고
+# amount_ratio 로 실제 개수만 뿜는다 (amount 를 바꾸면 버퍼를 다시 잡으므로). 흐르는 씬(WorldFlow)은 운반 노드가 달라 예전 방식.
+const PARTICLE_POOL_MAX := 48     ## 한 종류당 노드 상한 (다 쓰는 중이면 가장 오래된 것을 다시 쏜다)
+static var _ppool := {}
+static var _ppool_root: Node3D
+
+
+## 풀에서 파티클 하나를 꺼내 pos 에서 터뜨린다. 쓸 수 없으면(흐르는 씬 · root 없음) false → 호출한 쪽이 예전 방식으로
+static func burst_particles(pos: Vector3, mesh: Mesh, pm: Material, count: int, life: float, local_aim := Basis.IDENTITY) -> bool:
+	if count <= 0:
+		return true
+	if WorldFlow.active() or root == null or not is_instance_valid(root) or not root.is_inside_tree():
+		return false
+	if _ppool_root != root:
+		_ppool.clear()
+		_ppool_root = root
+	var bucket := 4
+	while bucket < count:
+		bucket *= 2
+	var key := "%d|%d" % [mesh.get_instance_id(), bucket]
+	var list: Array = _ppool.get(key, [])
+	if not _ppool.has(key):
+		_ppool[key] = list
+	var p: GPUParticles3D = null
+	for q: GPUParticles3D in list:
+		if not q.emitting:
+			p = q
+			break
+	if p == null:
+		if list.size() < PARTICLE_POOL_MAX:
+			p = GPUParticles3D.new()
+			p.amount = bucket
+			p.one_shot = true
+			p.explosiveness = 1.0
+			p.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+			p.draw_pass_1 = mesh
+			root.add_child(p)
+		else:
+			p = list.pop_front()        # 가장 오래 전에 쓴 것
+		list.append(p)
+	else:
+		list.erase(p)
+		list.append(p)                  # 뒤쪽 = 최근에 쓴 것
+	p.amount_ratio = float(count) / float(bucket)
+	p.lifetime = life
+	p.process_material = pm
+	p.global_transform = Transform3D(local_aim, pos)
+	p.restart()
+	return true
 
 
 static var _spark_pms := {}
@@ -560,24 +615,11 @@ static func phantom_cut(from: Vector3, to: Vector3, tint: Color) -> void:
 
 ## 회피 잔상: 현재 로봇 파츠를 반투명하게 복제 (기본 보라, 2단 대시는 무지개빛)
 static func afterimage(visual: Node3D, tint := GHOST, life := 0.0) -> void:
-	var holder := Node3D.new()
-	root.add_child(holder)
-	var mat := _ghost_mat.duplicate() as StandardMaterial3D
-	mat.albedo_color = tint
-	for m: MeshInstance3D in mesh_parts(visual):
-		if not is_instance_valid(m) or not m.is_visible_in_tree() or m.cast_shadow == GeometryInstance3D.SHADOW_CASTING_SETTING_OFF:
-			continue
-		var g := MeshInstance3D.new()
-		g.mesh = m.mesh
-		g.material_override = mat
-		g.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-		holder.add_child(g)
-		g.global_transform = m.global_transform
-	var tw := holder.create_tween()
 	if life <= 0.0:
 		life = 0.16 if tint == GHOST else 0.24
-	tw.tween_property(mat, "albedo_color:a", 0.0, life)
-	tw.tween_callback(holder.queue_free)
+	var pool := GhostPool.get_pool()
+	if pool:
+		pool.spawn(visual, tint, life)     # 노드·머티리얼을 재사용한다 (ghost_pool.gd)
 
 
 ## visual 아래 메시 파츠 목록 (잔상·피격 섬광용). 물리 틱마다 불리므로 트리 탐색 결과를 visual 에 잠시 기억해 둔다.

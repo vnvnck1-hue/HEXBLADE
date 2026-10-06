@@ -89,7 +89,23 @@ func _run() -> void:
 		if s.state == FluidField.St.CLEARED:
 			break
 	Input.action_release("dash")
-	for i in 240:
+	# 정화 뒤: 남은 독가스가 한 번에 사라지지 않고 몇 초에 걸쳐 걷힘
+	var tox_c := ff.smoke.stat_toxic
+	_check(ff.fading(), "정화 뒤 걷어 내기 시작")
+	await _frames(18)
+	var tox_a := ff.smoke.stat_toxic
+	await _shot("22a_gas_fading")
+	await _frames(72)
+	var tox_b := ff.smoke.stat_toxic
+	await _frames(180)
+	var tox_d := ff.smoke.stat_toxic
+	print("FADE toxic %.2f → 0.3s %.2f → 1.5s %.2f → 4.5s %.2f" % [tox_c, tox_a, tox_b, tox_d])
+	_check(tox_a > tox_c * 0.5, "0.3초 뒤에도 절반 넘게 남음 = 뿅 사라지지 않음 (%.2f → %.2f)" % [tox_c, tox_a])
+	_check(tox_b < tox_a * 0.8 and tox_b > tox_c * 0.1, "1.5초: 서서히 줄어드는 중 (%.2f)" % tox_b)
+	_check(tox_d < maxf(tox_c * 0.03, 0.05), "4.5초 뒤 격자 어디에도 거의 안 남음 (%.3f)" % tox_d)
+	_check(not ff.fading(), "걷어 내기 끝")
+	await _frames(60)
+	for i in 60:
 		await physics_frame
 		if ff._acc < 1.0 and ff._chain_t > 0.3:
 			break

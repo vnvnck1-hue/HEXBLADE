@@ -1,0 +1,28 @@
+{
+  "file": "comparison.png",
+  "size": [
+    2064,
+    1124
+  ],
+  "layout": "left=current effective ALBEDO, right=latest texture illustration",
+  "color_edit": false,
+  "inputs": [
+    {
+      "source": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\floor-side-by-side-20261006\\current_effective.png",
+      "native_size": [
+        2048,
+        2048
+      ],
+      "sha256": "1c5b3564c04571029cf1be2564e26ad30e8a28c49ff87bfa529912bb277bc980"
+    },
+    {
+      "source": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\substance-painter-floor-20261006\\floor_4m_chunky_groove.png",
+      "native_size": [
+        1254,
+        1254
+      ],
+      "sha256": "d6d7b03cbb7c2e66db929a36c452618dda0362281bd60e9645677bfd60d0872d"
+    }
+  ],
+  "pixel_layout_verified": true
+}
