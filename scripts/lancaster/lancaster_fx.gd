@@ -247,11 +247,12 @@ static func jet_burst(vol := -6.0, pitch := 0.75, dur := 0.35) -> void:
 
 # ── 투사체 ──────────────────────────────────────────────
 
-static func tracer(pos: Vector3, dir: Vector3, speed: float) -> void:
+static func tracer(pos: Vector3, dir: Vector3, speed: float, target: Node3D = null) -> void:
 	_shared()
 	var tr := Tracer.new()
 	tr.vel = dir.normalized() * speed
 	tr.position = pos
+	tr.target = target
 	Main.inst.bullets.add_child(tr)
 
 
@@ -276,6 +277,7 @@ class Tracer extends Node3D:
 	var age := 0.0
 	var core: MeshInstance3D
 	var tail: MeshInstance3D
+	var target: Node3D            ## 연출용 표적 (등장 연출의 벌레 — cine_hit 을 부른다)
 
 	func _ready() -> void:
 		core = Pal.flat_mesh(LancasterFX._tracer_mesh, LancasterFX.TRACER_CORE, 3.2)
@@ -301,6 +303,18 @@ class Tracer extends Node3D:
 			GunFX.impact_wall(position - fwd * 0.15, wn, fwd, 0.45)
 			queue_free()
 			return
+		if target != null:
+			if not is_instance_valid(target) or not target.get("alive"):
+				target = null
+			else:
+				var tc := target.global_position + Vector3(0, 0.7, 0)
+				var sg := position - prev
+				var k := clampf((tc - prev).dot(sg) / maxf(sg.length_squared(), 0.0001), 0.0, 1.0)
+				var cl := prev + sg * k
+				if cl.distance_to(tc) < 0.8:
+					target.call("cine_hit", fwd, cl)
+					queue_free()
+					return
 		var p := main.player
 		if p.alive:
 			var chest := p.global_position + Vector3(0, 0.95, 0)

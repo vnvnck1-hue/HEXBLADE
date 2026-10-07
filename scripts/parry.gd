@@ -11,7 +11,9 @@ extends Node3D
 ##   parry_source() -> Node3D    공격한 적 (카메라 구도용)
 ##   parry_hit(player)           패링당했을 때의 결과 (반사 / 경직)
 ##   parry_window_open()         판정 창이 열리는 순간의 신호 연출
-## 모든 패링 공격은 과장된 준비동작 → 십자 별빛 알림 → 알림 후 정확히 TRAVEL 초 뒤에 닿는다 (타이밍이 매번 같다).
+## 모든 패링 공격은 과장된 준비동작 → 십자 별빛 알림 → 실제로 닿기 직전(EARLY 초 전부터)에만 판정 창이 열린다.
+## 별빛 뒤 정해진 시간에 닿는 규칙은 없다: 근접 공격은 다가와 실제로 휘두르는 순간, 탄은 실제로 날아와 닿기 직전에 패링된다
+## (parry_eta 는 언제나 '지금부터 실제로 맞기까지' 남은 시간이어야 한다).
 ## 성공 연출은 전투 속도를 끊지 않게 짧다: 2프레임 정지 + 몇 프레임 슬로우, 적당한 줌인, 글자 없음.
 ## 시간 연출(정지 → 슬로우 → 복귀)은 실제 시간(ms)으로 진행한다.
 
@@ -21,7 +23,7 @@ const EARLY := 0.26           # 닿기 전 이만큼(게임 초)부터 패링된
 const LATE := 0.07            # 닿은 뒤 이만큼까지 봐준다 (입력 지연 보정)
 const EARLY_LOCK := 0.4       # 창이 열리기 전 이만큼 안에 누르면 헛패링: 잠시 패링 불가
 const LOCKOUT := 0.32
-const TRAVEL := 0.5           # 알림이 뜬 뒤 공격이 플레이어에게 닿기까지 (게임 초). 모든 패링 공격 공통
+const TRAVEL := 0.5           # 위험(붉은) 섬광을 맞기 몇 초 전에 띄울지 (보스 돌진 등 패링 불가 공격의 예고용). 패링 판정과는 무관
 # 시간 연출 (실제 초): 단 몇 프레임
 const FREEZE := 0.034         # 2프레임 정지
 const SLOW := 0.3
@@ -30,7 +32,7 @@ const SLOW_END := 0.11        # 이때 정상 속도로 완전히 복귀
 # 히트스톱 프리셋 (실제 초). light = 연속 패링의 중간 타(parry_feel() == "light"): 멈추기만 하고 슬로우 없이 곧바로 이어진다,
 # heavy = 마지막 타 · 단발: 멈춘 뒤 몇 프레임 슬로우. scale = 멈춘 동안 시간 배율 (0.002 = 사실상 완전 정지).
 # stutter = 한 번 멈췄다 2프레임 움직이고 이 길이만큼 다시 멈춤, shiver = 멈춘 동안 화면이 이만큼(px 비율) 부들부들 떨림.
-# 허수아비 씬 보스방 P / Shift+P 로 바꾼다 (실행 인자 --parrystop=id). 씬을 다시 불러도 유지.
+# 허수아비 씬(홀 · 보스방) P / Shift+P 로 바꾼다 (실행 인자 --parrystop=id). 씬을 다시 불러도 유지. 기본 = HEAVY 묵직하게 길게.
 const STOP_PRESETS := [
 	{"id": "hard", "ko": "HARD · 딱 멈춤", "light": 0.11, "heavy": 0.16, "scale": 0.002, "stutter": 0.0, "shiver": 0.0},
 	{"id": "shiver", "ko": "SHIVER · 멈춘 채 떨림", "light": 0.12, "heavy": 0.2, "scale": 0.002, "stutter": 0.0, "shiver": 1.0},
@@ -38,7 +40,7 @@ const STOP_PRESETS := [
 	{"id": "heavy", "ko": "HEAVY · 묵직하게 길게", "light": 0.17, "heavy": 0.28, "scale": 0.002, "stutter": 0.0, "shiver": 0.6},
 	{"id": "soft", "ko": "SOFT · 예전 (가볍게)", "light": 0.07, "heavy": 0.085, "scale": 0.06, "stutter": 0.0, "shiver": 0.0},
 ]
-static var stop_i := 0
+static var stop_i := 3          # 기본 HEAVY
 static var _stop_args_read := false
 
 var threats: Array = []

@@ -6,7 +6,9 @@ extends Node
 ##
 ##  1 다시 소환(기동 연출부터)   2 패턴 세트   3 처치 가능 ↔ 무적   4 페이즈 1 ↔ 2(광폭화)   5 템포
 ##  8 크기(플레이어 키 × 2.0 / 1.5 / 2.5)   9 행동 정지   0 다음 패턴 바로 시전   (6 재화 무한 · 7 플레이어 무적은 그대로)
-## 확인용 실행 인자: --bossroom 은 보스방 입구에서 시작, --bossroom=off 면 방을 만들지 않는다.
+## 처음 들어오면 등장 연출(LancasterIntro): 등 돌린 보스가 벌레를 학살 · 짓밟고 → 돌아서서 재장전 · 붉은 눈 · 경보 → 보스전. Enter 건너뛰기.
+##   1 로 다시 소환하면 연출부터 다시 (방 밖에 있으면 다음에 들어올 때). U = 방 안에서 등장 연출 다시 보기.
+## 확인용 실행 인자: --bossroom 은 보스방 입구에서 시작, --bossroom=off 면 방을 만들지 않는다, --bossintro=off 면 등장 연출 없이 기동.
 ##   --bossset=<세트 id> --bosstempo=0~2 --bossphase=2 --bossimmortal
 
 const ROOM_SIZE := Vector2i(28, 24)
@@ -31,6 +33,8 @@ var hold := false
 var _respawn := -1.0
 var _bot_t := 0.0
 var _bot_side := 1.0
+var intro: LancasterIntro
+var _intro_on := true
 
 
 ## 맵 생성 직후 (build 전에) 홀 왼쪽에 방과 통로를 새긴다. 새 방 번호를 돌려준다.
@@ -74,6 +78,8 @@ func setup(id: int) -> void:
 			tempo_i = clampi(int(a.substr(12)), 0, LancasterBoss.TEMPOS.size() - 1)
 		elif a == "--bossimmortal":
 			killable = false
+		elif a == "--bossintro=off":
+			_intro_on = false
 	bar = BossBar.new()
 	add_child(bar)
 	bar.name_label.text = "LANCASTER  ·  광폭화 보안 로봇"
@@ -95,9 +101,11 @@ func _spawn() -> void:
 	boss.hold_ai = hold
 	boss.bar = bar
 	boss.home = center + Vector3(-3.0, 0, 0)
+	# 등장 연출: 무릎 꿇은 정지 대신 등을 돌리고(-X, 벌레 쪽) 서서 기다린다
+	boss.intro_ready = _intro_on and LancasterIntro.enabled and not inside
 	main.world.add_child(boss)
 	boss.global_position = boss.home
-	boss.rotation.y = -PI * 0.5            # 통로(+X) 쪽을 본다
+	boss.rotation.y = PI * 0.5 if boss.intro_ready else -PI * 0.5    # 등장 연출이면 안쪽(-X), 아니면 통로(+X) 쪽을 본다
 	boss.face_yaw = boss.rotation.y
 	boss.aim_yaw = boss.face_yaw
 	boss.rig.reset_feet()
@@ -109,6 +117,20 @@ func _spawn() -> void:
 		boss.active = true
 	if has_meta("p2"):
 		remove_meta("p2")
+
+
+## 등장 연출 시작 (방 안에서 U 로 다시 볼 때도)
+func play_intro() -> void:
+	if is_instance_valid(intro) or not is_instance_valid(boss) or not boss.alive:
+		return
+	if boss.st != LancasterBoss.St.DORMANT or not boss.intro_ready:
+		# 이미 싸우는 중: 연출용으로 다시 세운다
+		var keep := inside
+		inside = false
+		_spawn()
+		inside = keep
+		boss.active = inside
+	intro = LancasterIntro.start(self)
 
 
 func _apply_rect() -> void:
@@ -132,12 +154,15 @@ func _physics_process(dt: float) -> void:
 	if now != inside:
 		inside = now
 		main.rebuild_panel()
-		if inside:
+		if inside and not (is_instance_valid(boss) and boss.intro_ready):
 			main.hud.banner("BOSS ROOM  ·  LANCASTER", ACCENT, "버려진 시설의 광폭화된 보안 로봇 · 숫자 키로 보스 프리셋")
 	if is_instance_valid(boss):
 		boss.active = inside
 		if inside and boss.st == LancasterBoss.St.DORMANT and boss.alive:
-			boss.wake()
+			if boss.intro_ready:
+				play_intro()
+			else:
+				boss.wake()
 		if inside and boss.st == LancasterBoss.St.FIGHT and OS.get_cmdline_user_args().has("--bossphase=2") and boss.phase == 1 and not has_meta("p2"):
 			set_meta("p2", true)
 			boss.force_phase(2)
@@ -173,6 +198,7 @@ func build_panel(panel: TrainingPanel) -> void:
 	panel.title("BOSS ROOM · LANCASTER")
 	panel.section("보스")
 	panel.row("1", "다시 소환", func(): return "기동 연출부터")
+	panel.row("U", "등장 연출 다시 보기", func(): return "Enter 건너뛰기")
 	panel.row("2", "패턴 세트", func(): return LancasterBoss.SETS[set_i].ko)
 	panel.row("3", "보스", func(): return "처치 가능" if killable else "무적")
 	panel.row("4", "페이즈", func(): return ("2 · OVERDRIVE" if boss.phase >= 2 else "1") if is_instance_valid(boss) else "-")
@@ -268,6 +294,9 @@ func handle_key(k: int, shift: bool) -> bool:
 			if is_instance_valid(boss):
 				boss.hold_ai = hold
 			main.hud.banner("행동 정지  %s" % ("ON" if hold else "OFF"), ACCENT, "제자리에서 조준만 합니다" if hold else "")
+		KEY_U:
+			if _intro_on and LancasterIntro.enabled:
+				play_intro()
 		KEY_P:
 			var pr := Parry.cycle_stop(shift)
 			main.hud.banner("패링 히트스톱  %s" % pr.ko, ACCENT, "중간 타 %.2f초 · 마지막 타 %.2f초%s" % [pr.light, pr.heavy, " · 두 번 끊어 멈춤" if float(pr.stutter) > 0.0 else ""])

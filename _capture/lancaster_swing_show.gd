@@ -88,6 +88,7 @@ func _place_player(dist: float, ang := 0.6) -> void:
 
 
 func _run() -> void:
+	LancasterIntro.enabled = false
 	main = (load("res://scenes/training.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	current_scene = main

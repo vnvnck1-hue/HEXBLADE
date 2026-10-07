@@ -5,7 +5,9 @@ extends Enemy
 ##
 ##  immortal  무적: 체력이 1 아래로 내려가지 않고, 1.6초 동안 안 맞으면 다시 가득 찬다 (끝없이 때려 보기)
 ##            끄면 실제로 쓰러지고(죽음 연출) TrainingMain 이 잠시 뒤 다시 세운다
-##  attack    반격: 패링 탄(금빛 예고)만 쏜다 → 패링 연습
+##  attack    반격: 패링 탄(금빛 예고)을 쏜다 → 원거리 패링 연습
+##  melee     근접 반격: 가까이(MELEE_RANGE) 오면 몸을 크게 비틀어 가로대 팔을 감았다가(준비) → 별빛 → 한 박자 버티고 → 몇 프레임 만에
+##            후려친다. 판정 창은 이 실제 후려치기가 닿기 직전(Parry.EARLY)에만 열린다 → 근접 패링 연습
 ##  mover     이동: 기준 자리를 중심으로 좌우로 왕복한다 → 움직이는 대상 조준·돌진 확인
 
 const DUMMY_HP := 60            # × HP_SCALE(2.5) = 150
@@ -16,9 +18,23 @@ const SWAY_SPEED := 0.9         # 왕복 각속도 (rad/s)
 var anchor := Vector3.ZERO
 var immortal := true
 var attack := false
+var melee := false
 var mover := false
 var idle_t := 0.0
 var _phase := 0.0
+
+# 근접 반격 (후려치기)
+const MELEE_RANGE := 3.0        # 이 안에 들어오면 준비한다 (몸 중심 거리)
+const MELEE_REACH := 2.3        # 이 안이면 맞는다 (가로대 팔 끝)
+const MELEE_WIND := 0.8         # 준비동작
+const MELEE_BEAT := 0.34        # 별빛 뒤 버티는 한 박자 = 닿기까지 (판정 창은 마지막 Parry.EARLY 초)
+const MELEE_SWING := 3.0 / 60.0 # 후려치기 (3프레임)
+const MELEE_TWIST := 1.35
+var m_state := ""               # "" · wind · beat · swing · recover
+var m_t := 0.0
+var m_cd := 1.0
+var m_twist := 0.0
+var m_twist_v := 0.0
 
 
 func _ready() -> void:
@@ -108,7 +124,9 @@ func _physics_process(dt: float) -> void:
 func _ai(dt: float) -> void:
 	var body: Node3D = j.body
 	var keep := global_position
-	if attack:
+	if melee and (m_state != "" or _melee_ready(dt)):
+		_melee(dt, body)
+	elif attack:
 		# 패링 탄은 화면에 2발까지만 (무리 배치에서 금빛 탄이 쏟아지지 않게): 자리가 없으면 발사를 미룬다
 		if not orb_next and fire_timer < ORB_WINDUP + 0.05 and get_tree().get_nodes_in_group("parry_orbs").size() >= 2:
 			fire_timer = ORB_WINDUP + randf_range(0.3, 0.9)
@@ -122,7 +140,8 @@ func _ai(dt: float) -> void:
 		wob_v += (-wob * 220.0 - wob_v * 11.0) * dt
 		wob += wob_v * dt
 		body.position.y = 1.0
-		body.rotation = Vector3(wob.x, 0.0, wob.y)
+		_twist_spring(dt, 0.0)
+		body.rotation = Vector3(wob.x, m_twist, wob.y)
 		_face_slowly(dt)
 	var home := anchor
 	if mover:
@@ -132,6 +151,156 @@ func _ai(dt: float) -> void:
 	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
 	global_position = global_position.lerp(Vector3(home.x, global_position.y, home.z), 1.0 - exp(-(9.0 if mover else 3.5) * dt))
 	global_position = Main.inst.push_out(global_position, radius)
+
+
+# ── 근접 반격 ───────────────────────────────────────────
+
+func _melee_ready(dt: float) -> bool:
+	m_cd -= dt
+	if m_cd > 0.0 or not Main.inst.player.alive:
+		return false
+	var d := Main.inst.player.global_position - global_position
+	d.y = 0
+	if d.length() > MELEE_RANGE:
+		return false
+	m_state = "wind"
+	m_t = 0.0
+	Sfx.play("rev", 0.05, -4.0)
+	return true
+
+
+func _twist_spring(dt: float, goal: float, k := 140.0, damp := 14.0) -> void:
+	m_twist_v += ((goal - m_twist) * k - m_twist_v * damp) * dt
+	m_twist += m_twist_v * dt
+
+
+func _melee(dt: float, body: Node3D) -> void:
+	m_t += dt
+	var cm: StandardMaterial3D = j.core_mat
+	body.position.y = 1.0
+	match m_state:
+		"wind":
+			# 크게 비틀어 가로대 팔을 감는다 · 뒤로 젖힘 · 흰 발광은 끝 구간에만
+			var e := clampf(m_t / MELEE_WIND, 0.0, 1.0)
+			_face_slowly(dt)
+			_twist_spring(dt, -MELEE_TWIST * smoothstep(0.0, 0.6, e), 220.0, 18.0)
+			windup_k = smoothstep(0.55, 0.95, e)
+			cm.emission_energy_multiplier = 0.6 + 4.0 * e
+			body.rotation = Vector3(0.22 * e, m_twist, wob.y)
+			if m_t >= MELEE_WIND:
+				m_state = "beat"
+				m_t = 0.0
+				windup_k = 0.0
+				_warn((j.core as Node3D).global_position, "melee")
+				Sfx.play("pcue", 0.02, 2.0)
+				if Parry.inst:
+					Parry.inst.register(self)
+		"beat":
+			# 별빛 뒤 한 박자: 감은 채 부들부들 (판정 창은 끝 Parry.EARLY 초)
+			m_twist = -MELEE_TWIST + sin(m_t * 80.0) * 0.03
+			m_twist_v = 0.0
+			body.rotation = Vector3(0.22, m_twist, sin(m_t * 70.0) * 0.03)
+			if m_t >= MELEE_BEAT - MELEE_SWING:
+				m_state = "swing"
+				m_t = 0.0
+				Sfx.play("slash", 0.05, 0.0)
+		"swing":
+			# 3프레임 만에 반대편까지 후려친다
+			var e := clampf(m_t / MELEE_SWING, 0.0, 1.0)
+			m_twist = lerpf(-MELEE_TWIST, 1.1, 1.0 - pow(2.0, -10.0 * e))
+			body.rotation = Vector3(lerpf(0.22, -0.2, e), m_twist, 0.0)
+			if m_t >= MELEE_SWING:
+				_melee_contact()
+		"recover":
+			_twist_spring(dt, 0.0, 90.0, 9.0)
+			body.rotation = Vector3(wob.x, m_twist, wob.y)
+			cm.emission_energy_multiplier = lerpf(cm.emission_energy_multiplier, 0.6, 1.0 - exp(-6.0 * dt))
+			if m_t >= 0.6:
+				m_state = ""
+	wob_v += (-wob * 220.0 - wob_v * 11.0) * dt
+	wob += wob_v * dt
+
+
+func _melee_contact() -> void:
+	_end_melee_threat()
+	m_state = "recover"
+	m_t = 0.0
+	m_twist_v = 8.0
+	m_cd = randf_range(1.6, 2.6)
+	var p := Main.inst.player
+	var d := p.global_position - global_position
+	d.y = 0
+	var at := global_position + Vector3(0, 1.2, 0) + d.normalized() * 1.6
+	if p.alive and d.length() < MELEE_REACH + p.hit_radius:
+		if p.take_hit(at):
+			FX.flash(p.global_position + Vector3(0, 0.9, 0), Color(1, 0.6, 0.3), 1.0, 0.08)
+			Main.inst.shake(0.3)
+	FX.sparks(at, 8, [Color.WHITE, Color(1.0, 0.75, 0.35)], 5.0, 0.25, -12.0, 0.05)
+
+
+func _end_melee_threat() -> void:
+	_end_warn()
+	if Parry.inst:
+		Parry.inst.unregister(self)
+
+
+func parry_eta() -> float:
+	var p := Main.inst.player
+	if not alive or not p.alive or stagger_t > 0.0:
+		return INF
+	match m_state:
+		"beat":
+			return MELEE_BEAT - m_t
+		"swing":
+			return MELEE_SWING - m_t
+	return INF
+
+
+func parry_kind() -> String:
+	return "melee"
+
+
+func parry_point() -> Vector3:
+	var p := Main.inst.player.global_position + Vector3(0, 0.95, 0)
+	return p.lerp((j.core as Node3D).global_position, 0.5)
+
+
+func parry_source() -> Node3D:
+	return self
+
+
+func parry_window_open() -> void:
+	ParryFX.cue((j.core as Node3D).global_position)
+
+
+## 근접 반격이 패링당함: 후려치던 팔이 튕겨 나가며 크게 휘청
+func parry_hit(p: Player) -> void:
+	_end_melee_threat()
+	m_state = ""
+	m_twist_v = -14.0
+	m_cd = randf_range(1.8, 2.8)
+	var d := global_position - p.global_position
+	d.y = 0
+	stagger(d.normalized(), 1.6)
+	take_hit(1, d.normalized(), (j.core as Node3D).global_position, "parry")
+
+
+func parry_committed() -> bool:
+	if m_state in ["wind", "beat", "swing"]:
+		return true
+	return super.parry_committed()
+
+
+func _on_stagger() -> void:
+	if m_state != "":
+		_end_melee_threat()
+		m_state = ""
+		windup_k = 0.0
+
+
+func _exit_tree() -> void:
+	if Parry.inst:
+		Parry.inst.unregister(self)
 
 
 func _face_slowly(dt: float) -> void:

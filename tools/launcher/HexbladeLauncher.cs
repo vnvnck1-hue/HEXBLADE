@@ -25,8 +25,10 @@ static class HexbladeLauncher
         {
             string ver = File.ReadAllLines(Path.Combine(root, "godot-version.txt"))[0].Trim();
             ready = File.Exists(Path.Combine(root, ".tools", "godot", "Godot_v" + ver + "_win64.exe"));
+            // pull · 브랜치 전환 뒤 첫 실행은 godot.ps1 이 임포트부터 하므로 진행 창을 보여 준다
+            ready = ready && ImportedHead(root) == GitHead(root);
         }
-        catch (Exception) { }
+        catch (Exception) { ready = false; }
 
         string ps = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "WindowsPowerShell", "v1.0", "powershell.exe");
         string extra = string.Join(" ", args.Select(a => "\"" + a.Replace("\"", "\\\"") + "\""));
@@ -43,5 +45,28 @@ static class HexbladeLauncher
             return 1;
         }
         return 0;
+    }
+
+    // godot.ps1 이 마지막 임포트 때 적어 둔 커밋 (없으면 null)
+    static string ImportedHead(string root)
+    {
+        string f = Path.Combine(root, ".godot", "hexblade_import_head.txt");
+        return File.Exists(f) ? File.ReadAllLines(f)[0].Trim() : null;
+    }
+
+    // git 없이 .git 폴더에서 현재 커밋을 읽는다 (못 읽으면 "?" — 임포트가 필요한 것으로 본다)
+    static string GitHead(string root)
+    {
+        string git = Path.Combine(root, ".git");
+        string head = File.ReadAllText(Path.Combine(git, "HEAD")).Trim();
+        if (!head.StartsWith("ref: ")) return head;
+        string name = head.Substring(5).Trim();
+        string loose = Path.Combine(git, name.Replace('/', Path.DirectorySeparatorChar));
+        if (File.Exists(loose)) return File.ReadAllText(loose).Trim();
+        string packed = Path.Combine(git, "packed-refs");
+        if (File.Exists(packed))
+            foreach (string line in File.ReadAllLines(packed))
+                if (line.EndsWith(" " + name)) return line.Split(' ')[0];
+        return "?";
     }
 }

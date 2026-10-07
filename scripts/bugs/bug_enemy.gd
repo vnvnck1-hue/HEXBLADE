@@ -30,6 +30,10 @@ var goo: Array[Color] = GOO
 var splat_kind := 0
 ## 공격 빈도 배율 (벌레 아레나 위험도): 1 보다 크면 공격 쿨타임(attack_cd · roll_cd)이 그만큼 빨리 돈다
 var aggro := 1.0
+## 연출용 엑스트라 (보스 등장 연출 등): 처치해도 점수 · 콤보 · 드롭 · 처치 히트스탑이 없다
+var cine := false
+## 이 자리로 몰려든다 (INF 면 플레이어). 연출용
+var lure := Vector3.INF
 
 static var _splat_mesh: CylinderMesh
 static var _splat_mats: Array[StandardMaterial3D] = []
@@ -256,7 +260,8 @@ func die(dir := Vector3.ZERO, source := "bullet") -> void:
 		stun_halo.queue_free()
 	_set_flash(false)
 	(j.core_mat as StandardMaterial3D).emission_energy_multiplier = 0.0
-	Main.inst.on_enemy_killed(self)
+	if not cine:
+		Main.inst.on_enemy_killed(self)
 	match source:
 		"slash", "phantom":
 			bug_death = Death2.SEVER
@@ -444,6 +449,10 @@ func _exit_tree() -> void:
 ## 플레이어를 향한 수평 방향과 거리.
 ## 놓쳤을 때(연기 속 은신)는 플레이어 대신 배회 목적지를, 멈춰 서 있으면 두리번거리는 쪽을 가리킨다.
 func _to_player() -> Vector3:
+	if lure != Vector3.INF:
+		var lv := lure - global_position
+		lv.y = 0
+		return lv
 	if wander.on:
 		var g := wander.goal - global_position if wander.walking else wander.face_dir() * 4.0
 		g.y = 0
@@ -451,6 +460,35 @@ func _to_player() -> Vector3:
 	var d := Main.inst.player.global_position - global_position
 	d.y = 0
 	return d
+
+
+## 연출용 피격 (보스 등장 연출의 기관총): 피해 숫자 · 콤보 없이 움찔 · 체액만, 체력이 다하면 쓰러진다
+func cine_hit(dir: Vector3, pos: Vector3) -> void:
+	if not alive or not landed:
+		return
+	hp -= 1
+	punch = 1.0
+	flash_t = 0.05
+	_set_flash(true)
+	knock += Vector3(dir.x, 0, dir.z) * 2.5
+	var l := global_basis.inverse() * Vector3(dir.x, 0, dir.z)
+	wob_v += Vector2(l.z, -l.x) * 9.0
+	FX.sparks(pos, 6, goo, 5.0, 0.3, -14.0, 0.06)
+	FX.sparks(pos, 3, [Color.WHITE, Color("ffd27a")], 7.0, 0.15, -10.0, 0.04)
+	if hp <= 0:
+		die(dir, "bullet")
+
+
+## 연출용: 위에서 짓밟혀 납작하게 터진다
+func crush(dir := Vector3.ZERO) -> void:
+	if not alive:
+		return
+	die(dir, "crush")
+	if not is_inside_tree():
+		return
+	var body: Node3D = j.body
+	body.scale = Vector3(1.6, 0.18, 1.6)
+	_pop(1.7)
 
 
 ## 플레이어가 가까이 있나 (작은 소리는 가까울 때만 낸다)

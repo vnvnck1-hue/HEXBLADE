@@ -98,6 +98,26 @@ $q = { param($a) if ($a -match '[\s"]') { '"' + ($a -replace '"', '\"') + '"' } 
 # window-mode change: F11 fullscreen froze the game and then crashed (VkResult -2). This variable is the
 # layer's own disable switch; it only affects Godot started from here (the editor's play runs inherit it).
 $env:VK_LAYER_bandicam_helper_DEBUG_1 = '1'
+
+# Running a project (not the editor) never imports: after a pull or branch switch, new class_name scripts and
+# new assets stay unknown and scenes fail to compile (e.g. player.gd -> BoostRibbon). So re-import once whenever
+# the git commit differs from the one recorded at the last import (or the class cache is missing).
+function Sync-Import {
+	$stamp = Join-Path $root '.godot\hexblade_import_head.txt'
+	$cache = Join-Path $root '.godot\global_script_class_cache.cfg'
+	$head = ''
+	try { $head = [string](& git -C $root rev-parse HEAD 2>$null) } catch { $head = '' }
+	$old = if (Test-Path -LiteralPath $stamp) { (Get-Content -LiteralPath $stamp -TotalCount 1) } else { '' }
+	if ((Test-Path -LiteralPath $cache) -and $head -ne '' -and $head -eq $old) { return }
+	Write-Host '[godot] new commit since the last import - importing scripts and assets (one time)...'
+	$prev = $ErrorActionPreference
+	$ErrorActionPreference = 'Continue'
+	& $con --headless --path $root --import 2>&1 | Out-Null
+	$ErrorActionPreference = $prev
+	if ($head -ne '') { New-Item -ItemType Directory -Force -Path (Split-Path -Parent $stamp) | Out-Null; Set-Content -LiteralPath $stamp -Value $head -Encoding ascii }
+}
+if ($mode -in @('run', 'wait') -and -not ($rest -contains '--import')) { Sync-Import }
+
 switch ($mode) {
 	'setup' { Write-Host "[godot] $(Get-Version $con)"; exit 0 }
 	'which' { Write-Output $con; exit 0 }

@@ -5,13 +5,14 @@ extends Main
 ##
 ## 숫자 키로 바꾼다 (왼쪽 위 설정 패널 TrainingPanel 에 현재 상태가 보인다):
 ##  1 허수아비 다시 세우기 + 기록 초기화   2 배치: 1기 / 3기 / 무리 6기 / 멀리 1기
-##  3 무적 ↔ 처치 가능(쓰러지면 2초 뒤 다시 선다)   4 반격(패링 탄)   5 좌우 이동
+##  3 무적 ↔ 처치 가능(쓰러지면 2초 뒤 다시 선다)   4 반격: 끔 → 원거리(패링 탄) → 근접(후려치기) → 둘 다   5 좌우 이동
+##  P / Shift+P 패링 히트스톱 프리셋 (보스방과 같은 Parry.STOP_PRESETS, 기본 HEAVY)
 ##  6 재화 무한(에너지·미사일·부스터·드론 합체 게이지 = Q 합체 휠윈드 무제한, 탄창은 그대로라 재장전도 볼 수 있다)   7 플레이어 무적
 ##  0 합체 컷인 · [ 컷인 캐릭터 · - 컷인 트위닝 · F3 컷인 미리보기 · J 피해 숫자 프리셋 · H HUD 프리셋 (Main)
 ##  = / Shift+= 바닥 파괴 스타일 (CRUMBLE 깨짐 튐 기본 · SLAB 판 들림 · SPIKE 암석 솟음 · BUCKLE 찌그러짐 · SCATTER 파편 튐 · MIX 대파괴 · OFF)   F4 / Shift+F4 조준점에 바닥 파괴 크게 / 작게
 ##  F1 왼쪽 설명(설정 패널·하단 조작 안내) 잠시 숨기기 ↔ 보이기   F2 모든 UI 숨기기 ↔ 보이기 (HUD·드론 패널·피해 숫자·말풍선·적 체력바)
 ## 왼쪽 통로 끝에는 보스 체험방(TrainingBossRoom)이 있다: 들어가면 LANCASTER 가 기동하고 패널 · 숫자 키가 보스 프리셋으로 바뀐다.
-## 확인용 실행 인자: --layout=0~3 --killable --counter --moving (봇: --bot) · --bossroom (보스방 입구에서 시작) · --bossroom=off
+## 확인용 실행 인자: --layout=0~3 --killable --counter(=원거리) --counter=melee|both --moving (봇: --bot) · --bossroom (보스방 입구에서 시작) · --bossroom=off
 
 const ROOM_SIZE := Vector2i(30, 22)
 const RESPAWN := 2.0
@@ -27,7 +28,9 @@ var center := Vector3.ZERO
 var dummies: Array[TrainingDummy] = []
 var layout := 1
 var immortal := true
-var counter := false
+var counter := false           # 원거리 반격 (패링 탄)
+var counter_melee := false     # 근접 반격 (후려치기)
+const COUNTER_NAMES := ["끔", "원거리 (패링 탄)", "근접 (후려치기)", "원거리 + 근접"]
 var moving := false
 var infinite := true
 var god := true
@@ -68,6 +71,11 @@ func _ready() -> void:
 			immortal = false
 		elif a == "--counter":
 			counter = true
+		elif a == "--counter=melee":
+			counter_melee = true
+		elif a == "--counter=both":
+			counter = true
+			counter_melee = true
 		elif a == "--moving":
 			moving = true
 	_place()
@@ -149,6 +157,7 @@ func _spawn_dummy(p: Vector3) -> TrainingDummy:
 	d.anchor = map.push_out(p, 1.0)
 	d.immortal = immortal
 	d.attack = counter
+	d.melee = counter_melee
 	d.mover = moving
 	world.add_child(d)
 	d.global_position = d.anchor
@@ -162,6 +171,7 @@ func _apply_flags() -> void:
 		if is_instance_valid(d) and d.alive:
 			d.immortal = immortal
 			d.attack = counter
+			d.melee = counter_melee
 			d.mover = moving
 			if not counter:
 				d.orb_next = false
@@ -288,6 +298,10 @@ func _apply_ui() -> void:
 	# 말풍선(SpeechBubble)은 HUD 층 아래라 hud.visible 을 따른다
 
 
+func _counter_title() -> String:
+	return COUNTER_NAMES[int(counter) + int(counter_melee) * 2]
+
+
 func _onoff(v: bool) -> String:
 	return "ON" if v else "OFF"
 
@@ -311,7 +325,7 @@ func _build_panel() -> void:
 		panel.row("1", "다시 세우기", func(): return "기록 초기화")
 		panel.row("2", "배치", func(): return LAYOUTS[layout])
 		panel.row("3", "허수아비", func(): return "무적" if immortal else "처치 가능")
-		panel.row("4", "반격 (패링 탄)", func(): return _onoff(counter))
+		panel.row("4", "반격", _counter_title)
 		panel.row("5", "좌우 이동", func(): return _onoff(moving))
 		panel.section("플레이어")
 		panel.row("6", "재화 무한", func(): return _onoff(infinite))
@@ -319,6 +333,7 @@ func _build_panel() -> void:
 		panel.section("연출 프리셋")
 		panel.row("8", "타격 VFX", func(): return MocoFX.STYLE_NAMES[MocoFX.style] + ("  ×0.2" if MocoFX.slow < 1.0 else ""))
 		panel.row("J", "피해 숫자", func(): return DamageLog.preset.to_upper())
+		panel.row("P", "패링 히트스톱", func(): return String(Parry.stop_preset().ko))
 		panel.row("H", "HUD", func(): return HudPresets.NAMES[HudPresets.current])
 		panel.row("=", "바닥 파괴", func(): return String(GroundBreak.current().name))
 		panel.row("0", "합체 컷인", _cutin_title)
@@ -451,9 +466,14 @@ func _unhandled_input(event: InputEvent) -> void:
 				_apply_flags()
 				hud.banner("허수아비  %s" % ("무적" if immortal else "처치 가능"), Color(0.8, 0.9, 1.0), "처치하면 죽음 연출 뒤 2초 만에 다시 섭니다" if not immortal else "")
 			KEY_4:
-				counter = not counter
+				var m := (int(counter) + int(counter_melee) * 2 + 1) % 4
+				counter = m == 1 or m == 3
+				counter_melee = m >= 2
 				_apply_flags()
-				hud.banner("반격  %s" % _onoff(counter), ParryFX.GOLD, "금빛 예고 탄이 닿기 직전에 Space 로 패링" if counter else "")
+				hud.banner("반격  %s" % _counter_title(), ParryFX.GOLD, "가까이 가면 가로대 팔을 감았다 후려친다 · 실제로 닿기 직전에 Space 로 패링" if counter_melee else ("금빛 예고 탄이 닿기 직전에 Space 로 패링" if counter else ""))
+			KEY_P:
+				var pr := Parry.cycle_stop((event as InputEventKey).shift_pressed)
+				hud.banner("패링 히트스톱  %s" % pr.ko, ParryFX.GOLD, "중간 타 %.2f초 · 마지막(단발) %.2f초%s" % [pr.light, pr.heavy, " · 두 번 끊어 멈춤" if float(pr.stutter) > 0.0 else ""])
 			KEY_5:
 				moving = not moving
 				_apply_flags()

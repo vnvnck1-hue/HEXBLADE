@@ -230,6 +230,7 @@ func _begin_charge() -> void:
 
 
 func _end_charge_fx() -> void:
+	RangeOutline.clear("rush")
 	if is_instance_valid(_preview):
 		_preview.queue_free()
 	_preview = null
@@ -357,6 +358,21 @@ func _update_preview() -> void:
 		mi.basis = b * Basis.from_scale(Vector3(lw, 0.01, len))
 		var aa := a * (1.0 if i == 1 else 0.6)
 		mi.set_instance_shader_parameter("tint", Color(c.r * aa, c.g * aa, c.b * aa))
+	# 경로(최대면 끝의 원형 참격까지) 안 적: 실루엣에 굵은 붉은 외곽선
+	var inside: Array = []
+	var end := base + dir * dist
+	for e in Enemy.live(p.get_tree()):
+		var en := e as Enemy
+		if not is_instance_valid(en) or not en.alive or not en.landed:
+			continue
+		var hit := p._seg_dist(base, dir, dist, en.global_position) <= en.radius + w * 0.5
+		if full and not hit:
+			var fe := en.global_position - end
+			fe.y = 0
+			hit = fe.length() <= FINISH_R + en.radius
+		if hit:
+			inside.append(en)
+	RangeOutline.mark("rush", inside)
 
 
 ## 벽 앞에서 멈추는 거리

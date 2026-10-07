@@ -1,12 +1,12 @@
 class_name ParryOrb
 extends Node3D
 ## 패링 탄: 금빛 가시 링을 두른 큰 에너지 구체.
-## 속도는 발사 순간 거리로 정해 항상 Parry.TRAVEL(0.5초) 만에 플레이어에게 닿고, 비행 중에는 일정하다.
+## 속도는 일정(SPEED, 쏘는 쪽이 바꿀 수 있다)하고, 판정 창은 실제로 플레이어에게 닿기 직전(Parry.EARLY 초 전)에만 열린다.
 ## 빠른 만큼 진행 방향으로 길게 늘여 속도감을 낸다.
 ## 닿기 직전 대시로 패링하면 쏜 적에게 고속으로 되돌아가 크게 터진다.
 ## 대시 무적으로 그냥 피할 수도 있다 (피하면 그대로 지나간다).
 
-const MIN_SPEED := 8.0         # 너무 가까이서 쏠 때의 하한
+const SPEED := 13.0            # 기본 비행 속도 (m/s)
 const HOMING := 1.2            # rad/s. 가까워지면 멈춘다
 const HOMING_STOP := 3.2
 const STRETCH_REF := 7.0       # 이 속도에서 늘임 1배. 빠를수록 길어진다
@@ -34,9 +34,7 @@ static func make(pos: Vector3, dir: Vector3, from: Enemy) -> ParryOrb:
 	var o := ParryOrb.new()
 	o.position = pos
 	o.source = from
-	var p := Main.inst.player
-	var gap := Vector2(p.global_position.x - pos.x, p.global_position.z - pos.z).length() - (p.hit_radius + RADIUS)
-	o.speed = maxf(gap / Parry.TRAVEL, MIN_SPEED)
+	o.speed = SPEED
 	o.vel = dir * o.speed
 	return o
 

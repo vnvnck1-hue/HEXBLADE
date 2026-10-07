@@ -31,6 +31,11 @@ var cur_speed := 0.0
 var attack_cd := 1.2
 var bit := false
 var turn_rate := 0.0
+## 연출용 꼭두각시: AI 대신 puppet_goal 로 달려가 멈춰 lure(보스) 를 보고 위협한다 (공격 없음)
+var puppet := false
+var puppet_goal := Vector3.INF
+var puppet_speed := RUN_SPEED
+var puppet_bite := 0.0           ## 멈춰 있을 때 큰턱 벌림 (위협)
 
 
 func _model_path() -> String:
@@ -94,6 +99,9 @@ func _rig_dead(dt: float, k: float) -> void:
 
 
 func _ai(dt: float) -> void:
+	if puppet:
+		_puppet(dt)
+		return
 	var player := Main.inst.player
 	var to_p := _to_player()
 	var dist := to_p.length()
@@ -171,6 +179,33 @@ func _ai(dt: float) -> void:
 	cur_speed = move_toward(cur_speed, want, dt * (60.0 if want > cur_speed else 30.0))
 	var step := move_dir if state != A.PAUSE else Vector3.ZERO
 	global_position += (step * cur_speed + _separation(1.6) * 2.0 + knock) * dt
+	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
+	global_position = Main.inst.push_out(global_position, radius)
+
+
+func _puppet(dt: float) -> void:
+	st_t += dt
+	var to := puppet_goal - global_position if puppet_goal != Vector3.INF else Vector3.ZERO
+	to.y = 0
+	var want := 0.0
+	if to.length() > 0.35:
+		# 후다닥: 짧게 끊기는 달리기 (속도가 박자마다 출렁인다) · 살짝 지그재그
+		state = A.SKITTER
+		move_dir = to.normalized().rotated(Vector3.UP, sin(t * 7.0 + zig * 2.0) * 0.25)
+		want = puppet_speed * (0.7 + 0.3 * absf(sin(t * 8.5 + zig)))
+		turn_rate = _face(move_dir, dt, 14.0)
+		rig.bite_k = move_toward(rig.bite_k, 0.0, dt * 5.0)
+		if fmod(t + zig, 0.5) < dt and near_player(30.0):
+			Sfx.play("bug_skitter", 0.2, -16.0)
+	else:
+		state = A.PAUSE
+		var l := _to_player()
+		turn_rate = _face(l.normalized() if l.length() > 0.1 else -global_basis.z, dt, 9.0)
+		rig.bite_k = move_toward(rig.bite_k, puppet_bite, dt * 4.0)
+		rig.alarm = maxf(rig.alarm, 0.15 * puppet_bite)
+	cur_speed = move_toward(cur_speed, want, dt * (60.0 if want > cur_speed else 30.0))
+	var step := move_dir if state != A.PAUSE else Vector3.ZERO
+	global_position += (step * cur_speed + _separation(1.2) * 2.0 + knock) * dt
 	knock = knock.move_toward(Vector3.ZERO, 30.0 * dt)
 	global_position = Main.inst.push_out(global_position, radius)
 

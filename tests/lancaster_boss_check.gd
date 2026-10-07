@@ -83,6 +83,7 @@ func _put_player(dist: float) -> void:
 
 
 func _run() -> void:
+	LancasterIntro.enabled = false      # 첫 등장 연출은 lancaster_intro_check 가 따로 본다 (여기선 예전 기동 → 전투)
 	main = (load("res://scenes/training.tscn") as PackedScene).instantiate()
 	root.add_child(main)
 	current_scene = main
@@ -159,8 +160,21 @@ func _run() -> void:
 	_put_player(7.0)
 	_cast("claw")
 	var t0 := Main.inst.time
-	var opened := await _wait(func(): return Parry.inst.best_threat() == b, 4.0)
+	# 섬광이 떠도 파고드는 동안(멀리 있는 동안)은 패링 판정이 없다
+	var far_open := false
+	var opened := false
+	for i in 240:
+		if Parry.inst.best_threat() == b:
+			opened = true
+			break
+		if String(b.ps.get("ph", "")) == "close" and Parry.inst.best_threat() == b:
+			far_open = true
+		await physics_frame
 	_check(opened, "집게 연타 첫 타에 근접 패링 판정 창이 열린다")
+	_check(not far_open and String(b.ps.get("ph", "")) == "strike", "판정 창은 파고들기가 끝나고 바로 앞에서 휘두를 때만 (지금 %s)" % b.ps.get("ph", ""))
+	var near_d := (b.global_position - p.global_position) * Vector3(1, 0, 1)
+	_check(near_d.length() <= b._stand_d(p) + 0.3, "판정 창이 열릴 때 보스가 바로 앞 (%.2fm, 휘두르는 거리 %.2fm)" % [near_d.length(), b._stand_d(p)])
+	_check(b.parry_eta() <= Parry.EARLY + 0.001, "판정 창은 실제로 닿기 직전 (남은 %.2f초)" % b.parry_eta())
 	_check(Main.inst.time - t0 > 0.75, "첫 타 전 준비동작이 길다 (%.2f초)" % (Main.inst.time - t0))
 	var total := int(b.ps.get("total", 0))
 	_check(total >= 2, "연속 %d타" % total)
@@ -170,9 +184,9 @@ func _run() -> void:
 		away = away.normalized()
 		var pos0 := b.global_position
 		_check(b.parry_feel() == "light", "중간 타 패링은 가벼운 연출(히트스탑만)")
-		_check(Parry.stop_preset().id == "hard", "기본 패링 히트스톱 프리셋은 HARD")
+		_check(Parry.stop_preset().id == "heavy", "기본 패링 히트스톱 프리셋은 HEAVY (묵직하게 길게)")
 		_check(Parry.inst.try_parry(p), "첫 타 패링 성공")
-		_check(Engine.time_scale < 0.01, "패링 순간 하드 히트스톱: 시간이 사실상 멈춘다 (배율 %.3f)" % Engine.time_scale)
+		_check(Engine.time_scale < 0.01, "패링 순간 히트스톱: 시간이 사실상 멈춘다 (배율 %.3f)" % Engine.time_scale)
 		await _frames(2)
 		_check(b.st == LancasterBoss.St.FIGHT and b.pat == "claw" and b.ps.get("ph", "") == "link", "중간 타를 패링해도 멈추지 않고 연결 동작(link)으로 이어진다")
 		_check(p.stun_t > 0.0 and p.stun_t <= Player.PARRY_RECOIL and p.stun_soft, "패링 성공 뒤 플레이어가 살짝 경직 (%.2f초)" % p.stun_t)
@@ -186,9 +200,9 @@ func _run() -> void:
 				break
 			await physics_frame
 		_check(back < 0.35, "패링당해도 뒤로 밀려나지 않는다 (최대 %.2fm)" % back)
-		_check(again and Main.inst.time - t1 > 0.75 and Main.inst.time - t1 < 1.15, "다음 타는 한 세트로 이어서 온다 (%.2f초 뒤 판정 창, 예전 0.73초)" % (Main.inst.time - t1))
-		# 섬광 → 타격이 빠르다: 판정 창이 열린 뒤 닿기까지
-		_check(b.parry_eta() < 0.3, "섬광 뒤 0.3초 안에 닿는다 (남은 %.2f초)" % b.parry_eta())
+		_check(again and Main.inst.time - t1 > 0.75 and Main.inst.time - t1 < 1.5, "다음 타는 한 세트로 이어서 온다 (%.2f초 뒤 판정 창)" % (Main.inst.time - t1))
+		var near2 := (b.global_position - p.global_position) * Vector3(1, 0, 1)
+		_check(again and near2.length() <= b._stand_d(p) + 0.3 and b.parry_eta() <= Parry.EARLY + 0.001, "다음 타도 바로 앞에서 닿기 직전에만 (%.2fm · 남은 %.2f초)" % [near2.length(), b.parry_eta()])
 		for i in total - 1:
 			if Parry.inst.best_threat() == b or await _wait(func(): return Parry.inst.best_threat() == b, 2.0):
 				Parry.inst.try_parry(p)
@@ -212,8 +226,11 @@ func _run() -> void:
 	_cast("slug")
 	_check(await _wait(func(): return not get_nodes_in_group("parry_orbs").is_empty(), 4.0), "중탄은 패링 탄(ParryOrb)으로 나간다")
 	var orb := get_nodes_in_group("parry_orbs")[0] as ParryOrb
-	var gap := Vector2(p.global_position.x - orb.position.x, p.global_position.z - orb.position.z).length() - p.hit_radius - ParryOrb.RADIUS
-	_check(gap / orb.speed < 0.34, "중탄이 빠르다 (%.0fm/s · %.2f초 만에 닿음, 예전 0.5초)" % [orb.speed, gap / orb.speed])
+	_check(orb.speed >= LancasterBoss.SLUG_SPEED - 0.01, "중탄이 빠르다 (%.0fm/s, 일반 패링 탄 %.0f)" % [orb.speed, ParryOrb.SPEED])
+	var orb_open := await _wait(func(): return is_instance_valid(orb) and Parry.inst.best_threat() == orb, 2.0)
+	if orb_open:
+		var od := Vector2(p.global_position.x - orb.position.x, p.global_position.z - orb.position.z).length() - p.hit_radius - ParryOrb.RADIUS
+		_check(od / orb.speed <= Parry.EARLY + 0.02, "중탄 판정 창도 실제로 닿기 직전 (%.2fm · %.2f초)" % [od, od / orb.speed])
 	_check(await _wait(func(): return int(b.ps.get("n", 0)) >= 2, 3.0), "중탄 연속 2발")
 	await _wait(func(): return b.pat == "", 4.0)
 	main.god = false
@@ -241,10 +258,10 @@ func _run() -> void:
 	for i in Parry.STOP_PRESETS.size():
 		room.handle_key(KEY_P, false)
 		ids.append(Parry.stop_preset().id)
-	_check(ids.size() == 5 and ids[-1] == "hard" and ids.has("crunch") and ids.has("soft"), "P 키로 히트스톱 프리셋 %d종을 돌아 다시 HARD (%s)" % [ids.size(), ", ".join(ids)])
+	_check(ids.size() == 5 and ids[-1] == "heavy" and ids.has("crunch") and ids.has("soft"), "P 키로 히트스톱 프리셋 %d종을 돌아 다시 HEAVY (%s)" % [ids.size(), ", ".join(ids)])
 	room.handle_key(KEY_P, true)
-	_check(Parry.stop_preset().id == "soft", "Shift+P 는 거꾸로")
-	Parry.use_stop("hard")
+	_check(Parry.stop_preset().id == "crunch", "Shift+P 는 거꾸로")
+	Parry.use_stop("heavy")
 
 	# 소강: 한동안 때리지 않으면 거리를 벌리고 견제만 한다. 다시 때리면 곧 끝난다
 	_check(is_equal_approx(LancasterBoss.MAX_HP, 2700.0), "보스 체력 2700 (예전 900 의 세 배)")

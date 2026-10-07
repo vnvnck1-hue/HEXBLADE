@@ -1,0 +1,55 @@
+{
+  "bpm": 124,
+  "key": "D minor",
+  "sr": 44100,
+  "intro_bars": 8,
+  "loop_bars": 32,
+  "intro_seconds": 15.4839,
+  "loop_seconds": 61.9355,
+  "loop_samples": 2731355,
+  "intro_loop_start_sample": 682839,
+  "loop_peak_dbfs": -1.0,
+  "loop_rms_dbfs": -10.31,
+  "full_peak_dbfs": -1.0,
+  "clipped_samples": 0,
+  "dc_offset": [
+    0.00038,
+    0.00045
+  ],
+  "seam_jump": [
+    0.24818,
+    0.18277
+  ],
+  "natural_jump_same_spot": [
+    0.24818,
+    0.18277
+  ],
+  "seam_vs_natural_max_diff": 0.0,
+  "median_sample_step": 0.03256,
+  "p99_sample_step": 0.29246,
+  "section_rms_dbfs": {
+    "A": -10.24,
+    "B": -10.07,
+    "A'": -9.89,
+    "BR": -11.17,
+    "intro": -11.55
+  },
+  "band_energy_db": {
+    "sub_<60": -3.6,
+    "low_60-250": -4.8,
+    "mid_250-2k": -7.7,
+    "hi_2k-8k": -14.2,
+    "air_8k+": -16.8
+  },
+  "bus_rms_dbfs_premix": {
+    "drums": -5.6,
+    "bass": -13.3,
+    "pad": -22.9,
+    "lead": -16.4,
+    "arp": -24.8,
+    "fx": -19.6,
+    "rev": -22.5,
+    "dly": -29.8
+  },
+  "master_gain": 0.5644
+}

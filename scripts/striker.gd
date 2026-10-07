@@ -21,7 +21,7 @@ const BEAM_RANGE := 22.0
 const BEAM_HIT_WINDOW := 0.1
 const RECOVER_TIME := 0.45
 # 근접 돌진 베기 (패링 공격): 과장된 준비동작(크게 물러서며 기수를 치켜들고 웅크림) → 십자 별빛 알림 + 전신 섬광
-# → 알림 후 정확히 Parry.TRAVEL 초 뒤 플레이어에게 닿도록 돌진. 너무 가까우면 그 자세로 잠깐 버틴 뒤 돌진한다.
+# → 빠르게 파고들어(아직 패링 안 됨) 플레이어 바로 앞에서 SLASH_T 초 동안 베어 들어간다 — 판정 창은 이 실제 베기가 닿기 직전에만 열린다.
 const LUNGE_TRIGGER := 8.0      # 이 거리 안이면 돌진을 노린다
 const LUNGE_TELE := 0.7         # 준비동작 길이
 const LUNGE_TRACK := 0.55       # 준비동작 중 이 시간까지 조준을 따라온다
@@ -29,6 +29,9 @@ const LUNGE_MIN_SPEED := 16.0
 const LUNGE_MAX_SPEED := 40.0
 const LUNGE_OVERSHOOT := 2.0    # 플레이어를 지나쳐 더 달리는 거리
 const LUNGE_REACH := 1.1
+const SLASH_GAP := 0.7          # 파고들기가 끝나고 베기에 들어가는 남은 거리 (날개 끝 기준)
+const SLASH_T := 0.32           # 베기 길이: 이 끝에 닿는다 (Parry.EARLY 0.26 보다 길어 판정 창은 바로 앞에서만 열린다)
+const CLOSE_MAX := 1.0          # 파고들기 최대 시간
 const STAGGER_TIME := 2.2
 
 var state := S.MOVE
@@ -54,6 +57,10 @@ var lunge_dir := Vector3.FORWARD
 var lunge_hit := false
 var lunge_speed := 20.0
 var lunge_max := 0.5
+var lunge_slash := false        # 플레이어 바로 앞에서 베는 중 (패링 판정 구간)
+var slash_t := 0.0
+var slash_v := 0.0
+var lunge_after := 0.0          # 벤 뒤 지나쳐 달리는 남은 시간
 ## 확인 모드: 거리와 무관하게 돌진만 한다
 var lunge_only := false
 
@@ -437,32 +444,24 @@ func _lunge_tele(dt: float, dir: Vector3, _dist: float, active: bool) -> void:
 		_alert_lunge()
 
 
-## 준비동작 끝: 알림을 띄우고, 알림 후 정확히 Parry.TRAVEL 초 뒤에 닿도록 돌진 속도(또는 버티는 시간)를 정한다
+## 준비동작 끝: 알림을 띄우고 파고들기 시작 (별빛 뒤 정해진 시간에 닿는 규칙 없음 — 실제로 바로 앞에서 벨 때만 패링된다)
 func _alert_lunge() -> void:
-	var p := Main.inst.player
-	var gap := _gap_to(p)
-	lunge_speed = clampf(gap / Parry.TRAVEL, LUNGE_MIN_SPEED, LUNGE_MAX_SPEED)
-	var hold := maxf(0.0, Parry.TRAVEL - gap / lunge_speed)
-	lunge_max = (gap + LUNGE_OVERSHOOT) / lunge_speed
-	charge_t = hold
+	lunge_speed = LUNGE_MAX_SPEED
+	lunge_max = CLOSE_MAX
+	lunge_slash = false
+	lunge_after = -1.0
 	_warn(_nose(), "melee")
 	if Parry.inst:
 		Parry.inst.register(self)
-	if hold > 0.0:
-		state = S.LUNGE_HOLD
-	else:
-		_launch_lunge()
+	_launch_lunge()
 
 
-## 가까워서 남는 시간: 치켜든 자세로 버티며 떤다 (알림 → 닿기까지의 박자를 맞춘다)
-func _lunge_hold(dt: float, active: bool) -> void:
-	charge_t -= dt
-	vel = vel.move_toward(Vector3.ZERO, 60.0 * dt)
-	_face(lunge_dir, dt, 30.0)
+## 예전 버팀 상태 (지금은 쓰지 않는다 — 들어오면 바로 파고든다)
+func _lunge_hold(_dt: float, active: bool) -> void:
 	if not active:
 		_end_lunge()
 		state = S.MOVE
-	elif charge_t <= 0.0:
+	else:
 		_launch_lunge()
 
 
@@ -479,26 +478,58 @@ func _launch_lunge() -> void:
 	punch = 1.0
 
 
+## 파고들기(빠름, 플레이어를 따라 방향을 튼다) → 바로 앞에서 베기(SLASH_T, 남은 거리만 천천히) → 닿음 → 지나쳐 달림
 func _lunge(dt: float, player: Player) -> void:
 	lunge_t += dt
-	vel = lunge_dir * lunge_speed
 	ghost_t -= dt
 	if ghost_t <= 0.0:
 		ghost_t = 0.02
 		FX.afterimage(visual, Color(1.0, 0.75, 0.25, 0.35))
 	var to := player.global_position - global_position
 	to.y = 0
-	if not lunge_hit and player.alive and to.length() < LUNGE_REACH + player.hit_radius:
+	var gap := _gap_to(player)
+	if lunge_after >= 0.0:
+		# 벤 뒤: 지나쳐 달린다
+		vel = lunge_dir * lunge_speed
+		lunge_after -= dt
+		if lunge_after <= 0.0 or Main.inst.is_blocked(global_position + lunge_dir * (radius + 0.3)):
+			_finish_lunge()
+		return
+	if not lunge_slash:
+		if to.length() > 0.1:
+			lunge_dir = lunge_dir.slerp(to.normalized(), 1.0 - exp(-8.0 * dt)).normalized()
+			_face(lunge_dir, dt, 30.0)
+		vel = lunge_dir * lunge_speed
+		if gap <= SLASH_GAP:
+			lunge_slash = true
+			slash_t = 0.0
+			slash_v = gap / SLASH_T
+			wob_v.x += 20.0          # 베기 직전: 기수를 한 번 더 치켜든다
+		elif lunge_t >= lunge_max or Main.inst.is_blocked(global_position + lunge_dir * (radius + 0.3)):
+			_finish_lunge()
+		return
+	# 베기: 바로 앞에서 남은 거리만 메우며 휘두른다 — 끝에 실제로 닿는다
+	slash_t += dt
+	vel = lunge_dir * maxf(slash_v, 1.5)
+	if slash_t >= SLASH_T:
+		lunge_slash = false
 		lunge_hit = true
-		# 날개 끝으로 베고 지나간다 (대시 무적이면 그냥 스쳐 간다)
-		if player.take_hit(global_position):
-			FX.flash(player.global_position + Vector3(0, 0.9, 0), Color(1, 0.6, 0.3), 1.0, 0.08)
-	var ahead := global_position + lunge_dir * (radius + 0.3)
-	if lunge_t >= lunge_max or Main.inst.is_blocked(ahead):
-		_end_lunge()
-		state = S.RECOVER
-		recover_t = RECOVER_TIME
-		vel = lunge_dir * 5.0
+		_end_warn()
+		if Parry.inst:
+			Parry.inst.unregister(self)
+		if player.alive and to.length() < LUNGE_REACH + player.hit_radius + 0.5:
+			# 날개 끝으로 베고 지나간다 (대시 무적이면 그냥 스쳐 간다)
+			if player.take_hit(global_position):
+				FX.flash(player.global_position + Vector3(0, 0.9, 0), Color(1, 0.6, 0.3), 1.0, 0.08)
+		wob_v.x -= 26.0
+		lunge_after = LUNGE_OVERSHOOT / lunge_speed
+
+
+func _finish_lunge() -> void:
+	_end_lunge()
+	state = S.RECOVER
+	recover_t = RECOVER_TIME
+	vel = lunge_dir * 5.0
 
 
 func _end_lunge() -> void:
@@ -519,12 +550,12 @@ func parry_eta() -> float:
 	var gap := _gap_to(p)
 	# 준비동작 중에는 아직 알림 전이라 판정·타이밍 링이 없다
 	match state:
-		S.LUNGE_HOLD:
-			return charge_t + gap / lunge_speed
 		S.LUNGE:
-			if lunge_hit or to.dot(lunge_dir) < -0.3:
+			if lunge_hit or lunge_after >= 0.0 or to.dot(lunge_dir) < -0.3:
 				return INF
-			return gap / lunge_speed
+			if lunge_slash:
+				return SLASH_T - slash_t        # 바로 앞에서 베는 중: 실제로 닿기까지
+			return maxf(gap - SLASH_GAP, 0.0) / lunge_speed + SLASH_T   # 아직 파고드는 중 (판정 창 밖)
 	return INF
 
 

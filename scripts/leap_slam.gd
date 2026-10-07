@@ -116,6 +116,7 @@ func feed(held: bool, allowed: bool) -> bool:
 
 func _aim_end() -> void:
 	_aim = false
+	RangeOutline.clear("leap")
 	if is_instance_valid(_ind):
 		_ind.queue_free()
 	_ind = null
@@ -546,6 +547,7 @@ func _update_ind(dt: float) -> void:
 			_line(im, k, k + Vector2(0, -sz * bl), 0.07, Color(tc, 0.95 * lock), cy + 0.005)
 	# 범위 안 적 발밑: 잠금 꺾쇠 (작은 삼각 마커 3개가 조여 듦)
 	aim_count = 0
+	var inside: Array = []
 	for e in Enemy.live(p.get_tree()):
 		var en := e as Enemy
 		if not is_instance_valid(en) or not en.alive or not en.landed or en.prop:
@@ -554,6 +556,7 @@ func _update_ind(dt: float) -> void:
 		if d.length() > RADIUS + en.radius:
 			continue
 		aim_count += 1
+		inside.append(en)
 		var ec := Vector2(en.global_position.x, en.global_position.z)
 		var ey := en.global_position.y + 0.07
 		var er := en.radius + 0.35 + 0.08 * sin(tt * 12.0)
@@ -564,6 +567,7 @@ func _update_ind(dt: float) -> void:
 			var nn := Vector2(-u.y, u.x)
 			_tri(im, ec + u * er, ec + u * (er + 0.3) + nn * 0.14, ec + u * (er + 0.3) - nn * 0.14, Color(hot, 0.95 * lock), ey)
 		_arc(im, ec, er - 0.06, 0.0, TAU, 0.03, Color(hot, 0.5 * lock), 24, ey)
+	RangeOutline.mark("leap", inside)     # 범위 안 적: 실루엣에 굵은 붉은 외곽선
 	# 발밑 사거리 원 (점선)
 	var pc := Vector2(p.global_position.x, p.global_position.z)
 	var py := p.gy + 0.05

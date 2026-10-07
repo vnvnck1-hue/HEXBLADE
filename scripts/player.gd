@@ -89,6 +89,7 @@ var slow_mul := 1.0
 var no_attack := false            # 공격 불가: 연기 속 · 레버 돌리는 중 (이동기는 쓸 수 있다)
 var hidden := false               # 연기 속에 숨어 적이 보지 못한다
 var rooted := false               # 제자리 고정 (레버 돌리는 중)
+var cine_lock := false            # 연출 중 (보스 등장 등): 모든 조작을 받지 않는다
 var carry := Vector3.ZERO         # 레일이 실어 나르는 속도 (이동에 더해진다)
 var interact_ok := false          # 레버 범위: F 는 검 대신 레버로 간다
 var gimmick_pose: Callable        # 자세 덮어쓰기 (레버 돌리기), 인자 (player, dt)
@@ -353,6 +354,20 @@ func _physics_process(dt: float) -> void:
 				_begin_ult_aim()
 			else:
 				_deny("NO MISSILE", "missile")
+	if cine_lock:
+		move_dir = Vector3.ZERO
+		fire = false
+		reload_pressed = false
+		slash_pressed = false
+		dash_pressed = false
+		charge_held = false
+		boost_held = false
+		lmb_held = false
+		rmb_held = false
+		dual = false
+		skill_held = false
+		if ult_aiming:
+			_end_ult_aim(false)
 	# 아래 상태 필터에 지워지기 전의 입력: 선입력 버퍼에 담는다
 	var dash_raw := dash_pressed
 	var slash_raw := slash_pressed
