@@ -1,0 +1,441 @@
+{
+  "version": 1,
+  "generated_png_count": 4,
+  "native_svg_count": 17,
+  "units": "pixels, bounds exclusive right/bottom",
+  "files": [
+    {
+      "path": "png/01_keyart_clean.png",
+      "format": "PNG",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "bounds_alpha16": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "bounds_alpha128": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "sha256": "60da73b9a28d34778e270eee6fe283c3671abe1867e849c7f289c902374e580c",
+      "role": "Complete static background; mech/drone/banner/reflections already baked in. Do not add cutouts on top."
+    },
+    {
+      "path": "png/02_hangar_plate.png",
+      "format": "PNG",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGB",
+      "bounds_alpha16": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "bounds_alpha128": [
+        0,
+        0,
+        1672,
+        941
+      ],
+      "sha256": "a31b8799e91a47983523e7a525475a07ecdedb77d518160e2565d3925abd9108",
+      "role": "Empty environment for optional layered composition; cables/crane foreground are baked in."
+    },
+    {
+      "path": "png/03_mech_cutout.png",
+      "format": "PNG",
+      "size": [
+        1672,
+        941
+      ],
+      "mode": "RGBA",
+      "bounds_alpha16": [
+        516,
+        88,
+        1578,
+        891
+      ],
+      "bounds_alpha128": [
+        532,
+        89,
+        1578,
+        874
+      ],
+      "sha256": "5f51c6c00b1ea7c067cc6788e12fd366df38874a6a501bee5bc5b93f81274b6e",
+      "role": "Transparent mech + glowing red sword; framed with padding, re-illustrated. Use manifest bounds, not original canvas placement."
+    },
+    {
+      "path": "png/04_drone_cutout.png",
+      "format": "PNG",
+      "size": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "bounds_alpha16": [
+        106,
+        152,
+        1155,
+        1106
+      ],
+      "bounds_alpha128": [
+        107,
+        153,
+        1154,
+        1105
+      ],
+      "sha256": "6bdda0521d745ca67fc60883212f4fe79c43113391735e391ce74c946869389e",
+      "role": "Transparent single cleaning drone; centered square sprite, re-illustrated."
+    },
+    {
+      "path": "ui/01_logo_mark.svg",
+      "format": "SVG",
+      "size": [
+        192,
+        192
+      ],
+      "text_free": true,
+      "sha256": "92f97a334699d898d71d9db18cf3c924ae79c6847644d997666cd6bb70a39dcc"
+    },
+    {
+      "path": "ui/02_menu_normal.svg",
+      "format": "SVG",
+      "size": [
+        640,
+        128
+      ],
+      "text_free": true,
+      "sha256": "56cfd390fb82256ffe48129018e0abd46f0522d3822554a35ba935054b9438cf"
+    },
+    {
+      "path": "ui/03_menu_focus.svg",
+      "format": "SVG",
+      "size": [
+        640,
+        128
+      ],
+      "text_free": true,
+      "sha256": "0555efce8a9371a918c97477282bac09fd8dbfd57d73d85b08706c0a064a26a2"
+    },
+    {
+      "path": "ui/04_menu_pressed.svg",
+      "format": "SVG",
+      "size": [
+        640,
+        128
+      ],
+      "text_free": true,
+      "sha256": "94081b087b316dcca6d7b425862da888ebe1ac29aac9dbbaa1edd3f5aaec37c9"
+    },
+    {
+      "path": "ui/05_menu_disabled.svg",
+      "format": "SVG",
+      "size": [
+        640,
+        128
+      ],
+      "text_free": true,
+      "sha256": "31f64ae2f98453f1a07571ebd0c8db2f0ba2fc33459499ef7638dd0d1b260d90"
+    },
+    {
+      "path": "ui/06_focus_corners.svg",
+      "format": "SVG",
+      "size": [
+        640,
+        128
+      ],
+      "text_free": true,
+      "sha256": "b4fd3da7c90b8a1768dd944dc208f7f105319a0509b5495d86051739df15eb20"
+    },
+    {
+      "path": "ui/07_arrow_cream.svg",
+      "format": "SVG",
+      "size": [
+        48,
+        48
+      ],
+      "text_free": true,
+      "sha256": "cb47d58f70eb7d64f34624c8f081efa5038a090ea815f1bec6c8a64989d58dad"
+    },
+    {
+      "path": "ui/08_arrow_ink.svg",
+      "format": "SVG",
+      "size": [
+        48,
+        48
+      ],
+      "text_free": true,
+      "sha256": "188bd021e476ac958b94f1d071bfeaae08ee08a3c0b532f1f259ab3b15f1becb"
+    },
+    {
+      "path": "ui/09_diagonal_backdrop.svg",
+      "format": "SVG",
+      "size": [
+        1920,
+        1080
+      ],
+      "text_free": true,
+      "sha256": "7650d899ffc23cc99ffc92d74971e7cc6685de72a9af0e3890b674333f03d1ad"
+    },
+    {
+      "path": "ui/10_logo_underline.svg",
+      "format": "SVG",
+      "size": [
+        336,
+        18
+      ],
+      "text_free": true,
+      "sha256": "09fc1b8e6ef6a9bfc76885a461c349d0e196398ba98fcf971fe8e4e196a37923"
+    },
+    {
+      "path": "ui/11_hint_plate.svg",
+      "format": "SVG",
+      "size": [
+        640,
+        72
+      ],
+      "text_free": true,
+      "sha256": "50cd8d7fded9bd8cd928f27d41bd3a31ed491775ef55d4a5d5d1b8f913dc415e"
+    },
+    {
+      "path": "ui/12_drawer_panel.svg",
+      "format": "SVG",
+      "size": [
+        760,
+        820
+      ],
+      "text_free": true,
+      "sha256": "b0fa333c2a32cc9be3c1e2a254c7f85f149ec8938777c9453fb070b1edaf6dc6"
+    },
+    {
+      "path": "ui/13_badge_plate.svg",
+      "format": "SVG",
+      "size": [
+        144,
+        48
+      ],
+      "text_free": true,
+      "sha256": "b3c6697d2fdf55272e4c1230b25702ae64322692f4e23d2c6c993c21a0041974"
+    },
+    {
+      "path": "ui/14_left_readability.svg",
+      "format": "SVG",
+      "size": [
+        1920,
+        1080
+      ],
+      "text_free": true,
+      "sha256": "e5b6997ad458b4b35e9ee3ea42918a4a291192ffa91b17ac1f30e8bcdd19c718"
+    },
+    {
+      "path": "ui/15_contact_shadow.svg",
+      "format": "SVG",
+      "size": [
+        512,
+        128
+      ],
+      "text_free": true,
+      "sha256": "020b8e9b2e6ab615deb1e830cbf86f758151c9847cc28584b66668769bfdc75f"
+    },
+    {
+      "path": "ui/16_sword_floor_light.svg",
+      "format": "SVG",
+      "size": [
+        512,
+        128
+      ],
+      "text_free": true,
+      "sha256": "4367ed6112bc29c4d6948c24438bb227192854b604b8dc592fad1af762f34b6e"
+    },
+    {
+      "path": "ui/17_title_wordmark.svg",
+      "format": "SVG",
+      "size": [
+        761,
+        90
+      ],
+      "text_free": true,
+      "sha256": "dad3babf8cb231fc3abc88150bd4217286e4c0c8f3d039df3f76c55e1d06f613"
+    },
+    {
+      "path": "ui_png/01_logo_mark.png",
+      "format": "PNG",
+      "size": [
+        192,
+        192
+      ],
+      "sha256": "dbeb4f859e991921bb78b5ee5924ad39e0e77f3cffe148510fa036bce3eb7951",
+      "source": "ui/01_logo_mark.svg"
+    },
+    {
+      "path": "ui_png/02_menu_normal.png",
+      "format": "PNG",
+      "size": [
+        640,
+        128
+      ],
+      "sha256": "164eb9451ef6ab7c83b7d80085009c9e1110fdb4b21b5b941a024a9992c2f894",
+      "source": "ui/02_menu_normal.svg"
+    },
+    {
+      "path": "ui_png/03_menu_focus.png",
+      "format": "PNG",
+      "size": [
+        640,
+        128
+      ],
+      "sha256": "0a02987a640703cec08aef3551805373b346a4da6f560fccb87490d0f90541b7",
+      "source": "ui/03_menu_focus.svg"
+    },
+    {
+      "path": "ui_png/04_menu_pressed.png",
+      "format": "PNG",
+      "size": [
+        640,
+        128
+      ],
+      "sha256": "dccdc7bd9e9efb4fcfaaf1e1388e3cf5785a5c0b0b2d0bd906ccf4fe2603d7f8",
+      "source": "ui/04_menu_pressed.svg"
+    },
+    {
+      "path": "ui_png/05_menu_disabled.png",
+      "format": "PNG",
+      "size": [
+        640,
+        128
+      ],
+      "sha256": "452ae8150ddd65da9624fe42b401733e5107f79a8e46bbe833e688be0da89ec0",
+      "source": "ui/05_menu_disabled.svg"
+    },
+    {
+      "path": "ui_png/06_focus_corners.png",
+      "format": "PNG",
+      "size": [
+        640,
+        128
+      ],
+      "sha256": "5e786d14bf6408be8bd6d03aecc78a2029f774f1376e5de061c85a8e80c5d113",
+      "source": "ui/06_focus_corners.svg"
+    },
+    {
+      "path": "ui_png/07_arrow_cream.png",
+      "format": "PNG",
+      "size": [
+        48,
+        48
+      ],
+      "sha256": "5bd9ad710a52da960ed451415f4390744730c08bb668c6ff2d95bb153ec26e2a",
+      "source": "ui/07_arrow_cream.svg"
+    },
+    {
+      "path": "ui_png/08_arrow_ink.png",
+      "format": "PNG",
+      "size": [
+        48,
+        48
+      ],
+      "sha256": "7bc626860629b316cf5a826bfdd1e76ac3da2cbe4cd8513747993290b7b1cb7c",
+      "source": "ui/08_arrow_ink.svg"
+    },
+    {
+      "path": "ui_png/09_diagonal_backdrop.png",
+      "format": "PNG",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "30c0b4e8479745bfc0a3af2ed785d828edcacfbe3cdf9df5f54ae825995bde8b",
+      "source": "ui/09_diagonal_backdrop.svg"
+    },
+    {
+      "path": "ui_png/10_logo_underline.png",
+      "format": "PNG",
+      "size": [
+        336,
+        18
+      ],
+      "sha256": "1a1b2ba1155322f074ddb2dc115813a458b86b14bbe8468c68aab90eaa5f5330",
+      "source": "ui/10_logo_underline.svg"
+    },
+    {
+      "path": "ui_png/11_hint_plate.png",
+      "format": "PNG",
+      "size": [
+        640,
+        72
+      ],
+      "sha256": "c45351a90055d15490d2147b1faae3a0e9860cac77bc6dcc82499009ce75ad97",
+      "source": "ui/11_hint_plate.svg"
+    },
+    {
+      "path": "ui_png/12_drawer_panel.png",
+      "format": "PNG",
+      "size": [
+        760,
+        820
+      ],
+      "sha256": "9470899b550ddbe91c0acf9914a756ba4999918bf0bcef15d8130f23fd8efd04",
+      "source": "ui/12_drawer_panel.svg"
+    },
+    {
+      "path": "ui_png/13_badge_plate.png",
+      "format": "PNG",
+      "size": [
+        144,
+        48
+      ],
+      "sha256": "ad0fc6b739ba1d0f46448868730bef48842ea05326957b4c8e5227ec191b165c",
+      "source": "ui/13_badge_plate.svg"
+    },
+    {
+      "path": "ui_png/14_left_readability.png",
+      "format": "PNG",
+      "size": [
+        1920,
+        1080
+      ],
+      "sha256": "1edd4b32a539f820676ab97289394f1d1b09c7ef53d45b901f3396170ed184c6",
+      "source": "ui/14_left_readability.svg"
+    },
+    {
+      "path": "ui_png/15_contact_shadow.png",
+      "format": "PNG",
+      "size": [
+        512,
+        128
+      ],
+      "sha256": "6ec39a95bd4d38120e0d268e86d03df10e6768e9a1833ddb3e7be8b37a9af629",
+      "source": "ui/15_contact_shadow.svg"
+    },
+    {
+      "path": "ui_png/16_sword_floor_light.png",
+      "format": "PNG",
+      "size": [
+        512,
+        128
+      ],
+      "sha256": "fd59333e093f395ce1d3ffe81f870706143ff03dbb91125a1d65c4aa68976718",
+      "source": "ui/16_sword_floor_light.svg"
+    },
+    {
+      "path": "ui_png/17_title_wordmark.png",
+      "format": "PNG",
+      "size": [
+        761,
+        90
+      ],
+      "sha256": "a2180e1db23f644cd2c6584ab59bf3d24423c32bd8d03e72d792dd5eccc4f850",
+      "source": "ui/17_title_wordmark.svg"
+    }
+  ],
+  "native_png_variant_count": 17
+}

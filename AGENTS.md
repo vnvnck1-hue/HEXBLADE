@@ -59,6 +59,10 @@
 
 마지막 갱신: 2026-10-07
 
+### 우선 작업 — 로비 업그레이드 (빠른 시일 내 적용)
+
+**사용자 요청(2026-10-07): 로비 업그레이드는 빠른 시일 안에 실제 게임에 적용해야 한다.** 리소스와 [Claude 인수인계](docs/lobby-upgrade-claude-handoff.md)는 완료됐고 본편 연결이 남아 있다. 다음 로비 작업에서 우선 진행한다. 1차는 완성 배경01 + 실제 메뉴 UI로 구성하고 기존 Lobby 진입·복귀·자동 실행을 유지한 뒤 실제 Godot 화면과 조작을 검증한다.
+
 ### 재개 메모 — 메이드 합체 컷인 소품 (2026-10-06)
 
 사용자가 “이 작업 조만간 이어서 할꺼야, 문서에 기록 남겨줘”라고 요청했다. **최종 합성 시안 및 개별 이미지 에셋 제작까지 완료**, 이번 작업에서 게임 코드 연결이나 본편 적용은 하지 않았다. 다음 요청에서 이 기록과 최종 시안을 먼저 보고 이어간다.
@@ -85,6 +89,8 @@
 **남은 작업/재개 순서**: 다음 사용자 요청에 따라 에셋 수정 또는 게임 적용을 진행한다. 적용 요청이 오면 현행 컷인 코드와 [기존 사선 컷인 문서](docs/diagonal-docking-cutin.md)를 먼저 확인하고, 최신 PNG의 개별 크기·등장 위치·속도·회전·수명·뒤쪽 레이어를 맞춘다. 이 수치와 실제 리소스 적용 경로는 아직 미결정이다. 현재 출력 폴더는 `.gdignore`로 임포트 제외되어 있으므로 적용 시 필요한 PNG를 리소스 폴더로 복사하고 임포트 파일도 관리한다. 코드 변경 시 고정 Godot 실행기 및 프로젝트 검증 규칙을 따른다. 이전 `output/maid-cutin-prop-assets-20261005/` 8종은 구 그림체 자료로 최신 세트와 혼동하지 않는다. 기존 시안·다른 작업 보존, 커밋/푸시는 사용자 요청 시에만 한다.
 
 ### 작업 기록
+
+- 2026-10-07 (로비 업그레이드 리소스·인수인계, Codex): 사용자 첨부의 이전 로비 콘셉트(어두운 정비 격납고/라임 사선/크림 중장갑 기체+붉은 검/3안 청소 드론/좌측 사선 메뉴)로 리소스 먼저 제작 및 Claude용 md 완료. output/lobby-upgrade-kit-20261007/: 내장 imagegen 직접 참조5회(기체 여백 보정 포함), 생성 PNG4장 + 네이티브 SVG17종 = 독립21종, PNG대체17장 포함 디코딩파일38개. [Claude 인수인계](docs/lobby-upgrade-claude-handoff.md), preview.html·완성/분리/4비율/목록 PNG·layout.json·manifest/SHA·실제prompts/sources/validation·재현/포장도구·lobby_upgrade_kit.zip 보관. 1차 권장 = 완성 배경01 + 실제 UI, 기체/드론/사선을 분리본으로 중복 그리지 않는다. 분리구성은02+나머지레이어, 원안 세부차이 있음/새주인공모델확정 아님. PNG/알파·원본복사SHA동일·SVG·4비율 HTML포커스/이미지로드/목록13개 PASS, 고정 tools/godot.ps1 4.7.2 Image.load 38성공/0실패/종료0/SCRIPT ERROR0(최종루트인증서 환경ERROR1). 게임코드/씬/설정/리소스연결 미작업, .gdignore 임포트제외. Claude가 필요한 파일만 assets 복사/임포트 + 기존 Lobby 진입/복귀/자동실행 계약 유지 + 실제 Godot UI/전체테스트로 적용을 이어간다. 사용자 요청으로 로비 리소스·문서만 커밋, 푸시 없음. 빠른 시일 안에 실제 로비에 적용하는 우선 작업으로 기록. 사용자가 실수로 실행 취소한 누락파일10개는 검증된 완성본ZIP에서 복구했으며, 다른 작업자의 기존 변경은 보존.
 
 - 2026-10-07 (Claude): **LANCASTER 4차 — 집게 연타를 하나의 세트 타격기로 · 패링 연출 재정비 · 소강 · 체력 3배** (사용자: 3프레임 돌진은 너무 빠르다 → 원복). [docs/lancaster-boss.md](docs/lancaster-boss.md) CLAW CHAIN · 소강 · 패링 성공 연출 절, 용어 [docs/parry-camera-screen-effects.md](docs/parry-camera-screen-effects.md). ① 돌진 속도는 3차(섬광 → 0.3초 동안 날아옴)로 원복. ② 연타 사이 `after`(멈춤)+`rewind`(재장전) → **연결 동작 `link`** 0.8초(2페이즈 0.68): 다 휘두른 자세에서 다음 타 자세로 관절을 섞어 흘러 들어가며 다가섬 → 힘 모음 → 섬광. 다음 판정 창까지 0.73초 → 약 0.85초. 중간 타 패링은 `_strike_end()` 로 그대로 link 에 들어가 **넉백 · 반동 · 멈춤 없음**(`_soft_hit` 로 rig.hit 도 작게), 마지막 타 패링만 STAGGER. 마지막 타 뒤는 `finish`. ③ 공통 `Parry._success`: 적의 `parry_feel()`("light"/"heavy", 없으면 heavy) — light = 히트스톱 0.07초만(슬로우 없음) · 임팩트 프레임 반전 1프레임 · 연출 ×0.6, heavy = 히트스톱 0.085 → 슬로우 → 줌인. `ParryFX` 오버레이에 **줌 블러 · 쇼크웨이브 왜곡 고리** 추가(`play(.., k)`), `ParryFX.burst(.., k)` 에 반격 방향 불꽃 · `Distortion.burst`, 새 `CameraRig.parry_impact`(FOV 펄스 · 다가섬 · 공격 방향 킥 · 셰이크, 기존 main.shake/kick 대체), `ImpactFrame.parry(.., light)`. ④ `Player.parry_counter` → 패링 뒤 **살짝 경직** `PARRY_RECOIL` 0.2초(원거리 0.12, `stun_soft` 는 전류 불꽃 없음) — 모든 적의 패링에 적용. ⑤ 소강: 2.4초(2페이즈 3초) 동안 보스를 안 때리면 `lull_t` 3.6~5초(2.4~3.4) 거리 12.5m 로 벌리고 견제만, 다시 때리면 0.6초 안에 끝, 패턴 한 번 뒤에야 다시 소강. ⑥ `MAX_HP` 900 → 2700. 1페이즈는 과묵하게(옆걸음 ×0.62 · 방향 전환 드묾 · 조준 천천히 · 견제 · 대시 드묾 · 패턴 사이 휴식 0.9~1.6초). `lancaster_boss_check` 에 중간 패링 link 지속 · 뒤로 안 밀림(0.00m) · 플레이어 경직 · 다음 타 간격 · 소강(5→9.7m) · 체력 검사 추가, `_capture/lancaster_parry_show.gd` 는 rewind → link, 캡처 `output/lancaster-boss-20261006/parry_v3/`. ⑦ 히트스톱을 하드하게 + 프리셋 5종 Parry.STOP_PRESETS(hard 기본: 중간 0.11/마지막 0.16초 시간 배율 0.002 완전 정지 · shiver 멈춘 채 화면 떨림 · crunch 두 번 끊어 멈춤 · heavy 길게 · soft 예전), 보스방 P/Shift+P · --parrystop=id, Main.hitstop(sec, scale). ⑧ 덤: LancasterRig 디딘 발이 수평으로 다리 길이 밖이면 발을 안쪽으로 미끄러뜨림(예전엔 IK 가 발을 0.2~0.34m 들어 올려 테스트 간헐 실패), 소강 때 방 안 후퇴 지점(_retreat_spot)으로 빠짐(벽을 등지면 제자리던 문제). 고정 Godot 전체 48종 PASS, lancaster_boss_check 3회 연속 PASS(발 0.01m · 소강 5→12.3m), 패링 세트 bot 60초 ERROR 0. 이 작업 중 다른 작업자의 partner_drone.gd 가 잠시 컴파일 실패(CHARACTERS) → 그쪽이 고친 뒤 재검증. 사용자 요청으로 작업 폴더의 다른 작업(Codex 등 미커밋분) 전체와 함께 `feature/round-skill-hud` 에 커밋·푸시.
 

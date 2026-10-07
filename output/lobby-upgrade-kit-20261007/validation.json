@@ -1,0 +1,316 @@
+{
+  "png_checks": [
+    {
+      "file": "png/01_keyart_clean.png",
+      "decode": true,
+      "mode": "RGB",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha_range": null,
+      "alpha_corners": null,
+      "boundary_alpha_max": null,
+      "pass": true
+    },
+    {
+      "file": "png/02_hangar_plate.png",
+      "decode": true,
+      "mode": "RGB",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha_range": null,
+      "alpha_corners": null,
+      "boundary_alpha_max": null,
+      "pass": true
+    },
+    {
+      "file": "png/03_mech_cutout.png",
+      "decode": true,
+      "mode": "RGBA",
+      "size": [
+        1672,
+        941
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "boundary_alpha_max": 1,
+      "pass": true
+    },
+    {
+      "file": "png/04_drone_cutout.png",
+      "decode": true,
+      "mode": "RGBA",
+      "size": [
+        1254,
+        1254
+      ],
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_corners": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "boundary_alpha_max": 0,
+      "pass": true
+    }
+  ],
+  "svg_xml_parse": true,
+  "source_images_edited_by_script": false,
+  "all_asset_checks_pass": true,
+  "engine_import": {
+    "method": "Image.load original PNG/SVG through pinned tools/godot.ps1; no import of asset copies",
+    "version": "4.7.2-stable",
+    "assets_loaded": 38,
+    "assets_failed": 0,
+    "exit_code": 0,
+    "script_error_count": 0,
+    "startup_environment_error_count": 1,
+    "log": "engine_stdout.log"
+  },
+  "preview_checks": [
+    {
+      "name": "preview_static_1920x1080.png",
+      "stage": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "menus": [
+        {
+          "id": "sector_run",
+          "in_view": true
+        },
+        {
+          "id": "death_test",
+          "in_view": true
+        },
+        {
+          "id": "test_scenes",
+          "in_view": true
+        },
+        {
+          "id": "quit",
+          "in_view": true
+        }
+      ],
+      "image_count": 14,
+      "all_images_loaded": true,
+      "drawer_rows": 13,
+      "keyboard_down": true,
+      "keyboard_up": true,
+      "errors": []
+    },
+    {
+      "name": "preview_layered_1920x1080.png",
+      "stage": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "menus": [
+        {
+          "id": "sector_run",
+          "in_view": true
+        },
+        {
+          "id": "death_test",
+          "in_view": true
+        },
+        {
+          "id": "test_scenes",
+          "in_view": true
+        },
+        {
+          "id": "quit",
+          "in_view": true
+        }
+      ],
+      "image_count": 21,
+      "all_images_loaded": true,
+      "drawer_rows": 13,
+      "keyboard_down": true,
+      "keyboard_up": true,
+      "errors": []
+    },
+    {
+      "name": "preview_static_1280x800.png",
+      "stage": {
+        "x": 0,
+        "y": 40,
+        "width": 1280,
+        "height": 720
+      },
+      "menus": [
+        {
+          "id": "sector_run",
+          "in_view": true
+        },
+        {
+          "id": "death_test",
+          "in_view": true
+        },
+        {
+          "id": "test_scenes",
+          "in_view": true
+        },
+        {
+          "id": "quit",
+          "in_view": true
+        }
+      ],
+      "image_count": 14,
+      "all_images_loaded": true,
+      "drawer_rows": 13,
+      "keyboard_down": true,
+      "keyboard_up": true,
+      "errors": []
+    },
+    {
+      "name": "preview_static_1280x720.png",
+      "stage": {
+        "x": 0,
+        "y": 0,
+        "width": 1280,
+        "height": 720
+      },
+      "menus": [
+        {
+          "id": "sector_run",
+          "in_view": true
+        },
+        {
+          "id": "death_test",
+          "in_view": true
+        },
+        {
+          "id": "test_scenes",
+          "in_view": true
+        },
+        {
+          "id": "quit",
+          "in_view": true
+        }
+      ],
+      "image_count": 14,
+      "all_images_loaded": true,
+      "drawer_rows": 13,
+      "keyboard_down": true,
+      "keyboard_up": true,
+      "errors": []
+    },
+    {
+      "name": "preview_static_1920x800.png",
+      "stage": {
+        "x": 248.875,
+        "y": 0,
+        "width": 1422.22216796875,
+        "height": 800
+      },
+      "menus": [
+        {
+          "id": "sector_run",
+          "in_view": true
+        },
+        {
+          "id": "death_test",
+          "in_view": true
+        },
+        {
+          "id": "test_scenes",
+          "in_view": true
+        },
+        {
+          "id": "quit",
+          "in_view": true
+        }
+      ],
+      "image_count": 14,
+      "all_images_loaded": true,
+      "drawer_rows": 13,
+      "keyboard_down": true,
+      "keyboard_up": true,
+      "errors": []
+    },
+    {
+      "name": "preview_test_drawer.png",
+      "stage": {
+        "x": 0,
+        "y": 0,
+        "width": 1920,
+        "height": 1080
+      },
+      "menus": [
+        {
+          "id": "sector_run",
+          "in_view": true
+        },
+        {
+          "id": "death_test",
+          "in_view": true
+        },
+        {
+          "id": "test_scenes",
+          "in_view": true
+        },
+        {
+          "id": "quit",
+          "in_view": true
+        }
+      ],
+      "image_count": 14,
+      "all_images_loaded": true,
+      "drawer_rows": 13,
+      "errors": []
+    }
+  ],
+  "svg_rasterization": {
+    "tool": "sharp",
+    "count": 17
+  },
+  "preview_checks_pass": true,
+  "visual_review": {
+    "static": "reviewed",
+    "layered": "reviewed; minor AI design differences, vector banner differs from painted reference",
+    "drawer": "reviewed; long Korean text wraps and list scrolls",
+    "source_pngs_preserved": true
+  },
+  "source_copy_checks": [
+    {
+      "file": "png/01_keyart_clean.png",
+      "source_id": "01_keyart_clean",
+      "sha256_identical": true
+    },
+    {
+      "file": "png/02_hangar_plate.png",
+      "source_id": "02_hangar_plate",
+      "sha256_identical": true
+    },
+    {
+      "file": "png/03_mech_cutout.png",
+      "source_id": "03_mech_cutout",
+      "sha256_identical": true
+    },
+    {
+      "file": "png/04_drone_cutout.png",
+      "source_id": "04_drone_cutout",
+      "sha256_identical": true
+    }
+  ]
+}

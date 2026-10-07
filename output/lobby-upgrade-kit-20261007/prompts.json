@@ -1,0 +1,43 @@
+[
+  {
+    "id": "01_keyart_clean",
+    "prompt": "Use case: precise-object-edit. Asset type: game lobby key-art background, widescreen landscape 16:9, preferably 1920x1080 or larger.\nInput image 1 is the user's approved HEX BLADE lobby concept. Produce a clean text-free key-art master by editing this image. Preserve the exact camera angle, dark navy/purple industrial repair hangar, overhead cream lights, cranes, stacked service crates, wet reflective floor, foreground black cables; preserve the same crouched bulky ivory/cream armored mech with olive accents, amber visor, cyan power fittings and red energy sword and the small pale-blue three-green-eye cleaning drone at lower right. Preserve the luminous lime-green diagonal broad geometric graphic behind them. Strong black outlines, graphic cel-shading and brushy illustrated textures exactly like the reference. Preserve subject positions and silhouettes as closely as possible.\nREMOVE all interface overlays on left: entire HEX BLADE wordmark and turquoise mark, subtitle, all four menu buttons including frames/arrows/letters, footer key hints. Paint believable continuous hangar where removed, kept very dark and low-detail in the left 40% so real UI can be placed there later. Remove all lettering, numbers, slogans and brand marks from walls and mech armor as well; retain panels and scuffs. Keep sword tip and mech feet visible and entire drone uncut. No new objects, no typography, no watermark. This is the complete safe static fallback, not an interface mockup.",
+    "transparent_background": false,
+    "inputs": [
+      "reference/approved_concept.png"
+    ]
+  },
+  {
+    "id": "02_hangar_plate",
+    "prompt": "Use case: precise-object-edit. Asset type: game lobby background environment plate.\nInput 1 is the text-free key art already derived from the approved lobby; input 2 is the approved concept for style context. Edit input 1 into a CLEAN EMPTY HANGAR PLATE in precisely the same widescreen canvas size and camera angle.\nRemove the entire cream armored mech, its red energy sword, the pale blue three-eye cleaning drone, their cast shadows, the red sword floor illumination/reflection, and the entire bright lime diagonal graphic. Reconstruct the industrial hangar wall and floor naturally behind them. Preserve all other architecture: tall navy purple service bay columns, cream overhead light strips, right ceiling crane and hook, right stacked crates with small amber status lights, floor seams, dark foreground crates and black cables along the bottom edge. Left 40% remains particularly dark and quiet for UI readability. The center/right background should be low contrast too, suitable for reinserting the same mech and drone as separate transparent layers. Maintain strong graphic ink outlines, muted navy/slate/violet brushy cel-shaded illustration, exact perspective and bottom floor contact horizon of input 1. NO green swoosh, no people, no robots, no weapons, no UI, no words, numbers or logos, no red reflection, no fake border or watermark.",
+    "transparent_background": false,
+    "inputs": [
+      "png/01_keyart_clean.png",
+      "reference/approved_concept.png"
+    ]
+  },
+  {
+    "id": "03_mech_cutout",
+    "prompt": "Use case: background-extraction. Asset type: transparent RGBA foreground mech sprite for a layered game lobby.\nInput image 1 is the text-free lobby keyart. Isolate ONLY the exact crouching ivory armored mech AND the red energy sword held in its image-left hand. Preserve its thick cream armor, olive accents, orange narrow visor, cyan power strips, dark navy joints, overall body proportions, crouched front three-quarter pose, linework, brushy cel shading and original silhouette. Full mech including both feet, all shoulders and backpack and the ENTIRE long red sword down to the glowing pointed tip must be present and uncut. Preserve the mech's existing right-side placement, scale, camera view and position on the input 1672x941 landscape canvas; left area may be empty transparent. Do not center, straighten, rotate or redesign it. Remove EVERYTHING else: hangar, floor, reflection, green graphic, crane, foreground cables, small cleaning drone, cast shadow, UI. Transparent alpha background, including genuine transparent holes between legs, sword and body. Sword red edge glow should remain softly semitransparent and local to sword, with no full-image haze. No baked floor or ground shadow, no text, no logo, no numbers, no extra weapon, no watermark.",
+    "transparent_background": true,
+    "inputs": [
+      "png/01_keyart_clean.png"
+    ]
+  },
+  {
+    "id": "03_mech_cutout_padding_fix",
+    "prompt": "Use case: precise-object-edit. Asset type: production transparent foreground sprite. Input image is the isolated mech and sword; keep the exact mech/sword painting and design. Correct only framing: scale the entire subject down uniformly so there is at least 48 pixels completely transparent padding at ALL four edges of the SAME landscape 1672x941 canvas, including around sword tip AND semitransparent red glow. Do not crop or cut off any backpack corner, foot or sword glow. Keep the pose, palette, all mechanical details, brushy cel-shading and red luminous sword, alpha holes between limbs. Place subject so its solid bounding box sits on the right half and lower right, with the sword reaching toward lower center, leaving the left 20% completely empty. No floor, shadow, drone, background, fake checkerboard or text. Fully genuine transparent RGBA background.",
+    "transparent_background": true,
+    "inputs": [
+      "reference/mech_cutout_initial.png"
+    ]
+  },
+  {
+    "id": "04_drone_cutout",
+    "prompt": "Use case: background-extraction. Asset type: transparent PNG isolated cleaning-drone illustration for the same game lobby.\nInput image 1 is the approved clean lobby art. Extract ONLY the small pale blue cleaning drone in the lower right: squat round triangular robot with three circular bright green lenses arranged triangularly in a dark face, two chunky light blue side housings, short stable feet and the orange small triangle on the image-left side housing. Keep exact character design, front three-quarter angle, cel shaded blue-white metal, black outlines and the same warm/cool lighting style. NO mech, sword, green background graphic, floor, shadows or reflections. NO text, numbers, marks, watermark, grid or checkerboard. Real transparent background including gaps around feet. Place the entire drone at center of a square canvas with generous completely transparent safety margin on all four sides (at least 8% canvas), completely visible and uncut; opaque drone silhouette occupying approximately 80% width. Preserve green lens glow locally with soft alpha edges. A single drone, no alternate views.",
+    "transparent_background": true,
+    "inputs": [
+      "png/01_keyart_clean.png"
+    ]
+  }
+]

@@ -1,0 +1,27 @@
+[
+  {
+    "id": "01_keyart_clean",
+    "tool": "image_gen.imagegen (built-in)",
+    "output_hint": "Generated images are saved to C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836 as C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836\\exec-e724a16a-0f66-47bd-93bd-c2e7da3f8a97.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "id": "02_hangar_plate",
+    "tool": "image_gen.imagegen (built-in)",
+    "output_hint": "Generated images are saved to C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836 as C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836\\exec-5050726b-825e-4787-a027-96f5335fdf5a.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "id": "03_mech_cutout_initial",
+    "tool": "image_gen.imagegen (built-in)",
+    "output_hint": "Generated images are saved to C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836 as C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836\\exec-2955ea8b-ff4d-49ff-be5a-04b51153fc1f.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "id": "03_mech_cutout",
+    "tool": "image_gen.imagegen (built-in)",
+    "output_hint": "Generated images are saved to C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836 as C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836\\exec-f83832dc-61d7-4813-a515-6ceea89367e3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  {
+    "id": "04_drone_cutout",
+    "tool": "image_gen.imagegen (built-in)",
+    "output_hint": "Generated images are saved to C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836 as C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a11453-b686-7bf2-977c-2b14d33c6836\\exec-5674b205-c1e6-4127-85d0-f91cc6e63c04.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  }
+]
