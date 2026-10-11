@@ -1,0 +1,199 @@
+[gd_scene load_steps=21 format=3]
+
+[ext_resource type="Script" path="res://scripts/texture_diorama.gd" id="1"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_f01.glb" id="floor"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_w01.glb" id="wall"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_a01.glb" id="bench"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_a02.glb" id="locker"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_block_cover.glb" id="cover"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_block_pillar.glb" id="pillar"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_block_wall.glb" id="low_wall"]
+[ext_resource type="PackedScene" path="res://scenes/props/coolant_manifold.tscn" id="coolant"]
+[ext_resource type="PackedScene" path="res://scenes/props/power_distribution.tscn" id="power"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_service_s01_vent.glb" id="vent"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_service_s02_tank.glb" id="tank"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_service_s03_pipe.glb" id="pipe"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_service_s04_elbow.glb" id="elbow"]
+[ext_resource type="PackedScene" path="res://assets/models/bg_claude_service_s05_column.glb" id="column"]
+
+[sub_resource type="Environment" id="Environment"]
+background_mode = 1
+background_color = Color(0.035, 0.045, 0.065, 1)
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.65
+ssao_enabled = true
+ssao_radius = 0.7
+ssao_intensity = 0.45
+glow_intensity = 0.25
+
+[sub_resource type="StandardMaterial3D" id="BaseMaterial"]
+albedo_color = Color(0.065, 0.08, 0.105, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BaseMesh"]
+material = SubResource("BaseMaterial")
+size = Vector3(8.5, 0.35, 8.5)
+
+[sub_resource type="BoxMesh" id="ServiceDeckMesh"]
+size = Vector3(8, 0.2, 2)
+
+[sub_resource type="BoxMesh" id="FoundationMesh"]
+material = SubResource("BaseMaterial")
+size = Vector3(8, 0.6, 6)
+
+[node name="TextureDiorama" type="Node3D"]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-50, -30, 0)
+shadow_enabled = true
+shadow_opacity = 0.65
+directional_shadow_max_distance = 45.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+position = Vector3(10.2, 14.4, 17)
+rotation_degrees = Vector3(-38, 32, 0)
+projection = 1
+current = true
+size = 11.8
+far = 100.0
+
+[node name="Diorama" type="Node3D" parent="."]
+
+[node name="Base" type="MeshInstance3D" parent="Diorama"]
+position = Vector3(0, -1.075, 1)
+mesh = SubResource("BaseMesh")
+
+[node name="Foundation" type="MeshInstance3D" parent="Diorama"]
+position = Vector3(0, -0.5, 0)
+mesh = SubResource("FoundationMesh")
+
+[node name="Floors" type="Node3D" parent="Diorama"]
+
+[node name="F01_0_0" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(-4, 0, -3)
+
+[node name="F01_1_0" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(-2, 0, -3)
+
+[node name="F01_2_0" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(0, 0, -3)
+
+[node name="F01_3_0" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(2, 0, -3)
+
+[node name="F01_0_1" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(-4, 0, -1)
+
+[node name="F01_1_1" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(-2, 0, -1)
+
+[node name="F01_2_1" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(0, 0, -1)
+
+[node name="F01_3_1" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(2, 0, -1)
+
+[node name="F01_0_2" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(-4, 0, 1)
+
+[node name="F01_1_2" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(-2, 0, 1)
+
+[node name="F01_2_2" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(0, 0, 1)
+
+[node name="F01_3_2" parent="Diorama/Floors" instance=ExtResource("floor")]
+position = Vector3(2, 0, 1)
+
+[node name="ServiceDeck" type="MeshInstance3D" parent="Diorama/Floors"]
+position = Vector3(0, -0.9, 4)
+mesh = SubResource("ServiceDeckMesh")
+
+[node name="Walls" type="Node3D" parent="Diorama"]
+
+[node name="W01_Back_0" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(-2.25, 0, -3)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="W01_Back_1" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(-0.25, 0, -3)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="W01_Back_2" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(1.75, 0, -3)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="W01_Back_3" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(3.75, 0, -3)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="W01_Left_0" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(-4, 0, -3)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="W01_Left_1" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(-4, 0, -1)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="W01_Left_2" parent="Diorama/Walls" instance=ExtResource("wall")]
+position = Vector3(-4, 0, 1)
+rotation_degrees = Vector3(0, -90, 0)
+
+[node name="Cover" parent="Diorama/Walls" instance=ExtResource("cover")]
+position = Vector3(2.7, 0, 0.8)
+
+[node name="Pillar" parent="Diorama/Walls" instance=ExtResource("pillar")]
+position = Vector3(3.2, 0, -1.4)
+
+[node name="LowWall_0" parent="Diorama/Walls" instance=ExtResource("low_wall")]
+position = Vector3(3.5, 0, 1.8)
+
+[node name="LowWall_1" parent="Diorama/Walls" instance=ExtResource("low_wall")]
+position = Vector3(3.5, 0, 2.8)
+
+[node name="Props" type="Node3D" parent="Diorama"]
+
+[node name="Workbench" parent="Diorama/Props" instance=ExtResource("bench")]
+position = Vector3(0.1, 0, -2.575)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="Locker" parent="Diorama/Props" instance=ExtResource("locker")]
+position = Vector3(2.1, 0, -2.7)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="CoolantManifold" parent="Diorama/Props" instance=ExtResource("coolant")]
+position = Vector3(-2.3, 0, -2.65)
+
+[node name="PowerDistribution" parent="Diorama/Props" instance=ExtResource("power")]
+position = Vector3(-3.65, 0, 0.45)
+rotation_degrees = Vector3(0, 90, 0)
+
+[node name="Machinery" type="Node3D" parent="Diorama"]
+
+[node name="Vent" parent="Diorama/Machinery" instance=ExtResource("vent")]
+position = Vector3(-2.5, -0.8, 4)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="CoolingTank_0" parent="Diorama/Machinery" instance=ExtResource("tank")]
+position = Vector3(0, -0.8, 3.82)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="CoolingTank_1" parent="Diorama/Machinery" instance=ExtResource("tank")]
+position = Vector3(1.6, -0.8, 3.82)
+rotation_degrees = Vector3(0, 180, 0)
+
+[node name="StraightPipe" parent="Diorama/Machinery" instance=ExtResource("pipe")]
+position = Vector3(0.6, -0.8, 4.62)
+
+[node name="ElbowPipe" parent="Diorama/Machinery" instance=ExtResource("elbow")]
+position = Vector3(2.35, -0.8, 4.62)
+rotation_degrees = Vector3(0, 270, 0)
+
+[node name="ServiceColumn" parent="Diorama/Machinery" instance=ExtResource("column")]
+position = Vector3(3.3, -0.8, 4)
+rotation_degrees = Vector3(0, 180, 0)

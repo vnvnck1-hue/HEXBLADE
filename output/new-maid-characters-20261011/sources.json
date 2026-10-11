@@ -1,0 +1,22 @@
+{
+  "reference_images": [
+    "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-1.png",
+    "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-2.png",
+    "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-3.png",
+    "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-4.png"
+  ],
+  "outputs": [
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-631d7da0-ed1a-4e04-a17e-fa7a82dff547.png",
+      "file": "01_lavender_tea_maid.png"
+    },
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-ff804212-1320-40c4-b025-7c4053dfa5fe.png",
+      "file": "02_lemon_bakery_maid.png"
+    },
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-6c2c128b-12f7-4da8-8f5a-3ff83d8ffc71.png",
+      "file": "03_plum_magic_maid.png"
+    }
+  ]
+}

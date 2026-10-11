@@ -51,6 +51,7 @@ func _ready() -> void:
 		mi.scale = base
 		add_child(mi)
 		blobs.append([mi, base])     # 크기는 DroneMess._process 가 매 프레임 (출렁임 · 청소 진행만큼 줄어듦)
+	MessLook.apply(self)             # 조각은 _adopt 로 나중에 오지만 MessLook 은 한 프레임 미뤄 짓는다
 
 
 func _adopt(parts: Array) -> void:

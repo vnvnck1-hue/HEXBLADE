@@ -1,0 +1,29 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS  허수아비 시험장에 드론이 붙는다
+PASS  드론 동행 시작
+PASS  재화 무한: 드론 게이지가 늘 가득
+PASS  Q 합체 1번째 시작
+DOCK_VOICE shozyo1-atattekudasai (1)
+PASS  붙자마자 휠윈드 1
+PASS  휠윈드 1 내내 무적
+PASS  휠윈드 1 끝 → 저절로 분리
+PASS  휠윈드 1 끝나면 무적도 끝 (0.02)
+PASS  휠윈드 1 뒤에도 게이지 가득
+PASS  Q 합체 2번째 시작
+DOCK_VOICE shozyo2-eiya (2)
+PASS  붙자마자 휠윈드 2
+PASS  휠윈드 2 내내 무적
+PASS  휠윈드 2 끝 → 저절로 분리
+PASS  휠윈드 2 끝나면 무적도 끝 (0.01)
+PASS  휠윈드 2 뒤에도 게이지 가득
+PASS  Q 합체 3번째 시작
+DOCK_VOICE shozyo2-atare (3)
+PASS  붙자마자 휠윈드 3
+PASS  휠윈드 3 내내 무적
+PASS  휠윈드 3 끝 → 저절로 분리
+PASS  휠윈드 3 끝나면 무적도 끝 (0.01)
+PASS  휠윈드 3 뒤에도 게이지 가득
+DOCK_VOICE shozyo2-ta (4)
+PASS  재화 무한을 끄면 게이지를 쓴다
+RESULT: OK (0 fails)

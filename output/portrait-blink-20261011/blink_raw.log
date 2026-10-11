@@ -1,0 +1,51 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS 캐스트는 승인 여성 세 명과 유지한 남주만
+PASS owner_welcome 동일 규격
+PASS owner_welcome 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  pixels owner_welcome changed=35116 outside=0 alpha_same=true
+PASS owner_briefing 동일 규격
+FAIL owner_briefing 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  pixels owner_briefing changed=40122 outside=3 alpha_same=true
+PASS owner_encouragement 동일 규격
+FAIL owner_encouragement 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  pixels owner_encouragement changed=34479 outside=3 alpha_same=true
+PASS worker_introduction 동일 규격
+PASS worker_introduction 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  pixels worker_introduction changed=43464 outside=0 alpha_same=true
+PASS worker_cheerful 동일 규격
+PASS worker_cheerful 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  pixels worker_cheerful changed=43891 outside=0 alpha_same=true
+PASS partner_greeting 동일 규격
+PASS partner_greeting 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  pixels partner_greeting changed=24005 outside=0 alpha_same=true
+PASS owner/welcome 실제 눈 감기/그림자 일치
+PASS owner/welcome 0.12초 뒤 원본 복귀, 마스크 유지
+PASS owner/briefing 실제 눈 감기/그림자 일치
+PASS owner/briefing 0.12초 뒤 원본 복귀, 마스크 유지
+PASS owner/encouragement 실제 눈 감기/그림자 일치
+PASS owner/encouragement 0.12초 뒤 원본 복귀, 마스크 유지
+PASS owner/introduction 실제 눈 감기/그림자 일치
+PASS owner/introduction 0.12초 뒤 원본 복귀, 마스크 유지
+PASS owner 감은 상태에서 표정 전환
+PASS owner M 움직임 줄이기는 눈을 뜬 상태로 고정
+PASS owner 듣는 동안도 불규칙하게 깜빡임 (60초 13회)
+PASS worker/introduction 실제 눈 감기/그림자 일치
+PASS worker/introduction 0.12초 뒤 원본 복귀, 마스크 유지
+PASS worker/cheerful 실제 눈 감기/그림자 일치
+PASS worker/cheerful 0.12초 뒤 원본 복귀, 마스크 유지
+PASS worker 감은 상태에서 표정 전환
+PASS worker M 움직임 줄이기는 눈을 뜬 상태로 고정
+PASS worker 듣는 동안도 불규칙하게 깜빡임 (60초 13회)
+PASS partner/greeting 실제 눈 감기/그림자 일치
+PASS partner/greeting 0.12초 뒤 원본 복귀, 마스크 유지
+PASS partner 감은 상태에서 표정 전환
+PASS partner M 움직임 줄이기는 눈을 뜬 상태로 고정
+PASS partner 듣는 동안도 불규칙하게 깜빡임 (60초 14회)
+PASS 눈 프레임 추가 후에도 아이들링 마스크는 원본 6장으로 고정
+PASS 남주 포트레이트 유지, 기존 제외 설정 유지
+PASS owner 합체 컷인에서도 새 원화만
+PASS worker 합체 컷인에서도 새 원화만
+PASS partner 합체 컷인에서도 새 원화만
+PASS 조종석 컷인도 새 청소 파트너 원화
+RESULT dialogue_blink_check: FAIL (2 fails), natural blinks 40

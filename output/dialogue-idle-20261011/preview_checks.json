@@ -1,0 +1,14 @@
+{
+  "male_card_pixels_unchanged": true,
+  "compared_frames": [
+    "partner_000.png",
+    "partner_063.png"
+  ],
+  "roi": [
+    68,
+    606,
+    213,
+    746
+  ],
+  "gif_count": 10
+}

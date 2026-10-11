@@ -20,6 +20,7 @@ var path: Array = []
 var hp := 5
 var energy := Player.ENERGY_MAX
 var missiles := Player.MISSILE_START
+var drone_gauge := 0.0      # 파트너 드론 지원(청소) 게이지: 방을 옮겨도 이어진다
 var coins := 0
 var score := 0
 var kills := 0
@@ -160,6 +161,7 @@ func begin(seed_value: int) -> void:
 	hp = Player.MAX_HP
 	energy = Player.ENERGY_MAX
 	missiles = Player.MISSILE_START
+	drone_gauge = 0.0
 	coins = 0
 	score = 0
 	kills = 0
@@ -227,6 +229,8 @@ func bank_scene() -> void:
 		hp = m.player.hp
 		energy = m.player.energy
 		missiles = m.player.missiles
+	if is_instance_valid(PartnerDrone.inst):
+		drone_gauge = PartnerDrone.inst.gauge
 
 
 ## 포탈로 다음 칸에 들어간다
@@ -362,6 +366,8 @@ func _on_scene_started(cs: Node) -> void:
 		(cs as Main).player.hp = hp
 		(cs as Main).player.energy = energy
 		(cs as Main).player.missiles = missiles
+		if is_instance_valid(PartnerDrone.inst):
+			PartnerDrone.inst.gauge = drone_gauge
 		(cs as Main).hud.banner("SECTOR %d  ·  %s" % [sector + 1, boss_name()], G.KIND_COLORS[G.Kind.BOSS], "섹터의 끝 · 격파하면 다음 섹터로")
 
 

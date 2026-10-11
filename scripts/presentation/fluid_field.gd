@@ -113,7 +113,7 @@ func _build_grid() -> void:
 	lo -= Vector2(2.5, 2.5)
 	hi += Vector2(2.5, 2.5)
 	var size := hi - lo
-	var cell := clampf(maxf(size.x, size.y) / 384.0, 0.2, 0.5)
+	var cell := clampf(maxf(size.x, size.y) / 384.0, 0.2, 0.8)   # 넓은 맵은 칸을 키워 격자를 384 안팎으로 유지
 	var center := Vector3((lo.x + hi.x) * 0.5, 0, (lo.y + hi.y) * 0.5)
 	smoke = FluidSmoke.attach(main.world, center, size, cell)
 

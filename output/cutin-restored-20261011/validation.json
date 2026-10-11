@@ -1,0 +1,41 @@
+{
+  "scope": "Restore fusion cutins only; retain new dialogue cast, protagonist portrait, blink and idle motion",
+  "restoredAssetFiles": 47,
+  "archivedBytesIdentical": true,
+  "cutinScriptsAndTestsEqualGitHEAD": true,
+  "runtimeLogs": [
+    {
+      "name": "import",
+      "errors": 0
+    },
+    {
+      "name": "diagonal",
+      "errors": 0
+    },
+    {
+      "name": "cockpit",
+      "errors": 0
+    },
+    {
+      "name": "training-bot",
+      "errors": 0
+    }
+  ],
+  "regression": {
+    "completedTests": 56,
+    "passed": 55,
+    "remainingFailures": [
+      "diagonal_cutin_check"
+    ],
+    "sharedImportRetryPassed": true,
+    "retryErrors": 0,
+    "knownPriorFailure": "diagonal_cutin_check: right exit x=1271 versus 1280; also documented before this task in AGENTS.md",
+    "initialRunErrors": 49
+  },
+  "visualInspection": [
+    "diagonal.png: original mint maid, props and diagonal DOCKING",
+    "cockpit.png: original purple cockpit pilot"
+  ],
+  "preserved": "Dialogue owner/worker/partner/me, six closed-eye frames, idle motion; unrelated workspace changes",
+  "capturedAt": "2026-10-11T14:13:08.336Z"
+}

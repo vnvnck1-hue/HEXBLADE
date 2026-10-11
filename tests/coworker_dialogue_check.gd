@@ -63,7 +63,7 @@ func _run() -> void:
 				and runner.flags.get("coworker_attitude") == ("nervous" if attitude == 0 else "confident"), "역할/고장 질문 × 긴장/자신감 분기 %d/%d 종료" % [question, attitude])
 			_check(whos.has("owner") and whos.has("worker") and whos.has("me")
 				and poses.has("introduction") and poses.has("cheerful"), "세 사람 발언과 동료 감정 포즈 두 개 사용")
-	for path in ["res://assets/portraits/cleaning_owner/owner-introduction-player.png", "res://assets/portraits/purple_worker/purple-worker-introduction-player.png", "res://assets/portraits/purple_worker/purple-worker-cheerful-player.png"]:
+	for path in ["res://assets/portraits/opening_cast/owner_welcome.png", "res://assets/portraits/opening_cast/worker_introduction.png", "res://assets/portraits/opening_cast/worker_cheerful.png"]:
 		var texture := load(path) as Texture2D
 		var image := texture.get_image()
 		if image.is_compressed():

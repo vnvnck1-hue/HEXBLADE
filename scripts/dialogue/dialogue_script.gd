@@ -3,11 +3,11 @@ extends RefCounted
 ## 대사 파일(.dlg)을 읽어 명령 목록으로 바꾼다. 문법은 docs/dialogue.md 참고.
 ##
 ##   # 주석                          == 라벨
-##   @title 격납고 · 출격 준비          @enter mira left confident    @exit mira
-##   @expr mira angry                @move mira right              @shake 0.6   @flash   @wait 0.5
+##   @title 격납고 · 출격 준비          @enter owner left welcome    @exit owner
+##   @expr owner briefing                @move owner right              @shake 0.6   @flash   @wait 0.5
 ##   @summary 건너뛸 때 보여 줄 줄거리 한 줄
 ##   @set trust += 1                 @if trust >= 1 -> 라벨          -> 라벨       @end
-##   mira angry !: 이번엔 {shake}전부{/shake} 데려간다.   (! = 그림 흔들기)
+##   owner briefing !: 이번엔 {shake}전부{/shake} 데려간다.   (! = 그림 흔들기)
 ##   > 해설 문장 (화자 없음)
 ##   * 선택지 문장 -> 라벨              * [if trust >= 1] <미라> 조건부 · 꼬리표 붙은 선택지 -> 라벨
 ##
@@ -219,7 +219,7 @@ static func _value(s: String) -> Variant:
 	return s
 
 
-## 조건식 하나: "trust >= 1", "met_sena", "not met_sena"
+## 조건식 하나: "trust >= 1", "met_worker", "not met_worker"
 static func test(cond: String, flags: Dictionary) -> bool:
 	cond = cond.strip_edges()
 	if cond == "":

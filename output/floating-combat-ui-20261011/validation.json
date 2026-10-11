@@ -1,0 +1,23 @@
+[
+  {
+    "file": "01_comic_cutout.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "34893C43B8521E655417D603259105D4CA4D93CAE2899D9FBBA28017E9CDAA84",
+    "copy_matches": true
+  },
+  {
+    "file": "02_open_line.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "AA1911AEF1E75C358C2CE7DDCEFF318F8873A15E3EF1CFFE4CD9942DAD746F47",
+    "copy_matches": true
+  },
+  {
+    "file": "03_diagonal_arcade.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "73E306A80CDEF84FA650E0CD0957579660DC94F612014F65058EC2E34CE18785",
+    "copy_matches": true
+  }
+]

@@ -1,0 +1,11 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== coworker_dialogue_check
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== diagonal_cutin_check
+  RESULT: OK (0 fails)
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== opening_cast_check
+  RESULT opening_cast_check: PASS (0 fails)
+
+ALL 4 TESTS PASSED

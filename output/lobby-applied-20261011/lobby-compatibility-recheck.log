@@ -1,0 +1,7 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== lobby_upgrade_check
+  RESULT: OK (0 fails)
+=== mammoth_death_lab_check
+  MAMMOTH_DEATH_LAB_CHECK_OK: 30/60/144fps, 10 resets and seeks, floor contact, cue/completion once, pause/rate, reduced motion, unchanged run, real lobby button and return
+
+ALL 2 TESTS PASSED

@@ -1,23 +1,18 @@
 # 캐릭터 대화 시스템
 
-작성일: 2026-10-01 · 테스트 씬 `scenes/dialogue.tscn` (`dialogue_test.cmd`, 로비 → 테스트 씬 → 캐릭터 대화)
+갱신: 2026-10-11. 대화 테스트 씬은 로비 → 캐릭터 대화 또는 `launchers/scenes/dialogue_test.cmd`로 실행한다. 본편 출격/정산 연결은 아직 하지 않았다.
 
-거점·브리핑에서 쓸 포트레이트형 대화 기능이다. 지금은 테스트 씬에서만 돈다. 본편 연결(귀환 검사·출격 전 브리핑)은 요청이 오면 한다.
-2026-10-04: 테스트씬 기본 대본을 **청소업체 첫 출근**으로 변경했다. `dialogue_test.cmd` 또는 로비의 캐릭터 대화 항목으로 실행한다. **F1** 청소업체 첫 출근 · **F2** 기존 격납고 브리핑 · **F3** 기존 기능 시연 · **F4** 정비 동료 소개 · **R** 현재 대본 재시작.
+현재 출연진은 **사장(owner) · 정비사(worker) · 청소 파트너(partner) · 남주(me)**다. 사용자가 남주 포트레이트 유지로 확정했다. 이전 여성 캐릭터의 대화 등록과 대본만 제거했다. **정리 범위는 대화 씬에 한정한다. 합체 연출은 기존 민트 메이드(5포즈)·보라 정비사·초록 메이드 및 조종석 원화와 마스크·소품을 유지한다.** 사선 컷인의 이전 기본 선택/숨김 설정도 유지한다. 구 대화 사장 원화와 역사 자료는 `output/retired-characters-20261011/`에 보관한다.
 
-**새 동료 소개 씬**: `coworker_dialogue.cmd` 또는 로비의 **동료 소개 · 사장과 정비사**에서 바로 실행한다(`scenes/coworker_dialogue.tscn`, 대본 `data/dialogue/coworker_introduction.dlg`). 사장이 보라색 작업복의 정비사를 소개한 뒤 플레이어까지 셋이 기체 점검과 현장 대응을 이야기한다. 플레이어는 기존 `me` 화자/이름표로 참여한다. 역할/고장 질문과 긴장/자신감 응답의 네 조합이 함께 점검하는 결말에 합류한다. 이름 미정인 동료는 **정비사**로 표시하고, `worker_introduced`·`team_check_ready`는 해당 대화의 시안 플래그다.
+**F1** 청소업체 첫 출근 · **F2** 새 팀의 격납고 브리핑 · **F3** 기능 시연 · **F4** 정비 동료 소개 · **F5** 첫 청소 파트너 소개 · **R** 현재 대본 재시작. 사장/정비사/파트너는 큰 무대 포트레이트, 남주는 하단 대화창의 정지 포트레이트를 사용한다. 별도 실행은 `coworker_dialogue.cmd`와 `partner_dialogue.cmd`(launchers/scenes/).
 
-이 씬의 원화는 **시선과 몸 방향을 구분**한다. 두 인물 모두 플레이어를 바라보며, 왼쪽 사장의 몸은 오른쪽으로, 오른쪽 정비사의 몸은 왼쪽으로 살짝 틀어진다. `face`는 이 몸 방향을 나타내고, 반전 가능한 표정은 자리를 바꾸거나 표정을 교체할 때 방향을 다시 계산한다. 사장의 기존 비대칭 세 원화는 보존하며 새 `introduction` 원화만 반전을 허용한다. 새 투명 PNG는 `assets/portraits/cleaning_owner/owner-introduction-player.png`와 `assets/portraits/purple_worker/purple-worker-{introduction,cheerful}-player.png` 세 장. 동일 인물 편집을 위해 승인 원화를 편집 대상으로 사용하고 최초 원본 두 장을 그림체 기준으로 넣어 내장 imagegen으로 제작했다. 실제 프롬프트와7장 화면 캡처는 `output/coworker-introduction-20261004/`에 저장한다.
+**포트레이트**: `assets/portraits/opening_cast/`. 사장 환영/업무 설명/격려3종, 정비사 소개/신남2종, 파트너 인사1종, 남주 기본1종. 여성6개의 각 원화에 `_closed.png` 닫힌 눈 프레임을 추가했다. 내장 imagegen으로 눈 감은 모습을 제작하고 눈 영역만 합성했다. 최종 1254×1254 RGBA의 눈 밖 픽셀과 전체 알파는 원본과 완전 동일하며 원본은 바꾸지 않았다. 실제 프롬프트/생성 원본/눈 영역 좌표/픽셀 검증은 `output/portrait-blink-20261011/`에 보관한다. 최초 원본 참고4장만 그림체 기준으로 사용한다.
 
-넓은 화면의 좌우 두 인물은 각각 화면 너비25%/75%에 배치하고 단독 대화와 같은 상단/하단 여유에 맞춰 크기를 조절한다. 두 인물의 손과 얼굴은 하단 창 위에, 선택지는 창 안에 표시한다. 듣는 인물은70% 밝기로 유지해 소개 동안 둘 다 볼 수 있다.3~4인/좁은 화면의 기존 배치는 유지한다. `tests/coworker_dialogue_check.gd`는 실제 새 씬, 네 분기, 양쪽 몸 방향과 자리 이동/표정 교체, 투명 에셋, 하단 선택지, 최대 글자36, F4/R와 실행 경로를 검사한다. 캡처는 `tools/godot.ps1 wait -s res://_capture/coworker_introduction_show.gd`, 자동 진행은 `tools/godot.ps1 wait res://scenes/coworker_dialogue.tscn -- --bot --seed=7`.
+**아이들링과 눈 깜빡임**: 여성 세 명은 기존 숨쉬기/머리/옷자락/리본 셰이더 움직임을 유지한다. `DialogueIdleMotion`은 합체 셰이더를 재사용하되 사선 클립과 가슴 모핑을 끈다. 표정 전환의 이전/새 그림과 그림자를 각각 처리한다. 마스크 캐시는 원본6장으로 고정하며 닫힌 프레임은 동일 마스크를 사용한다. `DialogueBlink`는 각 포트레이트 전용 난수 생성기로2.8~6.2초 기다린 뒤0.12초간 눈을 감는다. 말하는 동안과 듣는 동안 모두 작동하고 게임 전역 난수에 영향을 주지 않는다. 표정 전환 중에도 두 프레임이 같은 눈 상태를 사용한다. **M** 움직임 줄이기를 켜면 눈을 뜬 채 유지하고 아이들링이 부드럽게 멎는다. 다시 끄면 이어진다.
 
-새 대본은 `data/dialogue/cleaning_opening.dlg`: 사장과 첫 인사 → 통로 확보 의뢰 → 보수/안전 질문 → 훈련과 안전 수칙 → 긴장/자신감 응답 → 출발 격려 순서다. 사장의 이름은 미정이므로 직함으로 표시하며, `owner`의 `welcome/briefing/encouragement` 표정을 사용한다. 선택 조합 네 가지가 모두 같은 첫 의뢰 준비에 합류한다. `first_contract_ready`는 대화 진행기 안의 시안 플래그이며 전투 씬 전환이나 보수 지급은 구현하지 않았다.
+**화면 배치**: 대화창은 항상 하단. 넓은 화면의 단독 포트레이트는 중앙에, 두 명은25%/75% 위치에 서며 손/얼굴은 창 위로 보인다. 허리 밑단만 창 뒤로 연결한다. 선택지는 하단 창 안에 표시한다. 상단 메뉴 아래 여유는 호흡 확대/표정 점프를 고려한다. 좌우 반전은 인물 몸 방향에 따르며 시선은 원화대로 플레이어 쪽이다. 세 명/좁은 화면은 기존 다인 배치다.
 
-첫 출근 상담은 `assets/portraits/cleaning_owner/`의 기존 사장 PNG 3장을 사용한다. `DialogueCast`의 인물별 `dir`로 새 에셋 경로를 연결했고 기존 네 인물의 경로는 유지한다. **대화창은 항상 하단**에 둔다. 넓은 화면의 단독 대화는 캐릭터를 화면 중앙에 크게 세우고, 허리 끝만 창 뒤로 이어지게 한다. 1280×800/글자28에서 그림은 약516px, 창 높이182px, 그림 하단은 창 뒤로28px 들어간다. 얼굴·상체·양손과 태블릿을 볼 수 있고 그림의 잘린 밑단은 창이 가린다. 최대 글자36에서는 창 높이214px로 읽을 공간을 확보한다. 단독 대화의 선택지는 하단 창 안에 배치하고 대사 본문을 잠시 숨기며, 선택 후 본문을 다시 표시한다. 선택지가3~4개면 창을 높여 버튼 공간을 확보한다. 단독/좌우 두 인물 맞춤은 화면 너비1100px 이상/가로세로 비1.35 이상에서 사용하고, 좁은 화면 또는3~4인 대화는 기존 배치를 유지한다. 창 크기/인원/자리/글자 크기/선택지 수 변경에 따라 재배치된다. 단독 상담 캡처는 `output/dialogue-centered-20261004/`에 보존한다. 캡처 실행은 `tools/godot.ps1 wait -s res://_capture/cleaning_opening_show.gd -- --out=res://output/dialogue-centered-20261004`.
-
-그림은 [카툰 포트레이트 시안](../output/character-dialogue-20261001/README.md) 12장(4명 × 표정 3종)과 [대화 UI 시안](../output/character-dialogue-20261001/dialogue-ui.png)의 배치를 그대로 쓴다.
-
-![격납고 브리핑](../output/dialogue-20261001/03_four_people_noa.png)
+검증: `tests/dialogue_check.gd`(파서/선택/화면/5대본), `dialogue_idle_check.gd`(모션/전환/M/캐시), `dialogue_blink_check.gd`(6장 픽셀/알파 불변/교체/주기/남주/컷인), `coworker_dialogue_check.gd`와 `opening_cast_check.gd`. 실제 화면 캡처는 `tools/godot.ps1 wait -s res://_capture/dialogue_blink_show.gd`, 결과는 `output/portrait-blink-20261011/`.
 
 ## 1. 리서치: 최근 게임의 대화 기능
 
@@ -51,13 +46,13 @@
 | 타자기 출력 | 글자 속도 4단계(느림 22 · 보통 40 · 빠름 70자/초 · 즉시). 쉼표 0.1초 · 마침표/!/? 0.22초 · … 0.3초 자동 멈춤(문장 끝은 안 멈춤). `{p}` `{p=1.0}` 직접 멈춤, `{fast}` `{slow}` 구간 속도 | 역전재판 |
 | 진행 | 좌클릭 · Space · Enter · 휠 아래. 출력 중이면 문장 완성, 다 나왔으면 다음 줄. 다음 표시 ▶ 가 흔들린다 | 공통 |
 | 화자 강조 | 말하는 사람은 밝기 100% · 크기 1.0 · 맨 앞, 나머지는 어둡게(남색 톤) · 0.94배 · 14px 아래. 0.1초 안쪽으로 부드럽게 바뀜 | 블루 아카이브 · 명일방주 |
-| 표정 | 줄 앞에 `mira angry:` 처럼 적는다. 바뀔 때 0.14초 교차 전환 + 통통 튐 | 하데스 II |
-| 감정 반동 | `mira angry !:` → 그림 흔들기 + 크게 튐. `@shake` 화면 흔들기(효과음), `@flash` 섬광 | 역전재판 |
+| 표정 | 줄 앞에 `owner briefing:` 처럼 적는다. 바뀔 때 0.14초 교차 전환 + 통통 튐 | 하데스 II |
+| 감정 반동 | `owner briefing !:` → 그림 흔들기 + 크게 튐. `@shake` 화면 흔들기(효과음), `@flash` 섬광 | 역전재판 |
 | 글자 꾸밈 | `{red}` `{cyan}` `{gold}` `{gray}` `{color=#hex}` `{b}` `{big}` `{small}` `{shake}` `{wave}` (RichTextLabel BBCode) | 공통 |
-| 글자음 | 2글자마다 짧은 블립. 인물마다 높이·파형이 다르고(미라 300Hz 사각 · 세나 470Hz 삼각 · 노아 390Hz 사인 · 에이린 250Hz 사인) 소리에 맞춰 그림이 살짝 들썩인다 | 역전재판 · 헬테이커 |
-| 무대 | 자리 5곳(left2 · left · center · right · right2), 4명까지. 뒷자리는 0.76배. 등장/퇴장은 가까운 화면 밖에서 미끄러짐. 화면 가운데를 보게 좌우 반전(디자인이 비대칭인 미라는 반전 금지) | 블루 아카이브 |
+| 글자음 | 2글자마다 짧은 블립. 인물마다 높이·파형이 다르고(사장 290Hz 사인 · 정비사 380Hz 삼각 · 파트너 430Hz 삼각) 소리에 맞춰 그림이 살짝 들썩인다 | 역전재판 · 헬테이커 |
+| 무대 | 자리 5곳(left2 · left · center · right · right2), 4명까지. 뒷자리는 0.76배. 등장/퇴장은 가까운 화면 밖에서 미끄러짐. 화면 가운데를 보게 좌우 반전(디자인이 비대칭인 사장는 반전 금지) | 블루 아카이브 |
 | 그림 없는 화자 | 해설(`>`)은 이름표 없이 기울인 회색, 주인공 `me` · 무전 `radio` 는 이름표만 | 공통 |
-| 선택지 | 대화창 위 가운데, 숫자 키 1~4 · 마우스 · 방향키. `<미라>` 꼬리표, `[if 조건]` 조건부, 이미 고른 줄은 흐리게 ✓. 자동·넘기기는 선택지에서 멈춤 | BG3 · 원신 · 헬테이커 |
+| 선택지 | 대화창 위 가운데, 숫자 키 1~4 · 마우스 · 방향키. `<사장>` 꼬리표, `[if 조건]` 조건부, 이미 고른 줄은 흐리게 ✓. 자동·넘기기는 선택지에서 멈춤 | BG3 · 원신 · 헬테이커 |
 | 자동 진행 (A) | 1초 + 글자 수 × 0.045초 뒤 다음 줄. 돌아가는 점 표시 | 원신 · 스타레일 |
 | 넘기기 (S) | **읽은 대사만** 빨리 넘김, 처음 보는 줄에서 멈춤. Ctrl 을 누르고 있으면 전부 넘김 | VN 공통 |
 | 선택지까지 건너뛰기 (Tab) | 다음 선택지(또는 끝)까지 한 번에 넘기고 **지나온 줄거리 요약**(`@summary`)을 카드로 보여 줌 | 스타레일 |
@@ -75,25 +70,25 @@
 == 라벨
 @title 격납고 · 출격 준비          장소 제목
 @summary 건너뛸 때 보여 줄 줄거리
-@enter mira left confident        등장 (자리: left2 left center right right2, 표정 생략 가능)
-@exit mira   /   @exit all        퇴장
-@expr mira angry                  표정만 바꾸기
-@move mira right                  자리 옮기기
+@enter owner left confident        등장 (자리: left2 left center right right2, 표정 생략 가능)
+@exit owner   /   @exit all        퇴장
+@expr owner briefing                  표정만 바꾸기
+@move owner right                  자리 옮기기
 @shake 0.6   @flash   @wait 0.5   화면 흔들기 · 섬광 · 기다리기
-@set trust_mira += 1              변수
-@if trust_mira >= 1 -> 라벨       조건 점프
+@set trust_owner += 1              변수
+@if trust_owner >= 1 -> 라벨       조건 점프
 -> 라벨                           점프
 @end                              끝
 
-mira: 대사                         화자: 대사 (등장 안 했으면 빈 자리에 자동 등장)
-mira angry: 대사                   표정 바꾸며
-mira angry !: 대사                 표정 + 그림 흔들기
+owner: 대사                         화자: 대사 (등장 안 했으면 빈 자리에 자동 등장)
+owner briefing: 대사                   표정 바꾸며
+owner briefing !: 대사                 표정 + 그림 흔들기
 > 해설 문장
 * 선택지 -> 라벨                    연속된 * 줄이 한 묶음
-* [if trust_mira >= 1] <미라> 조건부 · 꼬리표 붙은 선택지 -> 라벨
+* [if trust_owner >= 1] <사장> 조건부 · 꼬리표 붙은 선택지 -> 라벨
 ```
 
-화자 id 와 표정은 `scripts/dialogue/dialogue_cast.gd` 에 있다 (mira: confident/angry/flustered · sena: joy/angry/surprised · noa: neutral/skeptical/warm · eirin: confident/stern/vulnerable · 그림 없는 me/radio).
+화자 id와 표정은 `scripts/dialogue/dialogue_cast.gd`에 있다 (owner: welcome/briefing/encouragement/introduction · worker: introduction/cheerful · partner: greeting · me: neutral · 무전 radio).
 없는 화자·표정·자리·라벨은 읽을 때 오류로 잡는다 (테스트가 확인).
 
 ## 4. 코드 구조 (`scripts/dialogue/`)
@@ -107,7 +102,7 @@ mira angry !: 대사                 표정 + 그림 흔들기
 | `dialogue_voice.gd` (`DialogueVoice`) | 인물별 글자음 합성 |
 | `dialogue_cast.gd` (`DialogueCast`) | 인물 표 (이름 · 색 · 표정 그림 · 목소리 · 바라보는 쪽) |
 | `hangar_backdrop.gd` (`HangarBackdrop`) | 격납고 배경 |
-| `dialogue_main.gd` (`DialogueMain`) | 테스트 씬: F1 청소업체 첫 출근 · F2 격납고 브리핑 · F3 기능 시연 · R 처음부터 · Esc 로비 |
+| `dialogue_main.gd` (`DialogueMain`) | 테스트 씬: F1 청소업체 첫 출근 · F2 격납고 브리핑 · F3 기능 시연 · F4 정비 동료 · F5 청소 파트너 · R 처음부터 · Esc 로비 |
 
 본편에 넣을 때는 `DialogueView` 를 CanvasLayer 위에 올리고 `play(DialogueRunner.new(DialogueScript.load_file(...)))`, `finished` 신호를 받으면 된다 (전투 HUD·입력은 그동안 막아야 한다).
 

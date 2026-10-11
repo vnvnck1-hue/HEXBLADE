@@ -1,0 +1,406 @@
+{
+  "date": "2026-10-11",
+  "scope": "concept PNGs, independent HTML timing preview and MD only; no Godot gameplay integration",
+  "boards": 10,
+  "events": 58,
+  "checks": [
+    {
+      "kind": "png",
+      "id": "01_stage_start",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "02_wave_elite",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "03_area_clear",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "04_boss_alert",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "05_combat_feedback",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "06_support_docking",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "07_equipment_resources",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "08_hazards_gimmicks",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "09_results",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "png",
+      "id": "10_route_dialogue_system",
+      "width": 1672,
+      "height": 941,
+      "format": "png",
+      "decoded": true,
+      "original_copy_same": true,
+      "pass": true
+    },
+    {
+      "kind": "document",
+      "inventory_rows": 58,
+      "local_links": 16,
+      "missing_links": [],
+      "pass": true
+    },
+    {
+      "kind": "monitored_runtime_hashes",
+      "files": [
+        {
+          "path": "scripts\\hud.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\main.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\run_main.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\run_state.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\drone\\partner_drone.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\player.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\stream\\stream_main.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\dialogue\\dialogue_view.gd",
+          "same": true
+        },
+        {
+          "path": "scripts\\lobby.gd",
+          "same": true
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "gallery_load",
+      "images": 10,
+      "pass": true
+    },
+    {
+      "kind": "motion_overlay_single_background",
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 0,
+      "title": "출격·스테이지 시작",
+      "inStage": true,
+      "head": "SECTOR 01",
+      "time": 250,
+      "duration": 1220,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 1,
+      "title": "웨이브·정예·진행",
+      "inStage": true,
+      "head": "WAVE 02 / 05",
+      "time": 230,
+      "duration": 900,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 2,
+      "title": "청소·구역 완료·보상",
+      "inStage": true,
+      "head": "AREA CLEAR",
+      "time": 270,
+      "duration": 1300,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 3,
+      "title": "보스 등장·페이즈·약점",
+      "inStage": true,
+      "head": "WARNING",
+      "time": 260,
+      "duration": 1600,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 4,
+      "title": "정밀회피·타격·콤보",
+      "inStage": true,
+      "head": "PERFECT",
+      "time": 155,
+      "duration": 550,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 5,
+      "title": "드론 지원·합체·청소",
+      "inStage": true,
+      "head": "SUPPORT READY",
+      "time": 210,
+      "duration": 1020,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 6,
+      "title": "장비·재장전·자원",
+      "inStage": true,
+      "head": "RELOAD",
+      "time": 200,
+      "duration": 1200,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 7,
+      "title": "위험·상태·상호작용",
+      "inStage": true,
+      "head": "DANGER",
+      "time": 150,
+      "duration": 1200,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 8,
+      "title": "승리·실패·무한 모드 기록",
+      "inStage": true,
+      "head": "RUN COMPLETE",
+      "time": 410,
+      "duration": 1200,
+      "pass": true
+    },
+    {
+      "kind": "sample",
+      "i": 9,
+      "title": "포탈·대화·시스템 알림",
+      "inStage": true,
+      "head": "ROUTE SELECTED",
+      "time": 210,
+      "duration": 550,
+      "pass": true
+    },
+    {
+      "kind": "play_pause",
+      "progressed": true,
+      "paused": true,
+      "pass": true
+    },
+    {
+      "kind": "reset",
+      "pass": true
+    },
+    {
+      "kind": "reduced_motion",
+      "transform": "none",
+      "pass": true
+    },
+    {
+      "kind": "keyboard",
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 1280,
+      "height": 720,
+      "scrollWidth": 1280,
+      "viewWidth": 1280,
+      "buttons": true,
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 1280,
+      "height": 800,
+      "scrollWidth": 1280,
+      "viewWidth": 1280,
+      "buttons": true,
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 1920,
+      "height": 800,
+      "scrollWidth": 1920,
+      "viewWidth": 1920,
+      "buttons": true,
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 390,
+      "height": 844,
+      "scrollWidth": 390,
+      "viewWidth": 390,
+      "buttons": true,
+      "pass": true
+    },
+    {
+      "kind": "browser_js",
+      "errors": [],
+      "pass": true
+    }
+  ],
+  "all_pass": true,
+  "visual_review": [
+    {
+      "id": "01_stage_start",
+      "title": "출격·스테이지 시작",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Concept text/scene is not live state proof"
+    },
+    {
+      "id": "02_wave_elite",
+      "title": "웨이브·정예·진행",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Concept text/scene is not live state proof"
+    },
+    {
+      "id": "03_area_clear",
+      "title": "청소·구역 완료·보상",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Illustrative clear state; receipt should be smaller than picture if action resumes"
+    },
+    {
+      "id": "04_boss_alert",
+      "title": "보스 등장·페이즈·약점",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Boss geometry is AI reinterpretation; name treatment only, not model approval"
+    },
+    {
+      "id": "05_combat_feedback",
+      "title": "정밀회피·타격·콤보",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Six text feedback variants and timestamp labels rather than three separate motion frames"
+    },
+    {
+      "id": "06_support_docking",
+      "title": "드론 지원·합체·청소",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "X meter threshold50 is represented; existing Q DOCK art labeling differs from actual Q whirlwind30, use MD"
+    },
+    {
+      "id": "07_equipment_resources",
+      "title": "장비·재장전·자원",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Equipment icon correction inspected; lower storyboard ammo17/30 is fixed illustration, real reload must finish30/30"
+    },
+    {
+      "id": "08_hazards_gimmicks",
+      "title": "위험·상태·상호작용",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Attack-blocked sample uses combat backdrop, not live attack-state proof; warnings stay until source hazard ends"
+    },
+    {
+      "id": "09_results",
+      "title": "승리·실패·무한 모드 기록",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Concept text/scene is not live state proof"
+    },
+    {
+      "id": "10_route_dialogue_system",
+      "title": "포탈·대화·시스템 알림",
+      "reviewed": true,
+      "style": "navy/ivory clipped panels, lime halftone, short kinetic accents",
+      "notes": "Route icons and confirmation dialogue are conceptual reinterpretations; existing four node types/scripts preserved; SAVED optional"
+    }
+  ],
+  "limitations": [
+    "AI concept boards reinterpret backdrop/models; no model change approval",
+    "Generated Korean and schematic timing are concept-only; MD is authoritative",
+    "Extra state swatches are alternatives, not simultaneous alerts",
+    "Native HTML geometry demonstrates timing and is not an animation of AI bitmap layers",
+    "SAVED, NEW OBJECTIVE, PAUSE and general persistence systems are future proposals"
+  ]
+}

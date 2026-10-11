@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-11",
+  "policy": "Only these four original user attachments are generation references",
+  "references": [
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-1.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-01.png",
+      "sha256": "738A3347CC3747DBAFE5A5C553B700E3DF2C700D375B62082AB687960FE930F8",
+      "copy_match": true
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-2.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-02.png",
+      "sha256": "AEA009199DD2DA02E5EC373ABAD3AA567BBA03F494BB9DF1B50226AF8F0F285A",
+      "copy_match": true
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-3.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-03.png",
+      "sha256": "E63447B8852A72F16B0EF3E0300A901F302F31FAE335B4BE38E868D70F385C8C",
+      "copy_match": true
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-4.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-04.png",
+      "sha256": "BB194947B4D97CE273B9E121326DE51E193BF22851BE938FD1081DF715585DBF",
+      "copy_match": true
+    }
+  ]
+}

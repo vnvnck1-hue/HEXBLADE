@@ -1,0 +1,416 @@
+{
+  "date": "2026-10-11",
+  "engine": "4.7.2-stable",
+  "scope": {
+    "characters": [
+      "owner",
+      "worker",
+      "partner",
+      "mira",
+      "sena",
+      "noa",
+      "eirin"
+    ],
+    "unique_portrait_images": 18,
+    "male_excluded": true,
+    "mechanism": "Shared diagonal_cutin.gdshader with clip_enabled=0; per-character continuous body breathing/sway and damped hair/cloth/ribbon springs",
+    "all_expressions": "Verified by current dialogue_idle_check in complete regression and rendered expression sheets"
+  },
+  "regression": "ALL 55 TESTS PASSED",
+  "motion_checks": 96,
+  "render_checks": {
+    "checks": [
+      {
+        "message": "owner 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 6207 pixels",
+        "pass": true
+      },
+      {
+        "message": "worker 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 9770 pixels",
+        "pass": true
+      },
+      {
+        "message": "partner 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 9122 pixels",
+        "pass": true
+      },
+      {
+        "message": "mira 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 3461 pixels",
+        "pass": true
+      },
+      {
+        "message": "sena 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 4230 pixels",
+        "pass": true
+      },
+      {
+        "message": "noa 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 5718 pixels",
+        "pass": true
+      },
+      {
+        "message": "eirin 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 4971 pixels",
+        "pass": true
+      },
+      {
+        "message": "움직임 줄이기: 실제 렌더 픽셀도 정지",
+        "pass": true
+      },
+      {
+        "message": "mechanic 원하는 실제 대사 표시",
+        "pass": true
+      },
+      {
+        "message": "partner 원하는 실제 대사 표시",
+        "pass": true
+      }
+    ],
+    "fails": 0
+  },
+  "preview_checks": {
+    "male_card_pixels_unchanged": true,
+    "compared_frames": [
+      "partner_000.png",
+      "partner_063.png"
+    ],
+    "roi": [
+      68,
+      606,
+      213,
+      746
+    ],
+    "gif_count": 10
+  },
+  "previews": [
+    {
+      "file": "gallery.gif",
+      "size": [
+        960,
+        600
+      ],
+      "frames": 80,
+      "bytes": 8268499
+    },
+    {
+      "file": "mechanic.gif",
+      "size": [
+        960,
+        600
+      ],
+      "frames": 64,
+      "bytes": 5039746
+    },
+    {
+      "file": "partner.gif",
+      "size": [
+        960,
+        600
+      ],
+      "frames": 64,
+      "bytes": 4511507
+    },
+    {
+      "file": "01_owner.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 1794718
+    },
+    {
+      "file": "02_worker.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 2355123
+    },
+    {
+      "file": "03_partner.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 2190090
+    },
+    {
+      "file": "04_mira.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 1293419
+    },
+    {
+      "file": "05_sena.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 1934082
+    },
+    {
+      "file": "06_noa.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 1496178
+    },
+    {
+      "file": "07_eirin.gif",
+      "size": [
+        296,
+        318
+      ],
+      "frames": 80,
+      "bytes": 1454867
+    }
+  ],
+  "final_logs": [
+    {
+      "file": "import_final.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "A3FDCAA7421BCDC66619FEBF7BDF04CF3A84A56202C4B6CE39D60D1BDC6A7236"
+    },
+    {
+      "file": "regression.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "76AC6AAB08B40D3C48EEA5C084284D99628C42BF6A56C1E1018C8D47948EC552"
+    },
+    {
+      "file": "render.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "D04A68BB384036FA835BBE8CCD480D1240DDF6B6617F4C842C6BBD93ED2BDF4A"
+    },
+    {
+      "file": "cutin_render.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "E074DACF9A81FF968A788593FE1BF58579F0CF1A01F269F0ACFB7EA8A20E45D6"
+    },
+    {
+      "file": "bot_opening.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "AB8B2690F575E8341A06EC317A2FB9DD09A0EFD22135A46B5F839BF17CBAAE8E"
+    },
+    {
+      "file": "bot_briefing.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "7F4A29CD08C36EA8BB74ACFE9249B75DA9BD54C18CB58333FCC7E97F55CB7504"
+    },
+    {
+      "file": "bot_demo.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "5E28D7710DCF14EC92B09401EAB548ED7350DEFED9615E40055E81EB6E9D0989"
+    },
+    {
+      "file": "bot_mechanic.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "FCE4586CEF51CA6B6194F3C5C45A756B524D3A879FFCE03016BFC23CCD95EF3F"
+    },
+    {
+      "file": "bot_partner.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "46FC51C6FC8ECE707CDAF34813A96C3137E6B6A3BBB53158A9BCAA0F71ABFE2A"
+    }
+  ],
+  "media": [
+    {
+      "file": "01_owner.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "CCB2DB553F4BDC169D27DDECE25FF6CDE4529B6363D0DBA48174300694CE5B28"
+    },
+    {
+      "file": "02_worker.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "4A93DF22F881C4F16DDAF3E87D648BA4093A58E527E3BAA019E4B8B77E44B0BE"
+    },
+    {
+      "file": "03_partner.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "AEA27A3901A4EB3B064DD8D687F5F133C8E207509B1CA99280E4ED4E7A236675"
+    },
+    {
+      "file": "04_mira.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "F56062394BCA39E734EA2FE79A3FD2B0CF803666F1A15F6F1CE4A3C7C243E8A7"
+    },
+    {
+      "file": "05_sena.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "88C1D4036D8A9A23952114124DB4A16CC79B7449A8EFC841F60DDAFE15C8D31A"
+    },
+    {
+      "file": "06_noa.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "651959078D78921EFA2759542B0C21428E4C01F31ED64BBA44654403640547A9"
+    },
+    {
+      "file": "07_eirin.gif",
+      "width": 296,
+      "height": 318,
+      "sha256": "8CDF7AFDC9BEE56B939415D4F44CDCFA99442CBDA8F8D0C449ECE79C5EDFADA7"
+    },
+    {
+      "file": "cutin_verified.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "8244F6C5159CDCD982C9CA9A550B430F921E8584D86E2D6E6DE6880884F471BF"
+    },
+    {
+      "file": "eirin_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "BF85261BB9BE445B9FF43D4D402F31E81AFAF7D2CDE58AA80CCBC3847E996E0A"
+    },
+    {
+      "file": "expressions_00.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "6A82D4371824E270E69B7DCFD631EBC151038E977A0AE406F0277380DA5C7312"
+    },
+    {
+      "file": "expressions_01.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "89145691422A89047ADD2BBBECCE59279AD8A4025A745CC3C9226F6843D9DE3C"
+    },
+    {
+      "file": "expressions_02.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "6AE31149A46093C11473792046F548053757CF6674916092794676D54AA61965"
+    },
+    {
+      "file": "gallery.gif",
+      "width": 960,
+      "height": 600,
+      "sha256": "2C6AFAF063DBF0CCDEB87F5234881A715E39B3D61E91A4861DE24BF11FFC6CEE"
+    },
+    {
+      "file": "gallery.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "9D3AFCB5167C2EDE0E131F0466CCF44FD4C4647A0B7E3A4A8D13140AE3CD23DC"
+    },
+    {
+      "file": "mechanic.gif",
+      "width": 960,
+      "height": 600,
+      "sha256": "1EDCDCC1F818DBA2BFAB3F57112B3906081D4F512E557A6620EF0A5B0E6CDA54"
+    },
+    {
+      "file": "mechanic.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "770D182F4C463F112A8242065507A7A3BB938D957679C31C77E661F0927D1213"
+    },
+    {
+      "file": "mira_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "3D0740F246CED99FAE4D0A0F49B76495C6E2045840CD2FF338036D08E5A678BF"
+    },
+    {
+      "file": "noa_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "91AFC146BA2B49E4CE061C7467629D16A393B39A085F742A23C8204185A7CA0B"
+    },
+    {
+      "file": "owner_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "D70DC6D4C6B574BEFD10B5725385D7152197B0DE7A0BBFF6F49FD3283B55A5A4"
+    },
+    {
+      "file": "partner_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "86BDF060A9854BE9A3B277574E009A28CE86BA2DE0CEF77331ACAEF696D08A62"
+    },
+    {
+      "file": "partner.gif",
+      "width": 960,
+      "height": 600,
+      "sha256": "670E07219215F8E2AE760C9A7574134C881EC0B5B1F0BA0AA5E032E1C51C5E97"
+    },
+    {
+      "file": "partner.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "5177737FFE9C3B8D30445B7CE3D0DA313249E9824EB40C7805F44BC040EDA803"
+    },
+    {
+      "file": "sena_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "298F363271692C67FF36E4054B8D2F5406F1508D46BF301F3A873ACEE8D4D11B"
+    },
+    {
+      "file": "shader_after.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "74B79EE19BF0F1207BEFEC8373FE1ADCE75EB6D78C771A3DCB37CC8443FDE7BD"
+    },
+    {
+      "file": "shader_before.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "085583243EB3C710B103C5E22CACA9581244FCF670D00539587A3E00DF179463"
+    },
+    {
+      "file": "worker_mask.png",
+      "width": 128,
+      "height": 128,
+      "sha256": "436B33CDFFD3573DC6D90D7B2506C7AEB45B85D18541FEC506C25E49A56B0A15"
+    }
+  ],
+  "original_opening_portrait_hashes_unchanged": true,
+  "cutin_clip_max": 0,
+  "cutin_visual_review": "PASS",
+  "visual_reviews": [
+    "gallery.png",
+    "expressions_01.png",
+    "expressions_02.png",
+    "mechanic.png",
+    "partner.png",
+    "cutin_verified.png"
+  ],
+  "original_portrait_sources": "portrait_sources.json",
+  "finite_mask_cache": 18,
+  "material_count_per_portrait": 3,
+  "generated_uids": [
+    "scripts/dialogue/dialogue_idle_motion.gd.uid",
+    "tests/dialogue_idle_check.gd.uid"
+  ],
+  "frames_ignored_by_git": true,
+  "commit_or_push": false,
+  "unrelated_changes_preserved": true
+}

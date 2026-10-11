@@ -1,0 +1,135 @@
+{
+  "tool": "built-in imagegen, 6 independent edits",
+  "originals": [
+    {
+      "file": "owner_briefing.png",
+      "unchanged": true
+    },
+    {
+      "file": "owner_encouragement.png",
+      "unchanged": true
+    },
+    {
+      "file": "owner_welcome.png",
+      "unchanged": true
+    },
+    {
+      "file": "partner_greeting.png",
+      "unchanged": true
+    },
+    {
+      "file": "pilot_neutral.png",
+      "unchanged": true
+    },
+    {
+      "file": "worker_cheerful.png",
+      "unchanged": true
+    },
+    {
+      "file": "worker_introduction.png",
+      "unchanged": true
+    }
+  ],
+  "assets": [
+    {
+      "id": "owner_welcome",
+      "hashMatches": true,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "rgba": true,
+      "importExists": true,
+      "outsideEyeChangedPixels": 0,
+      "alphaChangedPixels": 0
+    },
+    {
+      "id": "owner_briefing",
+      "hashMatches": true,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "rgba": true,
+      "importExists": true,
+      "outsideEyeChangedPixels": 0,
+      "alphaChangedPixels": 0
+    },
+    {
+      "id": "owner_encouragement",
+      "hashMatches": true,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "rgba": true,
+      "importExists": true,
+      "outsideEyeChangedPixels": 0,
+      "alphaChangedPixels": 0
+    },
+    {
+      "id": "worker_introduction",
+      "hashMatches": true,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "rgba": true,
+      "importExists": true,
+      "outsideEyeChangedPixels": 0,
+      "alphaChangedPixels": 0
+    },
+    {
+      "id": "worker_cheerful",
+      "hashMatches": true,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "rgba": true,
+      "importExists": true,
+      "outsideEyeChangedPixels": 0,
+      "alphaChangedPixels": 0
+    },
+    {
+      "id": "partner_greeting",
+      "hashMatches": true,
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "rgba": true,
+      "importExists": true,
+      "outsideEyeChangedPixels": 0,
+      "alphaChangedPixels": 0
+    }
+  ],
+  "preview": {
+    "width": 960,
+    "pageHeight": 600,
+    "frames": 140,
+    "loop": 0
+  },
+  "retired": [
+    {
+      "name": "cleaning_owner",
+      "absentFromGame": true,
+      "archiveExists": true
+    },
+    {
+      "name": "purple_worker",
+      "absentFromGame": true,
+      "archiveExists": true
+    },
+    {
+      "name": "green_maid",
+      "absentFromGame": true,
+      "archiveExists": true
+    },
+    {
+      "name": "mint_maid",
+      "absentFromGame": true,
+      "archiveExists": true
+    }
+  ]
+}

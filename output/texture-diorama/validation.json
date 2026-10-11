@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-11",
+  "godot": "4.7.2.stable.official.ed1daf0bf",
+  "scene": "res://scenes/texture_diorama.tscn",
+  "scene_checks": 27,
+  "scene_failures": 0,
+  "rendered_bot_seconds": 12,
+  "renderer": "Forward+",
+  "resolution": [
+    1280,
+    800
+  ],
+  "bot_exit": 0,
+  "bot_errors": 0,
+  "bot_script_errors": 0,
+  "captures_visual_review": "all five views inspected",
+  "regression": {
+    "total": 52,
+    "passed": 51,
+    "failed": [
+      "diagonal_cutin_check"
+    ],
+    "failure": "Existing training-scene cutin left edge x=1271; expected >1280. Same failure on standalone retry.",
+    "interrupted_at": "moco_vfx_check",
+    "remaining_tests_completed": true
+  },
+  "captures": [
+    {
+      "file": "01_overview.png",
+      "bytes": 329025,
+      "sha256": "e767433da8a64b90690078e715ef8a5762ec471ce4b471d7f053c51f4c4b10b7"
+    },
+    {
+      "file": "02_floor.png",
+      "bytes": 362062,
+      "sha256": "57e2d986728f03977bd43ad3ef71a8a3c5da3e0b4f5a7443ac3b06f0d7090f31"
+    },
+    {
+      "file": "03_wall.png",
+      "bytes": 242804,
+      "sha256": "17337478be23b6715e0dffe5f58acf9459763cce68e15b8d21bdd1d3025ab9c5"
+    },
+    {
+      "file": "04_props.png",
+      "bytes": 401188,
+      "sha256": "892a49961a9e8367cb502e4028ec2ce5e387e1289dc14964687b05f793f70b72"
+    },
+    {
+      "file": "05_machinery.png",
+      "bytes": 451396,
+      "sha256": "b300b0ae72579de17f3fd7260b8c1121f87fb37e1277bfbe67786bb1239f38f0"
+    }
+  ]
+}

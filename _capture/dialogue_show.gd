@@ -2,7 +2,7 @@ extends SceneTree
 ## 대화 시스템 캡처: 대표 장면을 output/dialogue-20261001/ 에 PNG 로 남긴다.
 ##   powershell -File tools\godot.ps1 wait -s res://_capture/dialogue_show.gd
 
-const OUT := "res://output/dialogue-20261001"
+const OUT := "res://output/portrait-blink-20261011/briefing"
 var view: DialogueView
 var runner: DialogueRunner
 
@@ -40,15 +40,15 @@ func _run() -> void:
 	runner = DialogueRunner.new(DialogueScript.load_file("res://data/dialogue/hangar_briefing.dlg"))
 	view.play(runner)
 	await _wait(0.6)
-	_skip_to(func(): return view.line.get("who") == "mira")
+	_skip_to(func(): return view.line.get("who") == "owner")
 	await _wait(1.2)
-	await _shot("01_typing_mira")
+	await _shot("01_typing_owner")
 	_skip_to(func(): return view.line.get("punch", false))
 	await _wait(2.5)
-	await _shot("02_mira_angry_punch")
-	_skip_to(func(): return view.line.get("who") == "noa" and view.line.get("expr") == "skeptical")
+	await _shot("02_owner_angry_punch")
+	_skip_to(func(): return view.line.get("who") == "partner")
 	await _wait(3.5)
-	await _shot("03_four_people_noa")
+	await _shot("03_three_people_partner")
 	view.jump_to_choice()
 	await _wait(0.8)
 	await _shot("04_skip_summary")
@@ -60,7 +60,7 @@ func _run() -> void:
 	await _shot("06_log")
 	view.log_layer.visible = false
 	view._pick(0)
-	_skip_to(func(): return view.line.get("who") == "eirin" and view.line.get("expr") == "vulnerable")
+	_skip_to(func(): return view.line.get("who") == "worker" and view.line.get("expr") == "introduction")
 	await _wait(3.0)
-	await _shot("07_eirin_vulnerable")
+	await _shot("07_worker_vulnerable")
 	quit()

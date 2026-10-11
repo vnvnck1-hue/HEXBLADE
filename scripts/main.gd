@@ -282,8 +282,14 @@ func _build_arena() -> void:
 	world.add_child(map)
 	# 방 탐색 아레나는 바닥에 완만한 굴곡이 있다. --flat 이면 예전처럼 평지.
 	map.terrain = not OS.get_cmdline_user_args().has("--flat")
+	map.room_scale = room_scale()
 	map.generate(map_seed if map_seed >= 0 else randi())
 	map.build()
+
+
+## 메인 게임 방 크기 배율. --rooms=old 면 예전 크기.
+static func room_scale() -> float:
+	return 1.0 if cmd_args.has("--rooms=old") else ArenaMap.ROOM_SCALE
 
 
 # ── 판정 보조 ───────────────────────────────────────────
@@ -315,6 +321,8 @@ func add_bullet(b: Bullet) -> void:
 	if not b.from_player:
 		b.add_to_group("enemy_bullets")
 	bullets.add_child(b)
+	if not b.from_player:
+		BulletLook.apply(b)        # 적 투사체 시인성 프리셋 (기본은 없음)
 
 
 func mouse_ground(h: float) -> Vector3:

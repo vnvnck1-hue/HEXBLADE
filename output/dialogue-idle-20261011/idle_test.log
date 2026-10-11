@@ -1,0 +1,99 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS owner 아이들링 등록
+PASS owner/welcome 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS owner/welcome 실제 움직임/안정 변위
+PASS owner/briefing 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS owner/briefing 실제 움직임/안정 변위
+PASS owner/encouragement 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS owner/encouragement 실제 움직임/안정 변위
+PASS owner/introduction 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS owner/introduction 실제 움직임/안정 변위
+PASS owner 듣는 동안에도 아이들링 유지
+PASS owner 이전 표정도 자기 마스크로 교차 전환
+PASS owner 전환 뒤 이전 원화 참조 정리
+PASS owner 자리 반전과 그림자 변형 일치
+PASS owner 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS owner 복귀와 큰 프레임 간격에서 안정
+PASS owner 표정 반복에도 재질 3개 고정
+PASS worker 아이들링 등록
+PASS worker/introduction 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS worker/introduction 실제 움직임/안정 변위
+PASS worker/cheerful 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS worker/cheerful 실제 움직임/안정 변위
+PASS worker 듣는 동안에도 아이들링 유지
+PASS worker 이전 표정도 자기 마스크로 교차 전환
+PASS worker 전환 뒤 이전 원화 참조 정리
+PASS worker 자리 반전과 그림자 변형 일치
+PASS worker 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS worker 복귀와 큰 프레임 간격에서 안정
+PASS worker 표정 반복에도 재질 3개 고정
+PASS partner 아이들링 등록
+PASS partner/greeting 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS partner/greeting 실제 움직임/안정 변위
+PASS partner 듣는 동안에도 아이들링 유지
+PASS partner 자리 반전과 그림자 변형 일치
+PASS partner 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS partner 복귀와 큰 프레임 간격에서 안정
+PASS partner 표정 반복에도 재질 3개 고정
+PASS mira 아이들링 등록
+PASS mira/confident 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS mira/confident 실제 움직임/안정 변위
+PASS mira/angry 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS mira/angry 실제 움직임/안정 변위
+PASS mira/flustered 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS mira/flustered 실제 움직임/안정 변위
+PASS mira 듣는 동안에도 아이들링 유지
+PASS mira 이전 표정도 자기 마스크로 교차 전환
+PASS mira 전환 뒤 이전 원화 참조 정리
+PASS mira 자리 반전과 그림자 변형 일치
+PASS mira 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS mira 복귀와 큰 프레임 간격에서 안정
+PASS mira 표정 반복에도 재질 3개 고정
+PASS sena 아이들링 등록
+PASS sena/joy 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS sena/joy 실제 움직임/안정 변위
+PASS sena/angry 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS sena/angry 실제 움직임/안정 변위
+PASS sena/surprised 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS sena/surprised 실제 움직임/안정 변위
+PASS sena 듣는 동안에도 아이들링 유지
+PASS sena 이전 표정도 자기 마스크로 교차 전환
+PASS sena 전환 뒤 이전 원화 참조 정리
+PASS sena 자리 반전과 그림자 변형 일치
+PASS sena 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS sena 복귀와 큰 프레임 간격에서 안정
+PASS sena 표정 반복에도 재질 3개 고정
+PASS noa 아이들링 등록
+PASS noa/neutral 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS noa/neutral 실제 움직임/안정 변위
+PASS noa/skeptical 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS noa/skeptical 실제 움직임/안정 변위
+PASS noa/warm 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS noa/warm 실제 움직임/안정 변위
+PASS noa 듣는 동안에도 아이들링 유지
+PASS noa 이전 표정도 자기 마스크로 교차 전환
+PASS noa 전환 뒤 이전 원화 참조 정리
+PASS noa 자리 반전과 그림자 변형 일치
+PASS noa 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS noa 복귀와 큰 프레임 간격에서 안정
+PASS noa 표정 반복에도 재질 3개 고정
+PASS eirin 아이들링 등록
+PASS eirin/confident 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS eirin/confident 실제 움직임/안정 변위
+PASS eirin/stern 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS eirin/stern 실제 움직임/안정 변위
+PASS eirin/vulnerable 합체 셰이더 재사용 + 원화별 머리/옷 마스크
+PASS eirin/vulnerable 실제 움직임/안정 변위
+PASS eirin 듣는 동안에도 아이들링 유지
+PASS eirin 이전 표정도 자기 마스크로 교차 전환
+PASS eirin 전환 뒤 이전 원화 참조 정리
+PASS eirin 자리 반전과 그림자 변형 일치
+PASS eirin 움직임 줄이기면 몸/머리/옷 모두 정지
+PASS eirin 복귀와 큰 프레임 간격에서 안정
+PASS eirin 표정 반복에도 재질 3개 고정
+PASS 7명 모두 적용, 인물별 속도/위상 구별
+PASS 재진입/표정 반복 마스크 캐시 18장으로 고정
+PASS 남주 대사창 원화는 아이들링 셰이더/모션 제외
+PASS 실제 M키 설정으로 아이들링 줄이기
+RESULT dialogue_idle_check: PASS (0 fails)

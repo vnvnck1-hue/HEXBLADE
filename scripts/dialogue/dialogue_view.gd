@@ -34,6 +34,7 @@ var box: Control
 var text: RichTextLabel
 var plate_name: Label
 var plate_en: Label
+var speaker_portrait: TextureRect
 var title_label: Label
 var hint: Label
 var toast: Label
@@ -162,6 +163,13 @@ func _build() -> void:
 	box.add_child(plate_name)
 	plate_en = _label("", 16, Color(1, 1, 1, 0.7))
 	box.add_child(plate_en)
+	# 주인공은 대사창 안에서 보여 주어 기존 좌우 인물 배치를 유지한다.
+	speaker_portrait = TextureRect.new()
+	speaker_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	speaker_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	speaker_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	speaker_portrait.visible = false
+	box.add_child(speaker_portrait)
 
 	# 위: 장소 제목 · 버튼
 	title_label = _label("", 22, CREAM)
@@ -326,7 +334,7 @@ func _on_said(l: Dictionary) -> void:
 	var who: String = l.who
 	var info := DialogueCast.info(who) if who != "" else {}
 	accent = info.get("color", Color(0.55, 0.55, 0.6))
-	if DialogueCast.has_portrait(who):
+	if DialogueCast.has_portrait(who) and not info.get("speaker_only", false):
 		var p: DialoguePortrait = portraits.get(who)
 		if p == null:
 			p = _enter(who, _free_slot(), l.expr)
@@ -340,6 +348,7 @@ func _on_said(l: Dictionary) -> void:
 		q.active = id == who
 		q.z_index = 10 if id == who else (0 if q.slot in DialoguePortrait.BACK_SLOTS else 2)
 	_update_layout(get_viewport_rect().size)
+	_layout_speaker_portrait()
 	# 이름표: 화자 없음(해설)이면 숨기고 글자를 기울여 회색으로
 	plate_name.visible = who != ""
 	plate_en.visible = who != ""
@@ -477,10 +486,24 @@ func _update_layout(screen: Vector2) -> void:
 	text.offset_right = -150.0
 	text.offset_top = 36.0 if fitted else 46.0
 	text.offset_bottom = -20.0
+	_layout_speaker_portrait()
 	plate_name.position.x = 66.0
 	plate_en.position.x = plate_name.position.x + plate_name.get_minimum_size().x + 14.0
 	_layout_choices()
 	box.queue_redraw()
+
+
+func _layout_speaker_portrait() -> void:
+	var who: String = line.get("who", "")
+	var inset: bool = DialogueCast.info(who).get("speaker_only", false)
+	inset = inset and (runner == null or not runner.waiting_choice)
+	speaker_portrait.visible = inset
+	text.offset_left = 214.0 if inset else (48.0 if _solo_side != "" or _paired else 64.0)
+	if inset:
+		speaker_portrait.texture = DialogueCast.texture(who, line.get("expr", ""))
+		var side := minf(148.0, -box.offset_top - 38.0 - 48.0)
+		speaker_portrait.position = Vector2(40.0, 28.0)
+		speaker_portrait.size = Vector2(side, side)
 
 
 func _on_cue(c: Dictionary) -> void:

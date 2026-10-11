@@ -1,0 +1,699 @@
+{
+  "date": "2026-10-11",
+  "status": "complete",
+  "engine": "4.7.2-stable standard Forward+",
+  "execution": "tools/godot.ps1",
+  "composition": "A: complete keyart + real Godot UI",
+  "resources": [
+    {
+      "file": "01_logo_mark.svg",
+      "sha256": "0E768AFE7392267B4C2B1C0B54C1CA81A893F459ED5C8F7D04CC706F9EB60581",
+      "source_sha256": "0E768AFE7392267B4C2B1C0B54C1CA81A893F459ED5C8F7D04CC706F9EB60581",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "02_menu_normal.svg",
+      "sha256": "F5E050C04E9E697A286466E15B21A844702AFF46DAA4C3FFF9F75431BB637DFF",
+      "source_sha256": "F5E050C04E9E697A286466E15B21A844702AFF46DAA4C3FFF9F75431BB637DFF",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "03_menu_focus.svg",
+      "sha256": "74D293676F378600C705B8664C8B7503F4E1EEDCCEEEBED0163520EDC86A9B3A",
+      "source_sha256": "74D293676F378600C705B8664C8B7503F4E1EEDCCEEEBED0163520EDC86A9B3A",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "04_menu_pressed.svg",
+      "sha256": "801C87A5C2B871311877EDC05FC0FC6AF1CE3241AA60ED403D2E2B23B18CC4B7",
+      "source_sha256": "801C87A5C2B871311877EDC05FC0FC6AF1CE3241AA60ED403D2E2B23B18CC4B7",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "07_arrow_cream.svg",
+      "sha256": "9D332135CA301A5E215B94329AA0D9ECBE9D5AE4B0019773DA948117B3AA3DFA",
+      "source_sha256": "9D332135CA301A5E215B94329AA0D9ECBE9D5AE4B0019773DA948117B3AA3DFA",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "08_arrow_ink.svg",
+      "sha256": "4B9C7CCE312E80F9116D8125BE43382B237DB9E3CCC3ED65A1B47DE7643530E6",
+      "source_sha256": "4B9C7CCE312E80F9116D8125BE43382B237DB9E3CCC3ED65A1B47DE7643530E6",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "10_logo_underline.svg",
+      "sha256": "3A3DE33859DC7C1673724B57B02C20CC789B32B0B1EC11ADA8C66739CD51FE0A",
+      "source_sha256": "3A3DE33859DC7C1673724B57B02C20CC789B32B0B1EC11ADA8C66739CD51FE0A",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "11_hint_plate.svg",
+      "sha256": "F41000E49DC0FD077D218A7714C9D31CE222F3A9DD550DAC1071E13D3AB4DC8A",
+      "source_sha256": "F41000E49DC0FD077D218A7714C9D31CE222F3A9DD550DAC1071E13D3AB4DC8A",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "12_drawer_panel.svg",
+      "sha256": "03CC1D0B92EC7FF1129DE3227B805FDED3D45603370B086824C5D24FC8212960",
+      "source_sha256": "03CC1D0B92EC7FF1129DE3227B805FDED3D45603370B086824C5D24FC8212960",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "17_title_wordmark.svg",
+      "sha256": "DAD3BABF8CB231FC3ABC88150BD4217286E4C0C8F3D039DF3F76C55E1D06F613",
+      "source_sha256": "DAD3BABF8CB231FC3ABC88150BD4217286E4C0C8F3D039DF3F76C55E1D06F613",
+      "identical": true,
+      "import_present": true
+    },
+    {
+      "file": "keyart.png",
+      "sha256": "60DA73B9A28D34778E270EEE6FE283C3671ABE1867E849C7F289C902374E580C",
+      "source_sha256": "60DA73B9A28D34778E270EEE6FE283C3671ABE1867E849C7F289C902374E580C",
+      "identical": true,
+      "import_present": true
+    }
+  ],
+  "regression": {
+    "total": 57,
+    "first_pass_passed": 53,
+    "first_pass_failed": [
+      "dialogue_idle_check",
+      "enemy_wander_check",
+      "fluid_smoke_check",
+      "mammoth_death_lab_check"
+    ],
+    "recheck_logs": [
+      "regression-recheck.log",
+      "lobby-compatibility-recheck.log"
+    ],
+    "tests": [
+      {
+        "name": "abyss_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "ammo_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "blade_tech_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "blender_models_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "blue_handpaint_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "brawl_look_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "bug_arena_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "bug_chomper_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "bug_enemies_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "bug_grub_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "claude_background_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "claude_service_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "cockpit_cutin_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "codex_background_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "combo_meter_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "coworker_dialogue_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "dash_moves_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "diagonal_cutin_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "dialogue_blink_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "dialogue_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "dialogue_idle_check",
+        "initial_pass": false,
+        "rechecked": true,
+        "final_pass": true
+      },
+      {
+        "name": "enemy_wander_check",
+        "initial_pass": false,
+        "rechecked": true,
+        "final_pass": true
+      },
+      {
+        "name": "fluid_smoke_check",
+        "initial_pass": false,
+        "rechecked": true,
+        "final_pass": true
+      },
+      {
+        "name": "gimmicks_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "ground_break_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "gun_sound_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "hit_react_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "hud_preset_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "infest_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "input_buffer_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "lancaster_boss_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "lancaster_claw_hit_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "lancaster_intro_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "leap_slam_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "lobby_upgrade_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "mammoth_death_lab_check",
+        "initial_pass": false,
+        "rechecked": true,
+        "final_pass": true
+      },
+      {
+        "name": "mammoth_ingame_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "mech_player_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "missile_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "moco_vfx_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "opening_cast_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "painted_look_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "parry_commit_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "parry_timing_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "partner_drone_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "room_wave_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "space_sweep_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "speech_bubble_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "spider_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "stream_mode_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "terrain_jump_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "texture_diorama_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "training_ui_toggle_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "training_whirl_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "whirl_props_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "whirl_pull_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      },
+      {
+        "name": "world_flow_check",
+        "initial_pass": true,
+        "rechecked": false,
+        "final_pass": true
+      }
+    ],
+    "final_passed": 57,
+    "initial_hit_react_mesh_error_reproduced": false,
+    "hit_react_recheck": "hit-react-recheck.log"
+  },
+  "lobby_input_checks": 73,
+  "interaction_checks": [
+    {
+      "name": "F11 전체 화면",
+      "pass": true
+    },
+    {
+      "name": "F11 창 모드 복귀",
+      "pass": true
+    },
+    {
+      "name": "목록 Enter 허수아비 진입 0",
+      "pass": true
+    },
+    {
+      "name": "실제 Esc 로비 복귀 0",
+      "pass": true
+    },
+    {
+      "name": "재진입 전체 목록/최초 포커스 0",
+      "pass": true
+    },
+    {
+      "name": "재진입 노드 수 일정 0",
+      "pass": true
+    },
+    {
+      "name": "목록 Enter 허수아비 진입 1",
+      "pass": true
+    },
+    {
+      "name": "실제 Esc 로비 복귀 1",
+      "pass": true
+    },
+    {
+      "name": "재진입 전체 목록/최초 포커스 1",
+      "pass": true
+    },
+    {
+      "name": "재진입 노드 수 일정 1",
+      "pass": true
+    },
+    {
+      "name": "목록 Enter 허수아비 진입 2",
+      "pass": true
+    },
+    {
+      "name": "실제 Esc 로비 복귀 2",
+      "pass": true
+    },
+    {
+      "name": "재진입 전체 목록/최초 포커스 2",
+      "pass": true
+    },
+    {
+      "name": "재진입 노드 수 일정 2",
+      "pass": true
+    },
+    {
+      "name": "연출 테스트 전용 경로 진입",
+      "pass": true
+    },
+    {
+      "name": "연출 테스트 Esc 복귀",
+      "pass": true
+    },
+    {
+      "name": "섹터 런 실제 진입",
+      "pass": true
+    },
+    {
+      "name": "new_run 새 런 초기화",
+      "pass": true
+    },
+    {
+      "name": "섹터 런 Esc 복귀",
+      "pass": true
+    },
+    {
+      "name": "복귀 시간/물리 복구",
+      "pass": true
+    }
+  ],
+  "interaction_fails": 0,
+  "final_logs": [
+    {
+      "file": "import-final.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "interaction-final.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "visual-final.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "lobby-compatibility-recheck.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "regression-recheck.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "hit-react-recheck.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "bypass-run.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "bypass-test.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "file": "live.log",
+      "errors": 0,
+      "script_errors": 0
+    }
+  ],
+  "captures": [
+    {
+      "file": "death_test_entry.png",
+      "sha256": "E5DD5B8BB56E6102C391C191F2FC889BCDDB8C93424560798D35A194DD5FFD98"
+    },
+    {
+      "file": "drawer_bottom.png",
+      "sha256": "D11D7E34CDE247B6D5A4A6562B01AB0BE4CF58BC90B4C779FFD40A9982FF3DD0"
+    },
+    {
+      "file": "drawer_closed.png",
+      "sha256": "21496C402CC8FB3F9809DA90F975465D68E7A782DC9F255D14914EA74070D9EE"
+    },
+    {
+      "file": "drawer_long_title.png",
+      "sha256": "A89914A9B267F7616B057D8673BA2519B4A8F7D5112BBDF88F6CDA9AF42B4156"
+    },
+    {
+      "file": "drawer_top.png",
+      "sha256": "3ACC190ABB05A99F6DC309E0A3068C355C98CF1FC20139AF4C39E86380BBED18"
+    },
+    {
+      "file": "final_lobby.png",
+      "sha256": "B5BD2E62F6EF7B6AF3A5D7AAEB7D60BCDD92302A8FC2041C6763E91E427B1428"
+    },
+    {
+      "file": "focus_death_test.png",
+      "sha256": "60C92DBB22783FA7D6AA8114AEF02BA501F6428DB293218247B116E624BB8A76"
+    },
+    {
+      "file": "lobby_1280x720.png",
+      "sha256": "01687E36227F127A1E51079BC8A7648B83E6A6E2AFFC926BB30376D2604220E2"
+    },
+    {
+      "file": "lobby_1280x800.png",
+      "sha256": "A0813EA905D88CC777E692B6F4912868A5C05FF4E610756754AEB8E3B0C718D4"
+    },
+    {
+      "file": "lobby_1920x1080.png",
+      "sha256": "32C06053D3A4AFFC69BDA038744F097DBC17DC0009518F96E3A3E233210753C1"
+    },
+    {
+      "file": "lobby_1920x800.png",
+      "sha256": "372BFF01A279749FBF8B5F8408637488D00143F6ECEBCF213C7AEF4E3AA240D1"
+    },
+    {
+      "file": "sector_run_entry.png",
+      "sha256": "2CA00A62AEBEFEA052FBB9C733EFEA7E008D72AB25440D0B39F4E08A8BD85853"
+    },
+    {
+      "file": "training_entry.png",
+      "sha256": "6DCF024DF180A8B0A42FC09BDA8D27927E8796418E05894F1D924530D9925853"
+    }
+  ],
+  "source_hashes": [
+    {
+      "path": "scripts/lobby.gd",
+      "sha256": "7F51952391C27A65D851F4480B1E35BC1BD2AC86806CF8CFA0DE3253017ACDA5"
+    },
+    {
+      "path": "scripts/presentation/lobby_art.gd",
+      "sha256": "24B671F8A5FCB703F2C7130A9408F7CDD9441EB3F3EA999E45A292820FD3B9B7"
+    },
+    {
+      "path": "scripts/presentation/lobby_art.gd.uid",
+      "sha256": "165F8EF8163BE8FA671EA7BF56014BA7AF68FADA0D149AB98CF13883CE5A7A03"
+    },
+    {
+      "path": "scripts/mammoth_death_lab.gd",
+      "sha256": "CF7C85E3C6220323AB2C49047D251BF0D2975C67FB6FB81A8829DC15EF1575DE"
+    },
+    {
+      "path": "tests/lobby_upgrade_check.gd",
+      "sha256": "ADBC3B34BAFE50571274331F7D8BAEDD33E70BF330D161938BC21B21A5C35C81"
+    },
+    {
+      "path": "tests/lobby_upgrade_check.gd.uid",
+      "sha256": "D82203688018A8F261D8F117BC6BF3C72378B1F47F9079F1CB0C1F2255830C9D"
+    },
+    {
+      "path": "_capture/lobby_upgrade_show.gd",
+      "sha256": "32E33BCB5C564FEBD214556FC7E7CC824347B6FA94C80786F492D11D045619FA"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement": "Preview composition / colors / readability",
+      "evidence": "Four aspect captures visually inspected, original asset hashes identical",
+      "pass": true
+    },
+    {
+      "requirement": "Four real menus and current full test list",
+      "evidence": "73 input/path checks, 20 live interaction checks, compatibility regression",
+      "pass": true
+    },
+    {
+      "requirement": "Existing new_run, paths, back, bypass and F11",
+      "evidence": "Lobby source + final interaction log + two bot logs",
+      "pass": true
+    },
+    {
+      "requirement": "Modal drawer, wrap, scroll, keyboard/mouse, focus restore",
+      "evidence": "lobby_upgrade_check + actual drawer captures",
+      "pass": true
+    },
+    {
+      "requirement": "Repeat entry without node/audio/Tween duplication",
+      "evidence": "Three training round trips preserve exact node count; ten drawer cycles, no Tweens",
+      "pass": true
+    },
+    {
+      "requirement": "Assets/imports/UIDs/code/handoff preserved",
+      "evidence": "11 original asset matches + 11 imports, UIDs, README and AGENTS",
+      "pass": true
+    },
+    {
+      "requirement": "No project resolution/model change or commit/push",
+      "evidence": "Diff/status checked, two-line back fix, existing user changes preserved",
+      "pass": true
+    }
+  ]
+}

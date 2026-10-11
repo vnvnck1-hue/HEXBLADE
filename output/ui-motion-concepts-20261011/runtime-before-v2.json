@@ -1,0 +1,38 @@
+[
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\hud.gd",
+    "Hash": "AE375BB4537C01B683BC1183C3E7551370C13D5E7C09C0E903794FD5568D3C34"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\main.gd",
+    "Hash": "360EF00F39DC970FB2E0DCFBFE9FD5592E33C57A0267788E6B45A9CB4340886E"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\run_main.gd",
+    "Hash": "A282962432BCFCD6542EE278961C5B5887B916D56322C23830B21831DBA8ED69"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\run_state.gd",
+    "Hash": "1FC939452FB200F7AFE5E4C8802B9D07892BB414556BEED557886619DDC86E69"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\drone\\partner_drone.gd",
+    "Hash": "58DEFD7D3C53C3C8AE79146C22DA70B677AA3DEBFF9D48DD4580346DD8A9EE06"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\player.gd",
+    "Hash": "45108F20C44F22C76C78C81BAE0D34C9A0758DA20DC3DF8A1C348C4E653CF9A5"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\stream\\stream_main.gd",
+    "Hash": "62CBAD5396EC82C0109F2AED69C4A5FCCF544CBEF042B0CE79122D764D54AB46"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\dialogue\\dialogue_view.gd",
+    "Hash": "C61CC66D9661628B15DB7A893B05AF2E2B7C06F6A63091EEB82B20009E165545"
+  },
+  {
+    "Path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\lobby.gd",
+    "Hash": "7F51952391C27A65D851F4480B1E35BC1BD2AC86806CF8CFA0DE3253017ACDA5"
+  }
+]

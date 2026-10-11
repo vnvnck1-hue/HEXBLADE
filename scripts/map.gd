@@ -6,8 +6,8 @@ extends Node3D
 ## 몇몇 전투방은 보통 방의 2~3배 크기로 넓게 찍고, 그중 가장 큰 방은 웨이브 방(WAVES 번 웨이브)이 된다.
 
 const CELL := 1.0
-const W := 180
-const H := 180
+const W := 280
+const H := 280
 const VOID := 0
 const FLOOR := 1
 const PILLAR := 2      # 방 안의 높은 기둥
@@ -48,6 +48,11 @@ var terrain := false
 var hgt := PackedFloat32Array()       # 칸 중심 높이 (벽 칸은 이웃 바닥 중 가장 높은 값)
 var smooth := PackedInt32Array()      # 곡면 지형 요소 번호. -1 이면 hgt 높이의 평평한 칸
 var feats: Array = []                 # 곡면 요소: 둔덕/오목한 자리(mound)
+## 방 크기 배율 (생성 전에 정한다). 1 = 예전 크기. 메인 게임(방 탐색 · 섹터 런 전투방)은 ROOM_SCALE.
+## 넓은 방은 BIG_ROOMS 배율 × (1 + (room_scale - 1) × BIG_SPREAD). 방 정보의 scale 은 여전히 '보통 방 대비' 배율이다.
+var room_scale := 1.0
+const ROOM_SCALE := 1.6
+const BIG_SPREAD := 0.5
 
 
 # ── 좌표 ────────────────────────────────────────────────
@@ -186,7 +191,7 @@ func generate(seed_value: int) -> void:
 	discovered.fill(0)
 	rooms.clear()
 
-	start_room = _stamp(Vector2i(W / 2, H / 2), _shape(Shape.RECT, Vector2i(22, 16)), Shape.RECT, false)
+	start_room = _stamp(Vector2i(W / 2, H / 2), _shape(Shape.RECT, Vector2i(roundi(22 * room_scale), roundi(16 * room_scale))), Shape.RECT, false)
 	var tries := 0
 	# 형태 주머니: 모든 형태가 한 번씩 나온 뒤에 반복
 	var bag: Array = []
@@ -206,7 +211,7 @@ func generate(seed_value: int) -> void:
 					big_scale = want_big
 			# 넓은 방은 오래 못 찾으면 아무 방에서나 뻗어 나간다 (자리가 넉넉한 쪽을 찾게)
 			var bparent: Dictionary = rooms[rng.randi_range(0 if big_fail > 30 else maxi(0, rooms.size() - 3), rooms.size() - 1)]
-			var bshp := _big_shape(big_shape, big_scale)
+			var bshp := _big_shape(big_shape, big_scale * _big_k())
 			var bang := rng.randf() * TAU
 			var bdist: float = bparent.r + bshp.r + rng.randf_range(6.0, 11.0)
 			var bc: Vector2i = bparent.center + Vector2i(roundi(cos(bang) * bdist), roundi(sin(bang) * bdist))
@@ -240,7 +245,7 @@ func generate(seed_value: int) -> void:
 		if tries % 30 == 0:
 			bag.push_back(bag.pop_front())   # 계속 안 들어가는 형태는 뒤로
 		var shape_id: int = bag[0]
-		var shp := _shape(shape_id)
+		var shp := _room_shape(shape_id)
 		var ang := rng.randf() * TAU
 		var dist: float = parent.r + shp.r + rng.randf_range(6.0, 11.0)
 		var c: Vector2i = parent.center + Vector2i(roundi(cos(ang) * dist), roundi(sin(ang) * dist))
@@ -293,7 +298,8 @@ func generate_single(seed_value: int, shape_id: int, combat: bool, size := Vecto
 	discovered.resize(n)
 	discovered.fill(0)
 	rooms.clear()
-	start_room = _stamp(Vector2i(W / 2, H / 2), _shape(shape_id, size), shape_id, combat)
+	var shp := _room_shape(shape_id) if size == Vector2i.ZERO else _shape(shape_id, size)
+	start_room = _stamp(Vector2i(W / 2, H / 2), shp, shape_id, combat)
 	Terrain.shape(self)
 	_compute_anchors()
 
@@ -408,6 +414,16 @@ func _shape(s: int, size := Vector2i.ZERO) -> Dictionary:
 	for c in pillars:
 		r = maxf(r, Vector2(c).length())
 	return {"cells": cells, "pillars": pillars, "lows": lows, "r": r}
+
+
+## 보통 방 형태: room_scale 배로 넓힌 모양 (1 이면 예전 그대로)
+func _room_shape(s: int) -> Dictionary:
+	return _big_shape(s, room_scale) if room_scale > 1.01 else _shape(s)
+
+
+## 넓은 방 배율에 곱하는 값 (방 전체가 넓어진 만큼 넓은 방도 조금 더 넓힌다)
+func _big_k() -> float:
+	return 1.0 + (room_scale - 1.0) * BIG_SPREAD
 
 
 ## 보통 형태를 scale 배로 넓힌다. 넓힌 칸마다 원래 형태의 가장 가까운 칸 종류를 따른다.

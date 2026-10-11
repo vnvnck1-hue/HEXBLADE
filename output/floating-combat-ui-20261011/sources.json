@@ -1,0 +1,28 @@
+{
+  "reference": "C:\\Users\\vnvnc\\.codex\\attachments\\1e5d3e56-20e9-40a9-833b-3b757c9f5f31\\image-1.png",
+  "generated_with": "built-in image_gen",
+  "finals": [
+    {
+      "key": "uiA",
+      "file": "01_comic_cutout.png",
+      "title": "코믹 컷아웃",
+      "description": "굵은 외곽선과 독립 아이콘으로 원안의 코믹 느낌을 가장 가깝게 유지.",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b57-6564-7201-abb4-5886df78da17\\exec-76a9fe89-7e0c-480d-935a-8dc326af5bfd.png"
+    },
+    {
+      "key": "uiBFinal",
+      "file": "02_open_line.png",
+      "title": "오픈 라인",
+      "description": "작은 초상과 얇은 선, 정렬된 스킬로 화면 여백을 확보.",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b57-6564-7201-abb4-5886df78da17\\exec-f47418b5-e796-4b45-9fe9-95657e3be335.png"
+    },
+    {
+      "key": "uiCFinal",
+      "file": "03_diagonal_arcade.png",
+      "title": "사선 아케이드",
+      "description": "큰 숫자와 브러시 글자, 열린 부채꼴 스킬 배치로 속도감을 강조.",
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b57-6564-7201-abb4-5886df78da17\\exec-445d0972-2a95-492a-b92b-3e3c97e24fd4.png"
+    }
+  ]
+}
+

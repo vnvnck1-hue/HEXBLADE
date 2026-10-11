@@ -1,0 +1,65 @@
+[
+  {
+    "file": "owner_briefing.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "342C1FFB35390863D24C5289F6F463D4C3FE37ACAC025DF73D400DF420AAAF95",
+    "import_exists": true
+  },
+  {
+    "file": "owner_encouragement.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "6E564A7304F3E172FE796B9876CB6F40FE5A5CA0B70B6376BA02DE40C0254061",
+    "import_exists": true
+  },
+  {
+    "file": "owner_welcome.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "020E58DA75AE5384F88BDF9FD263AC55733F4CED735DF4EE0D5D309D366F9D4B",
+    "import_exists": true
+  },
+  {
+    "file": "partner_greeting.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "0692125DC61CE05E3F10675648AB0CE4BAFE4B0DE598D18D0233E92935648A22",
+    "import_exists": true
+  },
+  {
+    "file": "pilot_neutral.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "1627ACE5634ED97E71DB5E7374EF8F5A62C8C9DE219DFCA98BE653877563A74B",
+    "import_exists": true
+  },
+  {
+    "file": "worker_cheerful.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "2BE9543589663D91ADFF101B6352CBECE9A561F9D3A8377704353D119E5CA30E",
+    "import_exists": true
+  },
+  {
+    "file": "worker_introduction.png",
+    "width": 1254,
+    "height": 1254,
+    "sampled_alpha_min": 0,
+    "sampled_alpha_max": 255,
+    "sha256": "4B92CCECC91FB05A50F7A1E51DCD2B7B22155EADBAA8F251AD1B4C20F87E7B6C",
+    "import_exists": true
+  }
+]

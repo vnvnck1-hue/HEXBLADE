@@ -1,0 +1,56 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=0.733 f=43
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=0.809 f=56
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=0.949 f=71
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=1.273 f=113
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=1.929 f=173
+COMBO step=2 cut=2 RECOIL SHOT hit=1 blocked=0 t=2.062 f=181
+COMBO step=3 cut=0 PHANTOM FLURRY hit=1 blocked=0 t=2.297 f=228
+COMBO step=3 cut=1 PHANTOM FLURRY hit=1 blocked=0 t=2.405 f=242
+COMBO step=3 cut=2 PHANTOM FLURRY hit=1 blocked=0 t=2.513 f=256
+COMBO step=3 cut=3 PHANTOM FLURRY hit=1 blocked=0 t=2.620 f=269
+COMBO step=3 cut=4 PHANTOM FLURRY hit=1 blocked=0 t=2.727 f=282
+COMBO step=3 cut=5 PHANTOM FLURRY hit=1 blocked=0 t=2.835 f=296
+COMBO step=3 cut=6 PHANTOM FLURRY hit=1 blocked=0 t=3.010 f=314
+COMBO step=4 cut=0 CYCLONE hit=1 blocked=0 t=3.984 f=442
+COMBO step=5 cut=0 RISE hit=1 blocked=0 t=4.356 f=470
+COMBO step=5 cut=1 RISE hit=1 blocked=0 t=4.490 f=494
+COMBO step=6 cut=0 CRESCENT hit=2 blocked=0 t=5.022 f=556
+CUTIN FULL BURST
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=12.188 f=1158
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=12.264 f=1171
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=12.406 f=1188
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=12.732 f=1232
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=13.389 f=1293
+COMBO step=2 cut=2 RECOIL SHOT hit=1 blocked=0 t=13.522 f=1301
+COMBO step=3 cut=0 PHANTOM FLURRY hit=1 blocked=0 t=13.757 f=1348
+COMBO step=3 cut=1 PHANTOM FLURRY hit=1 blocked=0 t=13.865 f=1362
+COMBO step=3 cut=2 PHANTOM FLURRY hit=1 blocked=0 t=13.973 f=1376
+COMBO step=3 cut=3 PHANTOM FLURRY hit=1 blocked=0 t=14.081 f=1390
+COMBO step=3 cut=4 PHANTOM FLURRY hit=1 blocked=0 t=14.189 f=1404
+COMBO step=3 cut=5 PHANTOM FLURRY hit=1 blocked=0 t=14.297 f=1418
+COMBO step=3 cut=6 PHANTOM FLURRY hit=1 blocked=0 t=14.472 f=1436
+COMBO step=4 cut=0 CYCLONE hit=2 blocked=0 t=15.445 f=1563
+COMBO step=5 cut=0 RISE hit=1 blocked=0 t=15.816 f=1590
+COMBO step=5 cut=1 RISE hit=1 blocked=0 t=15.950 f=1614
+COMBO step=6 cut=0 CRESCENT hit=1 blocked=0 t=16.482 f=1676
+RELOAD begin t=17.818 f=1868
+CUTIN FULL BURST
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=24.194 f=2307
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=24.271 f=2321
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=24.413 f=2338
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=24.737 f=2380
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=25.393 f=2440
+COMBO step=2 cut=2 RECOIL SHOT hit=1 blocked=0 t=25.526 f=2448
+COMBO step=3 cut=0 PHANTOM FLURRY hit=1 blocked=0 t=25.812 f=2499
+COMBO step=3 cut=1 PHANTOM FLURRY hit=1 blocked=0 t=25.919 f=2512
+COMBO step=3 cut=2 PHANTOM FLURRY hit=1 blocked=0 t=26.027 f=2526
+COMBO step=3 cut=3 PHANTOM FLURRY hit=1 blocked=0 t=26.135 f=2540
+COMBO step=3 cut=4 PHANTOM FLURRY hit=1 blocked=0 t=26.243 f=2554
+COMBO step=3 cut=5 PHANTOM FLURRY hit=1 blocked=0 t=26.351 f=2568
+COMBO step=3 cut=6 PHANTOM FLURRY hit=1 blocked=0 t=26.526 f=2586
+COMBO step=4 cut=0 CYCLONE hit=2 blocked=0 t=27.500 f=2714
+COMBO step=5 cut=0 RISE hit=1 blocked=0 t=27.872 f=2742
+COMBO step=5 cut=1 RISE hit=1 blocked=0 t=28.006 f=2766
+COMBO step=6 cut=0 CRESCENT hit=1 blocked=0 t=28.538 f=2828

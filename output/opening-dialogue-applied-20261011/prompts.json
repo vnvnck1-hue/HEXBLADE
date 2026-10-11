@@ -1,0 +1,107 @@
+[
+  {
+    "id": "owner_welcome",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\02_company_owner.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nCompany owner welcome: body turned slightly toward image RIGHT, face and eyes face player, gentle reassuring closed-mouth smile. Blonde swept high bun, amber eyes, mint wrap blouse, cropped dark plum work blazer, cream tied skirt waist and small tool pouch. Hold dark mint-interface contract tablet close to chest in left hand (viewer right), right hand (viewer left) extends a welcoming open palm toward player at chest height. Keep wrist and palm complete.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-73a590b7-7ac0-408c-8d89-9df47cb9c478.png",
+    "asset": "assets/portraits/opening_cast/owner_welcome.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  },
+  {
+    "id": "worker_introduction",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\03_workshop_mechanic.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nWorkshop mechanic introduction: body turned slightly toward image LEFT while her green eyes face viewer/player, purple SHORT fluffy twin ponytails and broad fringe, purple canvas jacket, ivory tee, utility belt visible. Friendly slightly puzzled closed-mouth small smile. One gloved hand rests a chunky silver ratchet at shoulder, the other on hip. No crop of ratchet or elbow. Upper-body framing, no legs.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-1e64a60e-1bb3-4e9c-9032-3c99182206f6.png",
+    "asset": "assets/portraits/opening_cast/worker_introduction.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  },
+  {
+    "id": "partner_greeting",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\04_first_cleaning_partner.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nField cleaning partner greeting: body turned slightly toward image LEFT, visible magenta eye directed at viewer, mint green big side ponytail, bang still covering other eye, black bow, communications ear clip, black utility jacket/white cuffs/pink bow, white apron and small pink droplet pouch. Bright confident small open smile. One black-gloved hand waves near shoulder, other holds compact gray-pink nozzle vertically down near waist INSIDE canvas (not a large gun). Retain same identity, no maid headband.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-8e3a8fa1-0d0d-41cd-96d2-39457433e824.png",
+    "asset": "assets/portraits/opening_cast/partner_greeting.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  },
+  {
+    "id": "pilot_neutral",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\01_new_field_pilot.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nMale field pilot: slightly turn body image RIGHT, teal-gray eyes directly at viewer, tousled charcoal hair with pale gray accent lock, tired but determined small closed mouth. Cream-sage industrial coverall tied at waist over black high-neck shirt, charcoal cropped work jacket. Hold orange-visored pilot helmet tucked at waist in one arm and small job terminal in the other hand; both props compact, complete. No floating notification symbols. Male face remains identical to edit target; do not feminize.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-661c1c55-67e1-4440-beaf-ebb468b51d63.png",
+    "asset": "assets/portraits/opening_cast/pilot_neutral.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  },
+  {
+    "id": "owner_briefing",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\02_company_owner.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nCompany owner business briefing: body slightly toward image RIGHT and amber eyes directly to viewer/player. Preserve blonde high swept bun and costume precisely. Calm focused explaining expression, mouth slightly open as speaking. One hand holds compact contract terminal upright near chest, other raises ONE index finger beside chest indicating a practical instruction. Complete hand, tablet, hair. No floating icons.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-effad0f3-c69b-4190-a647-256cea1e5ed2.png",
+    "asset": "assets/portraits/opening_cast/owner_briefing.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  },
+  {
+    "id": "owner_encouragement",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\02_company_owner.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nCompany owner departure encouragement: body slightly toward image RIGHT, eyes to viewer/player, warm small confident open smile, same blonde swept high bun and mint wrap blouse/dark plum blazer/cream waist ribbon/tool pouch. One hand gives a compact reassuring thumbs-up at chest height, other holds contract tablet close against torso. No winking, no exaggerated laugh, preserve calm adult owner.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-8d4d0a61-e27d-4a69-b69c-b8a920ac40b7.png",
+    "asset": "assets/portraits/opening_cast/owner_encouragement.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  },
+  {
+    "id": "worker_cheerful",
+    "edit_target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\output\\opening-narrative-cast-20261011\\03_workshop_mechanic.png",
+    "style_references": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Edit task: turn the FIRST image, the approved full-body character, into a production-ready TRANSPARENT upper-body dialogue portrait of that EXACT SAME person. The first input is the EDIT TARGET for identity and costume, not a drawing style reference. The remaining four inputs are the ONLY drawing style references. Preserve the character's recognizable face, eyes, hair color and shape, asymmetrical accessories, costume colors and main costume parts. Follow ONLY original four for bold black outline, simpler inner lines, slanted heavy upper lashes, chunky hair clumps, broad flat cel-shadow shapes, angular highlights. Do not invent new accessories or change identity.\nComposition: ONE waist-up (hips cropped below belt) character on a SQUARE canvas. Actual alpha transparent background, no gray-purple background, no checkerboard pattern, no color rectangle, no border, no drop shadow or ground shadow, no scene, no typography. Complete all hair tips, both hands and required props fully visible inside the canvas with small transparent margins at top and sides, substantial large face, keep shoulder-to-head ratio in original references, cut the lower torso cleanly at bottom and do not include legs. Place head top at about 5% of image height, eyes near upper third, waist near 95%; hands and gesture around chest to waist so they will remain above game's dialogue panel. Eyes look directly toward viewer/player; body slightly turned per instruction. No full-body miniature on empty canvas. Crisp clean alpha hair and clothes edges, all interior skin/cloth opaque.\nWorkshop mechanic cheerful: body slightly toward image LEFT but green eyes toward viewer/player, friendly enthusiastic open smile with same purple short twin ponytails/ivory tee/purple canvas jacket/utility belt. One hand holds silver ratchet beside shoulder, other gives thumbs-up near chest. Complete tool, both hands, elbows and all hair. No new costume accents.",
+    "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-2360f87d-92ea-4f28-b4a6-3f3e1538e32c.png",
+    "asset": "assets/portraits/opening_cast/worker_cheerful.png",
+    "tool": "built-in image_gen",
+    "transparent_background": true
+  }
+]

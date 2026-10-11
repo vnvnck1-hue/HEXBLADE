@@ -1,0 +1,18 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== coworker_dialogue_check
+  ERROR: Failed to open 'user://logs/godot2026-10-11T19.20.11.log'.
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  ERROR: Failed to read the root certificate store.
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== dialogue_check
+  ERROR: Failed to open 'user://logs/godot2026-10-11T19.20.17.log'.
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  ERROR: Failed to read the root certificate store.
+  RESULT dialogue_check: PASS (0 fails)
+=== opening_cast_check
+  ERROR: Failed to open 'user://logs/godot2026-10-11T19.20.26.log'.
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  ERROR: Failed to read the root certificate store.
+  RESULT opening_cast_check: PASS (0 fails)
+
+ALL 3 TESTS PASSED

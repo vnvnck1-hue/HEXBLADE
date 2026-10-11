@@ -285,7 +285,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var key := (event as InputEventKey).physical_keycode
 	if key == KEY_ESCAPE:
+		get_viewport().set_input_as_handled()
 		_back()
+		return
 	elif key == KEY_SPACE:
 		_toggle_play()
 	elif key == KEY_R or key == KEY_F5:

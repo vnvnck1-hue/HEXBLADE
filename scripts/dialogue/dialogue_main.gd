@@ -1,7 +1,7 @@
 class_name DialogueMain
 extends Control
 ## 대화 시스템 테스트 씬 (scenes/dialogue.tscn). 대사 파일을 골라 처음부터 돌려 본다.
-##   F1 청소업체 첫 출근 · F2 격납고 브리핑 · F3 기능 시연 · F4 동료 소개 · R 처음부터 · Esc 로비
+##   F1 첫 출근 · F2 격납고 브리핑 · F3 기능 시연 · F4 정비 동료 · F5 청소 파트너 · R 처음부터 · Esc 로비
 ## 실행 인자 (-- 뒤): --script=feature_demo  --bot(자동 진행 + 선택지 무작위, 끝나면 종료)  --seed=1
 ##                    --capture=폴더(res:// 기준, 미리 만들어 둠) --every=0.5  --seconds=40
 
@@ -10,6 +10,7 @@ const SCRIPTS := [
 	{"key": KEY_F2, "id": "hangar_briefing", "title": "격납고 브리핑"},
 	{"key": KEY_F3, "id": "feature_demo", "title": "기능 시연"},
 	{"key": KEY_F4, "id": "coworker_introduction", "title": "동료 소개"},
+	{"key": KEY_F5, "id": "field_partner_introduction", "title": "청소 파트너"},
 ]
 const DIR := "res://data/dialogue/"
 
@@ -48,7 +49,7 @@ func _ready() -> void:
 		elif a.begins_with("--seconds="):
 			seconds = float(a.substr(10))
 	help = Label.new()
-	help.add_theme_font_size_override("font_size", 14)
+	help.add_theme_font_size_override("font_size", 12)
 	help.add_theme_color_override("font_color", Color(0.75, 0.8, 0.9, 0.7))
 	help.position = Vector2(46, 56)
 	help.z_index = 55

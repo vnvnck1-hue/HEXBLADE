@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-11",
+  "tool": "built-in image_gen",
+  "final_character_count": 4,
+  "generation_reference_count": 4,
+  "only_original_four_references": true,
+  "style_probe_review": "PASS: compared face and upper body to original four before full-body generation",
+  "owner_initial_top_crop": "Regenerated from original references; final hair fully visible",
+  "story_role_audit": "Four roles mapped to current opening story and coworker dialogue; new pilot/partner appearances remain proposals",
+  "files": [
+    {
+      "file": "02_company_owner.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "AFBFDDDCB94F0887A6E07AFABAD3A5D3F41B663DD894B0E4BD1F4C7EDD05991D",
+      "original_copy_match": true,
+      "visual_review": "PASS: complete full-body, clear role/prop, reference-style lines/eyes/hair/cel shadows"
+    },
+    {
+      "file": "03_workshop_mechanic.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "DE3901F042FC359CE4ABC2005F55C26965BC87AEE743D56EB69F73E72FA9A899",
+      "original_copy_match": true,
+      "visual_review": "PASS: complete full-body, clear role/prop, reference-style lines/eyes/hair/cel shadows"
+    },
+    {
+      "file": "04_first_cleaning_partner.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "5D740A144B0D22F4CC2CCC1941AE97C000957576FF74ED45F3A19561344753F7",
+      "original_copy_match": true,
+      "visual_review": "PASS: complete full-body, clear role/prop, reference-style lines/eyes/hair/cel shadows"
+    },
+    {
+      "file": "01_new_field_pilot.png",
+      "width": 1122,
+      "height": 1402,
+      "sha256": "F7E3B6D661ADE388B5DF807B04C129B12161F3D01642CE3F5E7FCE52300BE675",
+      "original_copy_match": true,
+      "visual_review": "PASS: complete full-body, clear role/prop, reference-style lines/eyes/hair/cel shadows"
+    }
+  ],
+  "references": [
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-1.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-01.png",
+      "sha256": "738A3347CC3747DBAFE5A5C553B700E3DF2C700D375B62082AB687960FE930F8",
+      "copy_match": true
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-2.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-02.png",
+      "sha256": "AEA009199DD2DA02E5EC373ABAD3AA567BBA03F494BB9DF1B50226AF8F0F285A",
+      "copy_match": true
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-3.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-03.png",
+      "sha256": "E63447B8852A72F16B0EF3E0300A901F302F31FAE335B4BE38E868D70F385C8C",
+      "copy_match": true
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-4.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-04.png",
+      "sha256": "BB194947B4D97CE273B9E121326DE51E193BF22851BE938FD1081DF715585DBF",
+      "copy_match": true
+    }
+  ],
+  "runtime_changes": false
+}

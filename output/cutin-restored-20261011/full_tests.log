@@ -1,0 +1,180 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== abyss_check
+  RESULT OK (0 fail)
+=== ammo_check
+  RESULT OK (0 fails)
+=== blade_tech_check
+  RESULT OK (0 fails)
+=== blender_models_check
+  RESULT OK (0 fails)
+=== blue_handpaint_check
+  RESULT OK (0 fails)
+=== brawl_look_check
+  RESULT  OK  (0 fail)
+=== bug_arena_check
+  BUG_ARENA_CHECK OK
+=== bug_chomper_check
+  BUG_CHOMPER_CHECK OK
+=== bug_enemies_check
+  BUG_ENEMIES_CHECK OK
+=== bug_grub_check
+  BUG_GRUB_CHECK OK
+=== claude_background_check
+  RESULT  OK  (0 fail)
+=== claude_service_check
+  RESULT claude_service_check fails=0
+=== cockpit_cutin_check
+  RESULT: OK (0 fails)
+=== codex_background_check
+  CODEX_BACKGROUND_CHECK 67 checks 0 fails
+=== combo_meter_check
+  combo_meter_check: 0 fails
+=== coworker_dialogue_check
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== dash_moves_check
+  RESULT OK (0 fails)
+=== diagonal_cutin_check
+  FAIL  오른쪽 화면 밖으로 퇴장 (왼쪽 끝 x=1271)
+  RESULT: FAILED (1 fails)
+=== dialogue_blink_check
+  RESULT dialogue_blink_check: PASS (0 fails), natural blinks 40
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== dialogue_idle_check
+  RESULT dialogue_idle_check: PASS (0 fails)
+=== enemy_wander_check
+  RESULT enemy_wander_check fails=0
+=== fluid_smoke_check
+  RESULT FLUID_SMOKE_OK (0 fails)
+=== gimmicks_check
+  RESULT gimmicks_check fails=0
+=== ground_break_check
+  RESULT ground_break_check: OK (0 fails)
+=== gun_sound_check
+  RESULT gun_sound_check fails=0
+=== hit_react_check
+  RESULT hit_react_check fails=0
+=== hud_preset_check
+  RESULT  OK  (0 fail)
+=== infest_check
+  RESULT OK (0 fails)
+=== input_buffer_check
+  RESULT OK (0 fails)
+=== lancaster_boss_check
+  RESULT OK (0 fails)
+=== lancaster_claw_hit_check
+  RESULT OK (0 fails)
+=== lancaster_intro_check
+  RESULT OK (0 fails)
+=== leap_slam_check
+  RESULT OK (0 fails)
+=== mammoth_death_lab_check
+  MAMMOTH_DEATH_LAB_CHECK_OK: 30/60/144fps, 10 resets and seeks, floor contact, cue/completion once, pause/rate, reduced motion, unchanged run, real lobby button and return
+=== mammoth_ingame_check
+  SCRIPT ERROR: Parse Error: Could not find type "LobbyArt" in the current scope.
+  SCRIPT ERROR: Parse Error: Identifier "LobbyArt" not declared in the current scope.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+     at: GDScript::reload (res://tests/mammoth_ingame_check.gd:0)
+  ERROR: Failed to load script "res://tests/mammoth_ingame_check.gd" with error "Compilation failed".
+  RESULT mammoth_ingame_check fails=0
+=== mech_player_check
+  SCRIPT ERROR: Parse Error: Could not find type "LobbyArt" in the current scope.
+  SCRIPT ERROR: Parse Error: Identifier "LobbyArt" not declared in the current scope.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+     at: GDScript::reload (res://tests/mech_player_check.gd:0)
+  ERROR: Failed to load script "res://tests/mech_player_check.gd" with error "Compilation failed".
+  RESULT mech_player_check fails=0
+=== missile_check
+  SCRIPT ERROR: Parse Error: Could not find type "LobbyArt" in the current scope.
+  SCRIPT ERROR: Parse Error: Identifier "LobbyArt" not declared in the current scope.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+     at: GDScript::reload (res://tests/missile_check.gd:0)
+  ERROR: Failed to load script "res://tests/missile_check.gd" with error "Compilation failed".
+  RESULT OK (0 fails)
+=== moco_vfx_check
+  SCRIPT ERROR: Parse Error: Class "MenuButton" hides a native class.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+  SCRIPT ERROR: Compile Error: Failed to compile depended scripts.
+     at: GDScript::reload (res://tests/moco_vfx_check.gd:0)
+  ERROR: Failed to load script "res://tests/moco_vfx_check.gd" with error "Compilation failed".
+  FAIL  기본 켜짐 (--vfx=old 아님)
+  FAIL  총알 한 발 = 버스트 1
+  FAIL  강타도 0.3초 안에 모두 사라짐
+  FAIL  같은 순간 연사 5발 → 숫자 하나 '5' []
+  FAIL  검 피해는 강타(노란) 숫자
+  FAIL  연사는 맞을 때마다 숫자가 따로 튐 (땅굴크루식, 상한 24) (0)
+  FAIL  경직 진입 STUN! 한 번 (이미 경직 중 재진입은 안 뜸) (0)
+  FAIL  연결선·볼텍스 노드 생김 (0, 0)
+  FAIL  보호막: blend_mix 옅은 면 + 육각 셀
+  FAIL  검 궤적 재질 mo.co 분기
+  FAIL  일반 베기 궤적은 0.25초 안에 사라짐 (생김 2, 남음 1)
+  RESULT moco_vfx_check fails=11
+=== opening_cast_check
+  RESULT opening_cast_check: PASS (0 fails)
+=== painted_look_check
+  RESULT  OK  (0 fail)
+=== parry_commit_check
+  RESULT parry_commit_check fails=0
+=== parry_timing_check
+  RESULT OK (0 fails)
+=== partner_drone_check
+  RESULT partner_drone_check fails=0
+=== room_wave_check
+  RESULT OK (0 fail)
+=== space_sweep_check
+  RESULT OK (0 fails)
+=== speech_bubble_check
+  RESULT: OK (0 fails)
+=== spider_check
+  SPIDER_CHECK OK
+=== stream_mode_check
+  RESULT PASS (0 fails)
+=== terrain_jump_check
+  TERRAIN_JUMP_CHECK OK (0 fails)
+=== texture_diorama_check
+  TEXTURE_DIORAMA_CHECK 27 checks 0 fails
+=== training_ui_toggle_check
+  RESULT: OK (0 fails)
+=== training_whirl_check
+  RESULT: OK (0 fails)
+=== whirl_props_check
+  RESULT: OK (0 fails)
+=== whirl_pull_check
+  RESULT OK (0 fails)
+=== world_flow_check
+  RESULT world_flow_check fails=0
+
+FAILED: diagonal_cutin_check, mammoth_ingame_check, mech_player_check, missile_check, moco_vfx_check

@@ -75,20 +75,20 @@ func _run() -> void:
 			_check(intro.flags.get("asked_payment" if question == 0 else "asked_safety", false)
 				and intro.flags.get("opening_attitude") == ("nervous" if attitude == 0 else "confident")
 				and expressions.has("welcome") and expressions.has("briefing") and expressions.has("encouragement"), "질문/응답 분기 보존, 사장 표정 3종 사용")
-	var bad := DialogueScript.from_text("ghost: 누구?\n@enter mira nowhere\n-> nolabel\nmira sleepy: 하암")
+	var bad := DialogueScript.from_text("ghost: 누구?\n@enter owner nowhere\n-> nolabel\nowner sleepy: 하암")
 	_check(bad.errors.size() == 4, "잘못된 화자 · 자리 · 라벨 · 표정을 오류로 잡음 (%d)" % bad.errors.size())
 
 	# ── 2. 꾸밈 ──
-	var m := DialogueScript.markup("안녕, 나는 {red}미라{/red}.{p=1.0} {shake}간다{/shake}! {fast}빠르게{/fast} [괄호]")
-	_check(m.bb.contains("[color=#ff4a5a]미라[/color]") and m.bb.contains("[shake") and m.bb.contains("[lb]괄호]"), "BBCode 변환 (%s)" % m.bb)
-	_check(m.plain == "안녕, 나는 미라. 간다! 빠르게 [괄호]", "글자만 남긴 문장 (%s)" % m.plain)
+	var m := DialogueScript.markup("안녕, 나는 {red}사장{/red}.{p=1.0} {shake}간다{/shake}! {fast}빠르게{/fast} [괄호]")
+	_check(m.bb.contains("[color=#ff4a5a]사장[/color]") and m.bb.contains("[shake") and m.bb.contains("[lb]괄호]"), "BBCode 변환 (%s)" % m.bb)
+	_check(m.plain == "안녕, 나는 사장. 간다! 빠르게 [괄호]", "글자만 남긴 문장 (%s)" % m.plain)
 	_check(is_equal_approx(m.pauses.get(3, 0.0), 0.1), "쉼표 뒤 0.1초 멈춤")
 	_check(m.pauses.get(10, 0.0) >= 1.0, "{p=1.0} 멈춤이 마침표 자리에 (%s)" % str(m.pauses))
 	_check(m.speeds.size() == 2 and m.speeds[0][1] > 1.0 and m.speeds[1][1] == 1.0, "{fast} 속도 구간 (%s)" % str(m.speeds))
 	_check(not m.pauses.has(m.plain.length()), "문장 끝에서는 멈추지 않음")
 
 	# ── 3. 진행기 ──
-	var src := "== start\n@summary 시작\nmira: 하나\n* 가 -> a\n* [if flag] 숨김 -> b\n* 나 -> b\n== a\n@set flag = true\n@set n += 2\n@if n >= 2 -> b\nmira: 안 나와야 함\n== b\n* [if flag] 보임 -> c\n* 끝 -> c\n== c\nmira angry: 끝\n@end\nmira: 끝 뒤"
+	var src := "== start\n@summary 시작\nowner: 하나\n* 가 -> a\n* [if flag] 숨김 -> b\n* 나 -> b\n== a\n@set flag = true\n@set n += 2\n@if n >= 2 -> b\nowner: 안 나와야 함\n== b\n* [if flag] 보임 -> c\n* 끝 -> c\n== c\nowner briefing: 끝\n@end\nowner: 끝 뒤"
 	var r := DialogueRunner.new(DialogueScript.from_text(src))
 	var said: Array = []
 	var asked: Array = []
@@ -127,13 +127,13 @@ func _run() -> void:
 	_check(not view.typing and view.text.visible_characters == -1, "출력 중 진행 입력 → 문장 완성")
 	view.next()
 	await _frames(2)
-	_check(view.line.who == "mira" and view.plate_name.text == "미라" and view.portraits.mira.active and not view.portraits.eirin.active, "다음 줄: 미라 강조, 에이린 어둡게")
-	# 미라 → 에이린 → 미라 angry! 까지
+	_check(view.line.who == "owner" and view.plate_name.text == "사장" and view.portraits.owner.active and not view.portraits.worker.active, "다음 줄: 사장 강조, 정비사 어둡게")
+	# 사장 → 정비사 → 사장 angry! 까지
 	for i in 2:
 		view.next()
 		view.next()
 		await _frames(2)
-	_check(view.line.who == "mira" and view.portraits.mira.expr == "angry" and view.line.punch, "표정 바꾸기 + 흔들기 (%s)" % view.portraits.mira.expr)
+	_check(view.line.who == "owner" and view.portraits.owner.expr == "briefing" and view.line.punch, "표정 바꾸기 + 흔들기 (%s)" % view.portraits.owner.expr)
 	var logs := view.log_count()
 	_check(logs == 4, "기록 4줄 (%d)" % logs)
 	# 자동 진행: 손대지 않아도 다음 줄로 간다
@@ -147,24 +147,24 @@ func _run() -> void:
 	await _frames(2)
 	_check(runner.waiting_choice and view.choice_box.get_child_count() == 3, "선택지까지 건너뜀, 버튼 3개")
 	_check(view.summary_layer.visible and view.summary_text.text.contains("섹터 7"), "건너뛴 줄거리 요약 표시")
-	_check(view.portraits.size() == 4, "4명이 무대에 (%d)" % view.portraits.size())
+	_check(view.portraits.size() == 3, "3명이 무대에 (%d)" % view.portraits.size())
 	view.next()
 	_check(not view.summary_layer.visible, "요약은 입력 한 번에 닫힘")
-	# 숫자 키 3 → 노아에게 더 묻기
+	# 숫자 키 3 → 파트너에게 더 묻기
 	var key := InputEventKey.new()
 	key.physical_keycode = KEY_3
 	key.keycode = KEY_3
 	key.pressed = true
 	root.push_input(key)
 	await _frames(2)
-	_check(runner.flags.get("asked_noa") == true and view.line.who == "noa", "숫자 키로 선택 → 분기 (%s)" % str(runner.flags))
+	_check(runner.flags.get("asked_partner") == true and view.line.who == "partner", "숫자 키로 선택 → 분기 (%s)" % str(runner.flags))
 	# 나머지는 빨리 넘기기 + 첫 번째 선택지로 끝까지
 	view.fast_forward = true
 	await _until(func():
 		if runner.waiting_choice:
 			view._pick(0)
 		return done[0], 30.0)
-	_check(done[0] and runner.flags.get("trust_mira", 0.0) == 1.0, "끝까지 진행, 미라 신뢰 +1 (%s)" % str(runner.flags))
+	_check(done[0] and runner.flags.get("trust_owner", 0.0) == 1.0, "끝까지 진행, 사장 신뢰 +1 (%s)" % str(runner.flags))
 	_check(view.portraits.is_empty(), "@exit all 로 모두 퇴장")
 	_check(DialogueRunner.picked.size() >= 2, "고른 선택지 기억 (%d)" % DialogueRunner.picked.size())
 	view.queue_free()
@@ -224,9 +224,9 @@ func _run() -> void:
 	key.keycode = KEY_F2
 	root.push_input(key)
 	await _frames(2)
-	_check(main.current == "hangar_briefing" and main.view.portraits.has("mira"), "F2로 기존 격납고 브리핑 전환")
+	_check(main.current == "hangar_briefing" and main.view.portraits.has("owner"), "F2로 새 캐스트 격납고 브리핑 전환")
 	_check(main.view.box.anchor_left == 0.0 and main.view.box.anchor_right == 1.0
-		and not main.view.portraits.mira.solo, "다인 대화는 기존 하단 전체 너비 배치 유지")
+		and not main.view.portraits.owner.solo, "다인 대화는 기존 하단 전체 너비 배치 유지")
 	key.physical_keycode = KEY_F3
 	key.keycode = KEY_F3
 	root.push_input(key)

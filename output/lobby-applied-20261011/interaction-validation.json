@@ -1,0 +1,85 @@
+{
+	"checks": [
+		{
+			"name": "F11 전체 화면",
+			"pass": true
+		},
+		{
+			"name": "F11 창 모드 복귀",
+			"pass": true
+		},
+		{
+			"name": "목록 Enter 허수아비 진입 0",
+			"pass": true
+		},
+		{
+			"name": "실제 Esc 로비 복귀 0",
+			"pass": true
+		},
+		{
+			"name": "재진입 전체 목록/최초 포커스 0",
+			"pass": true
+		},
+		{
+			"name": "재진입 노드 수 일정 0",
+			"pass": true
+		},
+		{
+			"name": "목록 Enter 허수아비 진입 1",
+			"pass": true
+		},
+		{
+			"name": "실제 Esc 로비 복귀 1",
+			"pass": true
+		},
+		{
+			"name": "재진입 전체 목록/최초 포커스 1",
+			"pass": true
+		},
+		{
+			"name": "재진입 노드 수 일정 1",
+			"pass": true
+		},
+		{
+			"name": "목록 Enter 허수아비 진입 2",
+			"pass": true
+		},
+		{
+			"name": "실제 Esc 로비 복귀 2",
+			"pass": true
+		},
+		{
+			"name": "재진입 전체 목록/최초 포커스 2",
+			"pass": true
+		},
+		{
+			"name": "재진입 노드 수 일정 2",
+			"pass": true
+		},
+		{
+			"name": "연출 테스트 전용 경로 진입",
+			"pass": true
+		},
+		{
+			"name": "연출 테스트 Esc 복귀",
+			"pass": true
+		},
+		{
+			"name": "섹터 런 실제 진입",
+			"pass": true
+		},
+		{
+			"name": "new_run 새 런 초기화",
+			"pass": true
+		},
+		{
+			"name": "섹터 런 Esc 복귀",
+			"pass": true
+		},
+		{
+			"name": "복귀 시간/물리 복구",
+			"pass": true
+		}
+	],
+	"fails": 0
+}

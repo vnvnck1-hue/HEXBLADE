@@ -1,0 +1,192 @@
+[
+  {
+    "id": "01_stage_start",
+    "title": "출격·스테이지 시작",
+    "head": "SECTOR 01",
+    "sub": "도시 외곽 · 경로를 돌파하세요",
+    "type": "stage",
+    "accent": "lime",
+    "duration": 980,
+    "exit": 132,
+    "persistent": false,
+    "note": "큰 출격은 첫 진입에 한 번. 다음 방은 축약.",
+    "words": [
+      "SECTOR",
+      "01"
+    ],
+    "receipt": "TAB · MAP",
+    "badge": "MISSION",
+    "build": 226
+  },
+  {
+    "id": "02_wave_elite",
+    "title": "웨이브·정예·진행",
+    "head": "WAVE 02 / 05",
+    "sub": "다음 웨이브 접근",
+    "type": "wave",
+    "accent": "mint",
+    "duration": 720,
+    "exit": 118,
+    "persistent": false,
+    "note": "일반·최종 웨이브·정예·속도 상승 변형.",
+    "words": [
+      "WAVE",
+      "02 / 05"
+    ],
+    "receipt": "FINAL / ELITE / SPEED",
+    "badge": "INBOUND",
+    "build": 190
+  },
+  {
+    "id": "03_area_clear",
+    "title": "청소·구역 완료·보상",
+    "head": "AREA CLEAR",
+    "sub": "코인 +12 · 출구 개방",
+    "type": "clear",
+    "accent": "lime",
+    "duration": 1000,
+    "exit": 136,
+    "persistent": false,
+    "note": "한 완료 카드 안에 보상과 출구 정보를 묶음.",
+    "words": [
+      "AREA",
+      "CLEAR"
+    ],
+    "receipt": "COINS +12 · EXIT OPEN",
+    "badge": "COMPLETE",
+    "build": 220
+  },
+  {
+    "id": "04_boss_alert",
+    "title": "보스 등장·페이즈·약점",
+    "head": "WARNING",
+    "sub": "MAMMOTH · 거대 중전차 접근",
+    "type": "boss",
+    "accent": "coral",
+    "duration": 1180,
+    "exit": 150,
+    "persistent": false,
+    "note": "큰 첫 등장과 작은 페이즈/약점 알림을 구분.",
+    "words": [
+      "WARNING",
+      "MAMMOTH"
+    ],
+    "receipt": "BOSS CONTACT",
+    "badge": "ALERT",
+    "build": 240
+  },
+  {
+    "id": "05_combat_feedback",
+    "title": "정밀회피·타격·콤보",
+    "head": "PERFECT",
+    "sub": "정밀 회피 성공",
+    "type": "combat",
+    "accent": "mint",
+    "duration": 420,
+    "exit": 112,
+    "persistent": false,
+    "note": "정밀 회피·패링·공격 이름·콤보·피해 숫자.",
+    "words": [
+      "PERFECT",
+      "!"
+    ],
+    "receipt": "PARRY / PIERCE / SLAM",
+    "badge": "TIMING",
+    "build": 146
+  },
+  {
+    "id": "06_support_docking",
+    "title": "드론 지원·합체·청소",
+    "head": "SUPPORT READY",
+    "sub": "X 보호막 / 볼텍스 · 지원 50 이상",
+    "type": "support",
+    "accent": "mint",
+    "duration": 780,
+    "exit": 130,
+    "persistent": true,
+    "note": "Q 휠윈드 30, X 지원 50. 기존 합체 인물 유지.",
+    "words": [
+      "SUPPORT",
+      "READY"
+    ],
+    "receipt": "X · 50 / Q · 30",
+    "badge": "TRIAD",
+    "build": 190
+  },
+  {
+    "id": "07_equipment_resources",
+    "title": "장비·재장전·자원",
+    "head": "RELOAD",
+    "sub": "실제 장비 상태에 붙는 티켓",
+    "type": "equipment",
+    "accent": "amber",
+    "duration": 820,
+    "exit": 130,
+    "persistent": true,
+    "note": "재장전·과열·충전·자원은 장비에 부착.",
+    "words": [
+      "RE",
+      "LOAD"
+    ],
+    "receipt": "T · RELOAD",
+    "badge": "EQUIPMENT",
+    "build": 184
+  },
+  {
+    "id": "08_hazards_gimmicks",
+    "title": "위험·상태·상호작용",
+    "head": "DANGER",
+    "sub": "붉은 띠 밖으로 이동",
+    "type": "danger",
+    "accent": "coral",
+    "duration": 820,
+    "exit": 130,
+    "persistent": true,
+    "note": "위험은 즉시 읽히고 실제 상태 종료까지 유지.",
+    "words": [
+      "DANGER",
+      "!"
+    ],
+    "receipt": "위험 종료까지 유지",
+    "badge": "HAZARD",
+    "build": 166
+  },
+  {
+    "id": "09_results",
+    "title": "승리·실패·무한 모드 기록",
+    "head": "RUN COMPLETE",
+    "sub": "작전 완료",
+    "type": "result",
+    "accent": "lime",
+    "duration": 1100,
+    "exit": 180,
+    "persistent": true,
+    "note": "결과는 입력까지 유지. S랭크·새 보상 없음.",
+    "words": [
+      "RUN",
+      "COMPLETE"
+    ],
+    "receipt": "결과 입력까지 유지",
+    "badge": "RESULT",
+    "build": 392
+  },
+  {
+    "id": "10_route_dialogue_system",
+    "title": "포탈·대화·시스템 알림",
+    "head": "ROUTE SELECTED",
+    "sub": "전투 구역 · 선택 가능 경로",
+    "type": "route",
+    "accent": "mint",
+    "duration": 480,
+    "exit": 130,
+    "persistent": false,
+    "note": "지도·대화 선택·토스트. SAVED 등은 후속 제안.",
+    "words": [
+      "ROUTE",
+      "SELECTED"
+    ],
+    "receipt": "전투 · 정예 · 정비 · 보스",
+    "badge": "NAVIGATION",
+    "build": 174
+  }
+]

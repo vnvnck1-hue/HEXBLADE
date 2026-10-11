@@ -1,0 +1,2673 @@
+{
+  "revision": "v2",
+  "scope": "standalone concept only",
+  "checks": [
+    {
+      "kind": "layer_separation",
+      "id": "01_stage_start",
+      "layers": 14,
+      "starts": [
+        0,
+        18,
+        40,
+        58,
+        64,
+        78,
+        90,
+        74,
+        96,
+        132,
+        150,
+        170,
+        108,
+        66
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 108,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 980,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "01_stage_start",
+      "new_head_hit": 108,
+      "old_entry": 140,
+      "new_duration": 980,
+      "old_duration": 1220,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "01_stage_start",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.411765,
+          "transform": "matrix(0.797059, 0, 0, 1.04412, -172.353, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0,
+          "transform": "matrix(0.9, 0, 0, 1, 195, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "01_stage_start",
+      "persistent": false,
+      "word": 0,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "02_wave_elite",
+      "layers": 14,
+      "starts": [
+        0,
+        8,
+        26,
+        42,
+        47,
+        58,
+        69,
+        48,
+        67,
+        102,
+        114,
+        134,
+        82,
+        50
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 82,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 720,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "02_wave_elite",
+      "new_head_hit": 82,
+      "old_entry": 120,
+      "new_duration": 720,
+      "old_duration": 900,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "02_wave_elite",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.705882,
+          "transform": "matrix(0.973529, 0, 0, 0.947059, -78.0882, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0.214286,
+          "transform": "matrix(0.927857, 0, 0, 1.01714, 146.78, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "02_wave_elite",
+      "persistent": false,
+      "word": 0,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "03_area_clear",
+      "layers": 14,
+      "starts": [
+        0,
+        12,
+        34,
+        46,
+        56,
+        68,
+        80,
+        60,
+        86,
+        126,
+        144,
+        164,
+        94,
+        54
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 94,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 1000,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "03_area_clear",
+      "new_head_hit": 94,
+      "old_entry": 160,
+      "new_duration": 1000,
+      "old_duration": 1300,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "03_area_clear",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.588235,
+          "transform": "matrix(0.902941, 0, 0, 0.985882, -117.647, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0,
+          "transform": "matrix(0.9, 0, 0, 1, 195, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "03_area_clear",
+      "persistent": false,
+      "word": 0,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "04_boss_alert",
+      "layers": 14,
+      "starts": [
+        0,
+        20,
+        40,
+        56,
+        66,
+        80,
+        94,
+        86,
+        106,
+        148,
+        164,
+        188,
+        126,
+        64
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 120,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 1180,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "04_boss_alert",
+      "new_head_hit": 120,
+      "old_entry": 150,
+      "new_duration": 1180,
+      "old_duration": 1600,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "04_boss_alert",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.352941,
+          "transform": "matrix(0.761765, 0, 0, 1.06353, -190.588, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0,
+          "transform": "matrix(0.9, 0, 0, 1, 195, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "04_boss_alert",
+      "persistent": false,
+      "word": 0,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "05_combat_feedback",
+      "layers": 14,
+      "starts": [
+        0,
+        12,
+        18,
+        24,
+        32,
+        40,
+        22,
+        36,
+        58,
+        70,
+        84,
+        54,
+        26
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 45,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 420,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "05_combat_feedback",
+      "new_head_hit": 45,
+      "old_entry": 65,
+      "new_duration": 420,
+      "old_duration": 550,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "05_combat_feedback",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.941176,
+          "transform": "matrix(1.11471, 0, 0, 0.869412, -0.735294, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0.714286,
+          "transform": "matrix(0.992857, 0, 0, 1.05714, 28.4643, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0.434783,
+          "transform": "matrix(1.31087, 0, -0.145829, 0.649565, -38.2609, 9.30435)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "05_combat_feedback",
+      "persistent": false,
+      "word": 0,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "06_support_docking",
+      "layers": 14,
+      "starts": [
+        0,
+        6,
+        22,
+        34,
+        44,
+        55,
+        66,
+        42,
+        64,
+        94,
+        114,
+        136,
+        78
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 76,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 780,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "06_support_docking",
+      "new_head_hit": 76,
+      "old_entry": 100,
+      "new_duration": 780,
+      "old_duration": 1020,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "06_support_docking",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.764706,
+          "transform": "matrix(1.00882, 0, 0, 0.927647, -50.7059, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0.357143,
+          "transform": "matrix(0.946429, 0, 0, 1.02857, 101.843, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "06_support_docking",
+      "persistent": true,
+      "word": 1,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "07_equipment_resources",
+      "layers": 14,
+      "starts": [
+        0,
+        8,
+        22,
+        36,
+        44,
+        54,
+        64,
+        40,
+        60,
+        90,
+        108,
+        128,
+        72
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 74,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 820,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "07_equipment_resources",
+      "new_head_hit": 74,
+      "old_entry": 110,
+      "new_duration": 820,
+      "old_duration": 1200,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "07_equipment_resources",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.705882,
+          "transform": "matrix(0.973529, 0, 0, 0.947059, 67.7941, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0.357143,
+          "transform": "matrix(0.946429, 0, 0, 1.02857, 84.5018, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "07_equipment_resources",
+      "persistent": true,
+      "word": 1,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "08_hazards_gimmicks",
+      "layers": 14,
+      "starts": [
+        0,
+        18,
+        34,
+        40,
+        50,
+        60,
+        88,
+        114,
+        38,
+        42
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 34,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 820,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "08_hazards_gimmicks",
+      "new_head_hit": 34,
+      "old_entry": 80,
+      "new_duration": 820,
+      "old_duration": 1200,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "08_hazards_gimmicks",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.941176,
+          "transform": "matrix(1.11471, 0, 0, 0.869412, -8.23529, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0.5,
+          "transform": "matrix(0.965, 0, 0, 1.04, 95, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 1,
+          "transform": "matrix(1.02311, 0, 0, 0.988444, 0, 0)"
+        },
+        {
+          "id": "number",
+          "opacity": 1,
+          "transform": "matrix(1.02311, 0, 0, 0.988444, 0, 0)"
+        },
+        {
+          "id": "sub",
+          "opacity": 1,
+          "transform": "matrix(1.02311, 0, 0, 0.988444, 0, 0)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "08_hazards_gimmicks",
+      "persistent": true,
+      "word": 1,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "09_results",
+      "layers": 25,
+      "starts": [
+        0,
+        18,
+        38,
+        58,
+        68,
+        80,
+        92,
+        76,
+        104,
+        140,
+        164,
+        188,
+        124,
+        66,
+        178,
+        202,
+        226,
+        250,
+        154,
+        172,
+        190,
+        208,
+        144,
+        300,
+        330
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge",
+        "stat0",
+        "stat1",
+        "stat2",
+        "stat3",
+        "statLabel0",
+        "statLabel1",
+        "statLabel2",
+        "statLabel3",
+        "statsRule",
+        "action0",
+        "action1"
+      ],
+      "headline_hit": 110,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        },
+        {
+          "id": "stat0",
+          "opacity": "1"
+        },
+        {
+          "id": "stat1",
+          "opacity": "1"
+        },
+        {
+          "id": "stat2",
+          "opacity": "1"
+        },
+        {
+          "id": "stat3",
+          "opacity": "1"
+        },
+        {
+          "id": "statLabel0",
+          "opacity": "1"
+        },
+        {
+          "id": "statLabel1",
+          "opacity": "1"
+        },
+        {
+          "id": "statLabel2",
+          "opacity": "1"
+        },
+        {
+          "id": "statLabel3",
+          "opacity": "1"
+        },
+        {
+          "id": "statsRule",
+          "opacity": "1"
+        },
+        {
+          "id": "action0",
+          "opacity": "1"
+        },
+        {
+          "id": "action1",
+          "opacity": "1"
+        }
+      ],
+      "duration": 1100,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "09_results",
+      "new_head_hit": 110,
+      "old_entry": 220,
+      "new_duration": 1100,
+      "old_duration": 1200,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "09_results",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.411765,
+          "transform": "matrix(0.797059, 0, 0, 1.04412, -172.353, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0,
+          "transform": "matrix(0.9, 0, 0, 1, 195, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "09_results",
+      "persistent": true,
+      "word": 1,
+      "pass": true
+    },
+    {
+      "kind": "layer_separation",
+      "id": "10_route_dialogue_system",
+      "layers": 14,
+      "starts": [
+        0,
+        6,
+        18,
+        28,
+        34,
+        44,
+        54,
+        32,
+        48,
+        78,
+        98,
+        116,
+        62,
+        36
+      ],
+      "rootAnimations": 0,
+      "rootTransform": "none",
+      "targets": [
+        "lead",
+        "panel",
+        "border",
+        "dots",
+        "slash0",
+        "slash1",
+        "slash2",
+        "word",
+        "number",
+        "sub",
+        "receipt",
+        "receiptText",
+        "burst",
+        "badge"
+      ],
+      "headline_hit": 66,
+      "inStage": true,
+      "overlaps": [
+        {
+          "id": "panel",
+          "opacity": "1"
+        },
+        {
+          "id": "border",
+          "opacity": "1"
+        },
+        {
+          "id": "dots",
+          "opacity": "1"
+        },
+        {
+          "id": "slash0",
+          "opacity": "1"
+        },
+        {
+          "id": "slash1",
+          "opacity": "1"
+        },
+        {
+          "id": "slash2",
+          "opacity": "1"
+        },
+        {
+          "id": "word",
+          "opacity": "1"
+        },
+        {
+          "id": "number",
+          "opacity": "1"
+        },
+        {
+          "id": "sub",
+          "opacity": "1"
+        },
+        {
+          "id": "receipt",
+          "opacity": "1"
+        },
+        {
+          "id": "receiptText",
+          "opacity": "1"
+        },
+        {
+          "id": "badge",
+          "opacity": "1"
+        }
+      ],
+      "duration": 480,
+      "pass": true
+    },
+    {
+      "kind": "faster",
+      "id": "10_route_dialogue_system",
+      "new_head_hit": 66,
+      "old_entry": 80,
+      "new_duration": 480,
+      "old_duration": 550,
+      "pass": true
+    },
+    {
+      "kind": "different_early_states",
+      "id": "10_route_dialogue_system",
+      "states": [
+        {
+          "id": "panel",
+          "opacity": 0.764706,
+          "transform": "matrix(1.00882, 0, 0, 0.927647, -62.1176, 0)"
+        },
+        {
+          "id": "border",
+          "opacity": 0.5,
+          "transform": "matrix(0.965, 0, 0, 1.04, 93.8625, 0)"
+        },
+        {
+          "id": "word",
+          "opacity": 0,
+          "transform": "matrix(1.45, 0, -0.308207, 0.28, -70, 18)"
+        },
+        {
+          "id": "number",
+          "opacity": 0,
+          "transform": "matrix(0.6, 0, 0, 1.9, 8, -78)"
+        },
+        {
+          "id": "sub",
+          "opacity": 0,
+          "transform": "matrix(1, 0, 0, 0.5, 0, 24)"
+        },
+        {
+          "id": "receipt",
+          "opacity": 0,
+          "transform": "matrix(0.12, 0, 0, 1.5, 100, 0)"
+        }
+      ],
+      "pass": true
+    },
+    {
+      "kind": "state_hold",
+      "id": "10_route_dialogue_system",
+      "persistent": false,
+      "word": 0,
+      "pass": true
+    },
+    {
+      "kind": "danger_immediate",
+      "pass": true
+    },
+    {
+      "kind": "play_pause",
+      "pass": true
+    },
+    {
+      "kind": "layer_toggle",
+      "pass": true
+    },
+    {
+      "kind": "all_layers_reduced",
+      "pass": true
+    },
+    {
+      "kind": "persistent_exit_preview",
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 1280,
+      "height": 720,
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 1280,
+      "height": 800,
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 1920,
+      "height": 800,
+      "pass": true
+    },
+    {
+      "kind": "responsive",
+      "width": 390,
+      "height": 844,
+      "pass": true
+    },
+    {
+      "kind": "browser_js",
+      "errors": [],
+      "pass": true
+    },
+    {
+      "kind": "runtime_preserved",
+      "files": [
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\hud.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\main.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\run_main.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\run_state.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\drone\\partner_drone.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\player.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\stream\\stream_main.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\dialogue\\dialogue_view.gd",
+          "same": true
+        },
+        {
+          "path": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\scripts\\lobby.gd",
+          "same": true
+        }
+      ],
+      "pass": true
+    }
+  ],
+  "all_pass": true,
+  "snapshots": [
+    {
+      "id": "01_stage_start",
+      "beats": [
+        0,
+        52,
+        94,
+        130,
+        226
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 18,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 40,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 58,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 64,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 78,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 90,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 74,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 96,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 132,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 150,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 170,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 108,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 66,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "02_wave_elite",
+      "beats": [
+        0,
+        42,
+        68,
+        101,
+        190
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 8,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 26,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 42,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 47,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 58,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 69,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 48,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 67,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 102,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 114,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 134,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 82,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 50,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "03_area_clear",
+      "beats": [
+        0,
+        46,
+        80,
+        120,
+        220
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 12,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 34,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 46,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 56,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 68,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 80,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 60,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 86,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 126,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 144,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 164,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 94,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 54,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "04_boss_alert",
+      "beats": [
+        0,
+        54,
+        106,
+        140,
+        240
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 20,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 40,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 56,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 66,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 80,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 94,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 86,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 106,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 148,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 164,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 188,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 126,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 64,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "05_combat_feedback",
+      "beats": [
+        0,
+        34,
+        42,
+        70,
+        146
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 0,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 12,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 18,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 24,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 32,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 40,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 22,
+          "attack": 23
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 36,
+          "attack": 23
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 58,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 70,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 84,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 54,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 26,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "06_support_docking",
+      "beats": [
+        0,
+        40,
+        62,
+        98,
+        190
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 6,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 22,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 34,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 44,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 55,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 66,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 42,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 64,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 94,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 114,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 136,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 78,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 42,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "07_equipment_resources",
+      "beats": [
+        0,
+        42,
+        60,
+        94,
+        184
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 8,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 22,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 36,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 44,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 54,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 64,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 40,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 60,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 90,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 108,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 128,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 72,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 44,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "08_hazards_gimmicks",
+      "beats": [
+        0,
+        18,
+        45,
+        114,
+        166
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 0,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 18,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 34,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 40,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 50,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 60,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 0,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 0,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 88,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 114,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 38,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 42,
+          "attack": 28
+        }
+      ]
+    },
+    {
+      "id": "09_results",
+      "beats": [
+        0,
+        52,
+        96,
+        138,
+        392
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 18,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 38,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 58,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 68,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 80,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 92,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 76,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 104,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 140,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 164,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 188,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 124,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 66,
+          "attack": 28
+        },
+        {
+          "name": "점수 숫자",
+          "delay": 178,
+          "attack": 26
+        },
+        {
+          "name": "처치 숫자",
+          "delay": 202,
+          "attack": 26
+        },
+        {
+          "name": "콤보 숫자",
+          "delay": 226,
+          "attack": 26
+        },
+        {
+          "name": "시간",
+          "delay": 250,
+          "attack": 26
+        },
+        {
+          "name": "점수 라벨",
+          "delay": 154,
+          "attack": 22
+        },
+        {
+          "name": "처치 라벨",
+          "delay": 172,
+          "attack": 22
+        },
+        {
+          "name": "콤보 라벨",
+          "delay": 190,
+          "attack": 22
+        },
+        {
+          "name": "시간 라벨",
+          "delay": 208,
+          "attack": 22
+        },
+        {
+          "name": "정산 구분선",
+          "delay": 144,
+          "attack": 24
+        },
+        {
+          "name": "재출격",
+          "delay": 300,
+          "attack": 30
+        },
+        {
+          "name": "로비",
+          "delay": 330,
+          "attack": 30
+        }
+      ]
+    },
+    {
+      "id": "10_route_dialogue_system",
+      "beats": [
+        0,
+        40,
+        52,
+        82,
+        174
+      ],
+      "tracks": [
+        {
+          "name": "선행 칼집",
+          "delay": 0,
+          "attack": 28
+        },
+        {
+          "name": "먹색 패널",
+          "delay": 6,
+          "attack": 34
+        },
+        {
+          "name": "아이보리 테두리",
+          "delay": 18,
+          "attack": 28
+        },
+        {
+          "name": "망점",
+          "delay": 28,
+          "attack": 28
+        },
+        {
+          "name": "장식 1",
+          "delay": 34,
+          "attack": 28
+        },
+        {
+          "name": "장식 2",
+          "delay": 44,
+          "attack": 28
+        },
+        {
+          "name": "장식 3",
+          "delay": 54,
+          "attack": 28
+        },
+        {
+          "name": "제목 단어",
+          "delay": 32,
+          "attack": 34
+        },
+        {
+          "name": "번호·강조어",
+          "delay": 48,
+          "attack": 34
+        },
+        {
+          "name": "한국어 설명",
+          "delay": 78,
+          "attack": 28
+        },
+        {
+          "name": "영수증 판",
+          "delay": 98,
+          "attack": 28
+        },
+        {
+          "name": "영수증 문구",
+          "delay": 116,
+          "attack": 28
+        },
+        {
+          "name": "임팩트 조각",
+          "delay": 62,
+          "attack": 28
+        },
+        {
+          "name": "분류 스탬프",
+          "delay": 36,
+          "attack": 28
+        }
+      ]
+    }
+  ],
+  "artifacts": {
+    "reviewed_on": "2026-10-12",
+    "all_ten_visually_reviewed": true,
+    "images": [
+      {
+        "src": "v2/01_stage_start_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/02_wave_elite_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/03_area_clear_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/04_boss_alert_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/05_combat_feedback_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/06_support_docking_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/07_equipment_resources_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/08_hazards_gimmicks_layered.png",
+        "width": 1600,
+        "height": 1200
+      },
+      {
+        "src": "v2/09_results_layered.png",
+        "width": 1600,
+        "height": 1230
+      },
+      {
+        "src": "v2/10_route_dialogue_system_layered.png",
+        "width": 1600,
+        "height": 1200
+      }
+    ],
+    "links": [
+      {
+        "url": "../output/ui-motion-concepts-20261011/index.html",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/design_v1.md",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/index_v1.html",
+        "exists": true
+      },
+      {
+        "url": "../output/chroma-major-screens-20261005/03_combat_cleanup.png",
+        "exists": true
+      },
+      {
+        "url": "../output/lobby-upgrade-kit-20261007/preview_static_1920x1080.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/01_stage_start_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/02_wave_elite_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/03_area_clear_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/04_boss_alert_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/05_combat_feedback_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/06_support_docking_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/07_equipment_resources_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/08_hazards_gimmicks_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/09_results_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/v2/10_route_dialogue_system_layered.png",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/index.html",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/prompts.json",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/sources.json",
+        "exists": true
+      },
+      {
+        "url": "../output/ui-motion-concepts-20261011/validation_v2.json",
+        "exists": true
+      }
+    ],
+    "browser_errors": [],
+    "all_pass": true,
+    "files": [
+      {
+        "path": "v2/01_stage_start_layered.png",
+        "sha256": "43961d9de86a31b798e6a2dfa873ee8dd24671c229fc5f976c0b84f653e30e50"
+      },
+      {
+        "path": "v2/02_wave_elite_layered.png",
+        "sha256": "e8ebc3362a2a56e9ed12e88243b470e1f67847e6ff79a975a603fc0ec47ec556"
+      },
+      {
+        "path": "v2/03_area_clear_layered.png",
+        "sha256": "d402053da95ec41235d7e2fa1e8ae19beaeee1e8005a45b268e2aadd6da3b0c1"
+      },
+      {
+        "path": "v2/04_boss_alert_layered.png",
+        "sha256": "2d0cef9755593b0aad40064ea9d3831e660346dcb4bee8665764575660f24fa2"
+      },
+      {
+        "path": "v2/05_combat_feedback_layered.png",
+        "sha256": "870075a8a2888e7d24acef9a489260d7dfbdd31be6ac98a2642d6c6959032659"
+      },
+      {
+        "path": "v2/06_support_docking_layered.png",
+        "sha256": "c35d1a03cb8eb93c5d15646292c65593588d37ec2c793be17eb85a387120b887"
+      },
+      {
+        "path": "v2/07_equipment_resources_layered.png",
+        "sha256": "650bff6919d8a05b96ce55e5bd0394581c50bc4969beda87774a76963bddcb3c"
+      },
+      {
+        "path": "v2/08_hazards_gimmicks_layered.png",
+        "sha256": "45f2be98a530076be122f4b2c80e9f641031dcad756a4f1d58f237cedee13f30"
+      },
+      {
+        "path": "v2/09_results_layered.png",
+        "sha256": "da7082884f5f5b1b573606c4c81d6b1ffc529531d3fe1e32f2c9c13c39720803"
+      },
+      {
+        "path": "v2/10_route_dialogue_system_layered.png",
+        "sha256": "d7718669636936702b7eab4b7fcb03147319671c41d90c1fcd82e9951410d69f"
+      }
+    ],
+    "keyboard_navigation": true
+  }
+}

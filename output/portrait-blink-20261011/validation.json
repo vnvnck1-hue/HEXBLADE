@@ -1,0 +1,210 @@
+{
+  "godot": "4.7.2-stable standard, tools/godot.ps1",
+  "fullSuite": {
+    "count": 56,
+    "pass": true,
+    "errors": 1,
+    "log": "full_tests.log"
+  },
+  "regressionIncident": {
+    "test": "training_whirl_check",
+    "firstRunEngineErrors": 1,
+    "message": "No vertices were added, surface cannot be created",
+    "isolatedRetryPass": true,
+    "isolatedRetryEngineErrors": 0,
+    "note": "Full 56 tests passed; one non-fatal empty-mesh engine error logged during training_whirl. Isolated rerun passed with zero errors. No unrelated mesh code changed."
+  },
+  "bots": [
+    {
+      "script": "cleaning_opening",
+      "exit": 0,
+      "errors": 0,
+      "completed": true
+    },
+    {
+      "script": "hangar_briefing",
+      "exit": 0,
+      "errors": 0,
+      "completed": true
+    },
+    {
+      "script": "feature_demo",
+      "exit": 0,
+      "errors": 0,
+      "completed": true
+    },
+    {
+      "script": "coworker_introduction",
+      "exit": 0,
+      "errors": 0,
+      "completed": true
+    },
+    {
+      "script": "field_partner_introduction",
+      "exit": 0,
+      "errors": 0,
+      "completed": true
+    }
+  ],
+  "checkedLogs": [
+    {
+      "file": "import.log",
+      "errors": 0
+    },
+    {
+      "file": "capture.log",
+      "errors": 0
+    },
+    {
+      "file": "bot_training.log",
+      "errors": 0
+    },
+    {
+      "file": "cutin_diagonal.log",
+      "errors": 0
+    },
+    {
+      "file": "cutin_cockpit.log",
+      "errors": 0
+    }
+  ],
+  "diagonalMaxClipError": 0,
+  "assetChecks": {
+    "tool": "built-in imagegen, 6 independent edits",
+    "originals": [
+      {
+        "file": "owner_briefing.png",
+        "unchanged": true
+      },
+      {
+        "file": "owner_encouragement.png",
+        "unchanged": true
+      },
+      {
+        "file": "owner_welcome.png",
+        "unchanged": true
+      },
+      {
+        "file": "partner_greeting.png",
+        "unchanged": true
+      },
+      {
+        "file": "pilot_neutral.png",
+        "unchanged": true
+      },
+      {
+        "file": "worker_cheerful.png",
+        "unchanged": true
+      },
+      {
+        "file": "worker_introduction.png",
+        "unchanged": true
+      }
+    ],
+    "assets": [
+      {
+        "id": "owner_welcome",
+        "hashMatches": true,
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "rgba": true,
+        "importExists": true,
+        "outsideEyeChangedPixels": 0,
+        "alphaChangedPixels": 0
+      },
+      {
+        "id": "owner_briefing",
+        "hashMatches": true,
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "rgba": true,
+        "importExists": true,
+        "outsideEyeChangedPixels": 0,
+        "alphaChangedPixels": 0
+      },
+      {
+        "id": "owner_encouragement",
+        "hashMatches": true,
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "rgba": true,
+        "importExists": true,
+        "outsideEyeChangedPixels": 0,
+        "alphaChangedPixels": 0
+      },
+      {
+        "id": "worker_introduction",
+        "hashMatches": true,
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "rgba": true,
+        "importExists": true,
+        "outsideEyeChangedPixels": 0,
+        "alphaChangedPixels": 0
+      },
+      {
+        "id": "worker_cheerful",
+        "hashMatches": true,
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "rgba": true,
+        "importExists": true,
+        "outsideEyeChangedPixels": 0,
+        "alphaChangedPixels": 0
+      },
+      {
+        "id": "partner_greeting",
+        "hashMatches": true,
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "rgba": true,
+        "importExists": true,
+        "outsideEyeChangedPixels": 0,
+        "alphaChangedPixels": 0
+      }
+    ],
+    "preview": {
+      "width": 960,
+      "pageHeight": 600,
+      "frames": 140,
+      "loop": 0
+    },
+    "retired": [
+      {
+        "name": "cleaning_owner",
+        "absentFromGame": true,
+        "archiveExists": true
+      },
+      {
+        "name": "purple_worker",
+        "absentFromGame": true,
+        "archiveExists": true
+      },
+      {
+        "name": "green_maid",
+        "absentFromGame": true,
+        "archiveExists": true
+      },
+      {
+        "name": "mint_maid",
+        "absentFromGame": true,
+        "archiveExists": true
+      }
+    ]
+  },
+  "nativeSourcePixels": "6 PNGs: zero differences outside eye region and zero alpha differences; checked in dialogue_blink_check",
+  "rendered": "Forward+ six poses, actual dialogue open/closed, diagonal and cockpit gameplay captures visually inspected",
+  "allRequiredChecksPass": true
+}

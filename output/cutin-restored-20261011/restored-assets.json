@@ -1,0 +1,190 @@
+[
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-cheerful-hairmask.png",
+    "sha256": "5fcf04dcd8a2fa93a577de3782e8a56ec6487f8b7b747d9539ad9bfc6094995c"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-cheerful-hairmask.png.import",
+    "sha256": "db83603bccec33ad91ac9271457fce1b9611bad92080dfea212763787b41aa93"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-cheerful-player.png",
+    "sha256": "3dabaa718e9ec3ddec46f565bc7b9ff2ef6a3606e9c84562d8dcbd9f5fb8199e"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-cheerful-player.png.import",
+    "sha256": "c2e5635d8f97f0e4cb8e7eba52322d9f2f248d668fc310e2e59ff78ed8678520"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-cheerful.png",
+    "sha256": "283bef6c9a5471629c9407a58fe04d9f22470642542683a2f81b0f4dce4aca29"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-cheerful.png.import",
+    "sha256": "28d64f8dc6f7dca56d7963636490cfb23e96223f6faae049b17bf325adf67a51"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-introduction-player.png",
+    "sha256": "d787107dddf03f7b7b2ac0400b0e2ac704d28a4b52453d7c87a1ec49c18526e3"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-introduction-player.png.import",
+    "sha256": "c18e5111e6e3944910f10bdac4071ad7d813dea77a26265e27b92830282aea2b"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-neutral.png",
+    "sha256": "8f63ddb2e1b8ed6a4c9bac9002dc49ec8fc628d132ff103894d61d73fbfc5329"
+  },
+  {
+    "path": "assets/portraits/purple_worker/purple-worker-neutral.png.import",
+    "sha256": "8d2f4b04661aab41cf9fad78be49c2c65f8fdef6a19ea68a9c687ae6984ecd66"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-bubble.png",
+    "sha256": "9caba24fc239aafa75d6c633851b22912bb38c1f954cc175f54b9e6050b5dbf9"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-bubble.png.import",
+    "sha256": "888d8540b618abc569bb3a14e3ceaa82107b3a4dbb7a1cf1c7d4321e087be1a1"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-docking.png",
+    "sha256": "c68d9325ab9be48a91faae7470ab73c54e3af12c79e459482f8cc8e036a866fc"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-docking.png.import",
+    "sha256": "870da0380f239d8f5749dbe9b8de986399c3f1f2646e569bc4f7e95d5f2f99e4"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-hairmask.png",
+    "sha256": "25501d8787a7d18be958dc6594399549ce1940c8ce98ab16ed3112a5ede37a08"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-hairmask.png.import",
+    "sha256": "62c1929bd6eaf0f3dc1931fd4c41c04b9044da94d6564ea62c37189caba2a91a"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-heart.png",
+    "sha256": "a8d2f1089fef7472785e4f57b6cfe2aa3df396958a55c034e68eb9c598834353"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-heart.png.import",
+    "sha256": "203efb4b52511aaaaf0fad340caadccc7adb863208551d99047198477f20d001"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-sparkle-a.png",
+    "sha256": "bb36b99811492c7d7d2ae85b9265daba3ec7edbdf0eb38cf712997c73dbff5a6"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-sparkle-a.png.import",
+    "sha256": "57ddd308fdb44934b43da391ed755cb669a0058c8f3b0020abfd442b400c4d65"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-sparkle-b.png",
+    "sha256": "4c1b047259fb4b55c1b0c34a376fc12b72add805dd3dd14d1c017ddeeccbf4bd"
+  },
+  {
+    "path": "assets/portraits/green_maid/green-maid-sparkle-b.png.import",
+    "sha256": "16c3b8985c437eb99ffa254421d5ab185db3f04dbecba660587ac0a44f307b85"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-docking.png",
+    "sha256": "c01a82465b2ad1048b4050305434d079cf7c670f1984571634679b88a0a1a008"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-docking.png.import",
+    "sha256": "3f3c8ac76f17e610386cc41b2230c32cc57771c9b807921b87ab6da9ae375d98"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-motionmask.png",
+    "sha256": "0c532ef0e5c318c7808ee6be4cb6441aee87e8a66f3a34c31d90281fc53ad112"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-motionmask.png.import",
+    "sha256": "9eaed7cddd0e71a9ceea5112fc7f4e98b0dce8e0eb68e1a80a2a05f06fdf5103"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose1-motion.png",
+    "sha256": "03fdc5fb630ebcfabdb4f8e8c24a51f7df00b471813200495ed7cbe02cc6b3a1"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose1-motion.png.import",
+    "sha256": "04d4c10e318c98e397ce8a0633a022545a8904c432f064e6710718d16b891650"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose1.png",
+    "sha256": "47483743902edd1f33262d0237171c28f868ad4b98fada69e3d938973fb20223"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose1.png.import",
+    "sha256": "6be0659d1ddbbe3a3ca9b77fbb29360a24ac0891a9e5cbbf560844dd5d922beb"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose2-motion.png",
+    "sha256": "873e9ca3b3e2233629b1c2874756c593076f2bb8518a1ec3f7d96aec1ae31bca"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose2-motion.png.import",
+    "sha256": "d1f740595d92ecaaf4ec6a58c57bf2b0db952dcb6485318b39f175773dd3d292"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose2.png",
+    "sha256": "761966ab22a829dea4944803fab0831ea6dfc52a239b77be57709c0371d3ade9"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose2.png.import",
+    "sha256": "857e437140ca5c679865175a6355442ca200103fc810989f69fdb63b9031bcd5"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose3-motion.png",
+    "sha256": "da176b10f17ac3a591c8d9027d154a28d2577be00da3358972a0241b673bb081"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose3-motion.png.import",
+    "sha256": "1ed388126eafa780e245c74b13a4b9e372949ca60d3bcc1e75afc0055a67476f"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose3.png",
+    "sha256": "b67a14531d62043d0a161c69e9f5f9640531a6e10d253fc559158131af4eb298"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose3.png.import",
+    "sha256": "fe2c525f84461f28e42e3702d8980b6d93e5546bb9fc1abc613c4bbf4680bc6e"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose4-motion.png",
+    "sha256": "1fc6c70f684ba8c8ba8166af1bb70f7ee734158b2563a77b8fd5e16e0bbcfc5d"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose4-motion.png.import",
+    "sha256": "f5a74bb8f20b249982abf2a17168857053898787d0508f1bb90df4400b4ff849"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose4.png",
+    "sha256": "fc792d593df914d295e7925da069b1d7f59c69a6270c1445b2a92ae89d606c03"
+  },
+  {
+    "path": "assets/portraits/mint_maid/mint-maid-pose4.png.import",
+    "sha256": "144d48bee3803a093ebc905ccbc204b143372727af492f9bdf90df6411584472"
+  },
+  {
+    "path": "assets/vfx/drone_cutin/cockpit_plate.png",
+    "sha256": "91eb7d1badbc187a6c7098d49468bc68bd7998f67d54db7fb381c36d17126c52"
+  },
+  {
+    "path": "assets/vfx/drone_cutin/cockpit_plate.png.import",
+    "sha256": "2fa548e8f394b119e1888e4bba0ffcba87c02ac4c67c6e7cb32e7499267f72bd"
+  },
+  {
+    "path": "assets/vfx/drone_cutin/cockpit_plate_clipped.png",
+    "sha256": "3854707b59fb5310a97e53820ac09683c24a7a8a7dc039e370621f4fa8c02af0"
+  },
+  {
+    "path": "assets/vfx/drone_cutin/cockpit_plate_clipped.png.import",
+    "sha256": "0dbbfbfd81f51118eb5693a747516533c30cf455ad402b8f12c2abecca5bf858"
+  },
+  {
+    "path": "_capture/drone_cutin_pack_preview.gd",
+    "sha256": "b9195a0e5b5d95b4551ad457505c6927f46f98271d2c7ebf6adaa61551e17eb1"
+  }
+]

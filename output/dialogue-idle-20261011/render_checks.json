@@ -1,0 +1,45 @@
+{
+	"checks": [
+		{
+			"message": "owner 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 6207 pixels",
+			"pass": true
+		},
+		{
+			"message": "worker 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 9770 pixels",
+			"pass": true
+		},
+		{
+			"message": "partner 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 9122 pixels",
+			"pass": true
+		},
+		{
+			"message": "mira 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 3461 pixels",
+			"pass": true
+		},
+		{
+			"message": "sena 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 4230 pixels",
+			"pass": true
+		},
+		{
+			"message": "noa 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 5718 pixels",
+			"pass": true
+		},
+		{
+			"message": "eirin 몸을 고정해도 셰이더 머리/옷이 실제로 움직임: 4971 pixels",
+			"pass": true
+		},
+		{
+			"message": "움직임 줄이기: 실제 렌더 픽셀도 정지",
+			"pass": true
+		},
+		{
+			"message": "mechanic 원하는 실제 대사 표시",
+			"pass": true
+		},
+		{
+			"message": "partner 원하는 실제 대사 표시",
+			"pass": true
+		}
+	],
+	"fails": 0
+}

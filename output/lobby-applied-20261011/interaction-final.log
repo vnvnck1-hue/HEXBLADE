@@ -1,0 +1,40 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060
+
+LOBBY_CAPTURE lobby_1280x800 viewport=(1280, 800)
+LOBBY_CAPTURE lobby_1280x720 viewport=(1280, 720)
+LOBBY_CAPTURE lobby_1920x1080 viewport=(1920, 1080)
+LOBBY_CAPTURE lobby_1920x800 viewport=(1920, 800)
+LOBBY_CAPTURE focus_death_test viewport=(1280, 800)
+LOBBY_CAPTURE drawer_top viewport=(1280, 800)
+LOBBY_CAPTURE drawer_long_title viewport=(1280, 800)
+LOBBY_CAPTURE drawer_bottom viewport=(1280, 800)
+LOBBY_CAPTURE drawer_closed viewport=(1280, 800)
+PASS F11 전체 화면
+PASS F11 창 모드 복귀
+PASS 목록 Enter 허수아비 진입 0
+LOBBY_CAPTURE training_entry viewport=(1280, 800)
+PASS 실제 Esc 로비 복귀 0
+PASS 재진입 전체 목록/최초 포커스 0
+PASS 재진입 노드 수 일정 0
+PASS 목록 Enter 허수아비 진입 1
+PASS 실제 Esc 로비 복귀 1
+PASS 재진입 전체 목록/최초 포커스 1
+PASS 재진입 노드 수 일정 1
+PASS 목록 Enter 허수아비 진입 2
+PASS 실제 Esc 로비 복귀 2
+PASS 재진입 전체 목록/최초 포커스 2
+PASS 재진입 노드 수 일정 2
+PASS 연출 테스트 전용 경로 진입
+LOBBY_CAPTURE death_test_entry viewport=(1280, 800)
+PASS 연출 테스트 Esc 복귀
+RUN_BEGIN seed=1006175099
+PASS 섹터 런 실제 진입
+PASS new_run 새 런 초기화
+LOBBY_CAPTURE sector_run_entry viewport=(1280, 800)
+RUN_ABORT scene=res://scenes/lobby.tscn
+PASS 섹터 런 Esc 복귀
+PASS 복귀 시간/물리 복구
+LOBBY_CAPTURE final_lobby viewport=(1280, 800)
+LOBBY_INTERACTION_RESULT fails=0
+LOBBY_QUIT_BUTTON Enter

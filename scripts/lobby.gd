@@ -8,8 +8,10 @@ const RUN_SCENE := "res://scenes/run.tscn"
 const DEATH_TEST_SCENE := "res://scenes/mammoth_death_lab.tscn"
 const TEST_SCENES := [
 	{"title": "방 탐색 아레나", "desc": "전투방 9곳을 통로로 이은 절차 생성 맵 · 벌레 괴생명체만 등장 · 방을 정리할 때마다 위험도 상승", "scene": "res://scenes/main.tscn"},
+	{"title": "무한 비행 · 종 스크롤 슈팅", "desc": "흐르는 도로 위를 끝없이 날아가며 편대로 몰려오는 전투기·포격 드론을 격추 · 30초마다 섹터 상승 · 정예 기체 · 최고 비행 거리 기록", "scene": "res://scenes/stream.tscn"},
 	{"title": "전투 테스트 · 허수아비", "desc": "넓은 홀에서 허수아비로 콤보·무기·패링을 자유롭게 시험 · 피해 숫자·DPS 표시", "scene": "res://scenes/training.tscn"},
-	{"title": "파트너 청소 드론", "desc": "미소녀 파트너의 드론 TRIAD: 따라다니며 잔해·체액 청소 · G 합체 · X 보호막/볼텍스 · Z 직접 청소", "scene": "res://scenes/drone.tscn"},
+	{"title": "텍스처링 · 정비실 디오라마", "desc": "본편 바닥·벽·프랍·배관을 모은 작은 정비실 · 시험 텍스처 교체 · 조명과 원본 비교", "scene": "res://scenes/texture_diorama.tscn"},
+	{"title": "파트너 청소 드론", "desc": "미소녀 파트너의 드론 TRIAD: 따라다니며 잔해·체액 청소 · Q 합체 · X 보호막/볼텍스 · Z 직접 청소", "scene": "res://scenes/drone.tscn"},
 	{"title": "필드 기믹", "desc": "연기 구역(은신) · 레일 · 가스통 폭발 · 수리키트 해치(F 연타) 를 한 홀에서 시험", "scene": "res://scenes/gimmicks.tscn"},
 	{"title": "유체 연기 · 나비에-스토크스", "desc": "GPU 유체 격자로 푼 바닥 연기 · 대시로 가르고 검으로 베고 휠윈드로 감고 폭발로 날리고 청소 질주로 빨아들임 (연출 전용)", "scene": "res://scenes/fluid_smoke.tscn"},
 	{"title": "벌레 괴생명체 · 개미 병정 · 공벌레 · 촘퍼 · 애벌레", "desc": "땅에서 기어 나오는 개미 병정(산 발사·물기) · 몸을 말아 구르는 공벌레 · 노란 체액을 흘리는 튜토리얼 벌레 촘퍼 · 몸을 수축·이완하며 기어 점액 흔적을 남기는 애벌레 · 4 키 애니메이션 전시", "scene": "res://scenes/bugs.tscn"},
@@ -19,22 +21,17 @@ const TEST_SCENES := [
 	{"title": "SHAFT 07 · 거미 보스 SHIPWRIGHT", "desc": "높은 벽의 갱도 · 벽과 구멍을 오가는 다관절 거미 · 거미줄 감속 · 새끼 소환 · 끝없는 기둥", "scene": "res://scenes/spider.tscn"},
 	{"title": "캐릭터 대화", "desc": "청소업체 사장과 첫 출근 · 기존 격납고 브리핑 · 선택지 분기 · 자동 · 기록", "scene": "res://scenes/dialogue.tscn"},
 	{"title": "동료 소개 · 사장과 정비사", "desc": "사장이 새 동료를 소개하고 파일럿까지 셋이서 대화 · 역할과 기체 점검 · 응답 선택", "scene": "res://scenes/coworker_dialogue.tscn"},
+	{"title": "첫 청소 파트너 소개", "desc": "새 상체 포트레이트 · 첫 현장 동료와 역할 분담 · 파일럿 대사창 원화", "scene": "res://scenes/partner_dialogue.tscn"},
 	{"title": "MAMMOTH 죽음 연출 · B안", "desc": "궤도 파손과 전복 컷씬 반복 확인 (본선 격파에 적용됨)", "scene": "res://scenes/lab_mammoth_b.tscn"},
 ]
-const CYAN := Color("7cf5ff")
-const PINK := Color("ff4a8a")
-const GOLD := Color("ffd166")
-
 var font: SystemFont
-var bg: Control
-var t := 0.0
+var art: LobbyArt
 var main_btn: Button
-var test_box: VBoxContainer
 var test_btns: Array[Button] = []
 var _leaving := false
 
 
-## 게임 씬에서 로비로 돌아온다
+## 게임 씬에서 로비로 돌아간다. 기존 시간/물리 복구 계약을 유지한다.
 static func back(tree: SceneTree) -> void:
 	Engine.time_scale = 1.0
 	Engine.physics_ticks_per_second = 60
@@ -42,7 +39,7 @@ static func back(tree: SceneTree) -> void:
 
 
 func _ready() -> void:
-	set_anchors_preset(Control.PRESET_FULL_RECT)
+	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	add_child(Sfx.new())
 	if _route_cmdline():
@@ -50,71 +47,17 @@ func _ready() -> void:
 	font = SystemFont.new()
 	font.font_names = PackedStringArray(["Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans CJK KR", "sans-serif"])
 	font.font_weight = 700
-	var th := Theme.new()
-	th.default_font = font
-	th.default_font_size = 18
-	theme = th
-
-	bg = Control.new()
-	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bg.draw.connect(_draw_bg)
-	add_child(bg)
-
-	var margin := MarginContainer.new()
-	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
-	for edge in ["left", "right", "top", "bottom"]:
-		margin.add_theme_constant_override("margin_" + edge, 20)
-	add_child(margin)
-	var scroll := ScrollContainer.new()
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	margin.add_child(scroll)
-	var center := CenterContainer.new()
-	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	scroll.add_child(center)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 14)
-	col.custom_minimum_size = Vector2(520, 0)
-	center.add_child(col)
-
-	var title := _label("HEX BLADE", 76, Color.WHITE)
-	title.add_theme_color_override("font_shadow_color", CYAN * Color(1, 1, 1, 0.55))
-	title.add_theme_constant_override("shadow_offset_x", 0)
-	title.add_theme_constant_override("shadow_offset_y", 0)
-	title.add_theme_constant_override("shadow_outline_size", 18)
-	col.add_child(title)
-	col.add_child(_label("쿼터뷰 3D 액션 로그라이트", 18, Color(0.7, 0.8, 0.95)))
-	col.add_child(_spacer(26))
-
-	main_btn = _button("메인 게임  ·  HEX SECTOR RUN", "포탈로 경로를 골라 섹터를 돌파하고 MAMMOTH · VULCAN 을 격파", CYAN, 21)
+	art = LobbyArt.new()
+	add_child(art)
+	art.build(TEST_SCENES, font)
+	main_btn = art.menus[0]
+	test_btns = art.rows
 	main_btn.pressed.connect(_start_run)
-	col.add_child(main_btn)
-
-	var death_btn := _button("연출 테스트  ·  MAMMOTH B안", "궤도 파손과 전복 · 재생 / 일시정지 / 컷별 미리보기", PINK, 20)
-	death_btn.pressed.connect(_go.bind(DEATH_TEST_SCENE))
-	col.add_child(death_btn)
-
-	var test_btn := _button("테스트 씬", "기존 방 조합 게임과 보스전을 따로 실행", GOLD, 20)
-	test_btn.pressed.connect(_toggle_tests)
-	col.add_child(test_btn)
-
-	test_box = VBoxContainer.new()
-	test_box.add_theme_constant_override("separation", 8)
-	test_box.visible = false
-	col.add_child(test_box)
-	for s in TEST_SCENES:
-		var b := _button("    ▸  " + s.title, "        " + s.desc, GOLD.lerp(Color.WHITE, 0.35), 17)
-		b.pressed.connect(_go.bind(s.scene))
-		test_box.add_child(b)
-		test_btns.append(b)
-
-	var quit_btn := _button("종료", "", Color(0.75, 0.75, 0.85), 18)
-	quit_btn.pressed.connect(func(): get_tree().quit())
-	col.add_child(quit_btn)
-
-	col.add_child(_spacer(18))
-	col.add_child(_label("↑↓ 선택 · Enter 결정 · 게임 중 Esc 로비 · F11 전체 화면", 14, Color(0.55, 0.6, 0.75)))
+	art.menus[1].pressed.connect(_go.bind(DEATH_TEST_SCENE))
+	art.menus[2].pressed.connect(_toggle_tests)
+	art.menus[3].pressed.connect(func(): get_tree().quit())
+	for i in TEST_SCENES.size():
+		test_btns[i].pressed.connect(_go.bind(TEST_SCENES[i].scene))
 	main_btn.grab_focus.call_deferred()
 
 
@@ -149,106 +92,12 @@ func _go(scene: String) -> void:
 
 
 func _toggle_tests() -> void:
-	test_box.visible = not test_box.visible
+	art.set_drawer(not art.drawer.visible)
 	Sfx.play("lock", 0.0, -4.0)
-	if test_box.visible:
-		test_btns[0].grab_focus()
 
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
-		if (event as InputEventKey).physical_keycode == KEY_ESCAPE and test_box.visible:
-			test_box.visible = false
-			main_btn.grab_focus()
+		if (event as InputEventKey).physical_keycode == KEY_ESCAPE and art and art.drawer.visible:
+			art.set_drawer(false)
 			get_viewport().set_input_as_handled()
-
-
-func _process(dt: float) -> void:
-	t += dt
-	if bg:
-		bg.queue_redraw()
-
-
-# ── 모양 ────────────────────────────────────────────────
-
-func _label(text: String, size: int, c: Color) -> Label:
-	var l := Label.new()
-	l.text = text
-	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", c)
-	return l
-
-
-func _spacer(h: float) -> Control:
-	var c := Control.new()
-	c.custom_minimum_size = Vector2(0, h)
-	return c
-
-
-func _button(title: String, desc: String, accent: Color, size: int) -> Button:
-	var b := Button.new()
-	b.text = title + ("\n" + desc if desc != "" else "")
-	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.add_theme_font_size_override("font_size", size)
-	b.custom_minimum_size = Vector2(0, 50 + (26 if desc != "" else 0))
-	b.add_theme_color_override("font_color", Color(0.85, 0.9, 1.0))
-	b.add_theme_color_override("font_hover_color", Color.WHITE)
-	b.add_theme_color_override("font_focus_color", Color.WHITE)
-	b.add_theme_color_override("font_pressed_color", accent)
-	var normal := _box(Color(0.06, 0.07, 0.14, 0.82), accent * Color(1, 1, 1, 0.35), 2)
-	var hot := _box(Color(accent.r, accent.g, accent.b, 0.16), accent, 3)
-	b.add_theme_stylebox_override("normal", normal)
-	b.add_theme_stylebox_override("hover", hot)
-	b.add_theme_stylebox_override("focus", hot)
-	b.add_theme_stylebox_override("pressed", _box(Color(accent.r, accent.g, accent.b, 0.3), Color.WHITE, 3))
-	b.mouse_entered.connect(func(): b.grab_focus())
-	b.focus_entered.connect(func(): Sfx.play("tink", 0.02, -10.0))
-	return b
-
-
-func _box(fill: Color, border: Color, w: int) -> StyleBoxFlat:
-	var s := StyleBoxFlat.new()
-	s.bg_color = fill
-	s.border_color = border
-	s.set_border_width_all(w)
-	s.border_width_left = w + 4
-	s.set_corner_radius_all(4)
-	s.content_margin_left = 22
-	s.content_margin_right = 18
-	s.content_margin_top = 10
-	s.content_margin_bottom = 10
-	return s
-
-
-## 배경: 천천히 흐르는 육각 격자와 가운데로 모이는 빛
-func _draw_bg() -> void:
-	var sz := bg.size
-	bg.draw_rect(Rect2(Vector2.ZERO, sz), Color(0.03, 0.03, 0.08))
-	var r := 34.0
-	var w := r * sqrt(3.0)
-	var h := r * 1.5
-	var off := Vector2(fmod(t * 9.0, w), fmod(t * 6.0, h * 2.0))
-	var mid := sz * 0.5
-	var y := -h * 2.0
-	var row := 0
-	while y < sz.y + h * 2.0:
-		var x := -w + (w * 0.5 if row % 2 == 1 else 0.0)
-		while x < sz.x + w:
-			var c := Vector2(x, y) + off
-			var d := c.distance_to(mid) / sz.length()
-			var pulse := 0.5 + 0.5 * sin(t * 1.3 - d * 14.0)
-			var col := CYAN.lerp(PINK, clampf(c.x / sz.x, 0.0, 1.0)) * Color(1, 1, 1, (0.05 + 0.1 * pulse) * (1.0 - d * 1.2))
-			var pts := PackedVector2Array()
-			for i in 7:
-				var a := PI / 6.0 + TAU * i / 6.0
-				pts.append(c + Vector2(cos(a), sin(a)) * (r - 3.0))
-			bg.draw_polyline(pts, col, 1.5, true)
-			x += w
-		y += h
-		row += 1
-	# 위아래 어둡게
-	for i in 12:
-		var k := i / 12.0
-		bg.draw_rect(Rect2(0, k * sz.y * 0.18, sz.x, sz.y * 0.018), Color(0, 0, 0, 0.35 * (1.0 - k)))
-		bg.draw_rect(Rect2(0, sz.y - (k + 0.1) * sz.y * 0.18, sz.x, sz.y * 0.018), Color(0, 0, 0, 0.35 * (1.0 - k)))

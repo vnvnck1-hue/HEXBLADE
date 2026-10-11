@@ -11,6 +11,7 @@ shader_type canvas_item;
 
 uniform vec2 clip_origin;                 // 하단선의 왼쪽 기준점 O (Canvas 좌표)
 uniform vec2 clip_normal = vec2(0.0, 1.0); // 단위 법선, 선 아래가 양수
+uniform float clip_enabled = 1.0;        // 대화 아이들링도 같은 변형을 사용하며 사선 마스크만 끈다.
 uniform float flash = 0.0;                // 합체 순간 흰빛
 
 uniform vec2 c_l = vec2(0.403, 0.618);
@@ -97,6 +98,6 @@ void fragment() {
 		c = vec4(sil_color.rgb, c.a * sil_color.a * silhouette);
 	}
 	float aa = max(fwidth(clip_d), 0.001);
-	c.a *= 1.0 - smoothstep(-0.5 * aa, 0.5 * aa, clip_d);
+	c.a *= mix(1.0, 1.0 - smoothstep(-0.5 * aa, 0.5 * aa, clip_d), clip_enabled);
 	COLOR = c;
 }

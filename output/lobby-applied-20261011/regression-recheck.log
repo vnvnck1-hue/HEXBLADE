@@ -1,0 +1,9 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== dialogue_idle_check
+  RESULT dialogue_idle_check: PASS (0 fails)
+=== enemy_wander_check
+  RESULT enemy_wander_check fails=0
+=== fluid_smoke_check
+  RESULT FLUID_SMOKE_OK (0 fails)
+
+ALL 3 TESTS PASSED

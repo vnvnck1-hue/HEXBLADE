@@ -1,0 +1,11 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== dialogue_blink_check
+  FAIL owner_briefing 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  FAIL owner_encouragement 눈 밖 픽셀/전체 알파 원본과 완전 동일
+  RESULT dialogue_blink_check: FAIL (2 fails), natural blinks 39
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== dialogue_idle_check
+  RESULT dialogue_idle_check: PASS (0 fails)
+
+FAILED: dialogue_blink_check

@@ -1,0 +1,118 @@
+{
+  "mode": "built-in image_gen",
+  "date": "2026-10-11",
+  "references": [
+    {
+      "path": "output/chroma-major-screens-20261005/03_combat_cleanup.png",
+      "sha256": "596ed429e3e51552b0ecf2c608269adae5978046cf4bee1c29c8bdf167d4f4f0",
+      "role": "adopted UI/world style reference; no new human character generation"
+    },
+    {
+      "path": "output/lobby-upgrade-kit-20261007/preview_static_1920x1080.png",
+      "sha256": "f801e4059c32dd1250a6281c89714ee86f2492f2df966e1a1fb1c8fb799e49e6",
+      "role": "adopted UI/world style reference; no new human character generation"
+    }
+  ],
+  "images": [
+    {
+      "id": "01_stage_start",
+      "path": "01_stage_start.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-0d8f7d18-5585-4eb4-abd9-0cf91f0488a2.png",
+      "sha256": "2ffe0864c92b69985f01e76ae99a3ae22e0e3ec1e7d7216c23d99210e59a5400",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "02_wave_elite",
+      "path": "02_wave_elite.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-a599b766-09b6-462e-a8d3-8ed5b0946d38.png",
+      "sha256": "6d3875272f71001c3e6608202486927cbdc9ffe0d8876308eebcae12166b244e",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "03_area_clear",
+      "path": "03_area_clear.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-dd6df825-f194-4dde-8709-bacf5f8c0114.png",
+      "sha256": "d8cfff28c162afd66a1afc350084edb680d3045645020a4685d9cb85fcff94d1",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "04_boss_alert",
+      "path": "04_boss_alert.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-56e9f4ef-945d-4663-aa85-2e6c5f7e3910.png",
+      "sha256": "b76351f1a24285a2536138ca789bbe93449e937473975e136e243915fd8fa219",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "05_combat_feedback",
+      "path": "05_combat_feedback.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-845f227d-1fdb-4c44-9a4d-7e7317572d56.png",
+      "sha256": "14ed4eb37849026e5738e1a28f811561710194786556f7cba14f47b3207a7bee",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "06_support_docking",
+      "path": "06_support_docking.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-7e969f1f-0a8a-4fc1-9d7f-9b8d85193748.png",
+      "sha256": "f36fb4f2a4092f9ef4a1401fbab6d0bf16a1858755201e794c242475b8f2e274",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "07_equipment_resources",
+      "path": "07_equipment_resources.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-5a9bd513-d8e7-4252-82c6-a815b37e3478.png",
+      "sha256": "0e14e5db8fb3c7f65c4315f070e84c9649e14826e7917a20e7180de61c72029c",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "08_hazards_gimmicks",
+      "path": "08_hazards_gimmicks.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-d1378183-cb7d-45af-90db-cd32879841b8.png",
+      "sha256": "319dafadf8784c2555708554cf748291ebc87cb36e1b16f4f3e686afaee3fb11",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "09_results",
+      "path": "09_results.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-9bb2b5e1-b5fb-4ea8-8eae-96bfd5d50553.png",
+      "sha256": "d94686e9b8b0f538dc8496ae278697f96eb9db27fb6b6ddb0488c1bf51fc77fe",
+      "size": [
+        1672,
+        941
+      ]
+    },
+    {
+      "id": "10_route_dialogue_system",
+      "path": "10_route_dialogue_system.png",
+      "generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-6b2a3224-ad4d-4efd-b298-d3e09ef8ef45.png",
+      "sha256": "7e97fdfa0f8ca746f1cdb3a790d714459a5882a359c8570f437ac015ef3189a7",
+      "size": [
+        1672,
+        941
+      ]
+    }
+  ]
+}

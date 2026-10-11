@@ -1,0 +1,32 @@
+[
+  {
+    "script": "cleaning_opening",
+    "exit": 0,
+    "errors": 0,
+    "completed": true
+  },
+  {
+    "script": "hangar_briefing",
+    "exit": 0,
+    "errors": 0,
+    "completed": true
+  },
+  {
+    "script": "feature_demo",
+    "exit": 0,
+    "errors": 0,
+    "completed": true
+  },
+  {
+    "script": "coworker_introduction",
+    "exit": 0,
+    "errors": 0,
+    "completed": true
+  },
+  {
+    "script": "field_partner_introduction",
+    "exit": 0,
+    "errors": 0,
+    "completed": true
+  }
+]

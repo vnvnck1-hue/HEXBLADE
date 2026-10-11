@@ -1,0 +1,11 @@
+{
+  "id": "07_equipment_resources",
+  "prompt": "Use case: precise-object-edit. Input1 is the EDIT TARGET, the existing HEXBLADE equipment-state concept board. Input2 is the approved Chroma UI/world style reference only. Preserve the entire composition, main RELOAD ticket, battlefield, mech and drone, three IN/HIT/OUT mini-frames, navy/ivory/lime graphic styling.\nFix ONLY the bottom-right WEAPON STATES comparison row so each state is anchored to its actual equipment and reads logically:\nREADY: orange gun icon, ammo30/30, mint check; OVERHEAT: purple twin booster jets icon, NO gun and NO ammunition, tiny SHIFT caption; +1 MISSILE: orange-and-white rocket/missile icon, rocket quantity \"1\", small R key, NO gun and NO ammo17/30 or18/30; +1 ENERGY: green energy-cell icon, three-cell pips with one newly filled, L+R key, NO gun and NO ammo; EMPTY: gray rocket/missile icon with \"0\" count and R key, NO gun.\nMake all five clear separated small samples. They are alternative states. Main reload sample can stay17/30 because it is a progress-state example; end READY gun must show30/30. No new human figures or portraits. No new HUD systems. Output a complete crisp wide board.",
+  "referenced_image_paths": [
+    "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/ui-motion-concepts-20261011/drafts/07_equipment_resources_before_correction.png",
+    "D:/2020_이전승찬파일/작업,내파일/2026/프로토타입 게임/헥스 블레이드/output/chroma-major-screens-20261005/03_combat_cleanup.png"
+  ],
+  "original_generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-1331249e-7863-4856-a7ae-ebb6d557807f.png",
+  "corrected_generated_source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12b49-aeca-7763-a498-39bb532d1c27\\exec-5a9bd513-d8e7-4252-82c6-a815b37e3478.png",
+  "review": "Five variant equipment icons now correspond to gun/booster/missile/energy/missile; READY sample shows30/30. Small animation storyboard keeps fixed illustrative17/30."
+}

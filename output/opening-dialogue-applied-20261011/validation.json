@@ -1,0 +1,198 @@
+{
+  "date": "2026-10-11",
+  "engine": "4.7.2-stable",
+  "assets": [
+    {
+      "file": "owner_briefing.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "342C1FFB35390863D24C5289F6F463D4C3FE37ACAC025DF73D400DF420AAAF95",
+      "import_exists": true
+    },
+    {
+      "file": "owner_encouragement.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "6E564A7304F3E172FE796B9876CB6F40FE5A5CA0B70B6376BA02DE40C0254061",
+      "import_exists": true
+    },
+    {
+      "file": "owner_welcome.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "020E58DA75AE5384F88BDF9FD263AC55733F4CED735DF4EE0D5D309D366F9D4B",
+      "import_exists": true
+    },
+    {
+      "file": "partner_greeting.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "0692125DC61CE05E3F10675648AB0CE4BAFE4B0DE598D18D0233E92935648A22",
+      "import_exists": true
+    },
+    {
+      "file": "pilot_neutral.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "1627ACE5634ED97E71DB5E7374EF8F5A62C8C9DE219DFCA98BE653877563A74B",
+      "import_exists": true
+    },
+    {
+      "file": "worker_cheerful.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "2BE9543589663D91ADFF101B6352CBECE9A561F9D3A8377704353D119E5CA30E",
+      "import_exists": true
+    },
+    {
+      "file": "worker_introduction.png",
+      "width": 1254,
+      "height": 1254,
+      "sampled_alpha_min": 0,
+      "sampled_alpha_max": 255,
+      "sha256": "4B92CCECC91FB05A50F7A1E51DCD2B7B22155EADBAA8F251AD1B4C20F87E7B6C",
+      "import_exists": true
+    }
+  ],
+  "captures": [
+    {
+      "file": "01_owner_welcome.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "0B1A8303FDA15A5423850C29AA75AE706E3C16026903BC6CD9A1C156FA75053A",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "02_pilot_reply.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "365F49AB83866E3954436D811B149280160958C1ECCE0B3B8FC404B25F834EE0",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "03_owner_briefing.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "783420F8B0E778265759B7F6B3B2ECEF52ACA55338497C41407A8FCC269C0876",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "04_mechanic_introduction.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "087AFB38377CC02A7FA0865A9715D47B9823E42F97CA052242BFC0900A12E495",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "05_mechanic_cheerful.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "CB833F4EC66602A1C6D586E8783BD5E53CD8EE28DBAECB516AB6D62E0CFFAD97",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "06_partner_greeting.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "91C33F37E912703D186244CC7E6FC9A0A233BC33691A3CB6A869858CD46C8588",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "07_partner_pilot_reply.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "5A77C995B1117E6BF76D61387785FD2C07E4DD0E5414921CF375BD922CE04646",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "08_partner_choices.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "040A574A11E3FB2970CAB3014C4FF90BB9DC27E2147C7B12FC9AD6F64F97DC33",
+      "visual_review": "PASS"
+    },
+    {
+      "file": "09_owner_encouragement.png",
+      "width": 1280,
+      "height": 800,
+      "sha256": "146F3EBD558DA6DD07AE3BB2BA039FD856D88D7DF40EB797BF39469533613A76",
+      "visual_review": "PASS"
+    }
+  ],
+  "final_logs": [
+    {
+      "file": "import_verified.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "91C01CADB6117FE6663EBCACA5993CB4DB75E51039796B4552940602E355AE71"
+    },
+    {
+      "file": "capture_verified.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "2FEBF5065C0CB31F6CBE5FEC116011754B9157C99277442DBCD646000CE6CB8A"
+    },
+    {
+      "file": "regression.log",
+      "errors": 1,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "429C96D8B68D7FD5116C2B6979F3AED486CED4F631BD98A5052825426C7B2219"
+    },
+    {
+      "file": "whirl_props_recheck.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 0,
+      "sha256": "A55952AD481E93A74A5CFAB48F8AE392F06E2F0A31D92DA1FB91F211B79A93E1"
+    },
+    {
+      "file": "bot_verified_dialogue.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "AB8B2690F575E8341A06EC317A2FB9DD09A0EFD22135A46B5F839BF17CBAAE8E"
+    },
+    {
+      "file": "bot_verified_coworker_dialogue.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "FCE4586CEF51CA6B6194F3C5C45A756B524D3A879FFCE03016BFC23CCD95EF3F"
+    },
+    {
+      "file": "bot_verified_partner_dialogue.log",
+      "errors": 0,
+      "script_errors": 0,
+      "dialogue_done": 1,
+      "sha256": "46FC51C6FC8ECE707CDAF34813A96C3137E6B6A3BBB53158A9BCAA0F71ABFE2A"
+    }
+  ],
+  "full_regression": "ALL 54 TESTS PASSED",
+  "regression_engine_error": "whirl_props_check: No vertices were added, surface cannot be created; standalone recheck PASS and ERROR 0",
+  "bot_scenes": [
+    "dialogue",
+    "coworker_dialogue",
+    "partner_dialogue"
+  ],
+  "bot_results": "all exit 0, DIALOGUE_DONE 1, ERROR 0",
+  "style_reference_policy": "Only original four images for style; approved full bodies used as explicit edit targets",
+  "generated_sources_copied_without_modification": true,
+  "commits_or_pushes": false,
+  "unrelated_work_preserved": true,
+  "initial_logs": "Initial restricted runs and interrupted Forward+ bot retained, excluded from final results"
+}

@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-11",
+  "tool": "built-in image_gen",
+  "count": 3,
+  "files": [
+    {
+      "file": "01_lavender_tea_maid.png",
+      "width": 1122,
+      "height": 1402,
+      "bytes": 1767647,
+      "sha256": "E2989DF727BE6F0C9CBD7829FEBF6FCF5EBF6C5E27DC4C0820A7FD144392B5FC",
+      "visual_review": "PASS: full-body, style consistency, distinct concepts"
+    },
+    {
+      "file": "02_lemon_bakery_maid.png",
+      "width": 1122,
+      "height": 1402,
+      "bytes": 1867398,
+      "sha256": "2860D97A2B1072D6298C511A26F13F7185357CDE9535F93E6287A32150B33961",
+      "visual_review": "PASS: full-body, style consistency, distinct concepts"
+    },
+    {
+      "file": "03_plum_magic_maid.png",
+      "width": 1122,
+      "height": 1402,
+      "bytes": 1938653,
+      "sha256": "C23741E5C2C87FF436DD4A8E6DC2A49D53BBB91D43169B2E88969832CA330E6A",
+      "visual_review": "PASS: full-body, style consistency, distinct concepts"
+    }
+  ]
+}

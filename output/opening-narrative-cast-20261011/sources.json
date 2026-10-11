@@ -1,0 +1,56 @@
+{
+  "tool": "built-in image_gen",
+  "reference_policy": "Use ONLY the original four user attachments for every new character generation. Previous generated images are not reference inputs.",
+  "references": [
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-1.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-01.png"
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-2.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-02.png"
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-3.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-03.png"
+    },
+    {
+      "original": "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-4.png",
+      "persistent_copy": "docs/character-style-references-20261011/reference-04.png"
+    }
+  ],
+  "outputs": [
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-80b84a8f-0a79-4403-8310-2488ce1222c1.png",
+      "file": "02_company_owner.png"
+    },
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-3eb184fc-0fc9-4e03-b476-3d41ffeba975.png",
+      "file": "03_workshop_mechanic.png"
+    },
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-86132ba9-8a56-4748-83cf-6ff71bc13917.png",
+      "file": "04_first_cleaning_partner.png"
+    },
+    {
+      "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-635a653c-4d50-48df-ab61-34b36d2c9817.png",
+      "file": "01_new_field_pilot.png"
+    }
+  ],
+  "style_probe": {
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-98725227-63d6-4ad4-bc72-cafe683737b5.png",
+    "file": "style_probe_owner.png",
+    "prompt": "Use case: stylized-concept.\nInput images: ONLY the four original user-supplied reference images, for DRAWING STYLE. These are the exclusive visual standard. Do not copy maid costumes, characters or poses; create the specified space-cleaning-company character.\nStyle: closely match these four original images: crisp black moderately thick silhouette outline with thinner internal strokes, sharp simple stylized anime eyes with slanted upper lids and heavy black upper lashes, simple iris and minimal highlights, large rounded hair clumps ending in sharp tips, flat angular ribbon-shaped hair highlights, peach skin and restrained pink cheek shading. Bold simplified shapes, broad flat local-color areas and broad purple-gray cel shadow shapes, very limited hard-edged highlights. Short pointed chin, tiny nose and mouth, slightly oversized head and chunky shoes. No airbrush gradients, skin texture, realistic anatomy rendering, fine strands or dense hardware. 2D hand-drawn illustration, same face-language and rendering density as references.\nScene: plain muted gray-purple background as in original references. A single character only, no typography, captions, watermark, logo, panels, sci-fi environment or secondary figures.\nStory context: a small space cleaning company, worn but serviceable industrial work equipment; welcoming coworkers, not a military combat squad. Costumes should suit their actual job, no maid headbands or frilled maid uniforms unless explicitly specified. All designs are human; cleaning partners physically pilot small cleaning machines, not androids or people transformed into drones.\nAsset type: drawing-style calibration study before final full-body art.\nSubject: Company owner, adult woman: light golden-blonde hair gathered into a large high swept bun, broad side-swept bangs and two simple curled cheek locks, calm amber eyes and a small reassuring smile. Mint wrap blouse with modest overlapping collar, a cropped charcoal-plum work blazer with rolled cuffs, high-waisted cream midi skirt tied with a large simple waist ribbon, dark low block-heel closed-toe shoes. Readable healthy adult build, slightly taller proportion than other female coworkers, roughly 4.5 heads tall, still in reference's stylized illustration vocabulary. A small belt pouch with one plainly drawn maintenance tool conveys that she also repairs machinery. Hold a compact dark contract terminal with abstract unreadable mint interface in one hand, other hand makes a quiet welcoming open-palm gesture. Practical, kind, dependable entrepreneur; no elderly appearance, no glamorous jewelry, no military coat.\nComposition: SINGLE waist-up portrait of the owner, her face large and her hair, sleeves and welcoming hand visible. Both eyes visible. No inset, no multiple poses. Check her eyes, hair shapes and flat cel shading against the ORIGINAL four references; emphasize matching rather than embellishment.",
+    "referenced_images": [
+      "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-1.png",
+      "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-2.png",
+      "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-3.png",
+      "C:\\Users\\vnvnc\\.codex\\attachments\\91a0dfc1-6e04-4445-8076-6f4a3d0c4311\\image-4.png"
+    ]
+  },
+  "discarded_owner_attempt": {
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-2e031703-beab-427a-89b4-bed2b386cbb3.png",
+    "reason": "Bun cropped at top. Regenerated from original four only; discarded output never used as a reference.",
+    "prompt": "Use case: stylized-concept.\nInput images: ONLY the four original user-supplied reference images, for DRAWING STYLE. These are the exclusive visual standard. Do not copy maid costumes, characters or poses; create the specified space-cleaning-company character.\nStyle: closely match these four original images: crisp black moderately thick silhouette outline with thinner internal strokes, sharp simple stylized anime eyes with slanted upper lids and heavy black upper lashes, simple iris and minimal highlights, large rounded hair clumps ending in sharp tips, flat angular ribbon-shaped hair highlights, peach skin and restrained pink cheek shading. Bold simplified shapes, broad flat local-color areas and broad purple-gray cel shadow shapes, very limited hard-edged highlights. Short pointed chin, tiny nose and mouth, slightly oversized head and chunky shoes. No airbrush gradients, skin texture, realistic anatomy rendering, fine strands or dense hardware. 2D hand-drawn illustration, same face-language and rendering density as references.\nScene: plain muted gray-purple background as in original references. A single character only, no typography, captions, watermark, logo, panels, sci-fi environment or secondary figures.\nStory context: a small space cleaning company, worn but serviceable industrial work equipment; welcoming coworkers, not a military combat squad. Costumes should suit their actual job, no maid headbands or frilled maid uniforms unless explicitly specified. All designs are human; cleaning partners physically pilot small cleaning machines, not androids or people transformed into drones.\nAsset type: full-body cast concept art for the game's opening narrative.\nSubject: Company owner, adult woman: light golden-blonde hair gathered into a large high swept bun, broad side-swept bangs and two simple curled cheek locks, calm amber eyes and a small reassuring smile. Mint wrap blouse with modest overlapping collar, a cropped charcoal-plum work blazer with rolled cuffs, high-waisted cream midi skirt tied with a large simple waist ribbon, dark low block-heel closed-toe shoes. Readable healthy adult build, slightly taller proportion than other female coworkers, roughly 4.5 heads tall, still in reference's stylized illustration vocabulary. A small belt pouch with one plainly drawn maintenance tool conveys that she also repairs machinery. Hold a compact dark contract terminal with abstract unreadable mint interface in one hand, other hand makes a quiet welcoming open-palm gesture. Practical, kind, dependable entrepreneur; no elderly appearance, no glamorous jewelry, no military coat.\nComposition: vertical portrait illustration, centered single full-body three-quarter standing character, entire hair and both shoe soles visible, modest safe margins above head and below feet, small flat oval ground shadow. Clear hands and coherent occupational props; no cropping."
+  }
+}

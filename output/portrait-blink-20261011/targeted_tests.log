@@ -1,0 +1,34 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== cockpit_cutin_check
+  RESULT: OK (0 fails)
+=== coworker_dialogue_check
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== diagonal_cutin_check
+  RESULT: OK (0 fails)
+=== dialogue_blink_check
+         [0] _run (res://tests/dialogue_blink_check.gd:14)
+         [0] _run (res://tests/dialogue_blink_check.gd:15)
+         [0] _run (res://tests/dialogue_blink_check.gd:14)
+         [0] _run (res://tests/dialogue_blink_check.gd:15)
+         [0] _run (res://tests/dialogue_blink_check.gd:14)
+         [0] _run (res://tests/dialogue_blink_check.gd:15)
+         [0] _run (res://tests/dialogue_blink_check.gd:14)
+         [0] _run (res://tests/dialogue_blink_check.gd:15)
+         [0] _run (res://tests/dialogue_blink_check.gd:14)
+         [0] _run (res://tests/dialogue_blink_check.gd:15)
+         [0] _run (res://tests/dialogue_blink_check.gd:14)
+         [0] _run (res://tests/dialogue_blink_check.gd:15)
+  FAIL partner 감은 상태에서 표정 전환
+  RESULT dialogue_blink_check: FAIL (1 fails), natural blinks 40
+=== dialogue_check
+  FAIL  단독 대화: 중앙 정렬, 허리 끝만 하단 창에 연결 ([P: (379.9, 75.80502), S: (516.5146, 518.2748)] / [P: (30.0, 580.0), S: (1220.0, 182.0)])
+  RESULT dialogue_check: FAIL (1 fails)
+=== dialogue_idle_check
+  FAIL owner 이전 표정도 자기 마스크로 교차 전환
+  RESULT dialogue_idle_check: FAIL (1 fails)
+=== opening_cast_check
+  RESULT opening_cast_check: PASS (0 fails)
+=== whirl_props_check
+  RESULT: OK (0 fails)
+
+FAILED: dialogue_blink_check, dialogue_check, dialogue_idle_check

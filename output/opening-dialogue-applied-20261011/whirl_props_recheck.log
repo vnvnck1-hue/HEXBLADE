@@ -1,0 +1,20 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS  드론 동행 시작
+DOCK_VOICE shozyo1-ei (1)
+PASS  Q 합체 → 휠윈드 시작
+PASS  민트 메이드 컷인으로 합체하면 휠윈드에 메이드 소품 연출이 붙는다
+  emitted 17 · peak 10 · flung 17 · bounced 30 · far 4.4m · stars 33
+PASS  소품이 계속 튀어나와 회오리를 돈다 (17개 · 동시 10개)
+PASS  소품이 사방으로 내팽개쳐짐 (17개 · 최대 4.4m)
+PASS  바닥에 통통 튐 (30번)
+PASS  금빛 가산 별이 함께 흩날림 (동시 33개)
+PASS  소품마다 바닥에 붙은 그림자
+PASS  소품 비행 수명 짧게 (최대 0.95초)
+PASS  소품 판은 깊이를 쓰지 않음 (기체가 네모로 뚫려 보이지 않게)
+PASS  소품 크기 절반 (판 최대 1.29m)
+PASS  휠윈드가 끝나면 소품이 모두 사라지고 노드 정리
+PASS  분리 뒤 다시 동행
+PASS  컷인 꺼도 휠윈드 시작
+PASS  컷인이 꺼져 있으면 소품 연출 없음
+RESULT: OK (0 fails)

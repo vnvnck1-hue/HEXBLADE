@@ -1,0 +1,13 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.3.280 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3060
+
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=0.733 f=44
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=0.804 f=52
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=0.940 f=63
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=1.263 f=88
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=1.918 f=132
+COMBO step=2 cut=2 RECOIL SHOT hit=1 blocked=0 t=2.051 f=140
+DOCK_VOICE shozyo1-atattekudasai (1)
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=2.288 f=216
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=2.341 f=220
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=2.407 f=224

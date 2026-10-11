@@ -1,0 +1,12 @@
+const fs = require('fs');
+const edit=(p,f)=>fs.writeFileSync(p,f(fs.readFileSync(p,'utf8')).replace(/\r\n/g,'\n'));
+edit('scripts/dialogue/dialogue_cast.gd',s=>s.replace(/## 기존 네 인물[^\n]*\n\nconst DIR[^\n]*\n/,'const DIR := "res://assets/portraits/opening_cast/"\n').replace(/\t"mira": \{[\s\S]*?\n}\n## 그림/, '}\n## 그림'));
+edit('scripts/dialogue/dialogue_idle_motion.gd',s=>s.replace(/, "mira": Vector4[^\n]+/,',').replace(/\t"(?:sena|eirin)": Vector4[^\n]+\n/g,'').replace(/\t"mira": \{"tempo"[\s\S]*?\n}\nstatic var/, '}\nstatic var').replace(/\t\t"(?:sena|eirin)": return[^\n]+\n/g,'').replace('c.v < 0.33 or (id == "mira" and c.r > c.g * 1.7)','c.v < 0.33').replace(/\t\t\t\tif id in \["mira", "noa"\]:\n\t\t\t\t\t[^\n]+\n/,''));
+// Parser examples use only the current cast.
+edit('scripts/dialogue/dialogue_script.gd',s=>s.replaceAll('mira','owner').replaceAll('confident','welcome').replaceAll('angry','briefing').replaceAll('met_sena','met_worker'));
+const rename=s=>s.replaceAll('mira','owner').replaceAll('eirin','worker').replaceAll('sena','worker').replaceAll('noa','partner').replaceAll('미라','사장').replaceAll('에이린','정비사').replaceAll('세나','정비사').replaceAll('노아','파트너').replace(/owner confident/g,'owner welcome').replace(/owner angry/g,'owner briefing').replace(/owner flustered/g,'owner encouragement').replace(/worker (?:stern|vulnerable|angry|surprised)/g,'worker introduction').replace(/worker (?:confident|joy)/g,'worker cheerful').replace(/partner (?:neutral|skeptical|warm)/g,'partner greeting');
+edit('tests/dialogue_check.gd',s=>rename(s).replace('view.portraits.size() == 4','view.portraits.size() == 3').replace('4명이 무대에','3명이 무대에').replace('== "angry"','== "briefing"').replace('기존 격납고','새 캐스트 격납고'));
+edit('data/dialogue/feature_demo.dlg',s=>rename(s).replace('@enter worker left2 introduction\n@enter worker right2 cheerful','@enter worker left2 introduction').replace('네 명까지 한 화면에 설 수 있어요!','우리는 세 명이 함께 화면에 설 수 있어요!').replace('그림 없는 화자(주인공 · 무전)는 이름표만 붙는다.','내 포트레이트는 아래 대화창에 표시된다.'));
+edit('tests/dialogue_idle_check.gd',s=>s.replace('motions.size() == 7','motions.size() == 3').replace('motions.noa != motions.sena','motions.partner != motions.worker').replace('7명 모두 적용','세 여성 모두 적용').replace('p.current_image.texture == tex','p._tex == tex'));
+edit('_capture/dialogue_idle_show.gd',s=>s.replace('"owner", "worker", "partner", "mira", "sena", "noa", "eirin"','"owner", "worker", "partner"'));
+edit('_capture/dialogue_show.gd',rename);

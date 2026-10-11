@@ -1,0 +1,92 @@
+[
+  {
+    "file": "gallery.gif",
+    "size": [
+      960,
+      600
+    ],
+    "frames": 80,
+    "bytes": 8268499
+  },
+  {
+    "file": "mechanic.gif",
+    "size": [
+      960,
+      600
+    ],
+    "frames": 64,
+    "bytes": 5039746
+  },
+  {
+    "file": "partner.gif",
+    "size": [
+      960,
+      600
+    ],
+    "frames": 64,
+    "bytes": 4511507
+  },
+  {
+    "file": "01_owner.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 1794718
+  },
+  {
+    "file": "02_worker.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 2355123
+  },
+  {
+    "file": "03_partner.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 2190090
+  },
+  {
+    "file": "04_mira.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 1293419
+  },
+  {
+    "file": "05_sena.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 1934082
+  },
+  {
+    "file": "06_noa.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 1496178
+  },
+  {
+    "file": "07_eirin.gif",
+    "size": [
+      296,
+      318
+    ],
+    "frames": 80,
+    "bytes": 1454867
+  }
+]

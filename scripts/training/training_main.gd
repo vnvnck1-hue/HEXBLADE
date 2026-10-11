@@ -10,6 +10,9 @@ extends Main
 ##  6 재화 무한(에너지·미사일·부스터·드론 합체 게이지 = Q 합체 휠윈드 무제한, 탄창은 그대로라 재장전도 볼 수 있다)   7 플레이어 무적
 ##  0 합체 컷인 · [ 컷인 캐릭터 · - 컷인 트위닝 · F3 컷인 미리보기 · J 피해 숫자 프리셋 · H HUD 프리셋 (Main)
 ##  = / Shift+= 바닥 파괴 스타일 (CRUMBLE 깨짐 튐 기본 · SLAB 판 들림 · SPIKE 암석 솟음 · BUCKLE 찌그러짐 · SCATTER 파편 튐 · MIX 대파괴 · OFF)   F4 / Shift+F4 조준점에 바닥 파괴 크게 / 작게
+##  9 / Shift+9 사체 표시 프리셋 (MessLook: BASE · RING 바닥 고리 · OUTLINE 실루엣 외곽선 · BEACON 아이콘·빛기둥)   ] 사체 샘플 뿌리기 (잔해 3 · 체액 3)
+##  Y / Shift+Y 적 투사체 표시 프리셋 (BulletLook: BASE · CORE 테두리+흰 심 · TRAIL 진행 방향 꼬리 · GROUND 바닥 그림자+경로)
+##  G 기본 적 자동 소환 켜기/끄기 (사격 드론 · 요격기가 둘레에 계속 나옴, 동시 AUTO_MAX 기. 끄면 남은 적도 물러남)
 ##  F1 왼쪽 설명(설정 패널·하단 조작 안내) 잠시 숨기기 ↔ 보이기   F2 모든 UI 숨기기 ↔ 보이기 (HUD·드론 패널·피해 숫자·말풍선·적 체력바)
 ## 왼쪽 통로 끝에는 보스 체험방(TrainingBossRoom)이 있다: 들어가면 LANCASTER 가 기동하고 패널 · 숫자 키가 보스 프리셋으로 바뀐다.
 ## 확인용 실행 인자: --layout=0~3 --killable --counter(=원거리) --counter=melee|both --moving (봇: --bot) · --bossroom (보스방 입구에서 시작) · --bossroom=off
@@ -49,6 +52,12 @@ var show_help := true           # F1: 왼쪽 설명
 var _numbers: CanvasLayer       # MocoFX 의 피해 숫자 층 (F2 로 같이 숨김)
 var boss_room: TrainingBossRoom # 왼쪽 보스 체험방 (이 씬 자체일 때만. 상속 씬은 없음)
 var _boss_room_id := -1
+var auto_spawn := false         # G: 기본 적 자동 소환
+var auto_foes: Array[Enemy] = []
+var _auto_t := 0.0
+var _auto_pending := 0
+const AUTO_MAX := 4             # 동시에 살아 있는 자동 소환 적
+const AUTO_GAP := 1.4           # 소환 간격 (초)
 
 
 func _ready() -> void:
@@ -270,6 +279,58 @@ func _physics_process(dt: float) -> void:
 		r[0] = float(r[0]) - dt
 	while not _respawns.is_empty() and float(_respawns[0][0]) <= 0.0:
 		_spawn_dummy(_respawns.pop_front()[1])
+	_update_auto(dt)
+
+
+# ── 기본 적 자동 소환 (G) ───────────────────────────────
+
+func _auto_alive() -> int:
+	var n := 0
+	for e in auto_foes:
+		if is_instance_valid(e) and e.alive:
+			n += 1
+	return n + _auto_pending
+
+
+func _set_auto(on: bool) -> void:
+	auto_spawn = on
+	_auto_t = 0.3
+	if not on:
+		# 남은 자동 소환 적은 빛나며 물러난다 (처치 기록 · 잔해 없음)
+		for e in auto_foes:
+			if is_instance_valid(e) and e.alive:
+				FX.flash(e.global_position + Vector3(0, 1, 0), Color(0.7, 0.9, 1.0), 0.8, 0.12)
+				e.remove_from_group("enemies")
+				e.queue_free()
+		auto_foes.clear()
+	hud.banner("기본 적 자동 소환  %s" % _onoff(on), Color(1.0, 0.55, 0.4), ("사격 드론 · 요격기가 둘레에 계속 나옵니다 (동시 %d기)" % AUTO_MAX) if on else "남은 적은 물러납니다")
+
+
+func _update_auto(dt: float) -> void:
+	auto_foes = auto_foes.filter(func(e): return is_instance_valid(e) and e.alive)
+	if not auto_spawn or not player.alive or (boss_room and boss_room.inside):
+		return
+	_auto_t -= dt
+	if _auto_t > 0.0 or _auto_alive() >= AUTO_MAX:
+		return
+	_auto_t = AUTO_GAP
+	var pos := map.random_spot(map.start_room, player.global_position, 6.5, 12.0)
+	_auto_pending += 1
+	FX.spawn_marker(pos, 0.7)
+	Sfx.play("spawn", 0.1, -6.0)
+	get_tree().create_timer(0.7, false).timeout.connect(func():
+		_auto_pending -= 1
+		if not auto_spawn or not is_instance_valid(world):
+			return
+		var e: Enemy
+		if randf() < 0.25:
+			e = Striker.new()
+		else:
+			e = Enemy.new()
+			e.pattern = [0, 1, 2][randi() % 3]       # 조준 연사 · 부채꼴 · 원형 탄막
+		world.add_child(e)
+		e.global_position = pos
+		auto_foes.append(e))
 
 
 func on_player_died() -> void:
@@ -330,16 +391,19 @@ func _build_panel() -> void:
 		panel.section("플레이어")
 		panel.row("6", "재화 무한", func(): return _onoff(infinite))
 		panel.row("7", "무적", func(): return _onoff(god))
+		panel.row("G", "기본 적 자동 소환", func(): return ("ON  %d/%d" % [_auto_alive(), AUTO_MAX]) if auto_spawn else "OFF")
 		panel.section("연출 프리셋")
 		panel.row("8", "타격 VFX", func(): return MocoFX.STYLE_NAMES[MocoFX.style] + ("  ×0.2" if MocoFX.slow < 1.0 else ""))
 		panel.row("J", "피해 숫자", func(): return DamageLog.preset.to_upper())
 		panel.row("P", "패링 히트스톱", func(): return String(Parry.stop_preset().ko))
 		panel.row("H", "HUD", func(): return HudPresets.NAMES[HudPresets.current])
 		panel.row("=", "바닥 파괴", func(): return String(GroundBreak.current().name))
+		panel.row("9", "사체 표시", func(): return MessLook.NAMES[MessLook.preset])
+		panel.row("Y", "적 투사체", func(): return BulletLook.NAMES[BulletLook.preset])
 		panel.row("0", "합체 컷인", _cutin_title)
 		panel.row("[", "컷인 캐릭터", func(): return DiagonalDockingCutin.character_title(DiagonalDockingCutin.char_mode))
 		panel.row("-", "컷인 트위닝", func(): return String(DiagonalDockingCutin.tween().name))
-	panel.footer("F3 컷인 · F4 바닥 파괴 미리보기\nF1 패널 숨기기 · F2 모든 UI 숨기기")
+	panel.footer("F3 컷인 · F4 바닥 파괴 미리보기 · ] 사체 샘플\nF1 패널 숨기기 · F2 모든 UI 숨기기")
 
 
 ## 상속 씬이 패널 아래에 덧붙이는 글자 (기본 없음)
@@ -364,6 +428,38 @@ func _ground_title() -> String:
 
 
 ## 바닥 파괴 스타일 바꾸기 → 플레이어 앞에 바로 미리보기
+func _set_mess_look(step: int) -> void:
+	MessLook.cycle(get_tree(), step)
+	hud.banner("사체 표시  %s" % MessLook.NAMES[MessLook.preset], Color(1.0, 0.75, 0.3), MessLook.DESCS[MessLook.preset])
+	# 둘레에 사체가 없으면 바로 비교할 수 있게 샘플을 뿌린다
+	var near := 0
+	for m in get_tree().get_nodes_in_group(DroneMess.GROUP):
+		if (m as Node3D).global_position.distance_to(player.global_position) < 12.0:
+			near += 1
+	if near < 3:
+		scatter_mess()
+
+
+## 플레이어 앞 반원에 사체 샘플: 기계 잔해 3 · 체액 3 (벌레 초록 · 촘퍼 노랑 · 감염 자주)
+func scatter_mess() -> void:
+	var cols := [Color(0.62, 0.92, 0.22), Color(1.0, 0.82, 0.2), Color(0.6, 0.18, 0.44)]
+	var fwd := player.aim_dir
+	fwd.y = 0
+	if fwd.length() < 0.1:
+		fwd = Vector3.FORWARD
+	fwd = fwd.normalized()
+	for i in 6:
+		var a := lerpf(-1.1, 1.1, float(i) / 5.0)
+		var d := 3.6 + float(i % 2) * 2.2
+		var pos := player.global_position + fwd.rotated(Vector3.UP, a) * d
+		pos = push_out(pos, 0.6)
+		pos.y = Main.gy(pos)
+		if i % 2 == 0:
+			DroneMess.spawn(world, pos, DroneMess.Kind.SCRAP, 1.0 + 0.15 * float(i / 2))
+		else:
+			DroneMess.spawn(world, pos, DroneMess.Kind.GOO, 1.0, cols[i / 2])
+
+
 func _set_ground(step: int) -> void:
 	GroundBreak.cycle(step)
 	hud.banner("바닥 파괴  %s" % _ground_title(), Color(0.8, 0.85, 1.0), GroundBreak.current().desc)
@@ -504,6 +600,16 @@ func _unhandled_input(event: InputEvent) -> void:
 				_set_tween(-1 if (event as InputEventKey).shift_pressed else 1)
 			KEY_BRACKETLEFT:
 				_set_char()
+			KEY_Y:
+				BulletLook.cycle(get_tree(), -1 if (event as InputEventKey).shift_pressed else 1)
+				hud.banner("적 투사체  %s" % BulletLook.NAMES[BulletLook.preset], Color(1.0, 0.45, 0.35), BulletLook.DESCS[BulletLook.preset] + ("" if auto_spawn else "  ·  G 로 적 자동 소환"))
+			KEY_G:
+				_set_auto(not auto_spawn)
+			KEY_9:
+				_set_mess_look(-1 if (event as InputEventKey).shift_pressed else 1)
+			KEY_BRACKETRIGHT:
+				scatter_mess()
+				hud.banner("사체 샘플", Color(1.0, 0.75, 0.3), "잔해 3 · 체액 3  —  표시 %s" % MessLook.NAMES[MessLook.preset])
 			_:
 				handled = false
 		if handled:

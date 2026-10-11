@@ -1,0 +1,11 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== mammoth_ingame_check
+  RESULT mammoth_ingame_check fails=0
+=== mech_player_check
+  RESULT mech_player_check fails=0
+=== missile_check
+  RESULT OK (0 fails)
+=== moco_vfx_check
+  RESULT moco_vfx_check fails=0
+
+ALL 4 TESTS PASSED

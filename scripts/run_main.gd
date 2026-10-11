@@ -35,6 +35,8 @@ func _ready() -> void:
 	player.hp = run.hp
 	player.energy = run.energy
 	player.missiles = run.missiles
+	if is_instance_valid(PartnerDrone.inst):
+		PartnerDrone.inst.gauge = run.drone_gauge
 	var r: Dictionary = map.rooms[map.start_room]
 	r.difficulty = nd.difficulty
 	if nd.kind in [G.Kind.COMBAT, G.Kind.ELITE]:
@@ -79,10 +81,12 @@ func _build_arena() -> void:
 	world.add_child(map)
 	var combat: bool = nd.kind in [G.Kind.COMBAT, G.Kind.ELITE]
 	# 출발·정비 구역은 엄폐물 없는 넓은 홀로 고정
+	map.room_scale = Main.room_scale()
+	var k := map.room_scale
 	if combat:
 		map.generate_single(nd.seed, nd.shape, true)
 	else:
-		map.generate_single(nd.seed, ArenaMap.Shape.RECT, false, Vector2i(17, 12))
+		map.generate_single(nd.seed, ArenaMap.Shape.RECT, false, Vector2i(roundi(17 * k), roundi(12 * k)))
 	map.build()
 
 
@@ -104,7 +108,7 @@ func _clear_room() -> void:
 	rooms_cleared += 1
 	var run := _run()
 	run.coins += nd.coins
-	print("ROOM_CLEAR node=%d level=%d t=%.1f hp=%d coins=%d" % [nd.id, nd.level, time, player.hp, run.coins])
+	print("ROOM_CLEAR node=%d level=%d t=%.1f hp=%d coins=%d gauge=%.1f" % [nd.id, nd.level, time, player.hp, run.coins, PartnerDrone.inst.gauge if is_instance_valid(PartnerDrone.inst) else -1.0])
 	for b in get_tree().get_nodes_in_group("enemy_bullets"):
 		FX.flash(b.position, Pal.E_BULLETS[2], 0.4, 0.1)
 		b.queue_free()

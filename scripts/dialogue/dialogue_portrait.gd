@@ -32,10 +32,21 @@ var _bob := 0.0
 var _flip := false
 var _t := 0.0
 var _screen := Vector2(1280, 800)
+var idle_motion: DialogueIdleMotion
+var current_image: TextureRect
+var old_image: TextureRect
+var shadow_image: TextureRect
+var _old_flip := false
+var blink: DialogueBlink
+var _closed_tex: Texture2D
+var _old_closed: Texture2D
 
 
 func setup(id: String, at: String, e: String, screen: Vector2) -> void:
 	who = id
+	if DialogueIdleMotion.supports(id):
+		idle_motion = DialogueIdleMotion.new(id)
+		blink = DialogueBlink.new()
 	_screen = screen
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_expr(e if e != "" else DialogueCast.CAST[id].default, false)
@@ -71,11 +82,60 @@ func set_expr(e: String, animate := true) -> void:
 	var t := DialogueCast.texture(who, e)
 	if animate and _tex != null:
 		_old = _tex
+		_old_closed = _closed_tex
+		_old_flip = _flip
 		_fade = 0.0
 		hop(0.6)
+	else:
+		_old = null
+		_fade = 1.0
 	expr = e
 	_tex = t
+	_closed_tex = DialogueCast.texture(who, e, true) if blink != null else t
 	_orient()
+	if idle_motion != null:
+		if current_image == null:
+			shadow_image = _idle_image(t, true)
+			old_image = _idle_image(t)
+			current_image = _idle_image(t)
+		if _old != null:
+			old_image.texture = _old
+			idle_motion.change_texture(who, old_image.material, _old)
+		current_image.texture = _tex
+		shadow_image.texture = _tex
+		idle_motion.change_texture(who, current_image.material, _tex)
+		idle_motion.change_texture(who, shadow_image.material, _tex)
+		_update_idle_images()
+
+
+func _idle_image(texture: Texture2D, shadow := false) -> TextureRect:
+	var image := TextureRect.new()
+	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	image.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	image.stretch_mode = TextureRect.STRETCH_SCALE
+	image.texture = texture
+	image.material = idle_motion.make_material(who, texture, shadow)
+	add_child(image)
+	return image
+
+
+func _update_idle_images() -> void:
+	var shut := blink != null and blink.closed
+	current_image.texture = _closed_tex if shut else _tex
+	shadow_image.texture = current_image.texture
+	old_image.texture = _old_closed if shut else _old
+	for image in [shadow_image, old_image, current_image]:
+		image.size = size
+		image.flip_h = _flip
+	shadow_image.position = size * Vector2(0.012, 0.006)
+	old_image.flip_h = _old_flip
+	old_image.visible = _old != null and _fade < 1.0
+	old_image.modulate.a = 1.0 - _fade
+	current_image.modulate.a = _fade if _old != null else 1.0
+	if _fade >= 1.0:
+		_old = null
+		_old_closed = null
+		old_image.texture = null
 
 
 func leave() -> void:
@@ -106,7 +166,7 @@ func _side() -> float:
 
 func h_size() -> float:
 	if solo or paired:
-		return minf(_screen.y - solo_bottom - 92.0, _screen.x * 0.5 - 40.0)
+		return minf(_screen.y - solo_bottom - 96.0, _screen.x * 0.5 - 40.0)
 	return _screen.y * (0.76 if slot in BACK_SLOTS else 0.88)
 
 
@@ -130,6 +190,8 @@ func gone() -> bool:
 
 func _process(dt: float) -> void:
 	_t += dt
+	if blink != null:
+		blink.step(dt, DialogueView.reduce_motion)
 	var tx := _target_x()
 	if leaving:
 		tx += (-1.0 if tx < _screen.x * 0.5 else 1.0) * _screen.x * 0.18
@@ -144,8 +206,7 @@ func _process(dt: float) -> void:
 	_bob = maxf(0.0, _bob - dt * 9.0)
 	_layout()
 	var s := size.x
-	var breathe := sin(_t * 1.6 + float(who.hash() % 7)) * 0.004 * _light
-	var sc := lerpf(0.94, 1.0, _light) + breathe
+	var sc := lerpf(0.94, 1.0, _light)
 	scale = Vector2(sc, sc)
 	var sx := 0.0
 	if _shake > 0.0:
@@ -155,12 +216,20 @@ func _process(dt: float) -> void:
 		# 큰 프레임 간격 뒤 스프링이 아래로 넘쳐도 그림의 허리/손을 화면 안에 유지한다.
 		y = _screen.y - solo_bottom - s + clampf(_hop * 40.0 - _bob * 4.0, -12.0, 0.0)
 	position = Vector2(_x - s * 0.5 + sx, y)
+	if idle_motion != null:
+		idle_motion.step(dt, DialogueView.reduce_motion, active)
+		position += idle_motion.body_offset
+		scale *= idle_motion.body_scale
+		rotation = idle_motion.body_roll
+		_update_idle_images()
 	var listener := Color(0.70, 0.70, 0.78) if paired else DIM
 	modulate = Color(listener.lerp(Color.WHITE, _light), _alpha)
 	queue_redraw()
 
 
 func _draw() -> void:
+	if idle_motion != null:
+		return
 	var s := size.x
 	if _flip:
 		draw_set_transform(Vector2(s, 0), 0.0, Vector2(-1, 1))

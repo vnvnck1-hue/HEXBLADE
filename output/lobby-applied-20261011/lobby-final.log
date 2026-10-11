@@ -1,0 +1,76 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS 최초 섹터 런 포커스
+PASS 네 메뉴와 현행 전체 테스트 목록
+PASS 아래키 연출 테스트
+PASS Tab 테스트 씬
+PASS Enter 패널 열기 / 첫 행
+PASS 패널 뒤 메뉴 입력/포커스 차단
+PASS 마지막 항목까지 키보드 스크롤
+PASS 선택한 마지막 항목 전체 노출
+PASS 긴 제목/설명 잘림 없음 Scene0
+PASS 긴 제목/설명 잘림 없음 Scene1
+PASS 긴 제목/설명 잘림 없음 Scene2
+PASS 긴 제목/설명 잘림 없음 Scene3
+PASS 긴 제목/설명 잘림 없음 Scene4
+PASS 긴 제목/설명 잘림 없음 Scene5
+PASS 긴 제목/설명 잘림 없음 Scene6
+PASS 긴 제목/설명 잘림 없음 Scene7
+PASS 긴 제목/설명 잘림 없음 Scene8
+PASS 긴 제목/설명 잘림 없음 Scene9
+PASS 긴 제목/설명 잘림 없음 Scene10
+PASS 긴 제목/설명 잘림 없음 Scene11
+PASS 긴 제목/설명 잘림 없음 Scene12
+PASS 긴 제목/설명 잘림 없음 Scene13
+PASS 긴 제목/설명 잘림 없음 Scene14
+PASS 긴 제목/설명 잘림 없음 Scene15
+PASS Esc 패널만 닫기 / 테스트 버튼 복귀
+PASS 재개방 선택/스크롤 보존
+PASS Tab으로 닫기 접근
+PASS 닫기 버튼 Enter
+PASS 원화/검/드론/메뉴 비율 유지 (1280.0, 800.0)
+PASS 캔버스 중앙 정렬 (1280.0, 800.0)
+PASS 원화/검/드론/메뉴 비율 유지 (1280.0, 720.0)
+PASS 캔버스 중앙 정렬 (1280.0, 720.0)
+PASS 원화/검/드론/메뉴 비율 유지 (1920.0, 1080.0)
+PASS 캔버스 중앙 정렬 (1920.0, 1080.0)
+PASS 원화/검/드론/메뉴 비율 유지 (1920.0, 800.0)
+PASS 캔버스 중앙 정렬 (1920.0, 800.0)
+PASS 마우스 호버 포커스
+PASS 마우스 실제 클릭 패널 열기
+PASS 마우스 휠 목록 스크롤
+PASS 닫기 버튼 마우스 클릭과 포커스 복구
+PASS 10회 열기/닫기 노드와 목록 중복 없음
+PASS 실제 씬 존재 방 탐색 아레나
+PASS 현행 씬 경로 연결 방 탐색 아레나
+PASS 실제 씬 존재 무한 비행 · 종 스크롤 슈팅
+PASS 현행 씬 경로 연결 무한 비행 · 종 스크롤 슈팅
+PASS 실제 씬 존재 전투 테스트 · 허수아비
+PASS 현행 씬 경로 연결 전투 테스트 · 허수아비
+PASS 실제 씬 존재 텍스처링 · 정비실 디오라마
+PASS 현행 씬 경로 연결 텍스처링 · 정비실 디오라마
+PASS 실제 씬 존재 파트너 청소 드론
+PASS 현행 씬 경로 연결 파트너 청소 드론
+PASS 실제 씬 존재 필드 기믹
+PASS 현행 씬 경로 연결 필드 기믹
+PASS 실제 씬 존재 유체 연기 · 나비에-스토크스
+PASS 현행 씬 경로 연결 유체 연기 · 나비에-스토크스
+PASS 실제 씬 존재 벌레 괴생명체 · 개미 병정 · 공벌레 · 촘퍼 · 애벌레
+PASS 현행 씬 경로 연결 벌레 괴생명체 · 개미 병정 · 공벌레 · 촘퍼 · 애벌레
+PASS 실제 씬 존재 MAMMOTH 추격전
+PASS 현행 씬 경로 연결 MAMMOTH 추격전
+PASS 실제 씬 존재 VULCAN 용광로
+PASS 현행 씬 경로 연결 VULCAN 용광로
+PASS 실제 씬 존재 LAYER 01 · 심연 성소
+PASS 현행 씬 경로 연결 LAYER 01 · 심연 성소
+PASS 실제 씬 존재 SHAFT 07 · 거미 보스 SHIPWRIGHT
+PASS 현행 씬 경로 연결 SHAFT 07 · 거미 보스 SHIPWRIGHT
+PASS 실제 씬 존재 캐릭터 대화
+PASS 현행 씬 경로 연결 캐릭터 대화
+PASS 실제 씬 존재 동료 소개 · 사장과 정비사
+PASS 현행 씬 경로 연결 동료 소개 · 사장과 정비사
+PASS 실제 씬 존재 첫 청소 파트너 소개
+PASS 현행 씬 경로 연결 첫 청소 파트너 소개
+PASS 실제 씬 존재 MAMMOTH 죽음 연출 · B안
+PASS 현행 씬 경로 연결 MAMMOTH 죽음 연출 · B안
+RESULT: OK (0 fails)

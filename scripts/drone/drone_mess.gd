@@ -70,6 +70,7 @@ func _ready() -> void:
 	# 떨어지며 생기는 연출: 조각이 툭 튀어 흩어진다
 	scale = Vector3.ONE * 0.3
 	create_tween().tween_property(self, "scale", Vector3.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	MessLook.apply(self)            # 사체 잘 보이게 하는 표시 프리셋 (기본은 없음)
 
 
 static func _meshes() -> void:

@@ -1,0 +1,9 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== lobby_upgrade_check
+  ERROR: Failed to open 'user://logs/godot2026-10-11T23.05.41.log'.
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  ERROR: Failed to read the root certificate store.
+  FAIL 마우스 실제 클릭 패널 열기
+  RESULT: FAILED (1 fails)
+
+FAILED: lobby_upgrade_check

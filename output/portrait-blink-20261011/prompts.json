@@ -1,0 +1,74 @@
+[
+  {
+    "id": "owner_welcome",
+    "target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\portraits\\opening_cast\\owner_welcome.png",
+    "refs": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit the FIRST image: the existing transparent dialogue portrait owner_welcome. The other four images are the ONLY style references, do not copy their character design. Create exactly the same portrait with a natural CLOSED-EYES BLINK. Change ONLY the visible eye regions: remove the iris, pupil and eye whites and draw a single gently relaxed, downward-closed eyelid with the existing thick black eyelashes. Eyes must be fully shut, not squinting with visible iris; retain the eyebrow position and the existing mood/expression. Where an eye is hidden by hair, keep that hair and the hidden eye area unchanged; for the mint-haired partner close only the one visible eye. Preserve exact original composition, canvas extent and character scale/registration. Keep the original face outline, nose, mouth, skin shading, blush, bangs, hair strands, ribbons, clothes, hands, tools, tablet and pose pixel-aligned and unchanged. NO new smile, no new wrinkles, no additions, no redesign, no head movement, no zoom, no crop. Square transparent PNG; preserve the alpha silhouette, background fully transparent. This is an alternating blink frame for a game sprite; the open and closed sprite must remain registered so swapping them changes only the eyes.",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-804b3331-8ee6-4624-a6cd-aba62aca6cc9.png"
+  },
+  {
+    "id": "owner_briefing",
+    "target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\portraits\\opening_cast\\owner_briefing.png",
+    "refs": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit the FIRST image: the existing transparent dialogue portrait owner_briefing. The other four images are the ONLY style references, do not copy their character design. Create exactly the same portrait with a natural CLOSED-EYES BLINK. Change ONLY the visible eye regions: remove the iris, pupil and eye whites and draw a single gently relaxed, downward-closed eyelid with the existing thick black eyelashes. Eyes must be fully shut, not squinting with visible iris; retain the eyebrow position and the existing mood/expression. Where an eye is hidden by hair, keep that hair and the hidden eye area unchanged; for the mint-haired partner close only the one visible eye. Preserve exact original composition, canvas extent and character scale/registration. Keep the original face outline, nose, mouth, skin shading, blush, bangs, hair strands, ribbons, clothes, hands, tools, tablet and pose pixel-aligned and unchanged. NO new smile, no new wrinkles, no additions, no redesign, no head movement, no zoom, no crop. Square transparent PNG; preserve the alpha silhouette, background fully transparent. This is an alternating blink frame for a game sprite; the open and closed sprite must remain registered so swapping them changes only the eyes.",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-83d1afa2-1e44-4dc0-99cc-9ab6295bd55e.png"
+  },
+  {
+    "id": "owner_encouragement",
+    "target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\portraits\\opening_cast\\owner_encouragement.png",
+    "refs": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit the FIRST image: the existing transparent dialogue portrait owner_encouragement. The other four images are the ONLY style references, do not copy their character design. Create exactly the same portrait with a natural CLOSED-EYES BLINK. Change ONLY the visible eye regions: remove the iris, pupil and eye whites and draw a single gently relaxed, downward-closed eyelid with the existing thick black eyelashes. Eyes must be fully shut, not squinting with visible iris; retain the eyebrow position and the existing mood/expression. Where an eye is hidden by hair, keep that hair and the hidden eye area unchanged; for the mint-haired partner close only the one visible eye. Preserve exact original composition, canvas extent and character scale/registration. Keep the original face outline, nose, mouth, skin shading, blush, bangs, hair strands, ribbons, clothes, hands, tools, tablet and pose pixel-aligned and unchanged. NO new smile, no new wrinkles, no additions, no redesign, no head movement, no zoom, no crop. Square transparent PNG; preserve the alpha silhouette, background fully transparent. This is an alternating blink frame for a game sprite; the open and closed sprite must remain registered so swapping them changes only the eyes.",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-e4b54ae8-3677-4d00-8356-4023f1ec714b.png"
+  },
+  {
+    "id": "worker_introduction",
+    "target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\portraits\\opening_cast\\worker_introduction.png",
+    "refs": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit the FIRST image: the existing transparent dialogue portrait worker_introduction. The other four images are the ONLY style references, do not copy their character design. Create exactly the same portrait with a natural CLOSED-EYES BLINK. Change ONLY the visible eye regions: remove the iris, pupil and eye whites and draw a single gently relaxed, downward-closed eyelid with the existing thick black eyelashes. Eyes must be fully shut, not squinting with visible iris; retain the eyebrow position and the existing mood/expression. Where an eye is hidden by hair, keep that hair and the hidden eye area unchanged; for the mint-haired partner close only the one visible eye. Preserve exact original composition, canvas extent and character scale/registration. Keep the original face outline, nose, mouth, skin shading, blush, bangs, hair strands, ribbons, clothes, hands, tools, tablet and pose pixel-aligned and unchanged. NO new smile, no new wrinkles, no additions, no redesign, no head movement, no zoom, no crop. Square transparent PNG; preserve the alpha silhouette, background fully transparent. This is an alternating blink frame for a game sprite; the open and closed sprite must remain registered so swapping them changes only the eyes.",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-ef5da97d-bbf7-47ce-8b4c-e7c91b5d2761.png"
+  },
+  {
+    "id": "worker_cheerful",
+    "target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\portraits\\opening_cast\\worker_cheerful.png",
+    "refs": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit the FIRST image: the existing transparent dialogue portrait worker_cheerful. The other four images are the ONLY style references, do not copy their character design. Create exactly the same portrait with a natural CLOSED-EYES BLINK. Change ONLY the visible eye regions: remove the iris, pupil and eye whites and draw a single gently relaxed, downward-closed eyelid with the existing thick black eyelashes. Eyes must be fully shut, not squinting with visible iris; retain the eyebrow position and the existing mood/expression. Where an eye is hidden by hair, keep that hair and the hidden eye area unchanged; for the mint-haired partner close only the one visible eye. Preserve exact original composition, canvas extent and character scale/registration. Keep the original face outline, nose, mouth, skin shading, blush, bangs, hair strands, ribbons, clothes, hands, tools, tablet and pose pixel-aligned and unchanged. NO new smile, no new wrinkles, no additions, no redesign, no head movement, no zoom, no crop. Square transparent PNG; preserve the alpha silhouette, background fully transparent. This is an alternating blink frame for a game sprite; the open and closed sprite must remain registered so swapping them changes only the eyes.",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-4f66f0bf-6354-4b41-9049-51e4f9ea1ed4.png"
+  },
+  {
+    "id": "partner_greeting",
+    "target": "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\assets\\portraits\\opening_cast\\partner_greeting.png",
+    "refs": [
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-01.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-02.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-03.png",
+      "D:\\2020_이전승찬파일\\작업,내파일\\2026\\프로토타입 게임\\헥스 블레이드\\docs\\character-style-references-20261011\\reference-04.png"
+    ],
+    "prompt": "Use case: precise-object-edit. Edit the FIRST image: the existing transparent dialogue portrait partner_greeting. The other four images are the ONLY style references, do not copy their character design. Create exactly the same portrait with a natural CLOSED-EYES BLINK. Change ONLY the visible eye regions: remove the iris, pupil and eye whites and draw a single gently relaxed, downward-closed eyelid with the existing thick black eyelashes. Eyes must be fully shut, not squinting with visible iris; retain the eyebrow position and the existing mood/expression. Where an eye is hidden by hair, keep that hair and the hidden eye area unchanged; for the mint-haired partner close only the one visible eye. Preserve exact original composition, canvas extent and character scale/registration. Keep the original face outline, nose, mouth, skin shading, blush, bangs, hair strands, ribbons, clothes, hands, tools, tablet and pose pixel-aligned and unchanged. NO new smile, no new wrinkles, no additions, no redesign, no head movement, no zoom, no crop. Square transparent PNG; preserve the alpha silhouette, background fully transparent. This is an alternating blink frame for a game sprite; the open and closed sprite must remain registered so swapping them changes only the eyes.",
+    "source": "C:\\Users\\vnvnc\\.codex\\generated_images\\01a12a5e-8bea-7373-818e-d552d7c7ae1e\\exec-1984575d-4dd7-44c7-83b9-dac0574b7b33.png"
+  }
+]
