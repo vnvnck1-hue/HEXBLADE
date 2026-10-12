@@ -6,6 +6,9 @@ enum Pattern { AIMED_BURST, FAN, RING }
 ## 죽음 연출: 즉시 폭발 / 과부하 팽창 후 폭발 / 튕겨 날아가 추락 폭발 / 전원 차단 후 쓰러져 붕괴
 enum Death { BURST, OVERLOAD, SPINOUT, SHUTDOWN, SLICED }
 
+## 로그라이크 모드 훅: 피해량 보정·명중 효과. 인자 (enemy, dmg, source) → 실제 피해(int). 기본값은 없음
+static var dmg_hook: Callable
+var _shown_dmg := -1           # 피해 숫자로 보일 값 (훅이 보정한 피해)
 var hp := 4
 var alive := true
 var landed := false
@@ -121,6 +124,12 @@ static func live(tree: SceneTree) -> Array:
 		_live_key = key
 		_live = tree.get_nodes_in_group("enemies")
 	return _live
+
+
+## 적이 트리에서 빠지면 이번 프레임 캐시를 버린다 (물리 틱 끝에 지워진 적이 같은 프레임의 _process 루프에 남지 않게)
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_EXIT_TREE:
+		_live_key = Vector2i(-1, -1)
 const TELEGRAPH := 0.5
 const ORB_CD := 3.2
 ## 패링 탄 준비동작 길이: 크게 뒤로 젖혀 웅크리며 코어를 부풀린다. 끝나는 순간 알림과 함께 발사.
@@ -533,12 +542,20 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 		return
 	if max_hp == 0:
 		_init_hp()
+	# 로그 모드 훅: 체력은 보정한 피해로 깎고, 넉백·피격 반응·섬광 크기는 원래 피해(dmg_raw)로 정한다
+	var dmg_raw := dmg
+	if dmg_hook.is_valid():
+		dmg = dmg_hook.call(self, dmg, source)
 	if stagger_t > 0.0:
 		dmg *= 2
-	_hit_spark(dmg, dir, pos, source)
+		dmg_raw *= 2
+	_shown_dmg = dmg if dmg_hook.is_valid() else -1
+	_hit_spark(dmg_raw, dir, pos, source)
+	_shown_dmg = -1
 	_hit_source = source
 	_hit_pos = pos
 	hp -= dmg
+	dmg = dmg_raw
 	_bar_hit = 1.0
 	# 패링 공격 중에는 밀리지 않는다 (돌진 궤적·박자가 흐트러지지 않게)
 	if not parry_committed():
@@ -575,7 +592,7 @@ func _hit_spark(dmg: int, dir: Vector3, pos: Vector3, source: String) -> void:
 	var heavy := dmg >= 4 or source in ["slash", "phantom", "missile", "parry"]     # _hurt 의 무거운 공격 분류와 같다
 	HitSpark.spawn(at, dir, maxf(k, 1.0 + dmg * 0.08), self, 1 if heavy else 0, source)
 	if not get("prop"):
-		MocoFX.report(self, dmg, heavy, at)
+		MocoFX.report(self, _shown_dmg if _shown_dmg >= 0 else dmg, heavy, at)
 
 
 ## 지금 피격 경직에 들어갈 수 있는가 (하위 기체가 덮어써 공중 도약 등을 뺀다)

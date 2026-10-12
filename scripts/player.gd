@@ -99,6 +99,11 @@ var blade_boost := 1.0            # 광선검 속도 강화 배율 (드론 합�
 var fire_boost := 1.0             # 기본 총 연사 강화 배율 (드론 합체 2)
 var on_attack: Callable           # 공격 알림 (드론 게이지 소모): 인자 "slash" · "shot"
 var spin_pose: Callable           # 회전 자세 (드론 합체 휠윈드): 인자 (player, dt). 광선검 리본도 직접 먹이고, 팔다리 리본이 켜진다
+## 로그라이크 모드 훅 (scripts/rogue/). 기본값은 아무 일도 하지 않는다.
+var speed_mul := 1.0               # 이동 속도 배율 (아이템 스탯)
+var shot_hook: Callable            # 기본 총 한 발 대체: 인자 (origin, dir). 있으면 기본 탄 대신 이것을 부른다
+var on_dash: Callable              # 대시 시작 알림: 인자 (player, chained)
+var on_strike: Callable            # 검 콤보 한 타 알림: 인자 (dir, reach, result)
 
 var hp := MAX_HP
 var alive := true
@@ -593,7 +598,7 @@ func _physics_process(dt: float) -> void:
 			target_speed *= 0.55
 		if mega_t > 0.0:
 			target_speed *= MEGA_MOVE
-		target_speed *= slow_mul
+		target_speed *= slow_mul * speed_mul
 		var dir := move_dir.limit_length(1.0)
 		if boosting and dir.length() < 0.1 and not infinite_boost:
 			dir = aim_dir
@@ -827,6 +832,8 @@ func _dash_start(chained := false) -> void:
 	Sfx.play("dash", 0.05, -6.0)
 	Main.inst.kick(dash_dir * 0.8)
 	Main.inst.camera.fov_punch(7.0)
+	if on_dash.is_valid():
+		on_dash.call(self, chained)
 
 	if chained:
 		# 2단 대시 성공: 3초 안의 다음 검은 휠윈드 (칼날이 불타오른다)
@@ -938,7 +945,10 @@ func _fire() -> void:
 	if d.length() < 1.2:
 		d = aim_dir
 	d = d.normalized().rotated(Vector3.UP, randf_range(-0.03, 0.03))
-	Main.inst.add_bullet(Bullet.make_player(origin, d, BULLET_SPEED))
+	if shot_hook.is_valid():
+		shot_hook.call(origin, d)
+	else:
+		Main.inst.add_bullet(Bullet.make_player(origin, d, BULLET_SPEED))
 	GunFX.muzzle(origin, d)
 	# 탄피는 사격 팔(왼쪽) 바깥으로 튄다
 	var out := Vector3.UP.cross(d).normalized()
@@ -1133,7 +1143,10 @@ func combo_strike(dir: Vector3, reach: float, cone_deg: float, dmg: int, kb: flo
 		if d.length() < reach + 0.3 and (d.length() < 0.8 or dir.angle_to(d.normalized()) <= cone):
 			FX.flash(bl.position, Pal.BLADE, 0.45, 0.08)
 			bl.queue_free()
-	return {"hit": hit, "blocked": blocked, "killed": killed}
+	var result := {"hit": hit, "blocked": blocked, "killed": killed}
+	if on_strike.is_valid():
+		on_strike.call(dir, reach, result)
+	return result
 
 
 ## 관통 일격 준비: PHANTOM_WINDOW 초 동안 칼날이 불타오르고, 그 안에 휘두르면 관통 일격이 나간다

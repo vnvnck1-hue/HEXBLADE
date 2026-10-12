@@ -1,0 +1,18 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+LOAD rogue_bomb.gd ok
+LOAD rogue_boss.gd ok
+LOAD rogue_build.gd ok
+LOAD rogue_effects.gd ok
+LOAD rogue_familiar.gd ok
+LOAD rogue_hud.gd ok
+LOAD rogue_items.gd ok
+LOAD rogue_look.gd ok
+LOAD rogue_main.gd ok
+LOAD rogue_map.gd ok
+LOAD rogue_pedestal.gd ok
+LOAD rogue_pickup.gd ok
+LOAD rogue_props.gd ok
+LOAD rogue_run.gd ok
+LOAD rogue_shot.gd ok
+LOAD rogue_check ok

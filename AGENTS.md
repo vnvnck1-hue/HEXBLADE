@@ -58,7 +58,11 @@
 
 ## 5. 현재 상태 (작업을 마칠 때 갱신한다)
 
-마지막 갱신: 2026-10-12
+마지막 갱신: 2026-10-13
+
+### 로그라이크 모드 「HEX DEPTHS」 (2026-10-12~13, Claude, 미커밋)
+
+사용자 목표: 기존 설정·내러티브를 잊고 **템포 빠른 전투 코어만 유지**한 아이작의 번제식 로그라이크. 리서치·기획·구현 현황은 [docs/roguelike-isaac-mode.md](docs/roguelike-isaac-mode.md). 실행 `launchers\scenes\rogue_run.cmd` 또는 로비 테스트 목록 2번째 **로그라이크 · HEX DEPTHS**. 상세는 아래 작업 기록 첫 항목.
 
 ### Claude·Codex 전체 작업 통합 커밋·푸시 (2026-10-12)
 
@@ -96,6 +100,14 @@
 **남은 작업/재개 순서**: 다음 사용자 요청에 따라 에셋 수정 또는 게임 적용을 진행한다. 적용 요청이 오면 현행 컷인 코드와 [기존 사선 컷인 문서](docs/diagonal-docking-cutin.md)를 먼저 확인하고, 최신 PNG의 개별 크기·등장 위치·속도·회전·수명·뒤쪽 레이어를 맞춘다. 이 수치와 실제 리소스 적용 경로는 아직 미결정이다. 현재 출력 폴더는 `.gdignore`로 임포트 제외되어 있으므로 적용 시 필요한 PNG를 리소스 폴더로 복사하고 임포트 파일도 관리한다. 코드 변경 시 고정 Godot 실행기 및 프로젝트 검증 규칙을 따른다. 이전 `output/maid-cutin-prop-assets-20261005/` 8종은 구 그림체 자료로 최신 세트와 혼동하지 않는다. 기존 시안·다른 작업 보존, 커밋/푸시는 사용자 요청 시에만 한다.
 
 ### 작업 기록
+
+- 2026-10-12~13 (미커밋, Claude): **로그라이크 모드 「HEX DEPTHS」 — 아이작의 번제식 새 모드 (설정·내러티브 미사용, 전투 코어만 유지)** — 리서치·기획·구현 현황: [docs/roguelike-isaac-mode.md](docs/roguelike-isaac-mode.md). 코드 `scripts/rogue/`(RogueMain extends Main · RogueMap extends ArenaMap · RogueRun 정적 런 상태 · RogueItems 데이터 · RogueBuild 스탯/플래그/결합/변신/상태이상 · RogueShot 변형 탄 · RogueEffects 공용 공격 · RoguePickup · RoguePedestal · RogueBomb · RogueProps(상자·틴티드·화톳불·가시·포털·금 간 벽) · RogueFamiliar · RogueLook 변신 외형 · RogueBoss · RogueHud), 씬 `scenes/rogue.tscn`, `launchers/scenes/rogue_run.cmd`, 로비 테스트 목록 2번째(1번째는 `--test` 가 씀). 6층 9×9 슬롯 BFS 방 그리드 · 특수방(아이템·상점·보스·비밀·저주·희생·도전·서재·악마/천사) · 2층부터 열쇠 잠금 · 비밀방은 폭발로 금 간 벽 → 포털 → 떨어진 섬 방 · 동전/폭탄/열쇠 · 빨강/소울/블랙(반 칸, `Player.hp` = 빨간 반 칸) · 패시브 87 · 액티브 18(방 정리 충전) · 장신구 20 · 알약 21효과/14색(런마다 섞임) · 카드/룬 17 · 결합 공격 15 · 변신 9(외형) · 패밀리어 6 · 챔피언 · 저주 4 · 보스 6(기존 적 확대 + 광폭화) · 특수방 문 위 표지판. 조작 Q 액티브 · X 폭탄 · Z 알약/카드 · Tab 패널, 재장전 없음. **기존 코드 훅(기본값 무동작)**: `Player.speed_mul/shot_hook/on_dash/on_strike`, `Enemy.dmg_hook`(체력 피해만 보정, 넉백·반응은 원래 피해) · `_shown_dmg` · `Enemy._notification(EXIT_TREE)` 에서 `Enemy.live()` 캐시 무효화(물리 틱에 지워진 적이 같은 프레임 `_process` 루프에 남아 "Trying to cast a freed object" 가 나던 잠재 버그, 궁극기 락온 중 발생). `lobby.gd` 한 줄. 주의: 이 프로젝트는 **Variant 추론(`:=`)을 오류로 취급** — 딕셔너리·배열 원소는 타입을 적을 것. 개발용 `_capture/rogue_parse_check.gd`(로그 스크립트 문법 일괄 확인) · `_capture/rogue_show.gd`(장면 캡처 → `output/rogue-20261012/shots/`, `.gdignore`). 테스트 `tests/rogue_check.gd`. 같은 날 Codex 의 `docs/fast-roguelike-narrative-ideas.md`(로그라이크 서사 후보)와는 별개 — 이 모드는 서사를 쓰지 않는다. 커밋·푸시 없음.
+
+- 2026-10-12 (미커밋, Codex): **빠른 전투 로그라이크·아이작 느낌 스테이지 방향 / 새 내러티브 4안** — 사용자 확정: 빠른 전투 로그라이크, 아이작 느낌의 방 탐색/다양한 기믹, 각 스테이지 끝 보스. 직전의 청소 삭제·전투 행동으로 기술 에너지 유지. `docs/fast-roguelike-narrative-ideas.md`에 도시를 삼킨 방주(구출/탈환)·내 심장을 돌려줘(복수/자기 회복)·우리가 돌아갈 별(공동체/귀환)·우승하면 다시 만난다(소망/경쟁)4개 독립 후보 기록. 각 안의 첫 장면·동기·특수방·층 보스·재도전·에너지 연결/장단점 포함. 후보 선택 미확정, 기존 청소업체/구출 수집 서사를 자동 승계하지 않음. 이전 연속 회랑 추천은 비교 기록이며 새 형식의 확정안이 아님을 리서치 문서에 표시. 게임 구현·Godot 검증·커밋/푸시 없음.
+
+- 2026-10-12 (미커밋, Codex): **연속 무쌍 방향 정정 — 청소 기믹 삭제·전투 행동으로 기술 에너지** — 사용자 확정: 이번 무쌍 설계에서 청소 기믹을 삭제하고 DOOM Eternal처럼 전투 행동 자체로 기술 에너지를 얻는다. 직전의 처치→청소→지원 제안은 폐기. `docs/continuous-musou-stage-research.md`를 타격/처치/성공한 패링·위험 회피→에너지→기술 사용 중심으로 수정. 구체 수급량·공용 에너지·기술 환급 상한·기존 에너지와 통합·스테이지 형태는 아직 제안. 대화 중 기획 정정이며 게임 코드의 청소 삭제는 아직 실행하지 않음. 내러티브 전체/동료/합체 삭제로 확대 해석하지 않음. 커밋·푸시 없음.
+
+- 2026-10-12 (미커밋, Codex): **연속 무쌍 스테이지 리서치·논의안** — 사용자 요청으로 DYNASTY WARRIORS: ORIGINS·DOOM Eternal·Nex Machina·Vampire Survivors·Risk of Rain 2의 공식 설명을 조사하고 현행 섹터 런/무한 비행/드론 청소와 비교. `docs/continuous-musou-stage-research.md`에 출처·현재 코드 근거·연속 방제 회랑/중앙 홀/거점 탈환3안·6분 예시·초기 검증안 기록. 우선 제안=연속 방제 회랑, 처치→자동 청소→지원/합체→군집 소탕. 구성·시간·적 비율/동시 수·보상 전부 미승인 가설. 직접 플레이 비교·게임 구현·Godot 회귀 없음. 기존 작업 보존, 커밋·푸시 없음.
 
 - 2026-10-12 (미커밋, Codex): **정비실 바닥/벽 채도·명도 대폭 낮춤** — 사용자 가독성 피드백에 따라 기본 재질을 전용 `scripts/presentation/painted_room_palette.gdshader`의 ShaderMaterial로 변경. 원본 PNG를 직접 샘플링 후 선형 RGB 휘도 기반 채도0.18·밝기 배수0.22 적용, 금속성0·거칠기1·반사광0. 원본 PNG/붓질/줄눈/UV/모델/조명 유지. 캐릭터·아이템·UI에는 전체 화면 색 보정을 적용하지 않음. 기존 보정색/조명 버튼 양쪽에 동일 보정 유지, B 본편 원본 비교 유지. `output/painted-room-muted-20261012/`에 실제 Forward+13화면 및 정지 메카/표식/Pickup(에너지 셀·미사일)5화면, 전후 비교·측정/검증/로그 보관. 화면의 바닥/벽 유효389011픽셀 평균 RGB 휘도 약50%·HSV 채도 약30%로 감소(셰이더 계수와 지각 명도 비율은 다름). 전용24항목 PASS, 자동 조작12초8단계 ERROR0/SCRIPT ERROR0. Pickup 비교는 실제 ready 메시/재질을 동작 정지시켜 사용하며 이동/줍기/전투 시뮬레이션은 하지 않는다. 전체59종 모두 PASS(이번 실행의 포낭·드론·재화 포함), 결과는 해당 폴더 `all_tests.log`/`validation.json`. 초기 밝은 적용 기록은 이전 폴더에 보존, 최신 기본값은 낮춘 색. 본편 랜덤 방은 미연결. 신규 셰이더 `.uid` 보존, 다른 세션 변경 유지, 커밋/푸시 없음.
 

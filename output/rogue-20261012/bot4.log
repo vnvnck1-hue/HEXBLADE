@@ -1,0 +1,209 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ROGUE_FLOOR depth=1 rooms=9 seed=3238046585 tries=1 curse= items=0
+DBG t=0.0 pos=(-3.5, 0.0, -38.5) room=0 live=cleared goal=(-4.5, 0.0, -26.5) path=12 enemies=0 pend=0/-1
+DBG t=2.0 pos=(-4.403042, 0.0, -32.88003) room=0 live=cleared goal=(-4.5, 0.0, -26.5) path=6 enemies=0 pend=0/-1
+DBG t=4.0 pos=(-3.597025, 0.0, -20.95639) room=2 live=active goal=(-3.5, 0.0, -17.5) path=3 enemies=0 pend=8/-1
+PARRY ranged t=6.99 n=1 f=1634 heavy
+PARRY ranged t=9.74 n=2 f=1990 heavy
+CUTIN FULL BURST
+PARRY ranged t=16.84 n=3 f=2793 heavy
+PARRY ranged t=16.96 n=4 f=2918 heavy
+EVADE dash t=17.56 Enemy
+ROGUE_CLEAR id=2 kind=challenge t=20.6 hp=6 soul=0 items=0
+DBG t=22.0 pos=(-1.322852, 0.0, -15.50933) room=2 live=cleared goal=(-3.5, 0.0, -17.5) path=4 enemies=0 pend=0/-1
+ROGUE_ITEM wings (날개) t=22.3
+DBG t=24.0 pos=(-2.514815, 0.0, -26.00901) room=2 live=cleared goal=(25.5, 0.0, -38.5) path=40 enemies=0 pend=0/-1
+DBG t=26.0 pos=(6.186093, 0.0, -31.78901) room=0 live=cleared goal=(25.5, 0.0, -38.5) path=26 enemies=0 pend=0/-1
+DBG t=28.0 pos=(15.64361, 0.0, -37.49712) room=3 live=active goal=(25.5, 0.0, -38.5) path=10 enemies=0 pend=5/-1
+PARRY ranged t=30.85 n=5 f=4068 heavy
+ROGUE_CLEAR id=3 kind=normal t=37.4 hp=6 soul=0 items=1
+DBG t=38.0 pos=(28.45617, 0.0, -33.84762) room=3 live=cleared goal=(54.5, 0.0, -38.5) path=31 enemies=0 pend=0/-1
+DBG t=40.0 pos=(39.60046, 0.0, -37.4784) room=3 live=cleared goal=(54.5, 0.0, -38.5) path=15 enemies=0 pend=0/-1
+DBG t=42.0 pos=(33.84497, 0.0, -37.49996) room=3 live=cleared goal=(-3.5, 0.0, -69.5) path=69 enemies=0 pend=0/-1
+DBG t=44.0 pos=(18.885, 0.0, -37.49997) room=3 live=cleared goal=(-3.5, 0.0, -69.5) path=54 enemies=0 pend=0/-1
+DBG t=46.0 pos=(3.925041, 0.0, -37.49997) room=0 live=cleared goal=(-3.5, 0.0, -69.5) path=39 enemies=0 pend=0/-1
+DBG t=48.0 pos=(-11.03495, 0.0, -37.49997) room=0 live=cleared goal=(-32.5, 0.0, -38.5) path=22 enemies=0 pend=0/-1
+DBG t=50.0 pos=(-25.9949, 0.0, -37.49997) room=1 live=idle goal=(-32.5, 0.0, -38.5) path=7 enemies=0 pend=0/-1
+ROGUE_ITEM spores (버섯 포자) t=50.8
+DBG t=52.0 pos=(-24.89925, 0.0, -38.50808) room=1 live=idle goal=(-3.5, 0.0, -69.5) path=52 enemies=0 pend=0/-1
+DBG t=54.0 pos=(-9.939306, 0.0, -38.50003) room=0 live=cleared goal=(-3.5, 0.0, -69.5) path=37 enemies=0 pend=0/-1
+DBG t=56.0 pos=(-3.519391, 0.0, -48.17273) room=0 live=cleared goal=(-3.5, 0.0, -69.5) path=21 enemies=0 pend=0/-1
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=60.243 f=6282
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=60.309 f=6286
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=60.443 f=6294
+ROGUE_CLEAR id=4 kind=normal t=71.8 hp=6 soul=0 items=2
+DBG t=72.0 pos=(-9.105058, 0.0, -69.72765) room=4 live=cleared goal=(25.5, 0.0, -80.5) path=45 enemies=0 pend=0/-1
+DBG t=74.0 pos=(5.822092, 0.0, -69.61389) room=4 live=cleared goal=(25.5, 0.0, -80.5) path=30 enemies=0 pend=0/-1
+DBG t=76.0 pos=(11.1781, 0.0, -79.48164) room=4 live=cleared goal=(25.5, 0.0, -80.5) path=15 enemies=0 pend=0/-1
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=90.236 f=8624
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=90.303 f=8628
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=90.436 f=8636
+ROGUE_BOSS_DEAD depth=1 t=100.9
+ROGUE_ITEM protein (단백질 캔) t=101.5
+DBG t=102.0 pos=(23.86186, 0.0, -80.55306) room=6 live=cleared goal=(25.5, 0.0, -77.5) path=4 enemies=0 pend=0/-1
+ROGUE_NEXT depth=2 t=102.4
+ROGUE_FLOOR depth=2 rooms=10 seed=150476988 tries=1 curse= items=3
+DBG t=0.0 pos=(-3.5, 0.0, -38.5) room=0 live=cleared goal=(-4.5, 0.0, -50.5) path=12 enemies=0 pend=0/-1
+DBG t=2.0 pos=(-4.423214, 0.0, -44.65462) room=0 live=cleared goal=(-4.5, 0.0, -50.5) path=5 enemies=0 pend=0/-1
+DBG t=4.0 pos=(-3.699886, 0.0, -54.17147) room=4 live=active goal=(inf, inf, inf) path=0 enemies=0 pend=8/-1
+CUTIN FULL BURST
+PARRY ranged t=14.61 n=1 f=2825 heavy
+EVADE back t=14.92 Enemy
+EVADE back t=16.44 Enemy
+CUTIN PIERCE ×2
+EVADE dash t=22.60 Striker
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=25.208 f=3886
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=25.274 f=3890
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=25.408 f=3898
+ROGUE_CLEAR id=4 kind=challenge t=32.1 hp=6 soul=0 items=3
+DBG t=34.0 pos=(-4.078743, 0.0, -62.39159) room=4 live=cleared goal=(-3.5, 0.0, -59.5) path=2 enemies=0 pend=0/-1
+ROGUE_ITEM big_heart (대형 하트) t=34.3
+DBG t=36.0 pos=(1.533213, 0.0, -65.578) room=4 live=cleared goal=(6.252392, 0.45, -52.56296) path=17 enemies=0 pend=0/-1
+DBG t=38.0 pos=(6.490288, 0.0, -54.37619) room=4 live=cleared goal=(6.252392, 0.45, -52.56296) path=1 enemies=0 pend=0/-1
+DBG t=40.0 pos=(-2.475156, 0.0, -49.57159) room=4 live=cleared goal=(25.5, 0.0, -38.5) path=38 enemies=0 pend=0/-1
+DBG t=42.0 pos=(6.940884, 0.0, -44.19061) room=0 live=cleared goal=(25.5, 0.0, -38.5) path=23 enemies=0 pend=0/-1
+DBG t=44.0 pos=(16.89282, 0.0, -39.50183) room=3 live=active goal=(inf, inf, inf) path=0 enemies=0 pend=7/-1
+PARRY ranged t=46.79 n=2 f=5748 heavy
+EVADE back t=46.95 Enemy
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=47.172 f=5929
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=47.239 f=5933
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=47.372 f=5941
+DANGER_WARN t=52.01
+ROGUE_CLEAR id=3 kind=normal t=52.9 hp=8 soul=0 items=4
+DBG t=54.0 pos=(25.29086, 0.0, -36.5586) room=3 live=cleared goal=(41.5, 0.0, -39.5) path=19 enemies=0 pend=0/-1
+DBG t=56.0 pos=(39.70244, 0.0, -37.53776) room=3 live=cleared goal=(41.5, 0.0, -39.5) path=3 enemies=0 pend=0/-1
+DBG t=58.0 pos=(51.94375, 0.0, -39.50014) room=7 live=idle goal=(54.5, 0.0, -38.5) path=3 enemies=0 pend=0/-1
+ROGUE_ITEM inner_eye (삼중 총구) t=58.2
+DBG t=60.0 pos=(43.96482, 0.0, -38.49958) room=7 live=idle goal=(-3.5, 0.0, -17.5) path=68 enemies=0 pend=0/-1
+DBG t=62.0 pos=(29.00469, 0.0, -38.49997) room=3 live=cleared goal=(-3.5, 0.0, -17.5) path=53 enemies=0 pend=0/-1
+DBG t=64.0 pos=(14.04475, 0.0, -38.49997) room=3 live=cleared goal=(-3.5, 0.0, -17.5) path=38 enemies=0 pend=0/-1
+DBG t=66.0 pos=(-0.915232, 0.0, -38.49997) room=0 live=cleared goal=(-3.5, 0.0, -17.5) path=23 enemies=0 pend=0/-1
+DBG t=68.0 pos=(-3.495641, 0.0, -24.96618) room=1 live=idle goal=(-3.5, 0.0, -17.5) path=7 enemies=0 pend=0/1
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=77.192 f=8062
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=77.258 f=8066
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=77.392 f=8074
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=77.708 f=8093
+ROGUE_CLEAR id=1 kind=normal t=78.2 hp=8 soul=0 items=5
+DBG t=80.0 pos=(-4.579064, 0.0, -30.49958) room=1 live=cleared goal=(-32.5, 0.0, -38.5) path=35 enemies=0 pend=0/-1
+DBG t=82.0 pos=(-14.57906, 0.0, -35.98956) room=0 live=cleared goal=(-32.5, 0.0, -38.5) path=20 enemies=0 pend=0/-1
+DBG t=84.0 pos=(-26.30193, 0.0, -37.49935) room=2 live=active goal=(inf, inf, inf) path=0 enemies=0 pend=7/-1
+EVADE dash t=86.35 Striker
+CUTIN PIERCE ×2
+EVADE dash t=86.67 Striker
+COMBO step=1 cut=0 FLASH hit=2 blocked=0 t=87.186 f=8750
+COMBO step=1 cut=1 FLASH hit=2 blocked=0 t=87.252 f=8754
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=87.386 f=8762
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=87.702 f=8781
+PARRY ranged t=87.77 n=3 f=8785 heavy
+DANGER_WARN t=89.47
+EVADE back t=89.78 Enemy
+PARRY ranged t=91.21 n=4 f=9193 heavy
+DANGER_WARN t=91.86
+PARRY melee t=92.50 n=5 f=9531 heavy
+ROGUE_CLEAR id=2 kind=normal t=92.8 hp=8 soul=0 items=5
+DBG t=94.0 pos=(-38.52413, 0.0, -39.51635) room=2 live=cleared goal=(-38.77356, 1.554908, -39.41679) path=1 enemies=0 pend=0/-1
+DBG t=96.0 pos=(-48.20386, 0.0, -39.50387) room=2 live=cleared goal=(-61.5, 0.0, -38.5) path=13 enemies=0 pend=0/-1
+DBG t=98.0 pos=(-40.09809, 0.0, -39.50003) room=2 live=cleared goal=(-3.5, 0.0, 3.5) path=79 enemies=0 pend=0/-1
+DBG t=100.0 pos=(-25.13802, 0.0, -39.50003) room=2 live=cleared goal=(-3.5, 0.0, 3.5) path=64 enemies=0 pend=0/-1
+DBG t=102.0 pos=(-10.17808, 0.0, -39.50003) room=0 live=cleared goal=(-3.5, 0.0, 3.5) path=49 enemies=0 pend=0/-1
+DBG t=104.0 pos=(-3.521077, 0.0, -30.07294) room=0 live=cleared goal=(-3.5, 0.0, 3.5) path=33 enemies=0 pend=0/-1
+DBG t=106.0 pos=(-3.500055, 0.0, -15.11302) room=1 live=cleared goal=(-3.5, 0.0, 3.5) path=18 enemies=0 pend=0/-1
+DBG t=108.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=110.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=112.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=114.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=116.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=118.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=120.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=122.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=124.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=126.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=128.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=130.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=132.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=134.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=136.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=138.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=140.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=142.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=144.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=146.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=148.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=150.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=152.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=154.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=156.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=158.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=160.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=162.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=164.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=166.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=168.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=170.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=172.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=174.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=176.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=178.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=180.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=182.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=184.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=186.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=188.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=190.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=192.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=194.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=196.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=198.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=200.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=202.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=204.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=206.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=208.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=210.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=212.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=214.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=216.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=218.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=220.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=222.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=224.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=226.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=228.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=230.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=232.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=234.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=236.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=238.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=240.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=242.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=244.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=246.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=248.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=250.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=252.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=254.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=256.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=258.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=260.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=262.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=264.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=266.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=268.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=270.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=272.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=274.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=276.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=278.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=280.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=282.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=284.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=286.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=288.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=290.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=292.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=294.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=296.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+DBG t=298.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1
+ROGUE_END t=300.0 depth=2 rooms=8 kills=68 items=5 hp=8
+DBG t=300.0 pos=(-3.500027, 0.0, -13.40202) room=1 live=cleared goal=(inf, inf, inf) path=0 enemies=0 pend=0/-1

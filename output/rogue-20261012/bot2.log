@@ -1,0 +1,31 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ROGUE_FLOOR depth=1 rooms=9 seed=3238046585 tries=1 curse= items=0
+PARRY ranged t=6.98 n=1 f=1650 heavy
+EVADE back t=7.30 Enemy
+EVADE back t=8.30 Enemy
+CUTIN FULL BURST
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=21.184 f=2948
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=21.251 f=2952
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=21.384 f=2960
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=21.702 f=2996
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=22.369 f=3036
+COMBO step=2 cut=2 RECOIL SHOT hit=0 blocked=0 t=22.502 f=3044
+ROGUE_CLEAR id=2 kind=challenge t=24.2 hp=6 soul=0 items=0
+ROGUE_ITEM wings (날개) t=25.6
+ROGUE_ITEM spores (버섯 포자) t=32.2
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=40.181 f=4179
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=40.248 f=4183
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=40.381 f=4191
+COMBO step=2 cut=0 RECOIL SHOT hit=0 blocked=0 t=40.698 f=4210
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=41.365 f=4250
+COMBO step=2 cut=2 RECOIL SHOT hit=0 blocked=0 t=41.498 f=4258
+PARRY ranged t=45.20 n=2 f=4572 heavy
+CUTIN PIERCE ×2
+ROGUE_CLEAR id=4 kind=normal t=54.2 hp=6 soul=0 items=2
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=66.231 f=6256
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=66.298 f=6260
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=66.431 f=6268
+ROGUE_CLEAR id=3 kind=normal t=70.0 hp=6 soul=0 items=2
+ROGUE_PILL speed_up
+ROGUE_END t=240.0 depth=1 rooms=3 kills=26 items=2 hp=6

@@ -1,0 +1,85 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ROGUE_FLOOR depth=4 rooms=12 seed=1262805008 tries=1 curse= items=0
+PARRY ranged t=12.94 n=1 f=1874 heavy
+EVADE back t=13.11 Enemy
+EVADE back t=13.11 Enemy
+CUTIN FULL BURST
+CUTIN PIERCE ×2
+ROGUE_CLEAR id=2 kind=normal t=23.5 hp=6 soul=0 items=0
+PARRY ranged t=35.22 n=2 f=3612 heavy
+PARRY ranged t=35.36 n=3 f=3708 heavy
+PARRY ranged t=36.68 n=4 f=3926 heavy
+CUTIN PIERCE ×2
+DANGER_WARN t=36.98
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=37.185 f=4060
+PARRY melee t=39.33 n=5 f=4249 heavy
+CUTIN PIERCE ×2
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=41.200 f=4466
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=41.266 f=4470
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=41.400 f=4478
+COMBO step=2 cut=0 RECOIL SHOT hit=3 blocked=0 t=41.716 f=4497
+CUTIN PIERCE ×3
+PARRY ranged t=45.34 n=6 f=4765 heavy
+PARRY ranged t=46.04 n=7 f=4903 heavy
+DANGER_WARN t=50.92
+PARRY melee t=56.37 n=8 f=5777 heavy
+ROGUE_CLEAR id=3 kind=normal t=63.1 hp=5 soul=0 items=0
+ROGUE_ITEM a_belial (분노의 서) t=78.9
+ROGUE_ACTIVE a_belial
+CUTIN FULL BURST
+CUTIN PIERCE ×2
+DANGER_WARN t=98.60
+PARRY ranged t=98.63 n=9 f=8748 heavy
+PERFECT_EVADE t=99.02
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=99.249 f=8948
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=99.316 f=8952
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=99.456 f=8982
+EVADE dash t=100.54 Striker
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=101.199 f=9112
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=101.266 f=9116
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=101.399 f=9124
+COMBO step=2 cut=0 RECOIL SHOT hit=0 blocked=0 t=101.716 f=9143
+PARRY ranged t=114.34 n=10 f=10108 heavy
+PARRY ranged t=116.67 n=11 f=10396 heavy
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=121.193 f=10926
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=121.259 f=10930
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=121.393 f=10938
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=121.709 f=10957
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=122.376 f=10997
+COMBO step=2 cut=2 RECOIL SHOT hit=0 blocked=0 t=122.509 f=11005
+ROGUE_CLEAR id=4 kind=normal t=128.9 hp=6 soul=3 items=0
+PARRY ranged t=144.34 n=12 f=12426 heavy
+EVADE back t=145.50 Enemy
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=146.193 f=12799
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=146.263 f=12822
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=146.397 f=12830
+COMBO step=2 cut=0 RECOIL SHOT hit=0 blocked=0 t=146.780 f=12853
+DANGER_WARN t=147.16
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=147.260 f=12926
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=147.327 f=12930
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=147.460 f=12938
+PARRY ranged t=147.93 n=13 f=12966 heavy
+CUTIN PIERCE ×2
+DANGER_WARN t=149.01
+PARRY ranged t=151.84 n=14 f=13493 heavy
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=152.218 f=13751
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=152.284 f=13755
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=152.418 f=13763
+PARRY ranged t=153.56 n=15 f=13873 heavy
+DANGER_WARN t=155.73
+PARRY ranged t=157.89 n=16 f=14385 heavy
+EVADE back t=160.45 Enemy
+ROGUE_CLEAR id=6 kind=normal t=162.7 hp=6 soul=0 items=0
+ROGUE_ITEM tiny_planet (소형 행성) t=171.7
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=180.239 f=16213
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=180.306 f=16217
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=180.439 f=16225
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=183.224 f=16456
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=183.291 f=16460
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=183.424 f=16468
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=185.197 f=16627
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=185.263 f=16631
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=185.397 f=16639
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=185.713 f=16658
+ROGUE_END t=200.0 depth=4 rooms=4 kills=39 items=1 hp=6

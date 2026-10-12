@@ -8,6 +8,7 @@ const RUN_SCENE := "res://scenes/run.tscn"
 const DEATH_TEST_SCENE := "res://scenes/mammoth_death_lab.tscn"
 const TEST_SCENES := [
 	{"title": "방 탐색 아레나", "desc": "전투방 9곳을 통로로 이은 절차 생성 맵 · 벌레 괴생명체만 등장 · 방을 정리할 때마다 위험도 상승", "scene": "res://scenes/main.tscn"},
+	{"title": "로그라이크 · HEX DEPTHS", "desc": "아이작의 번제식 6층 로그라이크 · 방 그리드 · 아이템방/상점/비밀방/악마·천사 거래 · 패시브 80+ · 액티브 · 장신구 · 알약 · 카드 · 결합 공격 · 변신", "scene": "res://scenes/rogue.tscn"},
 	{"title": "무한 비행 · 종 스크롤 슈팅", "desc": "흐르는 도로 위를 끝없이 날아가며 편대로 몰려오는 전투기·포격 드론을 격추 · 30초마다 섹터 상승 · 정예 기체 · 최고 비행 거리 기록", "scene": "res://scenes/stream.tscn"},
 	{"title": "전투 테스트 · 허수아비", "desc": "넓은 홀에서 허수아비로 콤보·무기·패링을 자유롭게 시험 · 피해 숫자·DPS 표시", "scene": "res://scenes/training.tscn"},
 	{"title": "텍스처링 · 정비실 디오라마", "desc": "본편 바닥·벽·프랍·배관을 모은 작은 정비실 · 시험 텍스처 교체 · 조명과 원본 비교", "scene": "res://scenes/texture_diorama.tscn"},

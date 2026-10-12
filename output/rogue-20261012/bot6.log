@@ -1,0 +1,210 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+ROGUE_FLOOR depth=1 rooms=9 seed=1942411523 tries=1 curse= items=0
+ROGUE_ITEM a_chaos (혼돈 주사위 D∞) t=4.1
+CUTIN FULL BURST
+EVADE back t=20.60 Enemy
+ROGUE_CLEAR id=4 kind=normal t=21.5 hp=6 soul=0 items=0
+ROGUE_ITEM antenna (안테나) t=29.7
+PARRY ranged t=47.17 n=1 f=5510 heavy
+PARRY ranged t=48.34 n=2 f=5783 heavy
+CUTIN FULL BURST
+ROGUE_CLEAR id=3 kind=normal t=53.2 hp=6 soul=0 items=1
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=77.191 f=8669
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=77.257 f=8673
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=77.391 f=8681
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=77.707 f=8700
+ROGUE_BOSS_DEAD depth=1 t=90.0
+ROGUE_ITEM trigger (트리거 스프링) t=95.6
+ROGUE_NEXT depth=2 t=96.3
+ROGUE_FLOOR depth=2 rooms=10 seed=4236683050 tries=1 curse=unknown items=2
+ROGUE_ITEM telescope (망원 조준기) t=4.4
+PARRY ranged t=16.83 n=1 f=3064 heavy
+PARRY ranged t=20.83 n=2 f=3509 heavy
+ROGUE_CLEAR id=3 kind=normal t=22.1 hp=6 soul=0 items=3
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=22.285 f=3857
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=22.352 f=3861
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=22.485 f=3869
+ROGUE_ITEM black_heart (검은 심장) t=27.6
+EVADE back t=52.51 Enemy
+ROGUE_CLEAR id=1 kind=normal t=52.9 hp=6 soul=0 items=4
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=60.234 f=6415
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=60.301 f=6419
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=60.434 f=6427
+PARRY ranged t=61.28 n=3 f=6878 heavy
+DANGER_WARN t=62.83
+ROGUE_CLEAR id=5 kind=normal t=67.0 hp=6 soul=0 items=4
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=73.188 f=7946
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=73.255 f=7950
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=73.388 f=7958
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=73.705 f=7977
+DANGER_WARN t=77.32
+PARRY melee t=80.07 n=4 f=8418 heavy
+DANGER_WARN t=84.61
+PARRY melee t=88.07 n=5 f=9238 heavy
+EVADE dash t=90.29 Striker
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=93.282 f=9739
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=93.348 f=9743
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=93.482 f=9751
+DANGER_WARN t=94.55
+DANGER_WARN t=94.76
+PARRY melee t=97.04 n=6 f=10002 heavy
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=98.184 f=10261
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=98.251 f=10265
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=98.384 f=10273
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=98.701 f=10292
+DANGER_WARN t=100.00
+DANGER_WARN t=103.27
+PARRY ranged t=103.61 n=7 f=10702 heavy
+CUTIN PIERCE ×2
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=104.186 f=10817
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=104.253 f=10821
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=104.386 f=10829
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=104.703 f=10848
+DANGER_WARN t=105.90
+DANGER_WARN t=109.50
+PERFECT_EVADE t=109.92
+EVADE dash t=112.41 Striker
+EVADE dash t=112.51 Enemy
+DANGER_WARN t=115.84
+PARRY ranged t=123.57 n=8 f=12345 heavy
+DANGER_WARN t=125.09
+DANGER_WARN t=126.99
+PARRY ranged t=131.42 n=9 f=13118 heavy
+PARRY ranged t=132.36 n=10 f=13371 heavy
+DANGER_WARN t=135.15
+EVADE back t=136.48 Enemy
+EVADE dash t=136.53 Enemy
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=141.255 f=14255
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=141.322 f=14259
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=141.455 f=14267
+PARRY ranged t=142.57 n=11 f=14334 heavy
+DANGER_WARN t=147.60
+ROGUE_BOSS_DEAD depth=2 t=148.6
+ROGUE_NEXT depth=3 t=150.3
+ROGUE_FLOOR depth=3 rooms=11 seed=1104371848 tries=2 curse= items=4
+ROGUE_ITEM a_bomb (폭탄 투하기) t=4.1
+ROGUE_ITEM a_chaos (혼돈 주사위 D∞) t=5.1
+ROGUE_ITEM a_bomb (폭탄 투하기) t=6.1
+ROGUE_ITEM a_chaos (혼돈 주사위 D∞) t=7.1
+ROGUE_ITEM a_bomb (폭탄 투하기) t=8.1
+ROGUE_ACTIVE a_bomb
+CUTIN FULL BURST
+EVADE back t=28.38 Enemy
+ROGUE_CLEAR id=2 kind=normal t=30.1 hp=6 soul=0 items=4
+ROGUE_ACTIVE a_bomb
+PARRY ranged t=38.78 n=1 f=3475 heavy
+PARRY ranged t=40.04 n=2 f=3747 heavy
+PARRY ranged t=40.26 n=3 f=3834 heavy
+ROGUE_CLEAR id=5 kind=normal t=45.2 hp=6 soul=0 items=4
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=45.257 f=4425
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=45.323 f=4429
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=45.457 f=4437
+ROGUE_ACTIVE a_bomb
+PARRY ranged t=65.45 n=4 f=5679 heavy
+PARRY ranged t=65.59 n=5 f=5780 heavy
+CUTIN PIERCE ×2
+EVADE back t=68.38 Enemy
+PARRY ranged t=72.53 n=6 f=6460 heavy
+PARRY ranged t=76.83 n=7 f=6901 heavy
+CUTIN PIERCE ×3
+ROGUE_CLEAR id=3 kind=normal t=82.3 hp=6 soul=0 items=4
+ROGUE_ITEM bloodlust (피의 욕망) t=92.4
+ROGUE_ACTIVE a_bomb
+CUTIN FULL BURST
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=117.276 f=9779
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=117.342 f=9783
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=117.476 f=9791
+DANGER_WARN t=120.01
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=120.250 f=10043
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=120.317 f=10047
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=120.450 f=10055
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=121.200 f=10100
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=121.867 f=10140
+COMBO step=2 cut=2 RECOIL SHOT hit=1 blocked=0 t=122.000 f=10148
+COMBO step=3 cut=0 PHANTOM FLURRY hit=1 blocked=0 t=122.234 f=10163
+COMBO step=3 cut=1 PHANTOM FLURRY hit=1 blocked=0 t=122.334 f=10169
+COMBO step=3 cut=2 PHANTOM FLURRY hit=1 blocked=0 t=122.434 f=10175
+COMBO step=3 cut=3 PHANTOM FLURRY hit=1 blocked=0 t=122.534 f=10181
+COMBO step=3 cut=4 PHANTOM FLURRY hit=1 blocked=0 t=122.634 f=10187
+COMBO step=3 cut=5 PHANTOM FLURRY hit=1 blocked=0 t=122.734 f=10193
+COMBO step=3 cut=6 PHANTOM FLURRY hit=1 blocked=0 t=122.918 f=10204
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=123.267 f=10287
+EVADE dash t=123.30 Crawler
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=123.334 f=10291
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=123.467 f=10299
+DANGER_WARN t=124.07
+EVADE back t=136.45 Crawler
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=137.366 f=11524
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=137.433 f=11528
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=137.566 f=11536
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=138.276 f=11635
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=138.343 f=11639
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=138.476 f=11647
+DANGER_WARN t=139.33
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=140.236 f=11871
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=140.302 f=11875
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=140.436 f=11883
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=141.262 f=11989
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=141.329 f=11993
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=141.462 f=12001
+EVADE dash t=148.54 Crawler
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=150.239 f=12913
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=150.306 f=12917
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=150.439 f=12925
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=151.189 f=12970
+COMBO step=2 cut=1 RECOIL SHOT hit=0 blocked=0 t=151.856 f=13010
+COMBO step=2 cut=2 RECOIL SHOT hit=1 blocked=0 t=151.989 f=13018
+COMBO step=3 cut=0 PHANTOM FLURRY hit=1 blocked=0 t=152.222 f=13032
+COMBO step=3 cut=1 PHANTOM FLURRY hit=1 blocked=0 t=152.322 f=13038
+COMBO step=3 cut=2 PHANTOM FLURRY hit=1 blocked=0 t=152.422 f=13044
+COMBO step=3 cut=3 PHANTOM FLURRY hit=1 blocked=0 t=152.522 f=13050
+COMBO step=3 cut=4 PHANTOM FLURRY hit=1 blocked=0 t=152.622 f=13056
+COMBO step=3 cut=5 PHANTOM FLURRY hit=1 blocked=0 t=152.722 f=13062
+COMBO step=3 cut=6 PHANTOM FLURRY hit=1 blocked=0 t=152.906 f=13073
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=153.266 f=13167
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=153.333 f=13171
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=153.466 f=13179
+DANGER_WARN t=154.07
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=165.263 f=14307
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=165.330 f=14311
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=165.463 f=14319
+DANGER_WARN t=169.47
+EVADE back t=176.35 Crawler
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=177.273 f=15413
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=177.340 f=15417
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=177.473 f=15425
+DANGER_WARN t=178.19
+DANGER_WARN t=179.99
+DANGER_WARN t=184.86
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=189.266 f=16392
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=189.332 f=16396
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=189.466 f=16404
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=197.378 f=17188
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=197.445 f=17192
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=197.578 f=17200
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=198.272 f=17299
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=198.339 f=17303
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=198.472 f=17311
+DANGER_WARN t=198.91
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=200.192 f=17495
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=200.258 f=17499
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=200.392 f=17507
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=200.708 f=17526
+COMBO step=1 cut=0 FLASH hit=0 blocked=0 t=201.273 f=17621
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=201.340 f=17625
+COMBO step=1 cut=2 FLASH hit=0 blocked=0 t=201.473 f=17633
+DANGER_WARN t=214.60
+COMBO step=1 cut=0 FLASH hit=0 blocked=1 t=222.265 f=19562
+COMBO step=1 cut=1 FLASH hit=0 blocked=1 t=222.332 f=19566
+COMBO step=1 cut=2 FLASH hit=0 blocked=1 t=222.465 f=19574
+EVADE dash t=224.44 Crawler
+DANGER_WARN t=229.46
+COMBO step=1 cut=0 FLASH hit=1 blocked=0 t=230.184 f=20227
+COMBO step=1 cut=1 FLASH hit=1 blocked=0 t=230.250 f=20231
+COMBO step=1 cut=2 FLASH hit=1 blocked=0 t=230.384 f=20239
+COMBO step=2 cut=0 RECOIL SHOT hit=1 blocked=0 t=230.700 f=20258
+COMBO step=1 cut=0 FLASH hit=0 blocked=1 t=236.187 f=20778
+COMBO step=1 cut=1 FLASH hit=0 blocked=0 t=236.253 f=20782
+COMBO step=1 cut=2 FLASH hit=0 blocked=1 t=236.387 f=20790
+ROGUE_END t=240.0 depth=3 rooms=10 kills=72 items=5 hp=6

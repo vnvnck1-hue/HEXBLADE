@@ -1,0 +1,124 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== abyss_check
+  RESULT OK (0 fail)
+=== ammo_check
+  RESULT OK (0 fails)
+=== blade_tech_check
+  RESULT OK (0 fails)
+=== blender_models_check
+  RESULT OK (0 fails)
+=== blue_handpaint_check
+  RESULT OK (0 fails)
+=== brawl_look_check
+  RESULT  OK  (0 fail)
+=== bug_arena_check
+  BUG_ARENA_CHECK OK
+=== bug_chomper_check
+  BUG_CHOMPER_CHECK OK
+=== bug_enemies_check
+  BUG_ENEMIES_CHECK OK
+=== bug_grub_check
+  BUG_GRUB_CHECK OK
+=== claude_background_check
+  RESULT  OK  (0 fail)
+=== claude_service_check
+  RESULT claude_service_check fails=0
+=== cockpit_cutin_check
+  RESULT: OK (0 fails)
+=== codex_background_check
+  CODEX_BACKGROUND_CHECK 67 checks 0 fails
+=== combo_meter_check
+  combo_meter_check: 0 fails
+=== coworker_dialogue_check
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== dash_moves_check
+  RESULT OK (0 fails)
+=== diagonal_cutin_check
+  RESULT: OK (0 fails)
+=== dialogue_blink_check
+  RESULT dialogue_blink_check: PASS (0 fails), natural blinks 40
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== dialogue_idle_check
+  RESULT dialogue_idle_check: PASS (0 fails)
+=== enemy_wander_check
+  RESULT enemy_wander_check fails=0
+=== fluid_smoke_check
+  RESULT FLUID_SMOKE_OK (0 fails)
+=== gimmicks_check
+  RESULT gimmicks_check fails=0
+=== ground_break_check
+  RESULT ground_break_check: OK (0 fails)
+=== gun_sound_check
+  RESULT gun_sound_check fails=0
+=== hit_react_check
+  RESULT hit_react_check fails=0
+=== hud_preset_check
+  RESULT  OK  (0 fail)
+=== infest_check
+  FAIL  ???¬ë‚­?€ ?Œë ˆ?´ì–´ë¥?ë°€?´ëƒ„ (0.37m)
+  RESULT FAILED (1 fails)
+=== input_buffer_check
+  RESULT OK (0 fails)
+=== lancaster_boss_check
+  RESULT OK (0 fails)
+=== lancaster_claw_hit_check
+  RESULT OK (0 fails)
+=== lancaster_intro_check
+  RESULT OK (0 fails)
+=== leap_slam_check
+  RESULT OK (0 fails)
+=== lobby_upgrade_check
+  RESULT: OK (0 fails)
+=== mammoth_death_lab_check
+  MAMMOTH_DEATH_LAB_CHECK_OK: 30/60/144fps, 10 resets and seeks, floor contact, cue/completion once, pause/rate, reduced motion, unchanged run, real lobby button and return
+=== mammoth_ingame_check
+  RESULT mammoth_ingame_check fails=0
+=== mech_player_check
+  RESULT mech_player_check fails=0
+=== missile_check
+  RESULT OK (0 fails)
+=== moco_vfx_check
+  RESULT moco_vfx_check fails=0
+=== opening_cast_check
+  RESULT opening_cast_check: PASS (0 fails)
+=== painted_look_check
+  RESULT  OK  (0 fail)
+=== painted_room_check
+  PAINTED_ROOM_CHECK 24 checks 0 fails
+=== parry_commit_check
+  RESULT parry_commit_check fails=0
+=== parry_timing_check
+  RESULT OK (0 fails)
+=== partner_drone_check
+  RESULT partner_drone_check fails=0
+=== player_entrance_check
+  FAILS 0
+=== rogue_check
+  RESULT ROGUE_OK (0 fails)
+=== room_wave_check
+  RESULT OK (0 fail)
+=== space_sweep_check
+  RESULT OK (0 fails)
+=== speech_bubble_check
+  RESULT: OK (0 fails)
+=== spider_check
+  SPIDER_CHECK OK
+=== stream_mode_check
+  RESULT PASS (0 fails)
+=== terrain_jump_check
+  TERRAIN_JUMP_CHECK OK (0 fails)
+=== texture_diorama_check
+  TEXTURE_DIORAMA_CHECK 27 checks 0 fails
+=== training_ui_toggle_check
+  RESULT: OK (0 fails)
+=== training_whirl_check
+  RESULT: OK (0 fails)
+=== whirl_props_check
+  RESULT: OK (0 fails)
+=== whirl_pull_check
+  RESULT OK (0 fails)
+=== world_flow_check
+  RESULT world_flow_check fails=0
+
+FAILED: infest_check

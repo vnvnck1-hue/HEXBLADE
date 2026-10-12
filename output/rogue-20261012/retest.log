@@ -1,0 +1,7 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== infest_check
+  RESULT OK (0 fails)
+=== rogue_check
+  RESULT ROGUE_OK (0 fails)
+
+ALL 2 TESTS PASSED

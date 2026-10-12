@@ -1,0 +1,62 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+PASS  패시브 87개
+PASS  액티브 18개
+PASS  장신구 20개
+PASS  아이템 이름이 겹치지 않는다
+PASS  알약 효과 21종 ≥ 색 14종
+PASS  카드·룬 17종
+PASS  결합 공격 15종 · 재료가 모두 아이템 목록에 있다
+PASS  변신 9종 모두 태그 아이템이 충분하다
+PASS  층 72개: 시작·보스·아이템방·상점·거래방이 모두 생성
+PASS  모든 방이 시작 방에서 문으로 이어진다
+PASS  보스방은 가장 먼 막다른 방
+PASS  비밀방 72 / 72 층
+ROGUE_FLOOR depth=1 rooms=11 seed=616834228 tries=1 curse= items=0
+PASS  시작 체력 3칸 (반 칸 6)
+PASS  아이템방에 받침대
+PASS  상점 받침대에 가격
+ROGUE_SYNERGY missile
+ROGUE_SYNERGY mortar
+PASS  공격력 증가 3.50 → 7.50
+PASS  유도 칩 + 폭발 탄두 = 결합 공격 '유도 폭뢰'
+PASS  트리거 + 폭발 탄두 = '연사 박격'
+PASS  연사 박격으로 폭발 탄두의 연사 감소가 사라짐 (5.20)
+ROGUE_TRANSFORM angel
+PASS  천사 태그 3개 → 변신 '기계 세라핌'
+PASS  변신 능력: 비행
+PASS  변신 외형(후광·날개)이 몸에 붙는다
+FAIL  기본 총 → 변형 탄 생성
+FAIL  유도 폭뢰: 탄이 미사일 모양
+FAIL  미사일 탄이 적에게 피해 (20 → 20)
+ROGUE_SYNERGY prism
+PASS  레이저 + 삼중 = '프리즘 레이저'
+PASS  레이저가 즉시 적중
+PASS  혈사포 빔 발사 오류 없음
+PASS  동전 5개 줍기 (0 → 5)
+PASS  체력이 가득이면 하트를 안 먹는다
+PASS  알약을 주머니에
+ROGUE_PILL range_down
+PASS  먹은 알약은 정체가 공개된다 (사거리 다운)
+ROGUE_ITEM speed_gear (고속 기어) t=5.4
+PASS  받침대 아이템 획득 → 빈 받침대
+ROGUE_ITEM pentagram (악마의 뿔) t=5.4
+PASS  악마 거래: 빨간 그릇 1칸으로 구매 (그릇 8)
+ROGUE_ITEM a_necro (네크로노미콘) t=5.4
+PASS  액티브 획득 · 가득 충전
+PASS  폭발이 금 간 벽을 부수고 비밀방 포털이 열린다
+PASS  포털로 비밀방에 들어간다
+PASS  전투방에 들어가면 문이 잠긴다
+ROGUE_CLEAR id=1 kind=normal t=6.9 hp=8 soul=4 items=12
+PASS  적을 모두 잡으면 문이 열린다
+PASS  방 정리 → 액티브 충전 (1)
+ROGUE_ACTIVE a_necro
+PASS  액티브 사용 → 충전 소모
+PASS  보스방 진입 → 보스 등장 (GORGER)
+ROGUE_BOSS_DEAD depth=1 t=9.2
+PASS  보스 격파 → 트랩도어
+ROGUE_NEXT depth=2 t=10.6
+ROGUE_FLOOR depth=2 rooms=10 seed=1401459659 tries=1 curse= items=12
+PASS  트랩도어 → 2층 (씬 다시 불러옴)
+PASS  아이템이 다음 층으로 이어진다
+RESULT ROGUE_FAILED (3 fails)
