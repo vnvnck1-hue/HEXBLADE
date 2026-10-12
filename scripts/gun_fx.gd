@@ -28,6 +28,7 @@ var _streak_mesh: BoxMesh
 
 var casings: Array = []   # {node, vel, ang, life, rest, bounced}
 var chips: Array = []     # {node, vel, ang, life, rest, half}
+var _free: Array[MeshInstance3D] = []   # 다 쓴 탄피·파편 노드 (숨겨 두고 다시 쓴다)
 var _tink_t := 0.0
 
 
@@ -35,8 +36,7 @@ func _ready() -> void:
 	inst = self
 	add_child(ToonGunFX.new())
 
-	var sh := Shader.new()
-	sh.code = """
+	var sh := ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
 instance uniform vec4 tint : source_color = vec4(0.6, 0.6, 0.7, 1.0);
@@ -46,7 +46,7 @@ void fragment() {
 	ALBEDO = tint.rgb;
 	ALPHA = alpha * smoothstep(0.0, 0.6, rim);
 }
-"""
+""")
 	_smoke_mat = ShaderMaterial.new()
 	_smoke_mat.shader = sh
 	_sphere = SphereMesh.new()
@@ -120,11 +120,7 @@ static func eject(pos: Vector3, out: Vector3, fwd: Vector3, size := 1.0) -> void
 	if inst == null:
 		return
 	var g := inst
-	var mi := MeshInstance3D.new()
-	mi.mesh = g._casing_mesh
-	mi.material_override = g._casing_mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	g.add_child(mi)
+	var mi := g._take(g._casing_mesh, g._casing_mat, false)
 	mi.global_transform = Transform3D(Basis.looking_at(fwd, Vector3.UP) * Basis(Vector3.RIGHT, PI * 0.5), pos)
 	mi.scale = Vector3.ONE * size
 	var vel := out * randf_range(2.2, 3.6) + Vector3(0, randf_range(3.0, 4.6), 0) - fwd * randf_range(0.4, 1.4)
@@ -133,7 +129,7 @@ static func eject(pos: Vector3, out: Vector3, fwd: Vector3, size := 1.0) -> void
 	g.casings.append({"node": mi, "vel": vel, "ang": ang, "life": CASING_LIFE, "rest": false, "bounced": false, "r": 0.044 * size, "s0": size})
 	while g.casings.size() > MAX_CASINGS:
 		var old: Dictionary = g.casings.pop_front()
-		(old.node as Node).queue_free()
+		g._release(old.node)
 
 
 # ── 착탄 ────────────────────────────────────────────────
@@ -248,11 +244,36 @@ func _smoke(pos: Vector3, drift: Vector3, size: float, alpha: float, life: float
 	tw.tween_callback(mi.queue_free)
 
 
+## 탄피·파편 노드 하나: 쉬는 노드가 있으면 다시 쓴다
+func _take(mesh: Mesh, mat: Material, shadow: bool) -> MeshInstance3D:
+	var mi: MeshInstance3D = null
+	while mi == null and not _free.is_empty():
+		mi = _free.pop_back()
+		if not is_instance_valid(mi) or mi.get_parent() != self:
+			mi = null          # 바닥 흡입(FloorVac)이 가져가 지운 노드
+	if mi == null:
+		mi = MeshInstance3D.new()
+		add_child(mi)
+	mi.mesh = mesh
+	mi.material_override = mat
+	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	mi.visible = true
+	return mi
+
+
+func _release(n: Variant) -> void:
+	var mi := n as MeshInstance3D
+	if not is_instance_valid(mi):
+		return
+	if mi.get_parent() != self or _free.size() >= MAX_CASINGS + MAX_CHIPS:
+		mi.queue_free()
+		return
+	mi.visible = false
+	_free.append(mi)
+
+
 func _chip(pos: Vector3, vel: Vector3, c: Color, size: float) -> void:
-	var mi := MeshInstance3D.new()
-	mi.mesh = _chip_meshes[randi() % _chip_meshes.size()]
-	mi.material_override = Pal.lit(c)
-	add_child(mi)
+	var mi := _take(_chip_meshes[randi() % _chip_meshes.size()], Pal.lit(c), true)
 	mi.global_position = pos
 	mi.rotation = Vector3(randf() * TAU, randf() * TAU, randf() * TAU)
 	mi.scale = Vector3.ONE * size
@@ -260,7 +281,7 @@ func _chip(pos: Vector3, vel: Vector3, c: Color, size: float) -> void:
 	chips.append({"node": mi, "vel": vel, "ang": ang, "life": CHIP_LIFE * randf_range(0.7, 1.0), "rest": false, "half": 0.035 * size, "s0": size})
 	while chips.size() > MAX_CHIPS:
 		var old: Dictionary = chips.pop_front()
-		(old.node as Node).queue_free()
+		_release(old.node)
 
 
 const MUZZLE_LIGHTS := 6
@@ -307,8 +328,8 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 		var pc: Dictionary = list[i]
 		var mi := pc.node as MeshInstance3D
 		pc.life -= dt
-		if pc.life <= 0.0:
-			mi.queue_free()
+		if pc.life <= 0.0 or not is_instance_valid(mi):
+			_release(mi)
 			list.remove_at(i)
 			i -= 1
 			continue
@@ -319,7 +340,7 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 				# 멈춘 탄피·파편은 도로에 실려 흘러간다
 				mi.global_position.z += road * dt
 				if WorldFlow.gone(mi.global_position):
-					mi.queue_free()
+					_release(mi)
 					list.remove_at(i)
 			i -= 1
 			continue
@@ -366,7 +387,7 @@ func _step(list: Array, dt: float, is_casing: bool) -> void:
 				pos.z = old.z
 				v.z = -v.z * 0.35
 		if WorldFlow.gone(pos):
-			mi.queue_free()
+			_release(mi)
 			list.remove_at(i)
 			i -= 1
 			continue

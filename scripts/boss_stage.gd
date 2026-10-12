@@ -81,8 +81,7 @@ func _ready() -> void:
 	var fl := MeshInstance3D.new()
 	fl.mesh = plane
 	fl.position = Vector3(0, 0, -30)
-	var sh := Shader.new()
-	sh.code = FLOOR_SHADER
+	var sh: Shader = ResCache.shader(FLOOR_SHADER)
 	floor_mat = ShaderMaterial.new()
 	floor_mat.shader = sh
 	floor_mat.set_shader_parameter("half_w", HALF_W)
@@ -213,8 +212,7 @@ func puff(pos: Vector3, c: Color, size: float, life := 0.6, rel_speed := 1.0, ad
 		_puff_mesh.radial_segments = 12
 		_puff_mesh.rings = 6
 		for i in 2:
-			var sh := Shader.new()
-			sh.code = PUFF_SHADER.replace("MODE", "blend_add" if i == 1 else "blend_mix")
+			var sh: Shader = ResCache.shader(PUFF_SHADER.replace("MODE", "blend_add" if i == 1 else "blend_mix"))
 			var m := ShaderMaterial.new()
 			m.shader = sh
 			_puff_mats.append(m)

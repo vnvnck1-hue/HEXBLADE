@@ -191,8 +191,7 @@ static func _shared() -> void:
 	_puff_mesh.height = 1.0
 	_puff_mesh.radial_segments = 22
 	_puff_mesh.rings = 11
-	var fs := Shader.new()
-	fs.code = FIRE_SHADER % NOISE
+	var fs: Shader = ResCache.shader(FIRE_SHADER % NOISE)
 	_fire_mat = ShaderMaterial.new()
 	_fire_mat.shader = fs
 	_dome_mesh = SphereMesh.new()
@@ -200,18 +199,15 @@ static func _shared() -> void:
 	_dome_mesh.height = 1.0
 	_dome_mesh.radial_segments = 40
 	_dome_mesh.rings = 20
-	var ds := Shader.new()
-	ds.code = DOME_SHADER
+	var ds: Shader = ResCache.shader(DOME_SHADER)
 	_dome_mat = ShaderMaterial.new()
 	_dome_mat.shader = ds
 	_quad = QuadMesh.new()
 	_quad.orientation = PlaneMesh.FACE_Y
-	var rs := Shader.new()
-	rs.code = RING_SHADER
+	var rs: Shader = ResCache.shader(RING_SHADER)
 	_ring_mat = ShaderMaterial.new()
 	_ring_mat.shader = rs
-	var ss := Shader.new()
-	ss.code = SCORCH_SHADER % NOISE
+	var ss: Shader = ResCache.shader(SCORCH_SHADER % NOISE)
 	_scorch_mat = ShaderMaterial.new()
 	_scorch_mat.shader = ss
 

@@ -21,6 +21,15 @@ func _check(ok: bool, what: String) -> void:
 		fails += 1
 
 
+## 보이스 원본 MP3 는 약관상 공개 저장소에 없다(.gitignore). 파일이 없는 PC 에서는 실제 재생이 필요한 검사를 건너뛴다고 밝힌다.
+## (받는 법: docs/drone-docking-voice-handoff.md 7절. 파일을 넣으면 그대로 검사한다)
+func _vcheck(ok: bool, what: String) -> void:
+	if DockingVoice.VOICES.any(func(v): return v == null):
+		print("SKIP  " + what + "  — 보이스 MP3 없음 (인수인계 문서 7절)")
+		return
+	_check(ok, what)
+
+
 func _frames(n: int) -> void:
 	for i in n:
 		await physics_frame
@@ -66,7 +75,7 @@ func _run() -> void:
 	var d := PartnerDrone.inst
 	_check(d != null and await _until(func(): return d.state == PartnerDrone.St.FOLLOW, 600), "허수아비 시험장에 드론 동행")
 	_check(DockingVoice.plays == 0, "씬 시작 prewarm 에서는 보이스 없음")
-	_check(DockingVoice.VOICES.size() == 9 and DockingVoice.VOICES.all(func(v): return v is AudioStream), "선택 보이스 9개 로드")
+	_vcheck(DockingVoice.VOICES.size() == 9 and DockingVoice.VOICES.all(func(v): return v is AudioStream), "선택 보이스 9개 로드")
 
 	# 1. Q 합체
 	d.gauge = PartnerDrone.GAUGE_MAX
@@ -89,7 +98,7 @@ func _run() -> void:
 	var t0 := Time.get_ticks_msec()
 	_check(await _until(func(): return d.state == PartnerDrone.St.DOCKED, 300), "합체 완료")
 	_check(is_instance_valid(c) and c.dock_t >= 0.0, "실제 합체 순간에 잠금(notify_dock)")
-	_check(DockingVoice.plays == plays0 + 1 and DockingVoice.is_playing(), "실제 합체 순간 보이스 1회 (%s)" % DockingVoice.last_name)
+	_vcheck(DockingVoice.plays == plays0 + 1 and DockingVoice.is_playing(), "실제 합체 순간 보이스 1회 (%s)" % DockingVoice.last_name)
 	var vp: AudioStreamPlayer = DockingVoice.inst.player if is_instance_valid(DockingVoice.inst) else null
 	_check(vp != null and is_equal_approx(vp.pitch_scale, 1.0) and vp.get_parent().get_parent() == lab and vp.process_mode == Node.PROCESS_MODE_PAUSABLE,
 		"보이스: 피치 1.0 · 씬 노드 아래(컷인 자식 아님) · 일시정지에 같이 멈춤")
@@ -137,7 +146,7 @@ func _run() -> void:
 	var life := (Time.get_ticks_msec() - t0) / 1000.0
 	print("  life=%.2fs (real)" % life)
 	_check(life < 1.6, "실제 시간으로 흐른다 (슬로우모션 · 히트스탑 중에도 1.6초 안에 끝)")
-	_check(DockingVoice.plays == plays0 + 1, "한 합체에 보이스는 한 번만 (휠윈드·분리에 추가 없음)")
+	_vcheck(DockingVoice.plays == plays0 + 1, "한 합체에 보이스는 한 번만 (휠윈드·분리에 추가 없음)")
 	_check(is_equal_approx(lab.slowmo, 1.0), "컷인이 끝나면 정상 속도로 복귀")
 
 	# 2. 합체 비행이 끊기면 성공 연출 없이 퇴장
@@ -395,7 +404,7 @@ func _run() -> void:
 	var before := DockingVoice.plays
 	lab._unhandled_input(ev)
 	await _until(func(): return DockingVoice.plays > before, 200)
-	_check(DockingVoice.last_name == DockingVoice.NAMES[0], "Shift+F3: 첫 번째 보이스부터 순서대로 (%s)" % DockingVoice.last_name)
+	_vcheck(DockingVoice.last_name == DockingVoice.NAMES[0], "Shift+F3: 첫 번째 보이스부터 순서대로 (%s)" % DockingVoice.last_name)
 	for x in _of(DiagonalDockingCutin):
 		x.queue_free()
 	var repeats := 0
@@ -407,7 +416,7 @@ func _run() -> void:
 			repeats += 1
 		prev = DockingVoice.last_name
 		seen[prev] = true
-	_check(repeats == 0 and seen.size() >= 7, "무작위 보이스: 직전 파일 연속 없음 · 여러 파일이 고루 (40번에 %d종)" % seen.size())
+	_vcheck(repeats == 0 and seen.size() >= 7, "무작위 보이스: 직전 파일 연속 없음 · 여러 파일이 고루 (40번에 %d종)" % seen.size())
 	await _until(func(): return not DockingVoice.is_playing() and DockingVoice.inst.duck <= 0.0, 600)
 	var mi := AudioServer.get_bus_index("Master")
 	var vb := AudioServer.get_bus_index(DockingVoice.BUS)
@@ -421,12 +430,12 @@ func _run() -> void:
 	var ducked := AudioServer.get_bus_volume_db(mi) - master0
 	var comp := AudioServer.get_bus_volume_db(vb)
 	print("  duck master %.1f dB · voice bus %+.1f dB" % [ducked, comp])
-	_check(ducked < -9.0 and absf(comp + ducked) < 0.01, "보이스 동안 다른 소리는 -10dB (보이스 버스는 상쇄해 그대로)")
+	_vcheck(ducked < -9.0 and absf(comp + ducked) < 0.01, "보이스 동안 다른 소리는 -10dB (보이스 버스는 상쇄해 그대로)")
 	_check(DockingVoice.inst.player.volume_db > 0.0, "보이스 음량을 올림 (%.1f dB)" % DockingVoice.inst.player.volume_db)
 	await _until(func(): return not DockingVoice.is_playing(), 400)
 	var long_len := (Time.get_ticks_msec() - long_t0) / 1000.0
 	print("  long voice played %.2fs" % long_len)
-	_check(long_len > 1.0, "긴 보이스는 끝까지 재생 (%.2f초)" % long_len)
+	_vcheck(long_len > 1.0, "긴 보이스는 끝까지 재생 (%.2f초)" % long_len)
 	await _until(func(): return DockingVoice.inst.duck <= 0.0, 300)
 	_check(is_equal_approx(AudioServer.get_bus_volume_db(mi), master0) and is_zero_approx(AudioServer.get_bus_volume_db(vb)), "보이스가 끝나면 덕킹이 풀려 원래 음량")
 	Sfx.inst.muted = true

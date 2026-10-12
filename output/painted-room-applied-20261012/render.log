@@ -1,0 +1,15 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.329 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070
+
+TEXTURE_DIORAMA_READY surfaces=56 categories=4
+PAINTED_ROOM_READY private_meshes=24 textures=3
+PAINTED_ROOM_SHOT 01_after_neutral
+PAINTED_ROOM_SHOT 02_before_neutral
+PAINTED_ROOM_SHOT 03_after_game_light
+PAINTED_ROOM_SHOT 04_before_game_light
+PAINTED_ROOM_SHOT 05_png_color
+PAINTED_ROOM_SHOT 06_floor_top
+PAINTED_ROOM_SHOT 07_wall_front
+PAINTED_ROOM_SHOT 08_reverse_angle
+PAINTED_ROOM_SHOT 09_controls
+PAINTED_ROOM_RENDER_OK

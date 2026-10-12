@@ -31,8 +31,7 @@ var _count := 0
 static func material() -> ShaderMaterial:
 	if _mat == null:
 		# ghost_clock 은 project.godot [shader_globals] 에 선언돼 있다
-		var sh := Shader.new()
-		sh.code = SHADER
+		var sh: Shader = ResCache.shader(SHADER)
 		_mat = ShaderMaterial.new()
 		_mat.shader = sh
 	return _mat

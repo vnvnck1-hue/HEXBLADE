@@ -118,8 +118,7 @@ class Suction extends Node3D:
 		top_level = true
 		DroneFX._init_mats()
 		if DroneFX._cone_shader == null:
-			DroneFX._cone_shader = Shader.new()
-			DroneFX._cone_shader.code = DroneFX.CONE_CODE
+			DroneFX._cone_shader = ResCache.shader(DroneFX.CONE_CODE)
 		mat = ShaderMaterial.new()
 		mat.shader = DroneFX._cone_shader
 		var cm := CylinderMesh.new()
@@ -244,14 +243,12 @@ class Shield extends Node3D:
 	func _ready() -> void:
 		if MocoFX.on:
 			if DroneFX._shield_moco == null:
-				DroneFX._shield_moco = Shader.new()
-				DroneFX._shield_moco.code = DroneFX.SHIELD_MOCO
+				DroneFX._shield_moco = ResCache.shader(DroneFX.SHIELD_MOCO)
 			mat = ShaderMaterial.new()
 			mat.shader = DroneFX._shield_moco
 		else:
 			if DroneFX._shield_shader == null:
-				DroneFX._shield_shader = Shader.new()
-				DroneFX._shield_shader.code = DroneFX.SHIELD_CODE
+				DroneFX._shield_shader = ResCache.shader(DroneFX.SHIELD_CODE)
 			mat = ShaderMaterial.new()
 			mat.shader = DroneFX._shield_shader
 		var sm := SphereMesh.new()
@@ -468,6 +465,8 @@ class Link extends MeshInstance3D:
 		var k := age / life
 		var fade := 1.0 - smoothstep(0.7, 1.0, k)
 		var reach := l * minf(k / 0.25, 1.0)        # 노즐에서 뻗어 나간다
+		if reach < 0.02:
+			return                                      # 아직 뻗기 전: 빈 면을 만들면 엔진 오류가 찍힌다
 		var col := MocoFX.lin(MocoFX.SUPPORT)
 		col.a = 0.9 * fade
 		_im.surface_begin(Mesh.PRIMITIVE_TRIANGLES)

@@ -53,7 +53,7 @@ func _ready() -> void:
 	key_box.set_border_width_all(1)
 	key_box.set_corner_radius_all(4)
 	for name_ in ["sword", "gun", "dash", "boost", "energy", "missile"]:
-		icons[name_] = load(ICON_DIR + name_ + ".png") as Texture2D
+		icons[name_] = ResCache.texture(ICON_DIR + name_ + ".png")
 
 
 func _process(dt: float) -> void:

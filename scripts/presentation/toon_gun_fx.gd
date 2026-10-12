@@ -293,8 +293,7 @@ func _ready() -> void:
 	_quad = QuadMesh.new()
 	_quad.size = Vector2.ONE
 	for i in FRAG.size():
-		var sh := Shader.new()
-		sh.code = COMMON + FRAG[i]
+		var sh := ResCache.shader(COMMON + FRAG[i])
 		var m := ShaderMaterial.new()
 		m.shader = sh
 		m.render_priority = PRIORITY[i]

@@ -175,8 +175,7 @@ func _ready() -> void:
 	ult_overlay = ColorRect.new()
 	ult_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
 	ult_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var osh := Shader.new()
-	osh.code = """
+	var osh: Shader = ResCache.shader("""
 shader_type canvas_item;
 uniform float k = 0.0;
 void fragment() {
@@ -186,7 +185,7 @@ void fragment() {
 	vec3 c = mix(vec3(0.0, 0.02, 0.07), vec3(0.4, 0.0, 0.06), v);
 	COLOR = vec4(c, k * (0.16 + v * 0.55 + scan * 0.05));
 }
-"""
+""")
 	var om := ShaderMaterial.new()
 	om.shader = osh
 	ult_overlay.material = om

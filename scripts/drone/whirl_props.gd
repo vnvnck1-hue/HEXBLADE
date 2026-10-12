@@ -129,12 +129,9 @@ func _ready() -> void:
 	if _quad == null:
 		_quad = QuadMesh.new()
 		_quad.size = Vector2.ONE
-		_shader = Shader.new()
-		_shader.code = SHADER
-		_star_shader = Shader.new()
-		_star_shader.code = STAR_SHADER
-		_shadow_shader = Shader.new()
-		_shadow_shader.code = SHADOW_SHADER
+		_shader = ResCache.shader(SHADER)
+		_star_shader = ResCache.shader(STAR_SHADER)
+		_shadow_shader = ResCache.shader(SHADOW_SHADER)
 	_ang = randf() * TAU
 	# 첫 순간: 한꺼번에 여럿 튀어나오며 시작 (와르르)
 	for i in 3:

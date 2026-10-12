@@ -26,8 +26,7 @@ var t := 0.0
 
 func _ready() -> void:
 	if _ring_shader == null:
-		_ring_shader = Shader.new()
-		_ring_shader.code = """
+		_ring_shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled;
 instance uniform float radius = 1.0;
@@ -41,7 +40,7 @@ void fragment() {
 	if (abs(r - radius) > w) discard;
 	ALBEDO = tint.rgb * 1.6;
 }
-""" % FX.BILLBOARD
+""" % FX.BILLBOARD)
 		_sphere = SphereMesh.new()
 		_sphere.radius = 0.5
 		_sphere.height = 1.0

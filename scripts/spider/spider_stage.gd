@@ -80,8 +80,7 @@ static func _shader_n(body: String) -> Shader:
 
 
 static func _shader(code: String) -> Shader:
-	var s := Shader.new()
-	s.code = code
+	var s: Shader = ResCache.shader(code)
 	return s
 
 

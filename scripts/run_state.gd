@@ -143,8 +143,7 @@ func _ready() -> void:
 	warp_rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	warp_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	warp_mat = ShaderMaterial.new()
-	var sh := Shader.new()
-	sh.code = WARP_SHADER
+	var sh: Shader = ResCache.shader(WARP_SHADER)
 	warp_mat.shader = sh
 	warp_rect.material = warp_mat
 	warp_rect.visible = false

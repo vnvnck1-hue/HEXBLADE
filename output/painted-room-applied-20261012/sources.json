@@ -1,0 +1,21 @@
+{
+  "generator": "built-in image_gen",
+  "approved_reference": "output/painted-room-concepts-20261012/v2/03_cream_service_dock.png",
+  "art": [
+    {
+      "id": "floor_room",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-9c416f17-6913-4804-90b6-d0640a526c63.png",
+      "asset": "assets/textures/painted_room/floor_room.png"
+    },
+    {
+      "id": "wall_panel",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-4c788d41-1f9d-458f-9c11-55cc18bef612.png",
+      "asset": "assets/textures/painted_room/wall_panel.png"
+    },
+    {
+      "id": "wall_frame",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-51b09da7-6bc2-467d-9760-3002a8af37c3.png",
+      "asset": "assets/textures/painted_room/wall_frame.png"
+    }
+  ]
+}

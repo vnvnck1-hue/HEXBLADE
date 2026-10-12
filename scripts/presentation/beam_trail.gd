@@ -34,8 +34,7 @@ func _ready() -> void:
 	top_level = true
 	global_transform = Transform3D.IDENTITY
 	if _shader == null:
-		_shader = Shader.new()
-		_shader.code = """
+		_shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled;
 uniform float energy = 1.25;
@@ -45,7 +44,7 @@ void fragment() {
 	float core = 1.0 - smoothstep(0.55, 1.0, d);
 	ALBEDO = COLOR.rgb * energy * core * COLOR.a;
 }
-"""
+""")
 	var m := ShaderMaterial.new()
 	m.shader = _shader
 	_mi.mesh = _mesh

@@ -203,8 +203,7 @@ func _drop(id) -> void:
 ## ① 마스크: 보이는 몸 픽셀에 스텐실을 찍는다. 색은 가장자리만 옅게 붉게.
 static func _mask() -> ShaderMaterial:
 	if _mask_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled, fog_disabled;
 stencil_mode write, compare_always, %d;
@@ -215,7 +214,7 @@ void fragment() {
 	ALBEDO = col * 1.4;
 	ALPHA = r * 0.45 * rim;
 }
-""" % STENCIL_REF
+""" % STENCIL_REF)
 		_mask_mat = ShaderMaterial.new()
 		_mask_mat.shader = sh
 		_mask_mat.set_shader_parameter("col", COL)
@@ -226,8 +225,7 @@ void fragment() {
 ## ② 외곽: 화면 공간에서 일정한 픽셀 두께로 부풀린 실루엣, 스텐실이 없는(몸 바깥) 곳에만
 static func _hull() -> ShaderMaterial:
 	if _hull_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
 // 몸 바깥(스텐실 0)에서만. compare_not_equal 은 4.7.2 에서 아무 데도 통과하지 않아 ref(77) > 값 으로 거른다
@@ -257,7 +255,7 @@ void fragment() {
 	ALBEDO = col * 1.25;
 	ALPHA = 1.0;
 }
-""" % [STENCIL_REF, NEAR]
+""" % [STENCIL_REF, NEAR])
 		_hull_mat = ShaderMaterial.new()
 		_hull_mat.shader = sh
 		_hull_mat.set_shader_parameter("col", COL)

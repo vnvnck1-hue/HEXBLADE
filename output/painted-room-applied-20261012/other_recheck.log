@@ -1,0 +1,7 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== partner_drone_check
+  RESULT partner_drone_check fails=0
+=== stream_mode_check
+  RESULT PASS (0 fails)
+
+ALL 2 TESTS PASSED

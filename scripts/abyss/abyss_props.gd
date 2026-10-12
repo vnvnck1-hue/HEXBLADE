@@ -161,8 +161,7 @@ func shaft(top: Vector3, bottom: Vector3, r: float, c: Color, power := 1.0) -> M
 
 
 func _shader(code: String) -> ShaderMaterial:
-	var sh := Shader.new()
-	sh.code = code.replace("NOISE", NOISE)
+	var sh: Shader = ResCache.shader(code.replace("NOISE", NOISE))
 	var m := ShaderMaterial.new()
 	m.shader = sh
 	return m

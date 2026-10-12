@@ -45,8 +45,7 @@ void fragment() { ALBEDO = COLOR.rgb * energy; }
 func _ready() -> void:
 	var box := BoxMesh.new()
 	box.size = Vector3(1, 1, 1)
-	var sh := Shader.new()
-	sh.code = SPARK_SHADER
+	var sh: Shader = ResCache.shader(SPARK_SHADER)
 	var m := ShaderMaterial.new()
 	m.shader = sh
 	box.material = m

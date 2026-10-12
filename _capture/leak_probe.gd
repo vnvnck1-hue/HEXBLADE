@@ -37,7 +37,7 @@ func _sample(tag: String) -> void:
 		Debris._sub_boxes.size(), BossTank._meshes.size(), BossTank._mats.size(),
 		PaintedLook._mats.size(), PaintedLook._shaders.size(), SaberTrail._shaders.size(),
 		MechDecals._tex.size(), MechDecals._frames.size(), WallProps._cache.size(), HitSpark._last.size()])
-	print("CACHE2 spark_pm=%d ramp=%d spray=%d" % [FX._spark_pms.size(), FX._ramps.size(), GunFX._spray_pms.size()])
+	print("CACHE2 spark_pm=%d ramp=%d spray=%d shaders=%d held=%d" % [FX._spark_pms.size(), FX._ramps.size(), GunFX._spray_pms.size(), ResCache._shaders.size(), ResCache._held.size()])
 
 
 func _process(_dt: float) -> bool:

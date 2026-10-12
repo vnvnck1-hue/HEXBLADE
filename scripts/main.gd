@@ -542,7 +542,7 @@ func _run_turret_show() -> void:
 	if _show_step == 1 and time >= 5.5:
 		# 광선검 절단 연출 확인: 첫 포탑을 벤 것으로 처리한다
 		_show_step = 2
-		for e in get_tree().get_nodes_in_group("enemies"):
+		for e in Enemy.live(get_tree()):
 			var en := e as Enemy
 			en.slash_yaw = randf() * TAU
 			en.take_hit(999, en.global_position - player.global_position, en.global_position, "slash")
@@ -769,7 +769,7 @@ func _physics_process(dt: float) -> void:
 	if state == State.PLAY and active_room >= 0 and spawn_queue.size() > 0:
 		spawn_timer -= dt
 		var alive := pending_spawns
-		for e in get_tree().get_nodes_in_group("enemies"):
+		for e in Enemy.live(get_tree()):
 			if not e.get("prop"):
 				alive += 1
 		if spawn_timer <= 0.0 and alive < max_alive():
@@ -1101,6 +1101,21 @@ func _terrain_bot(p: Player, out: Dictionary) -> Dictionary:
 
 
 ## 자동 플레이: 가까운 적 주위를 돌며 사격, 가까운 적탄은 회피
+## p 에서 가장 가까운 적. landed: 내려앉은 적만 · props: 가스통·둥지 같은 소품도 포함
+func _nearest_enemy(p: Node3D, landed := true, props := true) -> Enemy:
+	var best: Enemy = null
+	var bd := INF
+	for e in Enemy.live(get_tree()):
+		var en := e as Enemy
+		if (landed and not en.landed) or (not props and en.prop):
+			continue
+		var d := en.global_position.distance_to(p.global_position)
+		if d < bd:
+			bd = d
+			best = en
+	return best
+
+
 func bot_input(p: Player) -> Dictionary:
 	var out := {"move": Vector3.ZERO, "aim": p.global_position - Vector3(0, 0, 3), "fire": false, "slash": false, "dash": false, "charge": false, "boost": false, "jump": false}
 	if terrain_show:
@@ -1109,19 +1124,16 @@ func bot_input(p: Player) -> Dictionary:
 		# 천천히 원을 그리며 포탑이 따라오는지 보고, 5.5초에 한 기를 베어 절단 연출을 본 뒤 남은 포탑을 쏜다
 		var a := time * 0.5
 		out.move = Vector3(cos(a), 0, sin(a)) * 0.12 if time < 5.5 else Vector3.ZERO
-		for e in get_tree().get_nodes_in_group("enemies"):
+		for e in Enemy.live(get_tree()):
 			out.aim = (e as Node3D).global_position + Vector3(0, 0.95, 0)
 			break
 		out.fire = time > 6.6
 		return out
 	if parry_show:
 		# 제자리에서 가까운 적을 조준하고, 패링 창이 열리면 대시를 누른다
-		var bd2 := 1e9
-		for e in get_tree().get_nodes_in_group("enemies"):
-			var dd := (e as Node3D).global_position.distance_to(p.global_position)
-			if dd < bd2:
-				bd2 = dd
-				out.aim = (e as Node3D).global_position + Vector3(0, 0.95, 0)
+		var near := _nearest_enemy(p, false)
+		if near:
+			out.aim = near.global_position + Vector3(0, 0.95, 0)
 		var th: Object = Parry.inst.best_threat() if Parry.inst else null
 		out.dash = th != null and th.parry_eta() < Parry.EARLY * 0.5
 		return out
@@ -1135,15 +1147,9 @@ func bot_input(p: Player) -> Dictionary:
 		return out
 	if evade_show:
 		# 가장 가까운 적에게 다가가 붙으면 0.15초마다 검을 휘두른다
-		var bd4 := 1e9
-		var tgt: Enemy = null
-		for e in get_tree().get_nodes_in_group("enemies"):
-			var en := e as Enemy
-			var dd := en.global_position.distance_to(p.global_position)
-			if en.landed and dd < bd4:
-				bd4 = dd
-				tgt = en
+		var tgt := _nearest_enemy(p)
 		if tgt:
+			var bd4 := tgt.global_position.distance_to(p.global_position)
 			out.aim = tgt.global_position + Vector3(0, 0.95, 0)
 			var to := tgt.global_position - p.global_position
 			to.y = 0
@@ -1171,15 +1177,9 @@ func bot_input(p: Player) -> Dictionary:
 		if tt < 1.2:
 			out.slash = (tt > 0.5 and tt < 0.52) or (fmod(tt, 0.1) < 0.017 and tt > 0.6 and tt < 0.95)
 			return out
-		var bd3 := 1e9
-		for e in get_tree().get_nodes_in_group("enemies"):
-			var en := e as Enemy
-			if not en.landed:
-				continue
-			var dd := en.global_position.distance_to(p.global_position)
-			if dd < bd3:
-				bd3 = dd
-				out.aim = en.global_position + Vector3(0, 0.95, 0)
+		var near := _nearest_enemy(p)
+		if near:
+			out.aim = near.global_position + Vector3(0, 0.95, 0)
 		out.slash = fmod(tt, 0.1) < 0.017 and not (tt > 3.9 and tt < 4.5)
 		return out
 	if crawler_show:
@@ -1207,16 +1207,8 @@ func bot_input(p: Player) -> Dictionary:
 		if time > 5.9 and time < 5.95:
 			out.ult = true
 		return out
-	var best: Enemy = null
-	var bd := 1e9
-	for e in get_tree().get_nodes_in_group("enemies"):
-		var en := e as Enemy
-		if not en.landed or en.prop:
-			continue
-		var d := en.global_position.distance_to(p.global_position)
-		if d < bd:
-			bd = d
-			best = en
+	var best := _nearest_enemy(p, true, false)
+	var bd := best.global_position.distance_to(p.global_position) if best else 1e9
 	var move := Vector3.ZERO
 	if best:
 		out.aim = best.global_position + Vector3(0, 0.95, 0)
@@ -1236,7 +1228,7 @@ func bot_input(p: Player) -> Dictionary:
 			out.charge = true
 			out.fire = false
 		out.boost = bd > 8.5 and p.boost > 0.4
-		out.ult = get_tree().get_nodes_in_group("enemies").size() >= 3
+		out.ult = Enemy.live(get_tree()).size() >= 3
 		# 관통 일격이 준비되면 먼 적에게도 바로 벤다
 		if p.phantom_ready and bd < Player.PHANTOM_RANGE - 1.0:
 			out.slash = true
@@ -1269,7 +1261,7 @@ func bot_input(p: Player) -> Dictionary:
 				out.dash = true
 				bot_dash_cd = 1.0
 	# 차지 레이저 예고 범위에서 옆으로 빠진다
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		if e is Striker:
 			var th: Dictionary = (e as Striker).beam_threat()
 			if th.is_empty():
@@ -1298,7 +1290,7 @@ func bot_input(p: Player) -> Dictionary:
 func bot_ult_pointer(p: Player, ptr: Vector2) -> Vector2:
 	var best := Vector2.INF
 	var bd := 1e9
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed or p.locks.has(en):
 			continue
@@ -1315,7 +1307,7 @@ func bot_ult_pointer(p: Player, ptr: Vector2) -> Vector2:
 
 func bot_ult_release(p: Player) -> bool:
 	var left := 0
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		if (e as Enemy).landed and not p.locks.has(e):
 			left += 1
 	return (left == 0 and p.ult_aim_left() < 1.6) or p.ult_aim_left() < 0.5

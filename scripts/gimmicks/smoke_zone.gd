@@ -73,8 +73,7 @@ var _t := 0.0
 static func _shared() -> void:
 	if _mat:
 		return
-	var sh := Shader.new()
-	sh.code = SHADER % FX.BILLBOARD
+	var sh: Shader = ResCache.shader(SHADER % FX.BILLBOARD)
 	_mat = ShaderMaterial.new()
 	_mat.shader = sh
 	_mat.render_priority = 2

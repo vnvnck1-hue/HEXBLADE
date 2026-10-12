@@ -205,7 +205,7 @@ func _target() -> Enemy:
 		return source
 	var best: Enemy = null
 	var bd := 18.0
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -228,7 +228,7 @@ func _steer_to_target(dt: float) -> void:
 
 
 func _check_enemy_hit() -> void:
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue

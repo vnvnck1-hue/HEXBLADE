@@ -86,15 +86,13 @@ static func strand_mesh() -> CylinderMesh:
 static func _ensure() -> void:
 	if _cyst_mat:
 		return
-	var sh := Shader.new()
-	sh.code = CYST_SHADER.replace("//POOL", BrawlLook.POOL).replace("//LIGHT", LIGHT)
+	var sh: Shader = ResCache.shader(CYST_SHADER.replace("//POOL", BrawlLook.POOL).replace("//LIGHT", LIGHT))
 	_cyst_mat = ShaderMaterial.new()
 	_cyst_mat.shader = sh
 	BrawlLook.track_pool(_cyst_mat)
 	for i in CYST_VARIANTS:
 		_cysts.append(_build_cyst(1701 + i * 37))
-	var msh := Shader.new()
-	msh.code = MEMBRANE_SHADER.replace("//POOL", BrawlLook.POOL).replace("//LIGHT", LIGHT)
+	var msh: Shader = ResCache.shader(MEMBRANE_SHADER.replace("//POOL", BrawlLook.POOL).replace("//LIGHT", LIGHT))
 	for i in MEMBRANE_VARIANTS:
 		var built := _build_membrane(911 + i * 53)
 		_membranes.append(built[0])
@@ -104,8 +102,7 @@ static func _ensure() -> void:
 		m.set_shader_parameter("mask_tex", built[1])
 		BrawlLook.track_pool(m)
 		_mem_mats.append(m)
-	var gsh := Shader.new()
-	gsh.code = GOO_SHADER.replace("//LIGHT", LIGHT)
+	var gsh: Shader = ResCache.shader(GOO_SHADER.replace("//LIGHT", LIGHT))
 	_goo_mat = ShaderMaterial.new()
 	_goo_mat.shader = gsh
 	_goo_mat.set_shader_parameter("col", Color("7e2462"))

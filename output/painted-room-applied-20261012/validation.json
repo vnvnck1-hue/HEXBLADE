@@ -1,0 +1,132 @@
+{
+  "date": "2026-10-12",
+  "godot": "4.7.2-stable",
+  "scope": "Isolated painted_room_study diorama, floor and walls. Random gameplay rooms not connected. Furniture and machinery retain existing art.",
+  "assets": [
+    {
+      "id": "floor_room",
+      "path": "assets/textures/painted_room/floor_room.png",
+      "width": 1448,
+      "height": 1086,
+      "sha256": "9C058E0F77FC7D635C4EE83018AE13360869718C2A5CB32E4C54702EDBE8C2FD",
+      "source_sha256": "9C058E0F77FC7D635C4EE83018AE13360869718C2A5CB32E4C54702EDBE8C2FD",
+      "byte_identical": true,
+      "import_exists": true,
+      "lossless": true,
+      "mipmaps": true
+    },
+    {
+      "id": "wall_panel",
+      "path": "assets/textures/painted_room/wall_panel.png",
+      "width": 1024,
+      "height": 1536,
+      "sha256": "6DD366E2D36866C9F2486F68D712A2E780181B9CFB979F203D2453C7E48D7CEA",
+      "source_sha256": "6DD366E2D36866C9F2486F68D712A2E780181B9CFB979F203D2453C7E48D7CEA",
+      "byte_identical": true,
+      "import_exists": true,
+      "lossless": true,
+      "mipmaps": true
+    },
+    {
+      "id": "wall_frame",
+      "path": "assets/textures/painted_room/wall_frame.png",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "4E3C9A7F8A5BDEB88925EF231E0491ECD14DBBF608EA14A1A44D31C34FFB6267",
+      "source_sha256": "4E3C9A7F8A5BDEB88925EF231E0491ECD14DBBF608EA14A1A44D31C34FFB6267",
+      "byte_identical": true,
+      "import_exists": true,
+      "lossless": true,
+      "mipmaps": true
+    }
+  ],
+  "private_meshes": 24,
+  "direct_png_sampling": true,
+  "new_test_checks": 24,
+  "new_test_failures": 0,
+  "actual_forward_plus_screenshots": 12,
+  "stationary_glb_comparisons": 2,
+  "log_checks": [
+    {
+      "log": "import_release.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "log": "check_final.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "log": "render_review.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "log": "readability_glb.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "log": "bot.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "log": "bot_render.log",
+      "errors": 0,
+      "script_errors": 0
+    },
+    {
+      "log": "main_bot.log",
+      "errors": 0,
+      "script_errors": 0
+    }
+  ],
+  "regression": {
+    "total": 59,
+    "first_pass": 56,
+    "first_failed": [
+      "infest_check",
+      "partner_drone_check",
+      "stream_mode_check"
+    ],
+    "isolated_recheck_passed": [
+      "partner_drone_check",
+      "stream_mode_check"
+    ],
+    "isolated_recheck_failed": [
+      "infest_check"
+    ],
+    "final_pass": 58,
+    "final_failed": 1,
+    "evidence": [
+      "all_tests.log",
+      "infest_recheck.log",
+      "other_recheck.log"
+    ],
+    "related_gameplay_files_edited_in_this_task": false
+  },
+  "automation": {
+    "headless_diorama_seconds": 12,
+    "forward_plus_diorama_seconds": 12,
+    "interaction_steps": 8,
+    "main_arena_bot_seconds": 30
+  },
+  "imports_and_uids": {
+    "script_uid": true,
+    "test_uid": true
+  },
+  "visual_review": [
+    "10_floor_wall_only.png",
+    "11_original_floor_wall_only.png",
+    "06_floor_top.png",
+    "07_wall_front.png",
+    "08_reverse_angle.png",
+    "12_controls_1280.png",
+    "13_static_mech_markers.png"
+  ],
+  "intermediate_failed_logs_preserved": true,
+  "commits_created": false,
+  "pushed": false
+}

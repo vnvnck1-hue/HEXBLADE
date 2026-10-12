@@ -11,6 +11,7 @@ const TEST_SCENES := [
 	{"title": "무한 비행 · 종 스크롤 슈팅", "desc": "흐르는 도로 위를 끝없이 날아가며 편대로 몰려오는 전투기·포격 드론을 격추 · 30초마다 섹터 상승 · 정예 기체 · 최고 비행 거리 기록", "scene": "res://scenes/stream.tscn"},
 	{"title": "전투 테스트 · 허수아비", "desc": "넓은 홀에서 허수아비로 콤보·무기·패링을 자유롭게 시험 · 피해 숫자·DPS 표시", "scene": "res://scenes/training.tscn"},
 	{"title": "텍스처링 · 정비실 디오라마", "desc": "본편 바닥·벽·프랍·배관을 모은 작은 정비실 · 시험 텍스처 교체 · 조명과 원본 비교", "scene": "res://scenes/texture_diorama.tscn"},
+	{"title": "핸드페인팅 정비실 · 크림 / 연보라", "desc": "선택한 3번 원화의 바닥·벽 PNG 실제 적용 · B 원본 비교 · 원색과 조명 비교", "scene": "res://scenes/painted_room_study.tscn"},
 	{"title": "파트너 청소 드론", "desc": "미소녀 파트너의 드론 TRIAD: 따라다니며 잔해·체액 청소 · Q 합체 · X 보호막/볼텍스 · Z 직접 청소", "scene": "res://scenes/drone.tscn"},
 	{"title": "필드 기믹", "desc": "연기 구역(은신) · 레일 · 가스통 폭발 · 수리키트 해치(F 연타) 를 한 홀에서 시험", "scene": "res://scenes/gimmicks.tscn"},
 	{"title": "유체 연기 · 나비에-스토크스", "desc": "GPU 유체 격자로 푼 바닥 연기 · 대시로 가르고 검으로 베고 휠윈드로 감고 폭발로 날리고 청소 질주로 빨아들임 (연출 전용)", "scene": "res://scenes/fluid_smoke.tscn"},
@@ -23,6 +24,13 @@ const TEST_SCENES := [
 	{"title": "동료 소개 · 사장과 정비사", "desc": "사장이 새 동료를 소개하고 파일럿까지 셋이서 대화 · 역할과 기체 점검 · 응답 선택", "scene": "res://scenes/coworker_dialogue.tscn"},
 	{"title": "첫 청소 파트너 소개", "desc": "새 상체 포트레이트 · 첫 현장 동료와 역할 분담 · 파일럿 대사창 원화", "scene": "res://scenes/partner_dialogue.tscn"},
 	{"title": "MAMMOTH 죽음 연출 · B안", "desc": "궤도 파손과 전복 컷씬 반복 확인 (본선 격파에 적용됨)", "scene": "res://scenes/lab_mammoth_b.tscn"},
+]
+## 로비에 있는 동안 백그라운드로 미리 읽어 둘 무거운 에셋 (첫 게임 진입 끊김 방지)
+const WARM := [
+	MechPlayer.GLB, PartnerDrone.MODEL,
+	"res://assets/models/bg_claude_w01.glb", "res://assets/models/bg_claude_w01_half.glb", "res://assets/models/bg_claude_jamb.glb",
+	"res://assets/models/bg_claude_a01.glb", "res://assets/models/bg_claude_a02.glb", "res://assets/models/bg_claude_f01.glb",
+	"res://assets/models/bg_claude_block_wall.glb", "res://assets/models/bg_claude_block_cover.glb", "res://assets/models/bg_claude_block_pillar.glb",
 ]
 var font: SystemFont
 var art: LobbyArt
@@ -44,6 +52,7 @@ func _ready() -> void:
 	add_child(Sfx.new())
 	if _route_cmdline():
 		return
+	ResCache.warm(WARM)
 	font = SystemFont.new()
 	font.font_names = PackedStringArray(["Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans CJK KR", "sans-serif"])
 	font.font_weight = 700

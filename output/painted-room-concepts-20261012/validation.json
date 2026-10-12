@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in image_gen",
+  "requested_count": 3,
+  "completed_count": 3,
+  "input_images": [],
+  "visual_review": "PASS: three distinct palettes, L-shaped maintenance space, open central floors, hand-painted wall/furniture/machinery surfaces, no characters/UI/text",
+  "scope": "Concept illustrations only; not UV atlases or implemented game textures",
+  "files": [
+    {
+      "name": "코랄 작업실",
+      "file": "01_coral_workshop.png",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-9902f3e2-cd48-4d77-b7e9-63f38637d813.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "F6B232E22E08026D59FD079851AA1348630F8A82BAE82BB425ABB4BC86F72030",
+      "copy_hash_equal": true,
+      "decoded": true
+    },
+    {
+      "name": "청록 냉각 설비실",
+      "file": "02_teal_cooling_bay.png",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-9416f477-b59f-49a4-973c-f02307b4e9ef.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "5A7F4112B0EB41FDA952F1C81D8BF2D0F2F18C576D89B748B4C40AD3679C7BC9",
+      "copy_hash_equal": true,
+      "decoded": true
+    },
+    {
+      "name": "크림 청소·정비 도크",
+      "file": "03_cream_service_dock.png",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-3760be4d-04a8-4628-a08d-550b5720f496.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "675FD7F01C39D17209BCC98920B5002695E45221B50BA199BF5C5D319FCC164A",
+      "copy_hash_equal": true,
+      "decoded": true
+    }
+  ]
+}

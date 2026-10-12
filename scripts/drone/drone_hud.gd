@@ -24,7 +24,7 @@ var _pulse := 0.0
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	portrait = load(PORTRAIT) as Texture2D
+	portrait = ResCache.texture(PORTRAIT)
 	card_font.font_names = PackedStringArray(["Arial", "Liberation Sans", "Malgun Gothic", "sans-serif"])
 	card_font.font_weight = 800
 	card_font.font_italic = true

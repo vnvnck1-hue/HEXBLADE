@@ -61,8 +61,7 @@ func _ready() -> void:
 		_strip.size = Vector3(1, 0.01, 1)
 		_streak = BoxMesh.new()
 		_streak.size = Vector3(0.035, 0.035, 1.0)
-		_beam_shader = Shader.new()
-		_beam_shader.code = """
+		_beam_shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, shadows_disabled;
 uniform vec4 tint : source_color = vec4(1.0);
@@ -78,7 +77,7 @@ void fragment() {
 	float fine = step(0.8, s2);
 	ALBEDO = tint.rgb * energy * (1.0 - contrast + contrast * 2.0 * max(band, fine * 0.6));
 }
-"""
+""")
 	var specs := [[Color("2fd8ff"), 2.0, 1.0, 0.45, 9.0], [Color("a8f8ff"), 2.6, 0.64, 0.35, 12.0], [Color.WHITE, 3.4, 0.34, 0.2, 16.0]]
 	for spec in specs:
 		var mi := MeshInstance3D.new()

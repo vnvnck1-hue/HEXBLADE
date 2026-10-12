@@ -366,6 +366,11 @@ func _physics_process(_dt: float) -> void:
 			pos = q
 			moved = true
 	if moved:
+		pos = main.push_out(pos, p.hit_radius * 0.75)
+		# 벽에 밀려 다시 포낭 안으로 들어갔으면 한 번 더 (구석 둥지)
+		for n in nests:
+			if is_instance_valid(n) and n.alive:
+				pos = n.push_out(pos, p.hit_radius * 0.75)
 		p.global_position = main.push_out(pos, p.hit_radius * 0.75)
 	nests = nests.filter(func(x): return is_instance_valid(x))
 

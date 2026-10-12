@@ -43,8 +43,7 @@ static func _res() -> void:
 	if _arc != null:
 		return
 	_arc = _build_swoosh(0.55, 20)
-	var sh := Shader.new()
-	sh.code = """
+	var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, cull_disabled, shadows_disabled, depth_draw_never;
 instance uniform float fade = 1.0;
@@ -58,11 +57,10 @@ void fragment() {
 	float edge = 1.0 - smoothstep(0.75, 1.0, v);
 	ALBEDO = col * (1.1 + 2.2 * core) * edge * (1.0 - u * 0.55) * fade;
 }
-"""
+""")
 	_add_mat = ShaderMaterial.new()
 	_add_mat.shader = sh
-	var gs := Shader.new()
-	gs.code = """
+	var gs: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, cull_back, shadows_disabled, depth_draw_never;
 instance uniform float fade = 1.0;
@@ -71,7 +69,7 @@ void fragment() {
 	float r = clamp(dot(NORMAL, VIEW), 0.0, 1.0);
 	ALBEDO = tint.rgb * pow(r, 2.2) * 1.8 * fade;
 }
-"""
+""")
 	_glow_mat = ShaderMaterial.new()
 	_glow_mat.shader = gs
 	_ball = SphereMesh.new()
@@ -123,7 +121,7 @@ static func _build_swoosh(bend: float, seg: int) -> ArrayMesh:
 static func find_contact(tree: SceneTree, origin: Vector3, dir: Vector3, length: float, width: float) -> Dictionary:
 	var best := {}
 	var best_d := 1e9
-	for e in tree.get_nodes_in_group("enemies"):
+	for e in Enemy.live(tree):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue

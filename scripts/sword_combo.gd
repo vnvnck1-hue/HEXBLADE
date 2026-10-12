@@ -860,7 +860,7 @@ func _after_cut(center: Vector3, yaw: float, i: int, n: int, a: Dictionary) -> v
 	FX.flash(pos, Color(1.0, 0.85, 0.95), 0.7, 0.03)
 	var hit := false
 	var r := float(a.radius)
-	for e in p.get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(p.get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -942,7 +942,7 @@ func _land() -> void:
 func _find_target() -> Enemy:
 	var best: Enemy = null
 	var bd := RANGE
-	for e in p.get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(p.get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue

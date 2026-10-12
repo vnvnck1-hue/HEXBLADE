@@ -48,6 +48,7 @@ var agit := 0.0
 var _agit_sent := -1.0
 var _chain: Array = []            ## [남은 시간, Cyst]
 var _first_hit := true
+var _idle := false                ## 모든 혹이 멈췄고 흥분도 0: 다시 맞거나 플레이어가 다가올 때까지 틱을 통째로 건너뛴다
 
 
 func _ready() -> void:
@@ -127,6 +128,9 @@ func _physics_process(dt: float) -> void:
 	if p and is_instance_valid(p):
 		var d := Vector2(p.global_position.x - global_position.x, p.global_position.z - global_position.z).length()
 		target = clampf(1.0 - (d - radius) / 2.6, 0.0, 1.0) * 0.35
+	if _idle and target == 0.0 and _chain.is_empty():
+		return
+	_idle = false
 	agit = move_toward(agit, target, dt * (0.35 if agit > target else 1.5))
 	var ag := snappedf(agit, 0.02)
 	var ag_changed := ag != _agit_sent
@@ -144,15 +148,20 @@ func _physics_process(dt: float) -> void:
 				c.pop_t = 0.0
 		i -= 1
 	var any_alive := false
+	var busy := ag_changed or agit > 0.0 or target > 0.0 or not _chain.is_empty()
 	for c in cysts:
-		_tick_cyst(c, dt, ag, ag_changed)
+		if _tick_cyst(c, dt, ag, ag_changed):
+			busy = true
 		if not c.popped:
 			any_alive = true
 	if not any_alive and _chain.is_empty():
 		_wither()
+		return
+	_idle = not busy
 
 
-func _tick_cyst(c: Cyst, dt: float, ag: float, ag_changed: bool) -> void:
+## 이번 틱에 움직인(자세·셰이더 값을 쓴) 혹이면 true
+func _tick_cyst(c: Cyst, dt: float, ag: float, ag_changed: bool) -> bool:
 	var swell := 0.0
 	if c.pop_t >= 0.0 and not c.popped:
 		c.pop_t += dt
@@ -167,7 +176,7 @@ func _tick_cyst(c: Cyst, dt: float, ag: float, ag_changed: bool) -> void:
 	# 멈춘 혹은 자세·셰이더 값을 다시 쓰지 않는다 (맵 전체 둥지의 혹 수백 개가 매 틱 변환을 쓰던 것)
 	var rest := absf(c.punch) < 0.0005 and absf(c.punch_v) < 0.005 and swell == 0.0 and c.hit == 0.0 and c.sent.z == snappedf(c.dead, 0.05)
 	if rest and c.still and not ag_changed:
-		return
+		return false
 	c.still = rest
 	var pk := c.punch
 	var sw := 1.0 + swell * 0.22
@@ -183,6 +192,7 @@ func _tick_cyst(c: Cyst, dt: float, ag: float, ag_changed: bool) -> void:
 		c.mi.set_instance_shader_parameter("dead", v.z)
 	if ag_changed or swell > 0.0:
 		c.mi.set_instance_shader_parameter("agit", minf(1.0, ag + swell))
+	return true
 
 
 # ── 판정 ────────────────────────────────────────────────
@@ -196,6 +206,7 @@ func take_hit(dmg: int, dir: Vector3, pos: Vector3, source := "bullet") -> void:
 			live.append(c)
 	if live.is_empty():
 		return
+	_idle = false
 	var flat := Vector3(dir.x, 0, dir.z)
 	flat = flat.normalized() if flat.length() > 0.01 else Vector3.FORWARD
 	var hits: Array[Cyst] = []
@@ -331,6 +342,12 @@ func alive_cysts() -> int:
 
 
 ## 플레이어가 이 무더기 포낭 속으로 걸어 들어가지 않게 밀어낸다 (살아 있는 바닥 포낭만, 작은 혹은 밟고 지나감)
+## 몸 반지름 r 로 서도 벽에 밀리지 않는 자리인가
+func _free_spot(q: Vector3, r: float) -> bool:
+	var m := Main.inst
+	return m == null or m.push_out(q, r).distance_to(q) < 0.01
+
+
 func push_out(p: Vector3, r: float) -> Vector3:
 	for c in cysts:
 		if c.popped or c.wall or c.s < 0.5:
@@ -340,6 +357,18 @@ func push_out(p: Vector3, r: float) -> Vector3:
 		var lim := c.radius() * 0.82 + r
 		if d.length() < lim:
 			var n := d.normalized() if d.length() > 0.001 else Vector2(1, 0)
-			p.x = cp.x + n.x * lim
-			p.z = cp.z + n.y * lim
+			var q := Vector3(cp.x + n.x * lim, p.y, cp.z + n.y * lim)
+			# 둥지는 방 구석에 붙어 있다: 밀어낸 자리가 벽에 걸리면 벽 밀어내기가 다시 포낭 안으로 돌려보내 몸이 끼었다
+			# → 포낭 둘레 16방향 중 벽에 안 걸리는, 지금 자리에서 가장 가까운 곳으로 민다
+			if not _free_spot(q, r):
+				var best := INF
+				for k in 16:
+					var a := TAU * k / 16.0
+					var cand := Vector3(cp.x + cos(a) * lim, p.y, cp.z + sin(a) * lim)
+					var dist := Vector2(cand.x - p.x, cand.z - p.z).length()
+					if dist < best and _free_spot(cand, r):
+						best = dist
+						q = cand
+			p.x = q.x
+			p.z = q.z
 	return p

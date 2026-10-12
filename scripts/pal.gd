@@ -132,15 +132,14 @@ static func set_toon(on: bool) -> void:
 ## 조명 무시 단색. 색은 인스턴스 파라미터 tint / energy 로 지정한다.
 static func flat() -> ShaderMaterial:
 	if _flat_mat == null:
-		_flat_shader = Shader.new()
-		_flat_shader.code = """
+		_flat_shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, shadows_disabled;
 instance uniform vec4 tint : source_color = vec4(1.0);
 instance uniform float energy = 1.0;
 // ROUGHNESS 0 은 ToonOutline 에게 '외곽선 제외' 표식이다
 void fragment() { ALBEDO = tint.rgb * energy; ROUGHNESS = 0.0; }
-"""
+""")
 		_flat_mat = ShaderMaterial.new()
 		_flat_mat.shader = _flat_shader
 	return _flat_mat
@@ -170,8 +169,7 @@ static func flash() -> StandardMaterial3D:
 ## 락온된 적 위에 덮는 붉은 빗금 (화면 좌표 기준 사선이 흘러간다)
 static func lock_hatch() -> ShaderMaterial:
 	if _lock_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
 void fragment() {
@@ -181,7 +179,7 @@ void fragment() {
 	ALBEDO = mix(vec3(1.0, 0.08, 0.12), vec3(1.0, 0.55, 0.5), rim) * 1.6;
 	ALPHA = clamp(mix(0.12, 0.85, stripe) + rim * 0.6, 0.0, 1.0);
 }
-"""
+""")
 		_lock_mat = ShaderMaterial.new()
 		_lock_mat.shader = sh
 	return _lock_mat
@@ -191,8 +189,7 @@ void fragment() {
 ## 패링 공격 알림 순간 몸체 전체를 덮는 강한 금백색 섬광 (블룸이 걸리게 HDR 로 밝게)
 static func parry_flash() -> ShaderMaterial:
 	if _parry_flash_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
 void fragment() {
@@ -200,7 +197,7 @@ void fragment() {
 	ALBEDO = mix(vec3(1.0, 0.86, 0.4), vec3(1.0), 0.45 + rim * 0.55) * 4.0;
 	ALPHA = 0.97;
 }
-"""
+""")
 		_parry_flash_mat = ShaderMaterial.new()
 		_parry_flash_mat.shader = sh
 	return _parry_flash_mat
@@ -210,8 +207,7 @@ void fragment() {
 ## 처음부터 또렷하게 하얘지고, 끝으로 갈수록 더 밝고 빠르게 맥동한다 (블룸이 걸리게 HDR).
 static func parry_charge() -> ShaderMaterial:
 	if _parry_charge_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
 instance uniform float charge = 0.0;
@@ -222,7 +218,7 @@ void fragment() {
 	ALBEDO = vec3(1.0, 0.99, 0.96) * (1.6 + charge * 2.4 + rim * 1.4 + pulse * 0.6);
 	ALPHA = clamp(k * (0.55 + pulse * 0.2) + rim * 0.6, 0.0, 0.97);
 }
-"""
+""")
 		_parry_charge_mat = ShaderMaterial.new()
 		_parry_charge_mat.shader = sh
 	return _parry_charge_mat
@@ -230,8 +226,7 @@ void fragment() {
 
 static func parry_glow() -> ShaderMaterial:
 	if _parry_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
 void fragment() {
@@ -240,7 +235,7 @@ void fragment() {
 	ALBEDO = mix(vec3(1.0, 0.7, 0.12), vec3(1.0, 0.97, 0.85), rim) * 2.2;
 	ALPHA = clamp(0.28 + pulse * 0.22 + rim * 0.9, 0.0, 1.0);
 }
-"""
+""")
 		_parry_mat = ShaderMaterial.new()
 		_parry_mat.shader = sh
 	return _parry_mat

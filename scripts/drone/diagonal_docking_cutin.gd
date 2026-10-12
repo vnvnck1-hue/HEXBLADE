@@ -502,7 +502,7 @@ func _use_character(i: int) -> void:
 		cfg = cfg.duplicate()
 		var pd: Dictionary = poses[clampi(pose_i, 0, poses.size() - 1)]
 		for k in pd:
-			cfg[k] = load(pd[k]) if pd[k] is String and String(pd[k]).begins_with("res://") else pd[k]
+			cfg[k] = ResCache.get_res(pd[k]) if pd[k] is String and String(pd[k]).begins_with("res://") else pd[k]
 	art = cfg.art
 	anchor_uv = cfg.anchor
 	hair_uv = cfg.hair_top
@@ -698,7 +698,8 @@ func _layout() -> void:
 	side = minf((hold_y - vs.y * float(cfg.hair_screen)) / (anchor_uv.y - hair_uv), minf(vs.x * SIDE_MAX_W, vs.y * float(cfg.side_max_h)))
 	var margin := side * 0.08
 	s_start = (-side * anchor_uv.x - margin) / tangent.x
-	s_end = (vs.x + side * (1.0 - anchor_uv.x) + margin) / tangent.x
+	# 퇴장 끝: 초상 왼쪽 끝(기준점에서 side·anchor_uv.x 왼쪽)까지 화면 오른쪽 밖으로 (예전엔 오른쪽 폭을 써서 기준점이 가운데보다 오른쪽인 원화는 9px 남았다)
+	s_end = (vs.x + side * maxf(anchor_uv.x, 1.0 - anchor_uv.x) + margin) / tangent.x
 	# 글자 크기는 화면 가운데 띠 높이에 맞춘다 (정수로 묶어 글리프 캐시가 늘지 않게)
 	var band_h := _band_height(vs.x * 0.5)
 	# 글자 높이: TEXT_H, 단 띠가 가장 좁은 왼쪽 끝(x=0)에서 바닥선~위 테두리 사이에 들어가게

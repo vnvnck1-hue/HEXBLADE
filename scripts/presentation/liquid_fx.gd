@@ -56,8 +56,7 @@ static func material(kind: int, pal_name: String) -> ShaderMaterial:
 	if _mats.has(key):
 		return _mats[key]
 	if _shader == null:
-		_shader = Shader.new()
-		_shader.code = SHADER
+		_shader = ResCache.shader(SHADER)
 	var file: String = KIND_FILES[kind]
 	if not _tex.has(file):
 		_tex[file] = load("res://assets/vfx/liquid/liquid_%s.png" % file)

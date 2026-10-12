@@ -37,12 +37,10 @@ static func _shared() -> void:
 	_disc_mesh = QuadMesh.new()
 	_disc_mesh.size = Vector2.ONE
 	_disc_mesh.orientation = PlaneMesh.FACE_Y
-	var sh := Shader.new()
-	sh.code = DISC_SHADER
+	var sh: Shader = ResCache.shader(DISC_SHADER)
 	_disc_mat = ShaderMaterial.new()
 	_disc_mat.shader = sh
-	var fs := Shader.new()
-	fs.code = FAN_SHADER
+	var fs: Shader = ResCache.shader(FAN_SHADER)
 	_fan_mat = ShaderMaterial.new()
 	_fan_mat.shader = fs
 	_line_mat = StandardMaterial3D.new()

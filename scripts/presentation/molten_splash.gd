@@ -142,8 +142,7 @@ func _ready() -> void:
 	sphere.radial_segments = 12
 	sphere.rings = 7
 	var dm := ShaderMaterial.new()
-	dm.shader = Shader.new()
-	dm.shader.code = DROP_SHADER
+	dm.shader = ResCache.shader(DROP_SHADER)
 	sphere.material = dm
 	# 방울 + 목 브리지를 같은 멀티메시에 그린다
 	_drop_mm = _make_mm(sphere, DROP_CAP * 2)
@@ -153,8 +152,7 @@ func _ready() -> void:
 	quad.orientation = PlaneMesh.FACE_Y
 	quad.size = Vector2(1, 1)
 	var sm := ShaderMaterial.new()
-	sm.shader = Shader.new()
-	sm.shader.code = SPLAT_SHADER
+	sm.shader = ResCache.shader(SPLAT_SHADER)
 	sm.render_priority = 1
 	quad.material = sm
 	_splat_mm = _make_mm(quad, SPLAT_CAP)
@@ -175,8 +173,7 @@ func _ready() -> void:
 	_dome_mesh.radial_segments = 40
 	_dome_mesh.rings = 20
 	_dome_mat = ShaderMaterial.new()
-	_dome_mat.shader = Shader.new()
-	_dome_mat.shader.code = DOME_SHADER
+	_dome_mat.shader = ResCache.shader(DOME_SHADER)
 
 
 func _make_mm(mesh: Mesh, cap: int) -> MultiMesh:

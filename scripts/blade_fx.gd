@@ -60,8 +60,7 @@ func _ready() -> void:
 
 func _build_aura(radius: float, outer: float) -> MeshInstance3D:
 	if _aura_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh := ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled;
 uniform float heat = 0.0;       // 전체 세기 (0 이면 보이지 않는다)
@@ -107,7 +106,7 @@ void fragment() {
 	float a = (mix(0.25, 0.0, outer) + flame * mix(1.1, 0.9, outer)) * (0.45 + rim * mix(0.8, 1.2, outer)) * tip;
 	ALPHA = clamp(a * heat, 0.0, 1.0);
 }
-"""
+""")
 		_aura_mat = ShaderMaterial.new()
 		_aura_mat.shader = sh
 	var cap := CapsuleMesh.new()
@@ -343,8 +342,7 @@ func _apply(heat: float) -> void:
 ## 현재 칼날 모양을 그대로 복제해 제자리에 남기고, 점점 옅어지며 가늘어진다. hot 이면 불꽃빛으로 더 넓게.
 func _ghost(hot: bool, life: float) -> void:
 	if _ghost_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh := ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, cull_disabled, depth_draw_never, shadows_disabled;
 instance uniform float fade = 1.0;
@@ -355,7 +353,7 @@ void fragment() {
 	ALBEDO = mix(saber, fire, hot) * (0.5 + fade);
 	ALPHA = fade * mix(0.85, 0.7, hot);
 }
-"""
+""")
 		_ghost_mat = ShaderMaterial.new()
 		_ghost_mat.shader = sh
 	var holder := Node3D.new()

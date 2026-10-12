@@ -179,8 +179,7 @@ static func _meshes() -> void:
 ## 카메라를 보는 카툰 탄: 광채 → 남색 테두리 → 2단 색 몸통 → 흰 심 (깊이는 탄 자리, 다른 물체 뒤로는 가려짐)
 static func _core() -> ShaderMaterial:
 	if _core_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 instance uniform vec4 col : source_color = vec4(1.0, 0.2, 0.1, 1.0);
@@ -216,7 +215,7 @@ void fragment() {
 	ALBEDO = c;
 	ALPHA = a * fade;
 }
-"""
+""")
 		_core_mat = ShaderMaterial.new()
 		_core_mat.shader = sh
 		_core_mat.render_priority = 20
@@ -226,8 +225,7 @@ void fragment() {
 ## 진행 방향으로 늘어나는 꼬리 (탄 자리에서 뒤로). 축 = 속도, 폭 방향 = 축 × 시선
 static func _trail() -> ShaderMaterial:
 	if _trail_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled, skip_vertex_transform;
 instance uniform vec4 col : source_color = vec4(1.0, 0.2, 0.1, 1.0);
@@ -257,7 +255,7 @@ void fragment() {
 	ALBEDO = c;
 	ALPHA = clamp(a * fade, 0.0, 1.0);
 }
-"""
+""")
 		_trail_mat = ShaderMaterial.new()
 		_trail_mat.shader = sh
 		_trail_mat.render_priority = 4
@@ -267,8 +265,7 @@ void fragment() {
 ## 바닥: 탄 아래 그림자 점 + 붉은 고리, 앞쪽 진행 점선 (평면 로컬 -Z = 진행 방향)
 static func _ground() -> ShaderMaterial:
 	if _ground_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 instance uniform vec4 col : source_color = vec4(1.0, 0.2, 0.1, 1.0);
@@ -294,7 +291,7 @@ void fragment() {
 	ALBEDO = c;
 	ALPHA = clamp(a * fade, 0.0, 1.0);
 }
-"""
+""")
 		_ground_mat = ShaderMaterial.new()
 		_ground_mat.shader = sh
 		_ground_mat.render_priority = 3

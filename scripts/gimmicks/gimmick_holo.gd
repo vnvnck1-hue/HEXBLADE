@@ -30,8 +30,7 @@ static var _mat: ShaderMaterial
 
 static func material() -> ShaderMaterial:
 	if _mat == null:
-		var sh := Shader.new()
-		sh.code = SHADER
+		var sh: Shader = ResCache.shader(SHADER)
 		_mat = ShaderMaterial.new()
 		_mat.shader = sh
 		_mat.render_priority = 20

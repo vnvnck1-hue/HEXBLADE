@@ -462,7 +462,7 @@ func _rush_tick(dt: float) -> void:
 	var full := now - _from
 	full.y = 0
 	var path_len := full.length()
-	for e in p.get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(p.get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -544,7 +544,7 @@ func _finish_rush(completed: bool) -> void:
 		FX.crescent(to + Vector3(0, 0.9, 0), Basis(Vector3.UP, yaw) * Basis.from_scale(Vector3(0.8, 1, 0.8)), 0.03, 0.12)
 		FX.crescent(to + Vector3(0, 0.6, 0), Basis(Vector3.UP, yaw + PI) * Basis(Vector3.FORWARD, 0.3) * Basis.from_scale(Vector3(0.95, 1, 0.95)), 0.04, 0.14)
 		var any := false
-		for e in p.get_tree().get_nodes_in_group("enemies"):
+		for e in Enemy.live(p.get_tree()):
 			var en := e as Enemy
 			if not en.alive or not en.landed:
 				continue

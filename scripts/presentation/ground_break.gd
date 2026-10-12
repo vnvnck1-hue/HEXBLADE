@@ -291,8 +291,7 @@ func _buckle_mat(src: Material) -> Material:
 	if not _piece_mats.has(key):
 		var sid := sm.shader.get_instance_id()
 		if not _bk_shaders.has(sid):
-			var sh := Shader.new()
-			sh.code = sm.shader.code.replace(LINE, "ALBEDO = clamp(col * COLOR.rgb, 0.0, 1.0);")
+			var sh: Shader = ResCache.shader(sm.shader.code.replace(LINE, "ALBEDO = clamp(col * COLOR.rgb, 0.0, 1.0);"))
 			_bk_shaders[sid] = sh
 		var m := ShaderMaterial.new()
 		m.shader = _bk_shaders[sid]
@@ -313,8 +312,7 @@ static func _sun_dir() -> Vector3:
 
 static func _decal_material() -> ShaderMaterial:
 	if _decal_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, blend_mix;
 instance uniform float fade = 1.0;
@@ -323,7 +321,7 @@ void fragment() {
 	ALPHA = COLOR.a * fade;
 	ROUGHNESS = 0.0;   // ToonOutline 제외
 }
-"""
+""")
 		_decal_mat = ShaderMaterial.new()
 		_decal_mat.shader = sh
 	return _decal_mat

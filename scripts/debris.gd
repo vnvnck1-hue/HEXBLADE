@@ -10,6 +10,7 @@ static var inst: Debris
 static var _sub_boxes := {}
 
 var pieces: Array = []   # {node, vel, ang, half, life, max_life}
+var _free: Array[MeshInstance3D] = []   # 다 쓴 조각 노드 (숨겨 두고 다시 쓴다 — 적 하나 부서질 때 수십~백여 개씩 만들고 지우던 것)
 
 
 func _exit_tree() -> void:
@@ -62,17 +63,10 @@ static func burst(body: Node3D, center: Vector3, power: float, lift: float, push
 static func toss(mesh: Mesh, mat: Material, xf: Transform3D, vel: Vector3, life := 1.1) -> void:
 	if inst == null:
 		return
-	var mi := MeshInstance3D.new()
-	mi.mesh = mesh
-	mi.material_override = mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	inst.add_child(mi)
-	mi.global_transform = xf
+	var mi := inst._take(mesh, mat, xf)
 	var ang := Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * randf_range(10.0, 18.0)
 	inst.pieces.append({"node": mi, "vel": vel, "ang": ang, "half": 0.05, "life": life, "max": life})
-	while inst.pieces.size() > MAX_PIECES:
-		var old: Dictionary = inst.pieces.pop_front()
-		(old.node as Node).queue_free()
+	inst._trim()
 
 
 static func _sub_box(half_size: Vector3) -> BoxMesh:
@@ -84,13 +78,43 @@ static func _sub_box(half_size: Vector3) -> BoxMesh:
 	return _sub_boxes[key]
 
 
-func _add_piece(mesh: Mesh, mat: Material, xf: Transform3D, center: Vector3, power: float, lift: float, push: Vector3, half: float) -> void:
-	var mi := MeshInstance3D.new()
+## 조각 노드 하나: 쉬는 노드가 있으면 다시 쓴다
+func _take(mesh: Mesh, mat: Material, xf: Transform3D) -> MeshInstance3D:
+	var mi: MeshInstance3D = null
+	while mi == null and not _free.is_empty():
+		mi = _free.pop_back()
+		if not is_instance_valid(mi) or mi.get_parent() != self:
+			mi = null          # 바닥 흡입(FloorVac)이 가져가 지운 노드
+	if mi == null:
+		mi = MeshInstance3D.new()
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF   # 최대 220조각: 그림자 패스 부담을 피한다
+		add_child(mi)
 	mi.mesh = mesh
 	mi.material_override = mat
-	mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF   # 최대 220조각: 그림자 패스 부담을 피한다
-	add_child(mi)
 	mi.global_transform = xf
+	mi.visible = true
+	return mi
+
+
+## 다 쓴 조각을 숨겨 쉬게 한다
+func _release(mi: MeshInstance3D) -> void:
+	if not is_instance_valid(mi):
+		return
+	if mi.get_parent() != self or _free.size() >= MAX_PIECES:
+		mi.queue_free()
+		return
+	mi.visible = false
+	_free.append(mi)
+
+
+func _trim() -> void:
+	while pieces.size() > MAX_PIECES:
+		var old: Dictionary = pieces.pop_front()
+		_release(old.node as MeshInstance3D)
+
+
+func _add_piece(mesh: Mesh, mat: Material, xf: Transform3D, center: Vector3, power: float, lift: float, push: Vector3, half: float) -> void:
+	var mi := _take(mesh, mat, xf)
 	var out := xf.origin - center
 	out.y = 0
 	var dir := out.normalized() if out.length() > 0.01 else Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized()
@@ -99,9 +123,7 @@ func _add_piece(mesh: Mesh, mat: Material, xf: Transform3D, center: Vector3, pow
 	var ang := Vector3(randf_range(-1, 1), randf_range(-1, 1), randf_range(-1, 1)) * randf_range(8.0, 20.0)
 	var life := randf_range(1.6, 2.5)
 	pieces.append({"node": mi, "vel": vel, "ang": ang, "half": clampf(half, 0.06, 0.3), "life": life, "max": life})
-	while pieces.size() > MAX_PIECES:
-		var old: Dictionary = pieces.pop_front()
-		(old.node as Node).queue_free()
+	_trim()
 
 
 func _physics_process(dt: float) -> void:
@@ -111,8 +133,8 @@ func _physics_process(dt: float) -> void:
 		var pc: Dictionary = pieces[i]
 		var mi := pc.node as MeshInstance3D
 		pc.life -= dt
-		if pc.life <= 0.0:
-			mi.queue_free()
+		if pc.life <= 0.0 or not is_instance_valid(mi):
+			_release(mi)
 			pieces.remove_at(i)
 			i -= 1
 			continue
@@ -143,7 +165,7 @@ func _physics_process(dt: float) -> void:
 			pos.z = old.z
 			v.z = -v.z * 0.4
 		if WorldFlow.gone(pos):
-			mi.queue_free()
+			_release(mi)
 			pieces.remove_at(i)
 			i -= 1
 			continue

@@ -56,8 +56,7 @@ var _rollers: Array[MeshInstance3D] = []
 func _ready() -> void:
 	add_to_group("rail_belts")
 	if _shader == null:
-		_shader = Shader.new()
-		_shader.code = SHADER
+		_shader = ResCache.shader(SHADER)
 		_roller_mesh = CylinderMesh.new()
 		_roller_mesh.top_radius = 0.16
 		_roller_mesh.bottom_radius = 0.16

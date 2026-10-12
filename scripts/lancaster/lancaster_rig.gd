@@ -101,7 +101,7 @@ var _glow_sent := Color(0, 0, 0, 0)
 func setup(parent: Node3D) -> LancasterRig:
 	rng.randomize()
 	t = rng.randf() * 10.0
-	model = (load(GLB) as PackedScene).instantiate() as Node3D
+	model = ResCache.instantiate(GLB) as Node3D
 	model.position = SHIFT
 	parent.add_child(model)
 	for nd in model.find_children("*", "Node3D", true, false):

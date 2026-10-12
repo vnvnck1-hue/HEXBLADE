@@ -22,8 +22,8 @@ static func shape(m: ArenaMap) -> void:
 	for r in m.rooms:
 		_room(m, r)
 	# 벽 칸 높이 = 이웃 바닥 중 가장 높은 곳 (둔덕 옆 벽이 바닥에 묻히지 않게)
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(m.scan.position.y, m.scan.end.y):
+		for x in range(m.scan.position.x, m.scan.end.x):
 			var c := Vector2i(x, y)
 			if m.grid[m._idx(c)] != ArenaMap.VOID:
 				continue

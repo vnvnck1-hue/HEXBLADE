@@ -13,8 +13,7 @@ var sight: MeshInstance3D
 
 func _ready() -> void:
 	if _mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never, blend_add;
 instance uniform float progress = 0.0;
@@ -42,7 +41,7 @@ void fragment() {
 	i *= 1.0 - smoothstep(0.93, 1.0, along) * 0.6;
 	ALBEDO = vec3(1.0, 0.07, 0.12) * i;
 }
-"""
+""")
 		_mat = ShaderMaterial.new()
 		_mat.shader = sh
 		_quad = QuadMesh.new()

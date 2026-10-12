@@ -35,7 +35,7 @@ static func active() -> bool:
 
 
 func _ready() -> void:
-	portrait = load("res://assets/ui/calm_hud/mecha_bust.png") as Texture2D
+	portrait = ResCache.texture("res://assets/ui/calm_hud/mecha_bust.png")
 	title_font.font_names = PackedStringArray(["Arial", "Liberation Sans", "Malgun Gothic", "sans-serif"])
 	title_font.font_weight = 800
 	title_font.font_italic = true

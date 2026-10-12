@@ -1,7 +1,7 @@
 extends SceneTree
 ## 프레임 시간 측정: 씬을 자동 플레이로 돌리며 실제 프레임 시간 분포 · 끊김(hitch) · 처리/물리 시간 · 그리기 호출 · 노드 수를 잰다.
 ## 기능을 끈 실행(--drone=off, --fluid=off, --infest=off …)과 비교하면 기능별 비용이 나온다.
-## 실행: powershell -File tools\godot.ps1 wait --fixed-fps 0 -s res://_capture/frame_probe.gd -- --scene=res://scenes/main.tscn --bot --dronebot --seed=4 --seconds=9999 --probe-seconds=40 [--warm=5] [--tag=base]
+## 실행: powershell -File tools\godot.ps1 wait -s res://_capture/frame_probe.gd -- --scene=res://scenes/main.tscn --bot --dronebot --seed=4 --seconds=9999 --probe-seconds=40 [--warm=5] [--tag=base]
 ## Main 은 --bot 이면 --seconds=(기본 20초) 뒤 스스로 끝낸다 → 측정보다 길게 --seconds=9999 를 같이 준다.
 ## 측정 길이는 --probe-seconds= 로 따로 준다
 ## 끊김 프레임은 HITCH 줄로 그때의 노드 수 · 그 프레임에 새로 생긴 노드 수를 같이 찍는다.
@@ -86,6 +86,10 @@ func _run() -> void:
 		await process_frame
 		_keep_alive()
 	var times: PackedFloat32Array = []
+	var vp := root.get_viewport_rid()
+	RenderingServer.viewport_set_measure_render_time(vp, true)
+	var rcpu := 0.0
+	var rgpu := 0.0
 	var procs: PackedFloat32Array = []
 	var physs: PackedFloat32Array = []
 	var draws := 0.0
@@ -112,6 +116,8 @@ func _run() -> void:
 		physs.append(Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS) * 1000.0)
 		draws += Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME)
 		prims += Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME)
+		rcpu += RenderingServer.viewport_get_measured_render_time_cpu(vp) + RenderingServer.get_frame_setup_time_cpu()
+		rgpu += RenderingServer.viewport_get_measured_render_time_gpu(vp)
 		var nn := int(Performance.get_monitor(Performance.OBJECT_NODE_COUNT))
 		nodes_max = maxi(nodes_max, nn)
 		total_added += _added
@@ -132,9 +138,9 @@ func _run() -> void:
 	for v in times:
 		avg += v
 	avg /= maxf(n, 1)
-	print("FRAME %s frames=%d avg=%.2fms p50=%.2f p95=%.2f p99=%.2f max=%.1f hitches(>%.0fms)=%d proc_p50=%.2f proc_p99=%.2f phys_p50=%.2f phys_p99=%.2f draws=%.0f prims=%.0fk nodes_max=%d added/s=%.0f" % [
+	print("FRAME %s frames=%d avg=%.2fms p50=%.2f p95=%.2f p99=%.2f max=%.1f hitches(>%.0fms)=%d proc_p50=%.2f proc_p99=%.2f phys_p50=%.2f phys_p99=%.2f draws=%.0f prims=%.0fk nodes_max=%d added/s=%.0f render_cpu=%.2fms render_gpu=%.2fms" % [
 		tag, n, avg, sorted[n / 2], sorted[int(n * 0.95)], sorted[int(n * 0.99)], sorted[n - 1], hitch_ms, hitches,
-		ps[n / 2], ps[int(n * 0.99)], ph[n / 2], ph[int(n * 0.99)], draws / maxf(n, 1), prims / maxf(n, 1) / 1000.0, nodes_max, total_added / seconds])
+		ps[n / 2], ps[int(n * 0.99)], ph[n / 2], ph[int(n * 0.99)], draws / maxf(n, 1), prims / maxf(n, 1) / 1000.0, nodes_max, total_added / seconds, rcpu / maxf(n, 1), rgpu / maxf(n, 1)])
 	if not hitch_spawn.is_empty():
 		print("HITCH_SPAWN %s %s" % [tag, _top(hitch_spawn, 10)])
 	quit()

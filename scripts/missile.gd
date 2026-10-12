@@ -221,7 +221,7 @@ func _core(p: Vector3) -> void:
 
 func _explode() -> void:
 	var p := global_position
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if en.alive and en.landed and (en.global_position + Vector3(0, 1, 0)).distance_to(p) < SPLASH:
 			var d := en.global_position - p

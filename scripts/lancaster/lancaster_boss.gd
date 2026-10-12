@@ -1608,8 +1608,7 @@ func _make_claw_trail() -> SaberTrail:
 	tr.active = false
 	if _claw_shader == null:
 		# 불투명 혼합 + 깊이 테스트 끔: 흰 기체 앞에서도 묻히지 않고 몸에 가려지지 않는다
-		_claw_shader = Shader.new()
-		_claw_shader.code = SaberTrail.SHADER.replace("blend_mix", "blend_mix, depth_test_disabled")
+		_claw_shader = ResCache.shader(SaberTrail.SHADER.replace("blend_mix", "blend_mix, depth_test_disabled"))
 	var m := ShaderMaterial.new()
 	m.shader = _claw_shader
 	m.render_priority = 2

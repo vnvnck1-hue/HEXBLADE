@@ -47,8 +47,7 @@ static func setup(parent: Node3D) -> void:
 
 	# 폭발 원형파: 카메라를 향한 판. 중심을 바닥 근처에 두면 아래 절반이 바닥에 가려져
 	# 참고 GIF 처럼 밑면이 평평한 반원 띠가 된다.
-	var rs := Shader.new()
-	rs.code = """
+	var rs: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled;
 instance uniform float progress = 0.0;
@@ -77,13 +76,12 @@ void fragment() {
 	}
 	ALBEDO = col;
 }
-""" % BILLBOARD
+""" % BILLBOARD)
 	_ring_mat = ShaderMaterial.new()
 	_ring_mat.shader = rs
 
 	# 검 원호: UV.x = 호를 따라, UV.y = 안쪽(0)→바깥(1)
-	var ss := Shader.new()
-	ss.code = """
+	var ss: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never;
 instance uniform float progress = 0.0;
@@ -128,7 +126,7 @@ void fragment() {
 	ALPHA = clamp(along * 1.8, 0.0, 1.0) * (1.0 - smoothstep(0.7, 1.0, progress)) * 0.95;
 	}
 }
-"""
+""")
 	_slash_mat = ShaderMaterial.new()
 	_slash_mat.shader = ss
 	if MocoFX.on:
@@ -141,8 +139,7 @@ void fragment() {
 		_slash_mat.set_shader_parameter("m_shade", lc.call(MocoFX.SHADE))
 	_slash_mesh = _build_arc_mesh(0.45, 2.7, deg_to_rad(150.0), 28)
 
-	var sh := Shader.new()
-	sh.code = """
+	var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, shadows_disabled, depth_draw_never;
 uniform float strength = 0.55;
@@ -152,7 +149,7 @@ void fragment() {
 	ALBEDO = tint.rgb;
 	ALPHA = (1.0 - smoothstep(0.15, 1.0, r)) * strength;
 }
-"""
+""")
 	_shadow_mat = ShaderMaterial.new()
 	_shadow_mat.shader = sh
 

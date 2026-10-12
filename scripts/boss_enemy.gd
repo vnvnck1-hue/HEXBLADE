@@ -692,8 +692,7 @@ static var _ring_quads := {}
 ## 바닥 원형 경고 메시 (반지름 r). progress 로 안쪽이 차오르고, 3/4 이후 깜빡인다
 func _ring_mesh(r: float, col := Color(1.0, 0.12, 0.1)) -> MeshInstance3D:
 	if _marker_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, shadows_disabled, depth_draw_never, blend_add;
 instance uniform float progress = 0.0;
@@ -707,7 +706,7 @@ void fragment() {
 	float i = (ring * 1.6 + fill + cross * 0.8 + 0.08 * (1.0 - step(1.0, r))) * blink;
 	ALBEDO = col.rgb * i;
 }
-"""
+""")
 		_marker_mat = ShaderMaterial.new()
 		_marker_mat.shader = sh
 	if not _ring_quads.has(r):

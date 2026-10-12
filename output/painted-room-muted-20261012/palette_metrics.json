@@ -1,0 +1,18 @@
+{
+  "measurement": "Identical camera and lighting. Floor/wall only, pixels of bright version with max RGB > .22. Luma measured in display RGB, not linear photometric luminance.",
+  "sampled_pixels": 389011,
+  "before": {
+    "mean_display_rgb_luma": 0.6286715950237004,
+    "mean_hsv_saturation": 0.3601885722860605
+  },
+  "after": {
+    "mean_display_rgb_luma": 0.3147835633016275,
+    "mean_hsv_saturation": 0.10851822462486489
+  },
+  "luma_ratio": 0.5007122411658513,
+  "saturation_ratio": 0.3012816979065069,
+  "stationary_mech_green_pixels": 2140,
+  "stationary_mech_region_includes_edge_and_floor_pixels": true,
+  "stationary_mech_green_max_rgb_change": 0.11764705882352944,
+  "stationary_mech_green_median_rgb_change": 0.0
+}

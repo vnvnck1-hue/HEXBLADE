@@ -254,8 +254,7 @@ static func _meshes() -> void:
 
 static func _ring() -> ShaderMaterial:
 	if _ring_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 instance uniform vec3 col = vec3(1.0);
@@ -279,7 +278,7 @@ void fragment() {
 	ALBEDO = mix(col, vec3(1.0), core * 0.45) * 1.7;
 	ALPHA = clamp(v * fade, 0.0, 1.0);
 }
-"""
+""")
 		_ring_mat = ShaderMaterial.new()
 		_ring_mat.shader = sh
 		_ring_mat.render_priority = 2
@@ -289,8 +288,7 @@ void fragment() {
 ## 외곽선 ① 마스크: 보이는 조각 픽셀에 스텐실 + 옅은 밝은 림
 static func _mask() -> ShaderMaterial:
 	if _mask_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled, fog_disabled;
 stencil_mode write, compare_always, %d;
@@ -301,7 +299,7 @@ void fragment() {
 	ALBEDO = col * 1.3;
 	ALPHA = r * 0.5 * fade;
 }
-""" % STENCIL_REF
+""" % STENCIL_REF)
 		_mask_mat = ShaderMaterial.new()
 		_mask_mat.shader = sh
 		_mask_mat.render_priority = 36
@@ -312,8 +310,7 @@ void fragment() {
 ## (RangeOutline 과 같은 방식: 4.7.2 의 compare_not_equal 은 통과하지 않아 compare_greater 로 거른다)
 static func _hull() -> ShaderMaterial:
 	if _hull_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, fog_disabled;
 stencil_mode read, compare_greater, %d;
@@ -342,7 +339,7 @@ void fragment() {
 	ALBEDO = mix(col, vec3(1.0), 0.18) * 1.35 * pulse;
 	ALPHA = clamp(0.35 + 0.65 * fade, 0.0, 1.0);
 }
-""" % STENCIL_REF
+""" % STENCIL_REF)
 		_hull_mat = ShaderMaterial.new()
 		_hull_mat.shader = sh
 		_hull_mat.render_priority = 37
@@ -352,8 +349,7 @@ void fragment() {
 ## 핀 아이콘: 카메라를 보는 판, 깊이 무시(벽 뒤에서도 보임). 잔해 = 별 모양, 체액 = 물방울
 static func _pin() -> ShaderMaterial:
 	if _pin_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, depth_test_disabled, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 instance uniform vec3 col = vec3(1.0);
@@ -407,7 +403,7 @@ void fragment() {
 	ALBEDO = c * blink;
 	ALPHA = clamp(0.25 + 0.75 * fade, 0.0, 1.0);
 }
-"""
+""")
 		_pin_mat = ShaderMaterial.new()
 		_pin_mat.shader = sh
 		_pin_mat.render_priority = 30
@@ -416,8 +412,7 @@ void fragment() {
 
 static func _beam_m() -> ShaderMaterial:
 	if _beam_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, blend_add, depth_draw_never, cull_disabled, shadows_disabled, fog_disabled;
 instance uniform vec3 col = vec3(1.0);
@@ -431,7 +426,7 @@ void fragment() {
 	ALBEDO = mix(col, vec3(1.0), 0.35) * 1.6;
 	ALPHA = clamp(a * (0.45 + 0.35 * run) * (1.0 - side * 0.6) * fade, 0.0, 1.0);
 }
-"""
+""")
 		_beam_mat = ShaderMaterial.new()
 		_beam_mat.shader = sh
 		_beam_mat.render_priority = 3

@@ -55,8 +55,7 @@ static func _setup() -> void:
 	m.albedo_color = Color(2.2, 2.2, 2.2)
 	_spark_mesh.material = m
 
-	var sh := Shader.new()
-	sh.code = """
+	var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, blend_mix;
 instance uniform float heat = 1.0;   // 1 막 긁힘 → 0 식음
@@ -92,7 +91,7 @@ void fragment() {
 	float a = mix(0.5 * soot, 1.0, smoothstep(0.02, 0.3, t));
 	ALPHA = clamp(shape * ends * a, 0.0, 1.0);
 }
-"""
+""")
 	_heat_mat = ShaderMaterial.new()
 	_heat_mat.shader = sh
 	_heat_mat.render_priority = -1

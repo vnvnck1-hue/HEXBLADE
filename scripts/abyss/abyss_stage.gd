@@ -357,8 +357,7 @@ void fragment() {
 
 
 func _shader(code: String) -> ShaderMaterial:
-	var sh := Shader.new()
-	sh.code = code.replace("NOISE", NOISE)
+	var sh: Shader = ResCache.shader(code.replace("NOISE", NOISE))
 	var m := ShaderMaterial.new()
 	m.shader = sh
 	return m

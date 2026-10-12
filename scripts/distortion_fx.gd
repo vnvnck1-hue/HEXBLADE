@@ -110,14 +110,12 @@ void fragment() {
 static func _setup() -> void:
 	if _burst_mat:
 		return
-	var bs := Shader.new()
-	bs.code = BURST_SHADER % [NOISE, FX.BILLBOARD]
+	var bs: Shader = ResCache.shader(BURST_SHADER % [NOISE, FX.BILLBOARD])
 	_burst_mat = ShaderMaterial.new()
 	_burst_mat.shader = bs
 	_burst_mat.render_priority = PRIORITY
 	_quad = QuadMesh.new()
-	_trail_shader = Shader.new()
-	_trail_shader.code = TRAIL_SHADER % NOISE
+	_trail_shader = ResCache.shader(TRAIL_SHADER % NOISE)
 
 
 ## 굴절 충격파. radius = 고리가 다 퍼졌을 때 반경(m), strength = 휘는 세기, haze = 안쪽 아지랑이(0~1+)

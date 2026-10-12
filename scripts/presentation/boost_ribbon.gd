@@ -56,8 +56,7 @@ var _phase := randf() * TAU
 
 static func material() -> ShaderMaterial:
 	if _mat == null:
-		var sh := Shader.new()
-		sh.code = SHADER
+		var sh: Shader = ResCache.shader(SHADER)
 		_mat = ShaderMaterial.new()
 		_mat.shader = sh
 	return _mat

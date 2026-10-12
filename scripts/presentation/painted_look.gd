@@ -354,8 +354,7 @@ static func _screen_quad(cam: Camera3D, code: String, prio: int) -> MeshInstance
 	var q := QuadMesh.new()
 	q.size = Vector2(2, 2)
 	q.flip_faces = true
-	var sh := Shader.new()
-	sh.code = code
+	var sh: Shader = ResCache.shader(code)
 	var m := ShaderMaterial.new()
 	m.shader = sh
 	m.render_priority = prio

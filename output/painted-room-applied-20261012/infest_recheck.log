@@ -1,0 +1,6 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== infest_check
+  FAIL  큰 포낭은 플레이어를 밀어냄 (0.28m)
+  RESULT FAILED (1 fails)
+
+FAILED: infest_check

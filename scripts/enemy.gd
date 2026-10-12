@@ -1071,8 +1071,7 @@ func _init_hp() -> void:
 	max_hp = maxi(hp, 1)
 	_bar_chip = 1.0
 	if _bar_mat == null:
-		var sh := Shader.new()
-		sh.code = HP_BAR_SHADER % FX.BILLBOARD
+		var sh: Shader = ResCache.shader(HP_BAR_SHADER % FX.BILLBOARD)
 		_bar_mat = ShaderMaterial.new()
 		_bar_mat.shader = sh
 		_bar_mat.render_priority = 10

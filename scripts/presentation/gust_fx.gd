@@ -201,8 +201,7 @@ static func _build_mesh() -> ArrayMesh:
 func _ready() -> void:
 	if _mesh == null:
 		_mesh = _build_mesh()
-		var sh := Shader.new()
-		sh.code = SHADER
+		var sh: Shader = ResCache.shader(SHADER)
 		_mat = ShaderMaterial.new()
 		_mat.shader = sh
 	_mm = MultiMesh.new()

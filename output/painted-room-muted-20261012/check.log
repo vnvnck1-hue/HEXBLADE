@@ -1,0 +1,34 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+
+TEXTURE_DIORAMA_READY surfaces=56 categories=4
+TEXTURE_DIORAMA_READY surfaces=56 categories=4
+PAINTED_ROOM_READY private_meshes=24 textures=3
+PASS 12 floor modules / service deck / 11 wall meshes have private UV meshes
+PASS original PNG receives requested low saturation/value correction
+PASS painted PNG has imported mipmaps
+PASS original PNG receives requested low saturation/value correction
+PASS painted PNG has imported mipmaps
+PASS original PNG receives requested low saturation/value correction
+PASS painted PNG has imported mipmaps
+PASS source geometry/materials and furniture/machinery remain unchanged
+PASS all seven W01 walls identify the real cream infill as one part
+PASS painted UVs remain within each PNG
+PASS full room artwork covers exact 8x6m floor
+PASS painted joints align with the 2m model seams
+PASS B restores original geometry AND original materials
+PASS unlit mode preserves the low-value correction
+PASS lit mode restores real lighting
+PASS manual wall replacement returns to original UV geometry without touching painted floor
+PASS R restores only selected category
+PASS restore button brings both painted presets back
+PASS furniture hide control leaves painted floor and walls active
+PASS furniture visibility restores
+PASS painted lab uses real color ambient fill rather than a missing sky
+PASS new study is reachable from lobby
+TEXTURE_DIORAMA_READY surfaces=56 categories=4
+PAINTED_ROOM_READY private_meshes=24 textures=3
+PASS reload 1 keeps global caches stable
+TEXTURE_DIORAMA_READY surfaces=56 categories=4
+PAINTED_ROOM_READY private_meshes=24 textures=3
+PASS reload 2 keeps global caches stable
+PAINTED_ROOM_CHECK 24 checks 0 fails

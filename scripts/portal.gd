@@ -112,8 +112,7 @@ func _ready() -> void:
 	membrane = MeshInstance3D.new()
 	membrane.mesh = dm
 	var mat := ShaderMaterial.new()
-	var sh := Shader.new()
-	sh.code = MEMBRANE_SHADER
+	var sh := ResCache.shader(MEMBRANE_SHADER)
 	mat.shader = sh
 	mat.set_shader_parameter("tint", color)
 	membrane.material_override = mat

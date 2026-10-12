@@ -40,7 +40,7 @@ static func active() -> bool:
 
 ## 메카를 body 아래에 만들고 Build.robot 과 같은 키의 관절 사전을 돌려준다.
 static func build(body: Node3D) -> Dictionary:
-	var glb := (load(GLB) as PackedScene).instantiate() as Node3D
+	var glb := ResCache.instantiate(GLB) as Node3D
 	var g := {}                       # GLB 노드 이름 → 노드
 	for n in glb.find_children("*", "Node3D", true, false):
 		g[n.name] = n

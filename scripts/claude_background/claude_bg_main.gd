@@ -75,7 +75,7 @@ func _prop_cells() -> Array[Vector3]:
 
 
 func _inst(key: String) -> Node3D:
-	var n := (load(GLB[key]) as PackedScene).instantiate() as Node3D
+	var n := ResCache.instantiate(GLB[key]) as Node3D
 	n.set_meta("claude_bg", key)      # BrawlLook 이 W01 을 벽 역할로 칠한다 (본편 ClaudeBgDress 와 같은 메타)
 	bg.add_child(n)
 	return n

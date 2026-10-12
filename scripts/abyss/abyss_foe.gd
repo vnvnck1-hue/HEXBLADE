@@ -35,8 +35,7 @@ func _ready() -> void:
 ## 공격 예고 발광: 가장자리가 강하게 맥동하는 진홍빛
 static func tele_material() -> ShaderMaterial:
 	if _tele_mat == null:
-		var sh := Shader.new()
-		sh.code = """
+		var sh: Shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_back, depth_draw_never, shadows_disabled;
 void fragment() {
@@ -45,7 +44,7 @@ void fragment() {
 	ALBEDO = mix(vec3(1.0, 0.05, 0.12), vec3(1.0, 0.75, 0.75), rim * 0.6) * 2.6;
 	ALPHA = clamp(0.22 + pulse * 0.25 + rim * 0.9, 0.0, 1.0);
 }
-"""
+""")
 		_tele_mat = ShaderMaterial.new()
 		_tele_mat.shader = sh
 	return _tele_mat

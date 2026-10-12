@@ -167,8 +167,7 @@ func _ready() -> void:
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	mat = ShaderMaterial.new()
-	var sh := Shader.new()
-	sh.code = SHADER
+	var sh: Shader = ResCache.shader(SHADER)
 	mat.shader = sh
 	rect.material = mat
 	add_child(rect)
@@ -251,8 +250,7 @@ func _process(_dt: float) -> void:
 
 static func _glint_material() -> ShaderMaterial:
 	if _glint_mat == null:
-		var sh := Shader.new()
-		sh.code = GLINT % FX.BILLBOARD
+		var sh: Shader = ResCache.shader(GLINT % FX.BILLBOARD)
 		_glint_mat = ShaderMaterial.new()
 		_glint_mat.shader = sh
 		_quad = QuadMesh.new()
@@ -289,8 +287,7 @@ static func glint(pos: Vector3, size: float, c: Color, dur := 0.32, parent: Node
 
 static func _star_material() -> ShaderMaterial:
 	if _star_mat == null:
-		var sh := Shader.new()
-		sh.code = STAR % FX.BILLBOARD
+		var sh: Shader = ResCache.shader(STAR % FX.BILLBOARD)
 		_star_mat = ShaderMaterial.new()
 		_star_mat.shader = sh
 		_glint_material()

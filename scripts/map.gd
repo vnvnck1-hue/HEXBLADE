@@ -51,6 +51,10 @@ var feats: Array = []                 # 곡면 요소: 둔덕/오목한 자리(m
 ## 방 크기 배율 (생성 전에 정한다). 1 = 예전 크기. 메인 게임(방 탐색 · 섹터 런 전투방)은 ROOM_SCALE.
 ## 넓은 방은 BIG_ROOMS 배율 × (1 + (room_scale - 1) × BIG_SPREAD). 방 정보의 scale 은 여전히 '보통 방 대비' 배율이다.
 var room_scale := 1.0
+## 바닥·기둥·엄폐물이 있는 칸의 경계 + SCAN_PAD 칸 (격자 밖으로는 자름). 맵 생성·꾸밈이 280×280 격자 전체 대신 이 안만 훑는다.
+## 이 밖의 칸은 모두 VOID 이고 바닥에서 SCAN_PAD 칸 넘게 떨어져 있어 벽·꾸밈·설비 바닥(최대 8칸)이 생기지 않는다.
+var scan := Rect2i(0, 0, W, H)
+const SCAN_PAD := 10
 const ROOM_SCALE := 1.6
 const BIG_SPREAD := 0.5
 
@@ -265,6 +269,7 @@ func generate(seed_value: int) -> void:
 					_carve_corridor(a.center, b.center)
 					a.links.append(b.id)
 					b.links.append(a.id)
+	update_scan()
 	_find_doors()
 	_assign_difficulty()
 	_pick_wave_room()
@@ -300,6 +305,7 @@ func generate_single(seed_value: int, shape_id: int, combat: bool, size := Vecto
 	rooms.clear()
 	var shp := _room_shape(shape_id) if size == Vector2i.ZERO else _shape(shape_id, size)
 	start_room = _stamp(Vector2i(W / 2, H / 2), shp, shape_id, combat)
+	update_scan()
 	Terrain.shape(self)
 	_compute_anchors()
 
@@ -548,9 +554,25 @@ func _carve_line(p: Vector2i, q: Vector2i) -> void:
 		c += step
 
 
-func _find_doors() -> void:
+## 바닥 칸 경계를 다시 잰다 (격자를 다 찍은 뒤 한 번)
+func update_scan() -> void:
+	var lo := Vector2i(W, H)
+	var hi := Vector2i(-1, -1)
 	for y in H:
+		var row := y * W
 		for x in W:
+			if grid[row + x] != VOID:
+				lo = Vector2i(mini(lo.x, x), mini(lo.y, y))
+				hi = Vector2i(maxi(hi.x, x), maxi(hi.y, y))
+	if hi.x < 0:
+		scan = Rect2i(0, 0, 0, 0)
+		return
+	scan = Rect2i(lo, hi - lo + Vector2i.ONE).grow(SCAN_PAD).intersection(Rect2i(0, 0, W, H))
+
+
+func _find_doors() -> void:
+	for y in range(scan.position.y, scan.end.y):
+		for x in range(scan.position.x, scan.end.x):
 			var c := Vector2i(x, y)
 			var i := _idx(c)
 			if grid[i] != FLOOR or room_of[i] != -1:
@@ -583,13 +605,12 @@ func _assign_difficulty() -> void:
 # ── 메시 · 충돌 ─────────────────────────────────────────
 
 func build() -> void:
-	_floor_shader = Shader.new()
-	_floor_shader.code = FLOOR_SHADER
+	_floor_shader = ResCache.shader(FLOOR_SHADER)
 	# 바닥: 방마다 살짝 다른 색
 	var tints := [Color(0.175, 0.175, 0.29), Color(0.19, 0.17, 0.3), Color(0.16, 0.18, 0.3), Color(0.185, 0.165, 0.27), Color(0.17, 0.19, 0.31)]
 	var regions := {}
-	for y in H:
-		for x in W:
+	for y in range(scan.position.y, scan.end.y):
+		for x in range(scan.position.x, scan.end.x):
 			var i := y * W + x
 			if grid[i] == VOID:
 				continue
@@ -619,8 +640,8 @@ func build() -> void:
 	solid.resize(W * H)
 	var base := PackedFloat32Array()
 	base.resize(W * H)
-	for y in H:
-		for x in W:
+	for y in range(scan.position.y, scan.end.y):
+		for x in range(scan.position.x, scan.end.x):
 			var i := y * W + x
 			var g := grid[i]
 			if g == PILLAR or g == LOW:
@@ -635,16 +656,16 @@ func build() -> void:
 	top_st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var body := StaticBody3D.new()
 	add_child(body)
-	for y in H:
-		var x := 0
-		while x < W:
+	for y in range(scan.position.y, scan.end.y):
+		var x := scan.position.x
+		while x < scan.end.x:
 			var t := solid[y * W + x]
 			var b0 := base[y * W + x]
 			if t == 0:
 				x += 1
 				continue
 			var x0 := x
-			while x < W and solid[y * W + x] == t and absf(base[y * W + x] - b0) < 0.001:
+			while x < scan.end.x and solid[y * W + x] == t and absf(base[y * W + x] - b0) < 0.001:
 				x += 1
 			var h := WALL_H if t >= 9 else (PILLAR_H if t == PILLAR else LOW_H)
 			var mn := Vector3((x0 - W * 0.5) * CELL, 0, (y - H * 0.5) * CELL)
@@ -905,19 +926,21 @@ func find_path(from: Vector3, to: Vector3) -> Array[Vector3]:
 	prev[_idx(s)] = -1
 	var head := 0
 	var gi := _idx(g)
+	# 너비 우선 탐색: 칸 번호로만 계산한다 (예전엔 이웃마다 Vector2i·배열을 만들어 큰 맵에서 한 번에 16ms — 봇이 0.5초마다 불렀다)
+	var steps := PackedInt32Array([1, -1, W, -W])
 	while head < q.size():
 		var i := q[head]
 		head += 1
 		if i == gi:
 			break
 		var cx := i % W
-		var cy := i / W
-		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-			var n: Vector2i = Vector2i(cx, cy) + d
-			if not _in(n):
+		for k in 4:
+			if (k == 0 and cx == W - 1) or (k == 1 and cx == 0):
 				continue
-			var ni := _idx(n)
-			if prev[ni] != -2 or is_blocked_cell(n):
+			var ni := i + steps[k]
+			if ni < 0 or ni >= W * H or prev[ni] != -2:
+				continue
+			if grid[ni] != FLOOR or (gate_of[ni] >= 0 and rooms[gate_of[ni]].gates_closed):
 				continue
 			prev[ni] = i
 			q.append(ni)
@@ -925,8 +948,9 @@ func find_path(from: Vector3, to: Vector3) -> Array[Vector3]:
 		return out
 	var cur := gi
 	while cur != -1:
-		out.push_front(world_of(Vector2i(cur % W, cur / W)))
+		out.append(world_of(Vector2i(cur % W, cur / W)))
 		cur = prev[cur]
+	out.reverse()
 	return out
 
 

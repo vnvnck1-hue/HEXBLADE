@@ -229,6 +229,7 @@ var rushing := false
 var charge_snd: AudioStreamPlayer
 var boost_snd: AudioStreamPlayer
 var celebrate_t := -1.0
+var entrance: PlayerEntrance     # 등장 연출: 화면 아래 밖에서 날아와 브레이크 턴 착지 (presentation/player_entrance.gd)
 
 const PIVOT_Y := 0.85
 
@@ -294,6 +295,12 @@ func _ready() -> void:
 	boost_snd = AudioStreamPlayer.new()
 	add_child(boost_snd)
 	boost_snd.volume_db = -80.0
+	entrance = PlayerEntrance.make(self)
+
+
+## 등장 연출 중인가 (조작 잠금 · 무적)
+func entrance_busy() -> bool:
+	return entrance != null and entrance.active()
 
 
 func _physics_process(dt: float) -> void:
@@ -479,7 +486,7 @@ func _physics_process(dt: float) -> void:
 		boost = 1.0
 		overheated = false
 	if want_boost and boost > 0.0:
-		if not boosting:
+		if not boosting and not entrance_busy():
 			_boost_start()
 		boost = maxf(0.0, boost - BOOST_DRAIN * dt)
 		boost_idle = 0.0
@@ -1015,7 +1022,7 @@ func _fire_laser(k: float) -> void:
 		length = contact.dist
 	var dmg := int(round(lerpf(3.0, 10.0, k)))
 	var hit_any := false
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -1089,7 +1096,7 @@ func combo_strike(dir: Vector3, reach: float, cone_deg: float, dmg: int, kb: flo
 	var blocked := 0
 	var killed := 0
 	var yaw := atan2(-dir.x, -dir.z)
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -1144,7 +1151,7 @@ func _phantom_start() -> void:
 	var main := Main.inst
 	var best: Enemy = null
 	var bd := PHANTOM_RANGE
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -1196,7 +1203,7 @@ func _phantom_hit() -> void:
 	var dir := path / maxf(length, 0.001) if length > 0.01 else lunge_dir
 	var yaw := atan2(-dir.x, -dir.z)
 	var marked: Array = []
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed:
 			continue
@@ -1339,7 +1346,7 @@ func _update_ult_aim() -> void:
 	var snap: Enemy = null
 	var snap_sp := ult_raw
 	var bd := mr
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed or locks.has(en) or locks.size() >= LOCK_MAX:
 			continue
@@ -1359,7 +1366,7 @@ func _update_ult_aim() -> void:
 	ult_snap = snap
 	ult_ptr = ult_ptr.lerp(snap_sp, 1.0 - exp(-(48.0 if snap else 30.0) * rdt))
 	# 조준점(또는 마우스)이 스치는 적을 락온
-	for e in get_tree().get_nodes_in_group("enemies"):
+	for e in Enemy.live(get_tree()):
 		var en := e as Enemy
 		if not en.alive or not en.landed or locks.has(en) or locks.size() >= LOCK_MAX:
 			continue
@@ -1680,7 +1687,7 @@ func _update_mega(dt: float) -> void:
 	if mega_tick <= 0.0:
 		mega_tick = MEGA_TICK
 		var hit_any := false
-		for e in get_tree().get_nodes_in_group("enemies"):
+		for e in Enemy.live(get_tree()):
 			var en := e as Enemy
 			if not en.alive or not en.landed:
 				continue
@@ -2053,7 +2060,7 @@ func _animate(dt: float) -> void:
 		blade.scale = blade.scale.lerp(Vector3.ONE, 0.3)
 		torso.rotation.y = lerpf(torso.rotation.y, 0.0, 0.25)
 
-	_animate_jets(dt, maxf(1.0 if boosting else 0.0, tech.jet_k()))
+	_animate_jets(dt, maxf(maxf(1.0 if boosting else 0.0, tech.jet_k()), entrance.jet() if entrance_busy() else 0.0))
 	motion.post(dt)
 	# 검술 콤보: 관절·높이·몸 기울기를 콤보 자세로 덮고, 스윙 사이 칼 위치를 잔상에 넘긴다
 	trail.tint = blade_fx.flame_k
@@ -2074,6 +2081,8 @@ func _animate(dt: float) -> void:
 		gimmick_pose.call(self, dt)    # 기믹 자세 (레버 돌리기)
 	if gear_pose.is_valid():
 		gear_pose.call(self, dt)       # 청소 질주 자세 (SweepGear)
+	if entrance_busy():
+		entrance.pose(dt)              # 등장 연출: 몸을 날리고 자세를 덮어쓴다
 	if mech:
 		MechPlayer.settle(j)
 	_feed_body_trails(dt)
@@ -2089,7 +2098,7 @@ func _animate(dt: float) -> void:
 ## 팔·다리 리본: 대시(드릴 회전) 중이거나 돌진 중일 때만 보인다
 func _feed_body_trails(dt: float) -> void:
 	var spin := spin_pose.is_valid() or whirl.active()
-	var on := leap.flying() or dash_t > 0.0 or rushing or lunge_t > 0.0 or combo.ph == SwordCombo.Ph.LUNGE or tech.rushing() or spin
+	var on := entrance_busy() or leap.flying() or dash_t > 0.0 or rushing or lunge_t > 0.0 or combo.ph == SwordCombo.Ph.LUNGE or tech.rushing() or spin
 	# 대시 회전·돌진은 몸 톤 리본만: 광선검의 분홍 초승달은 끈다 (자세를 잡는 칼이 궤적을 어지럽히지 않게)
 	trail.active = (not on or tech.whirl() or spin or leap.busy()) and not tech.charging()     # 최대 돌진 · 휠윈드는 광선검 회오리 잔상을 남긴다
 	for bt in body_trails:

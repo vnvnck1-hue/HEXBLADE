@@ -64,8 +64,7 @@ static func _shared() -> void:
 	if _tex:
 		return
 	_tex = ImageTexture.create_from_image(_make_image(256))
-	var sh := Shader.new()
-	sh.code = FLAME_SHADER
+	var sh: Shader = ResCache.shader(FLAME_SHADER)
 	_flame_mat = ShaderMaterial.new()
 	_flame_mat.shader = sh
 	_flame_mat.render_priority = 3

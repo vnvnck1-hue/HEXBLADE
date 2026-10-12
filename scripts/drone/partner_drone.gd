@@ -285,7 +285,7 @@ func _ready() -> void:
 		DockingVoice.warm()
 	visual = Node3D.new()
 	add_child(visual)
-	model = (load(MODEL) as PackedScene).instantiate()
+	model = ResCache.instantiate(MODEL)
 	visual.add_child(model)
 	rig = DroneRig.new().setup(model)
 	nozzle = model.find_child("pt_nozzle", true, false)
@@ -525,6 +525,12 @@ func add_gauge(v: float) -> void:
 
 ## 등장: 하늘에서 추진기로 감속하며 떨어져 쿵 착지
 func _deploy(dt: float) -> void:
+	if player.entrance_busy():
+		# 플레이어가 날아 들어오는 동안은 기다렸다가, 착지한 뒤 따라 내려온다
+		st_t = 0.0
+		visual.visible = false
+		return
+	visual.visible = true
 	var k := clampf(st_t / 0.65, 0.0, 1.0)
 	visual.position.y = 7.0 * (1.0 - k) * (1.0 - k)
 	rig.air = 1.0

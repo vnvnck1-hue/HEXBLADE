@@ -158,8 +158,7 @@ func release() -> void:
 
 static func _material() -> ShaderMaterial:
 	if _mat == null:
-		var sh := Shader.new()
-		sh.code = SHADER
+		var sh: Shader = ResCache.shader(SHADER)
 		_mat = ShaderMaterial.new()
 		_mat.shader = sh
 		_mat.set_shader_parameter("life", LIFE)

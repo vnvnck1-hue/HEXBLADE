@@ -42,7 +42,7 @@ static func floor_material(offset := Vector2.ZERO) -> ShaderMaterial:
 	var key := Vector2i(posmod(roundi(offset.x), 2), posmod(roundi(offset.y), 2))
 	if not _floor_mats.has(key):
 		var tex: Texture2D = null
-		var n := (load(GLB.f01) as PackedScene).instantiate()
+		var n := ResCache.instantiate(GLB.f01)
 		for mi: MeshInstance3D in n.find_children("*", "MeshInstance3D", true, false):
 			var m := mi.mesh.surface_get_material(0) as BaseMaterial3D
 			if m and m.albedo_texture:
@@ -74,7 +74,7 @@ static func block_mesh(kind: String) -> Mesh:
 
 
 static func _inst(parent: Node3D, kind: String, pos: Vector3, yaw_deg: float) -> Node3D:
-	var n := (load(GLB[kind]) as PackedScene).instantiate() as Node3D
+	var n := ResCache.instantiate(GLB[kind]) as Node3D
 	n.rotation_degrees.y = yaw_deg
 	n.position = pos
 	n.set_meta("claude_bg", kind)
@@ -115,14 +115,15 @@ static func plan(map: ArenaMap, occupied: Dictionary) -> void:
 	var tall := {}
 	# 줄마다 연속 구간 [x0, x1)
 	var runs: Array = []
-	for y in ArenaMap.H:
-		var x := 0
-		while x < ArenaMap.W:
+	var sc := map.scan
+	for y in range(sc.position.y, sc.end.y):
+		var x := sc.position.x
+		while x < sc.end.x:
 			if not _tall_ok(map, Vector2i(x, y), occupied):
 				x += 1
 				continue
 			var x0 := x
-			while x < ArenaMap.W and _tall_ok(map, Vector2i(x, y), occupied):
+			while x < sc.end.x and _tall_ok(map, Vector2i(x, y), occupied):
 				x += 1
 			if x - x0 >= MIN_RUN:        # 짧은 구간에 3m 판 하나만 서면 외딴 기둥처럼 보인다 → 낮은 블록으로
 				runs.append([y, x0, x])
@@ -222,8 +223,8 @@ static func apply(map: ArenaMap) -> void:
 	var tall: Dictionary = map.get_meta("claude_tall", {})
 	var occupied: Dictionary = map.get_meta("claude_occupied", {})
 	var spots := {"wall": [], "cover": [], "pillar": []}
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var c := Vector2i(x, y)
 			var i := map._idx(c)
 			var g := map.grid[i]

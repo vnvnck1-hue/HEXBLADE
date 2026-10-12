@@ -19,6 +19,10 @@ powershell -File tools\godot.ps1 wait -s res://_capture/frame_probe.gd -- --scen
 Main 은 `--bot` 이면 `--seconds=`(기본 20초) 뒤 스스로 끝내므로 `--seconds=9999` 를 같이 주고, 측정 길이는 `--probe-seconds=` 로 준다
 (안 주면 Main 이 20초에 먼저 끝내 버려 결과 줄이 안 찍힌다 — 충돌처럼 보이지만 정상 종료).
 
+`_capture/script_profile.gd` 는 스크립트 종류마다 처리 순서를 따로 주고 사이에 표시 노드를 넣어, 스크립트별 `_process` · `_physics_process` 평균/최대 시간을 찍는다
+(`--spike=ms` 이상인 순간은 SPIKE 줄). 처리 순서를 바꾸므로 순간 스파이크 값은 왜곡될 수 있다 — 평상시 평균 비교용.
+`frame_probe.gd` 는 렌더 CPU/GPU 시간(`render_cpu` · `render_gpu`)도 찍는다. **`--fixed-fps 0` 은 주지 않는다** (물리 틱이 멈추고 변환이 NaN 이 되어 프레임마다 수 초 걸린다).
+
 `_capture/phys_profile.gd` 는 물리 틱 하나를 [그 밖 / Main / 플레이어 / 드론 / 적] 구간으로 나눠 오래 걸린 틱만 찍는다.
 
 **측정 주의 — 로그를 파일로 받으면 `print()` 가 느려진다.** PowerShell 을 거쳐 파일로 리다이렉트하면 `print` 한 줄이 평균 2ms(최대 7ms) 걸려
@@ -78,6 +82,28 @@ Main 은 `--bot` 이면 `--seconds=`(기본 20초) 뒤 스스로 끝내므로 `-
 
 **그 밖**: HUD·`Striker` 의 그룹 조회를 `Enemy.live()` 로.
 
+## 2차 (2026-10-12): 씬 전환 멈춤 · 반복 로드
+
+측정: 평상시 프레임은 대부분 씬 3~4ms(방 탐색 5~7ms) 로 양호했고, 체감 렉은 **섹터 런에서 칸을 옮길 때마다 1.5초 멈춤**이었다.
+씬을 불러올 때 `Main._ready` 구간을 재 보니 (섹터 런 두 번째 칸부터, 전 → 후):
+
+| 구간 | 전 | 후 | 원인 |
+|---|---|---|---|
+| 아레나 생성 (`map.build`) | 1000~1250ms | 55~70ms | 방 하나짜리 맵인데 280×280 격자 전체를 GDScript 로 여러 번 훑음 · 배경 GLB 를 매번 디스크에서 다시 읽음 |
+| 플레이어 (메카 GLB) | 180ms | 20ms | 이전 씬이 사라지며 GLB 가 풀려 다시 읽음 |
+| 파트너 드론 | 86ms | 4ms | 〃 |
+| 총 연출 (`GunFX` · `ToonGunFX`) | 72ms | 0.1ms | 셰이더를 씬마다 새로 만들어 다시 컴파일 |
+| 합계 (칸 이동 멈춤) | 약 1.5초 | 약 0.15초 | |
+
+- `ArenaMap.scan` — 바닥 칸 경계 + 10칸(`SCAN_PAD`). 맵 생성 · 벽 · 데칼 · 배경 배치 · 설비 거리장 · 지형 루프가 이 안만 훑는다 (행 우선 순서는 그대로라 무작위 배치 결과 동일).
+- `ResCache` (`scripts/res_cache.gd`) — 씬을 바꿔도 남는 보관소. `ResCache.instantiate(path)` · `texture(path)` · `get_res(path)`.
+  메카 · 드론 · LANCASTER · 배경 W01 묶음 · HUD 초상/아이콘 · 컷인 포즈 원화에 적용.
+  `ResCache.warm(paths)` 는 백그라운드 스레드로 미리 읽는다 — 로비(`Lobby.WARM`)가 첫 게임 진입에 쓸 GLB 를 미리 읽어 둔다.
+- `ResCache.shader(code)` — 같은 코드의 셰이더는 하나만. `Shader.new()` + `code` 95곳을 이것으로 바꿨다.
+- 풀: 몸체 파편 `Debris` · 탄피/착탄 파편 `GunFX` 노드를 지우지 않고 숨겨 다시 쓴다.
+- 감염 둥지 `InfestNest`: 모든 혹이 멈추고 플레이어가 멀면 틱을 통째로 건너뛴다 (`_idle`).
+- 매 틱 표적 탐색 (플레이어 레이저 · 궁극기 조준 · 콤보 · 미사일 · 패링 탄 · 봇) 을 `Enemy.live()` 로.
+
 ## 새 기능을 넣을 때의 규칙
 
 1. **전투 중에 `load()` 하지 않는다.** 마지막 사용자가 사라지면 리소스가 풀려 다음 `load()` 가 디스크에서 다시 읽는다
@@ -91,3 +117,6 @@ Main 은 `--bot` 이면 `--seconds=`(기본 20초) 뒤 스스로 끝내므로 `-
 6. **맵 전체에 깔리는 꾸밈은 멀리서 쉰다.** `Cull.far(위치)` (플레이어에서 26m 밖 = 화면 밖) 이면 갱신을 건너뛴다. 판정에는 쓰지 않는다.
 7. **멈춘 것은 다시 쓰지 않는다.** 스프링이 쉬면 변환·셰이더 값 쓰기를 건너뛰고(`InfestNest` 혹), 쉬는 UI 는 다시 그리지 않는다(`ComboMeter` · `SpeechBubble`).
 8. **그룹 조회는 `Enemy.live(get_tree())`** (프레임당 한 번만 배열을 만든다).
+9. **씬마다 다시 쓰는 GLB · 큰 텍스처는 `ResCache`** 로 읽는다 (`load()` 는 씬이 바뀌면 풀려 다시 읽는다).
+10. **셰이더는 `ResCache.shader(code)`** 로 만든다. 코드에 바뀌는 숫자를 끼워 넣지 말고 uniform 으로 넘긴다 (종류마다 쌓인다).
+11. **맵 칸 루프는 `map.scan` 안만** 돈다 (`ArenaMap.W/H` 전체 280×280 을 돌지 않는다).

@@ -105,8 +105,7 @@ static func vc_material() -> ShaderMaterial:
 
 static func _vc_shader() -> Shader:
 	if _shader == null:
-		_shader = Shader.new()
-		_shader.code = """
+		_shader = ResCache.shader("""
 shader_type spatial;
 render_mode unshaded, cull_disabled, depth_draw_never, shadows_disabled, blend_mix, fog_disabled;
 uniform float hdr = 1.3;
@@ -117,7 +116,7 @@ void fragment() {
 	ALBEDO = c * mix(1.0, hdr, w);
 	ALPHA = COLOR.a;
 }
-"""
+""")
 	return _shader
 
 
@@ -220,6 +219,7 @@ func _draw_bursts(dt: float) -> void:
 	if _bursts.is_empty():
 		return
 	_im.surface_begin(Mesh.PRIMITIVE_TRIANGLES)
+	_tri(Vector3.ZERO, Vector3.ZERO, Vector3.ZERO, Color(0, 0, 0, 0))   # 아직 아무 버스트도 안 그려지는 프레임(지연 중)에도 빈 면 오류가 나지 않게 — 넓이 0 이라 안 그려진다
 	for b: Dictionary in _bursts:
 		if b.has("mz"):
 			MisfitzHit.emit(self, b)

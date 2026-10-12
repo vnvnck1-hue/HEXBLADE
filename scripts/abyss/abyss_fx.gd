@@ -35,20 +35,16 @@ static func setup() -> void:
 		_splat_orm = ImageTexture.create_from_image(orm)
 	if _crescent == null:
 		_crescent = _build_crescent()
-		var sh := Shader.new()
-		sh.code = CRESCENT_SHADER
+		var sh: Shader = ResCache.shader(CRESCENT_SHADER)
 		_crescent_mat = ShaderMaterial.new()
 		_crescent_mat.shader = sh
-		var bs := Shader.new()
-		bs.code = BEAM_SHADER
+		var bs: Shader = ResCache.shader(BEAM_SHADER)
 		_beam_mat = ShaderMaterial.new()
 		_beam_mat.shader = bs
-		var ss := Shader.new()
-		ss.code = SIGIL_SHADER
+		var ss: Shader = ResCache.shader(SIGIL_SHADER)
 		_sigil_mat = ShaderMaterial.new()
 		_sigil_mat.shader = ss
-		var ws := Shader.new()
-		ws.code = WARN_SHADER
+		var ws: Shader = ResCache.shader(WARN_SHADER)
 		_warn_mat = ShaderMaterial.new()
 		_warn_mat.shader = ws
 		_box = BoxMesh.new()

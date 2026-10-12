@@ -108,8 +108,7 @@ static func saber_material() -> ShaderMaterial:
 static func make_material(additive := false) -> ShaderMaterial:
 	var key := "add" if additive else "mix"
 	if not _shaders.has(key):
-		var sh := Shader.new()
-		sh.code = SHADER.replace("blend_mix", "blend_add" if additive else "blend_mix")
+		var sh: Shader = ResCache.shader(SHADER.replace("blend_mix", "blend_add" if additive else "blend_mix"))
 		_shaders[key] = sh
 	var m := ShaderMaterial.new()
 	m.shader = _shaders[key]

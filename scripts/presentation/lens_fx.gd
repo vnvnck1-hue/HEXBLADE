@@ -36,8 +36,7 @@ var _mat: ShaderMaterial
 func _ready() -> void:
 	layer = 5
 	_mat = ShaderMaterial.new()
-	_mat.shader = Shader.new()
-	_mat.shader.code = SHADER
+	_mat.shader = ResCache.shader(SHADER)
 	_rect = ColorRect.new()
 	_rect.material = _mat
 	_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE

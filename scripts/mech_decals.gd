@@ -59,8 +59,8 @@ static func dress(map: ArenaMap, skip: Dictionary) -> Node3D:
 	rng.seed = map.rng.seed ^ 0x5EED
 	var used: Dictionary = {}          # 바닥 칸 점유
 	var regions: Dictionary = {}
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var c := Vector2i(x, y)
 			if map.grid[map._idx(c)] == ArenaMap.FLOOR:
 				var rid: int = map.room_of[map._idx(c)]
@@ -179,8 +179,8 @@ static func _is_edge_wall(map: ArenaMap, c: Vector2i, skip: Dictionary) -> bool:
 static func _wall_tops(map: ArenaMap, kit: Node3D, rng: RandomNumberGenerator, skip: Dictionary) -> void:
 	var taken: Dictionary = {}
 	var cands: Array[Vector2i] = []
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var c := Vector2i(x, y)
 			if _is_edge_wall(map, c, skip):
 				cands.append(c)
@@ -228,8 +228,8 @@ static func _wall_tops(map: ArenaMap, kit: Node3D, rng: RandomNumberGenerator, s
 ## 벽 정면: 카메라를 향한 뒷벽(+Z 면)에 표식
 static func _wall_faces(map: ArenaMap, kit: Node3D, rng: RandomNumberGenerator, skip: Dictionary) -> void:
 	var cands: Array[Vector2i] = []
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var c := Vector2i(x, y)
 			var back := c + Vector2i(0, -1)
 			if map.grid[map._idx(c)] == ArenaMap.FLOOR and map._in(back) and map.grid[map._idx(back)] == ArenaMap.VOID and not skip.has(back):

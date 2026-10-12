@@ -120,8 +120,8 @@ static func distances(map: ArenaMap) -> PackedByteArray:
 	d.resize(n)
 	d.fill(255)
 	var q: Array[Vector2i] = []
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			if map.grid[y * ArenaMap.W + x] != ArenaMap.VOID:
 				d[y * ArenaMap.W + x] = 0
 				q.append(Vector2i(x, y))
@@ -208,8 +208,8 @@ static func _floor(map: ArenaMap, d: PackedByteArray) -> MeshInstance3D:
 	st.begin(Mesh.PRIMITIVE_TRIANGLES)
 	st.set_normal(Vector3.UP)
 	var cells := 0
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var dc := d[y * ArenaMap.W + x]
 			if dc < DMIN - 1 or dc > DMAX:
 				continue
@@ -258,8 +258,8 @@ static func _band(d: PackedByteArray, c: Vector2i) -> bool:
 ## 조립 틀 놓기: 칸을 섞은 순서로 돌며, 벽 가까운(DNEAR) 자리에 겹치지 않게 놓는다. 틀 둘레 한 칸은 비워 숨 쉴 자리를 둔다.
 static func _templates(map: ArenaMap, d: PackedByteArray, used: Dictionary, spots: Dictionary, rng: RandomNumberGenerator) -> void:
 	var cand: Array[Vector2i] = []
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var v := d[y * ArenaMap.W + x]
 			if v >= DMIN and v <= DNEAR:
 				cand.append(Vector2i(x, y))
@@ -336,8 +336,8 @@ static func _add(spots: Dictionary, key: String, xf: Transform3D) -> void:
 
 ## 벽 옆 기둥: 바닥에서 2칸(벽 바로 바깥) 칸 중, 벽면이 카메라 쪽(+Z)이나 옆(±X)으로 드러난 곳에 4칸마다
 static func _wall_columns(map: ArenaMap, d: PackedByteArray, used: Dictionary, spots: Dictionary) -> void:
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var c := Vector2i(x, y)
 			if d[y * ArenaMap.W + x] != DMIN or used.has(c):
 				continue
@@ -363,8 +363,8 @@ static func _is_wall(d: PackedByteArray, c: Vector2i) -> bool:
 static func _wall_lines(map: ArenaMap, d: PackedByteArray, spots: Dictionary) -> void:
 	var k := 0.25
 	var axis_h := 0.3 * k                       # 피벗(바닥)에서 축까지
-	for y in ArenaMap.H:
-		for x in ArenaMap.W:
+	for y in range(map.scan.position.y, map.scan.end.y):
+		for x in range(map.scan.position.x, map.scan.end.x):
 			var c := Vector2i(x, y)
 			if d[y * ArenaMap.W + x] < DMIN or not _is_wall(d, c + Vector2i(0, -1)):
 				continue

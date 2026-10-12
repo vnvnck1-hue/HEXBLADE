@@ -110,8 +110,7 @@ func _ready() -> void:
 	q.size = Vector2(2, 2)
 	q.flip_faces = true
 	mesh = q
-	var sh := Shader.new()
-	sh.code = SHADER
+	var sh: Shader = ResCache.shader(SHADER)
 	mat = ShaderMaterial.new()
 	mat.shader = sh
 	mat.render_priority = Material.RENDER_PRIORITY_MIN

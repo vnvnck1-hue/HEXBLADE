@@ -64,8 +64,7 @@ func _ready() -> void:
 	smoke_mesh.height = 1.0
 	smoke_mesh.radial_segments = 12
 	smoke_mesh.rings = 6
-	var shader := Shader.new()
-	shader.code = SMOKE_SHADER
+	var shader: Shader = ResCache.shader(SMOKE_SHADER)
 	var smoke_mat := ShaderMaterial.new()
 	smoke_mat.shader = shader
 	smoke_mesh.material = smoke_mat

@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-12",
+  "generator": "built-in image_gen",
+  "completed_count": 3,
+  "scope": "Three redrawn concept paintings only; no runtime texture or model changes",
+  "visual_review": "PASS: broader brush-painted color planes, chunky bevels, simplified bolts and surface marks, more colorful purple/teal shadows; original room themes retained; no character or UI",
+  "files": [
+    {
+      "name": "코랄 작업실",
+      "file": "01_coral_workshop.png",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-f4596f61-3617-4760-95ed-45c3fe0b325e.png",
+      "edit_target": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\painted-room-concepts-20261012\\01_coral_workshop.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "87079CF74CB4F25E1EF71E9D565107C9AB1A69DB98A92B2537BEE4B528AEB4DE",
+      "decoded": true,
+      "copy_hash_equal": true
+    },
+    {
+      "name": "청록 냉각 설비실",
+      "file": "02_teal_cooling_bay.png",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-c8bd23d9-d7b6-41f1-ba31-18ca25bc5f4c.png",
+      "edit_target": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\painted-room-concepts-20261012\\02_teal_cooling_bay.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "42ED5B244A170429D9DDEB4A0DC827BC26B7DE938A28123CE6BC74C007F8A2B4",
+      "decoded": true,
+      "copy_hash_equal": true
+    },
+    {
+      "name": "크림 청소·정비 도크",
+      "file": "03_cream_service_dock.png",
+      "source": "C:\\Users\\Loadcomplete\\.codex\\generated_images\\01a12f45-9233-7e42-92c6-aff9d55cc531\\exec-72f4a2d6-a34d-4873-bbf8-234a6e57a38a.png",
+      "edit_target": "C:\\Users\\Loadcomplete\\Documents\\ChatGPT\\3D 쿼터뷰 슈팅게임_Claude\\output\\painted-room-concepts-20261012\\03_cream_service_dock.png",
+      "width": 1536,
+      "height": 1024,
+      "sha256": "360EC8EBA92CB0E743D707246D64E2E4BF5AD4AAF9306059DB1D58093BCB9908",
+      "decoded": true,
+      "copy_hash_equal": true
+    }
+  ]
+}
