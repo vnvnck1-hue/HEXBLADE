@@ -1,0 +1,71 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+Vulkan 1.4.329 - Forward+ - Using Device #0: NVIDIA - NVIDIA GeForce RTX 3070
+
+PASS 첫 출근 사장 대사
+PASS 실제 렌더 캡처 저장: 01_blue_owner_solo
+PASS 01_blue_owner_solo 선택된 실제 배경 리소스
+PASS 01_blue_owner_solo 배경이 무대를 빈 틈 없이 채움
+PASS 01_blue_owner_solo 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 01_blue_owner_solo
+PASS 주인공 대사
+PASS 실제 렌더 캡처 저장: 02_blue_pilot_reply
+PASS 02_blue_pilot_reply 선택된 실제 배경 리소스
+PASS 02_blue_pilot_reply 배경이 무대를 빈 틈 없이 채움
+PASS 02_blue_pilot_reply 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 02_blue_pilot_reply
+PASS 실제 키 입력으로 대본 전환: hangar_briefing
+PASS 브리핑 두 인물 대사
+PASS 실제 렌더 캡처 저장: 03_red_briefing_pair
+PASS 03_red_briefing_pair 선택된 실제 배경 리소스
+PASS 03_red_briefing_pair 배경이 무대를 빈 틈 없이 채움
+PASS 03_red_briefing_pair 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 03_red_briefing_pair
+PASS 브리핑 세 인물 대사
+PASS 실제 렌더 캡처 저장: 04_red_briefing_three
+PASS 04_red_briefing_three 선택된 실제 배경 리소스
+PASS 04_red_briefing_three 배경이 무대를 빈 틈 없이 채움
+PASS 04_red_briefing_three 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 04_red_briefing_three
+PASS 브리핑 선택지
+PASS 실제 렌더 캡처 저장: 05_red_briefing_choices
+PASS 05_red_briefing_choices 선택된 실제 배경 리소스
+PASS 05_red_briefing_choices 배경이 무대를 빈 틈 없이 채움
+PASS 05_red_briefing_choices 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 05_red_briefing_choices
+PASS 실제 키 입력으로 대본 전환: coworker_introduction
+PASS 정비사 소개 대사
+PASS 실제 렌더 캡처 저장: 06_blue_mechanic_pair
+PASS 06_blue_mechanic_pair 선택된 실제 배경 리소스
+PASS 06_blue_mechanic_pair 배경이 무대를 빈 틈 없이 채움
+PASS 06_blue_mechanic_pair 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 06_blue_mechanic_pair
+PASS 실제 키 입력으로 대본 전환: field_partner_introduction
+PASS 파트너 소개 대사
+PASS 실제 렌더 캡처 저장: 07_blue_partner_pair
+PASS 07_blue_partner_pair 선택된 실제 배경 리소스
+PASS 07_blue_partner_pair 배경이 무대를 빈 틈 없이 채움
+PASS 07_blue_partner_pair 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 07_blue_partner_pair
+PASS 실제 키 입력으로 대본 전환: feature_demo
+PASS 기능 시연 단독 대사
+PASS 실제 렌더 캡처 저장: 08_red_partner_solo
+PASS 08_red_partner_solo 선택된 실제 배경 리소스
+PASS 08_red_partner_solo 배경이 무대를 빈 틈 없이 채움
+PASS 08_red_partner_solo 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 08_red_partner_solo
+PASS 실제 렌더 캡처 저장: 09_red_solo_16x9
+PASS 09_red_solo_16x9 선택된 실제 배경 리소스
+PASS 09_red_solo_16x9 배경이 무대를 빈 틈 없이 채움
+PASS 09_red_solo_16x9 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 09_red_solo_16x9
+PASS 실제 키 입력으로 대본 전환: cleaning_opening
+PASS F1 재진입
+PASS 실제 렌더 캡처 저장: 10_blue_solo_4x3
+PASS 10_blue_solo_4x3 선택된 실제 배경 리소스
+PASS 10_blue_solo_4x3 배경이 무대를 빈 틈 없이 채움
+PASS 10_blue_solo_4x3 배경에 추가 색 배수 없음
+DIALOGUE_BACKGROUND_CAPTURE 10_blue_solo_4x3
+PASS 실제 키 입력으로 대본 전환: cleaning_opening
+PASS R 재시작
+PASS 재시작 시 배경 유지
+RESULT dialogue_background_capture: PASS (57 checks, 10 shots, 0 fails)

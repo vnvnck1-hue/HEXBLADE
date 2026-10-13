@@ -1,0 +1,353 @@
+{
+	"checks": [
+		{
+			"message": "첫 출근 사장 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 01_blue_owner_solo",
+			"pass": true
+		},
+		{
+			"message": "01_blue_owner_solo 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "01_blue_owner_solo 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "01_blue_owner_solo 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "주인공 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 02_blue_pilot_reply",
+			"pass": true
+		},
+		{
+			"message": "02_blue_pilot_reply 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "02_blue_pilot_reply 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "02_blue_pilot_reply 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 키 입력으로 대본 전환: hangar_briefing",
+			"pass": true
+		},
+		{
+			"message": "브리핑 두 인물 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 03_red_briefing_pair",
+			"pass": true
+		},
+		{
+			"message": "03_red_briefing_pair 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "03_red_briefing_pair 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "03_red_briefing_pair 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "브리핑 세 인물 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 04_red_briefing_three",
+			"pass": true
+		},
+		{
+			"message": "04_red_briefing_three 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "04_red_briefing_three 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "04_red_briefing_three 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "브리핑 선택지",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 05_red_briefing_choices",
+			"pass": true
+		},
+		{
+			"message": "05_red_briefing_choices 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "05_red_briefing_choices 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "05_red_briefing_choices 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 키 입력으로 대본 전환: coworker_introduction",
+			"pass": true
+		},
+		{
+			"message": "정비사 소개 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 06_blue_mechanic_pair",
+			"pass": true
+		},
+		{
+			"message": "06_blue_mechanic_pair 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "06_blue_mechanic_pair 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "06_blue_mechanic_pair 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 키 입력으로 대본 전환: field_partner_introduction",
+			"pass": true
+		},
+		{
+			"message": "파트너 소개 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 07_blue_partner_pair",
+			"pass": true
+		},
+		{
+			"message": "07_blue_partner_pair 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "07_blue_partner_pair 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "07_blue_partner_pair 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 키 입력으로 대본 전환: feature_demo",
+			"pass": true
+		},
+		{
+			"message": "기능 시연 단독 대사",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 08_red_partner_solo",
+			"pass": true
+		},
+		{
+			"message": "08_red_partner_solo 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "08_red_partner_solo 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "08_red_partner_solo 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 09_red_solo_16x9",
+			"pass": true
+		},
+		{
+			"message": "09_red_solo_16x9 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "09_red_solo_16x9 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "09_red_solo_16x9 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 키 입력으로 대본 전환: cleaning_opening",
+			"pass": true
+		},
+		{
+			"message": "F1 재진입",
+			"pass": true
+		},
+		{
+			"message": "실제 렌더 캡처 저장: 10_blue_solo_4x3",
+			"pass": true
+		},
+		{
+			"message": "10_blue_solo_4x3 선택된 실제 배경 리소스",
+			"pass": true
+		},
+		{
+			"message": "10_blue_solo_4x3 배경이 무대를 빈 틈 없이 채움",
+			"pass": true
+		},
+		{
+			"message": "10_blue_solo_4x3 배경에 추가 색 배수 없음",
+			"pass": true
+		},
+		{
+			"message": "실제 키 입력으로 대본 전환: cleaning_opening",
+			"pass": true
+		},
+		{
+			"message": "R 재시작",
+			"pass": true
+		},
+		{
+			"message": "재시작 시 배경 유지",
+			"pass": true
+		}
+	],
+	"fails": 0,
+	"renderer": "Forward+",
+	"shots": [
+		{
+			"file": "01_blue_owner_solo.png",
+			"height": 800,
+			"location": "hangar",
+			"portraits": [
+				"owner"
+			],
+			"script": "cleaning_opening",
+			"speaker": "owner",
+			"width": 1280
+		},
+		{
+			"file": "02_blue_pilot_reply.png",
+			"height": 800,
+			"location": "hangar",
+			"portraits": [
+				"owner"
+			],
+			"script": "cleaning_opening",
+			"speaker": "me",
+			"width": 1280
+		},
+		{
+			"file": "03_red_briefing_pair.png",
+			"height": 800,
+			"location": "briefing",
+			"portraits": [
+				"owner",
+				"worker"
+			],
+			"script": "hangar_briefing",
+			"speaker": "worker",
+			"width": 1280
+		},
+		{
+			"file": "04_red_briefing_three.png",
+			"height": 800,
+			"location": "briefing",
+			"portraits": [
+				"owner",
+				"worker",
+				"partner"
+			],
+			"script": "hangar_briefing",
+			"speaker": "partner",
+			"width": 1280
+		},
+		{
+			"file": "05_red_briefing_choices.png",
+			"height": 800,
+			"location": "briefing",
+			"portraits": [
+				"owner",
+				"worker",
+				"partner"
+			],
+			"script": "hangar_briefing",
+			"speaker": "owner",
+			"width": 1280
+		},
+		{
+			"file": "06_blue_mechanic_pair.png",
+			"height": 800,
+			"location": "hangar",
+			"portraits": [
+				"owner",
+				"worker"
+			],
+			"script": "coworker_introduction",
+			"speaker": "worker",
+			"width": 1280
+		},
+		{
+			"file": "07_blue_partner_pair.png",
+			"height": 800,
+			"location": "hangar",
+			"portraits": [
+				"owner",
+				"partner"
+			],
+			"script": "field_partner_introduction",
+			"speaker": "partner",
+			"width": 1280
+		},
+		{
+			"file": "08_red_partner_solo.png",
+			"height": 800,
+			"location": "briefing",
+			"portraits": [
+				"partner"
+			],
+			"script": "feature_demo",
+			"speaker": "partner",
+			"width": 1280
+		},
+		{
+			"file": "09_red_solo_16x9.png",
+			"height": 720,
+			"location": "briefing",
+			"portraits": [
+				"partner"
+			],
+			"script": "feature_demo",
+			"speaker": "partner",
+			"width": 1280
+		},
+		{
+			"file": "10_blue_solo_4x3.png",
+			"height": 768,
+			"location": "hangar",
+			"portraits": [
+				"owner"
+			],
+			"script": "cleaning_opening",
+			"speaker": "owner",
+			"width": 1024
+		}
+	]
+}

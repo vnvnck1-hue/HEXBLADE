@@ -99,6 +99,7 @@ func _ready() -> void:
 ## 대사 진행기를 연결하고 시작한다
 func play(r: DialogueRunner, label := "") -> void:
 	runner = r
+	backdrop.select_for_script(r.dlg.path.get_file().get_basename())
 	runner.said.connect(_on_said)
 	runner.asked.connect(_on_asked)
 	runner.cue.connect(_on_cue)
@@ -114,7 +115,6 @@ func _build() -> void:
 	stage.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(stage)
 	backdrop = HangarBackdrop.new()
-	backdrop.font = bold
 	stage.add_child(backdrop)
 	people = Control.new()
 	people.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)

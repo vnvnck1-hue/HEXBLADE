@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-13",
+  "tool": "built-in image_gen",
+  "status": "Two concepts completed; user review pending",
+  "images": [
+    {
+      "file": "01_blue_service_hangar.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "80C01559B0ECFFBBA575C7DDF704171A82563440B1BF224A0B2C2E4358A9BFCD",
+      "portrait_region_gamma_encoded_luma_mean": 0.1910541165799646,
+      "portrait_region_gamma_encoded_luma_max": 0.39954823529411765,
+      "visual_review": "No people/UI/text; broad subdued portrait zones; architectural details concentrated at edges; no game integration."
+    },
+    {
+      "file": "02_dusty_brick_briefing_room.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "290AAD3C0221FEF279B2CC91D7CFEAF53DF2FC37AB2FA8A2122343CFEA75D27B",
+      "portrait_region_gamma_encoded_luma_mean": 0.16605488542083416,
+      "portrait_region_gamma_encoded_luma_max": 0.2537137254901961,
+      "visual_review": "No people/UI/text; broad subdued portrait zones; architectural details concentrated at edges; no game integration."
+    }
+  ],
+  "notes": "Luma is a sampled gamma-encoded RGB brightness proxy, not linear luminance or WCAG contrast. No in-game character compositing or gameplay validation performed."
+}

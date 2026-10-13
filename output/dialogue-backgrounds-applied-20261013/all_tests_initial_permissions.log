@@ -1,0 +1,20 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== abyss_check
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  RESULT OK (0 fail)
+=== ammo_check
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  RESULT OK (0 fails)
+=== blade_tech_check
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  RESULT OK (0 fails)
+=== blender_models_check
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  RESULT OK (0 fails)
+=== blue_handpaint_check
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  RESULT OK (0 fails)
+=== brawl_look_check
+  ERROR: Failed to open log file for writing: user://logs/godot.log
+  RESULT  OK  (0 fail)
+=== bug_arena_check

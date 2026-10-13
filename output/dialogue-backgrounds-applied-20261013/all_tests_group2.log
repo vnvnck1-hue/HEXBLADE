@@ -1,0 +1,33 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== dash_moves_check
+  RESULT OK (0 fails)
+=== dialogue_check
+  RESULT dialogue_check: PASS (0 fails)
+=== fluid_smoke_check
+  RESULT FLUID_SMOKE_OK (0 fails)
+=== gun_sound_check
+  RESULT gun_sound_check fails=0
+=== infest_check
+  RESULT OK (0 fails)
+=== lancaster_claw_hit_check
+  RESULT OK (0 fails)
+=== lobby_upgrade_check
+  RESULT: OK (0 fails)
+=== mech_player_check
+  RESULT mech_player_check fails=0
+=== opening_cast_check
+  RESULT opening_cast_check: PASS (0 fails)
+=== parry_commit_check
+  RESULT parry_commit_check fails=0
+=== player_entrance_check
+  FAILS 0
+=== space_sweep_check
+  RESULT OK (0 fails)
+=== stream_mode_check
+  RESULT PASS (0 fails)
+=== training_ui_toggle_check
+  RESULT: OK (0 fails)
+=== whirl_pull_check
+  RESULT OK (0 fails)
+
+ALL 15 TESTS PASSED

@@ -1,0 +1,116 @@
+{
+  "A_neon_descent": {
+    "title": "NEON DESCENT",
+    "bpm": 132,
+    "bars": 32,
+    "loop_seconds": 58.1818,
+    "loop_samples": 2565818,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -10.84,
+    "clipped_samples": 0,
+    "dc_offset": [
+      0.0002,
+      0.00017
+    ],
+    "seam_vs_natural_max_diff": 0.0,
+    "section_rms_dbfs": {
+      "A": -10.48,
+      "B": -10.04,
+      "A'": -10.02,
+      "BR": -13.83
+    },
+    "band_energy_db": {
+      "sub_<60": -4.2,
+      "low_60-250": -4.4,
+      "mid_250-2k": -7.5,
+      "hi_2k-8k": -12.8,
+      "air_8k+": -16.4
+    },
+    "bus_rms_dbfs_premix": {
+      "drums": -5.8,
+      "bass": -14.4,
+      "pad": -22.5,
+      "lead": -16.4,
+      "arp": -26.2,
+      "fx": -34.0,
+      "rev": -22.0,
+      "dly": -29.7
+    }
+  },
+  "B_deep_signal": {
+    "title": "DEEP SIGNAL",
+    "bpm": 104,
+    "bars": 32,
+    "loop_seconds": 73.8461,
+    "loop_samples": 3256615,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -11.87,
+    "clipped_samples": 0,
+    "dc_offset": [
+      0.00034,
+      0.00033
+    ],
+    "seam_vs_natural_max_diff": 0.0,
+    "section_rms_dbfs": {
+      "S1": -15.13,
+      "S2": -12.13,
+      "S3": -11.39,
+      "S4": -10.2
+    },
+    "band_energy_db": {
+      "sub_<60": -4.3,
+      "low_60-250": -3.6,
+      "mid_250-2k": -8.6,
+      "hi_2k-8k": -14.0,
+      "air_8k+": -18.3
+    },
+    "bus_rms_dbfs_premix": {
+      "drums": -8.9,
+      "bass": -12.8,
+      "pad": -24.4,
+      "lead": -18.1,
+      "arp": -21.9,
+      "fx": -35.6,
+      "rev": -23.5,
+      "dly": -28.5
+    }
+  },
+  "C_midnight_hex": {
+    "title": "MIDNIGHT HEX (2차)",
+    "bpm": 104,
+    "bars": 32,
+    "loop_seconds": 73.8461,
+    "loop_samples": 3256615,
+    "peak_dbfs": -1.0,
+    "rms_dbfs": -11.21,
+    "clipped_samples": 0,
+    "dc_offset": [
+      0.00023,
+      0.00018
+    ],
+    "seam_vs_natural_max_diff": 0.0,
+    "section_rms_dbfs": {
+      "HOOK": -10.52,
+      "VERSE": -11.38,
+      "CHORUS": -10.4,
+      "BRIDGE": -12.99
+    },
+    "band_energy_db": {
+      "sub_<60": -5.4,
+      "low_60-250": -4.3,
+      "mid_250-2k": -5.5,
+      "hi_2k-8k": -13.2,
+      "air_8k+": -18.4
+    },
+    "bus_rms_dbfs_premix": {
+      "drums": -7.5,
+      "bass": -14.5,
+      "pad": -24.6,
+      "lead": -15.6,
+      "arp": -17.5,
+      "fx": -34.9,
+      "rev": -20.1,
+      "dly": -26.9
+    }
+  }
+}

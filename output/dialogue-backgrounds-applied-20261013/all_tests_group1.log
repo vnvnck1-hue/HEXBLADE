@@ -1,0 +1,33 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== coworker_dialogue_check
+  RESULT coworker_dialogue_check: PASS (0 fails)
+=== dialogue_blink_check
+  RESULT dialogue_blink_check: PASS (0 fails), natural blinks 40
+=== enemy_wander_check
+  RESULT enemy_wander_check fails=0
+=== ground_break_check
+  RESULT ground_break_check: OK (0 fails)
+=== hud_preset_check
+  RESULT  OK  (0 fail)
+=== lancaster_boss_check
+  RESULT OK (0 fails)
+=== leap_slam_check
+  RESULT OK (0 fails)
+=== mammoth_ingame_check
+  RESULT mammoth_ingame_check fails=0
+=== moco_vfx_check
+  RESULT moco_vfx_check fails=0
+=== painted_room_check
+  PAINTED_ROOM_CHECK 24 checks 0 fails
+=== partner_drone_check
+  RESULT partner_drone_check fails=0
+=== room_wave_check
+  RESULT OK (0 fail)
+=== spider_check
+  SPIDER_CHECK OK
+=== texture_diorama_check
+  TEXTURE_DIORAMA_CHECK 27 checks 0 fails
+=== whirl_props_check
+  RESULT: OK (0 fails)
+
+ALL 15 TESTS PASSED

@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-13",
+  "godot": "4.7.2-stable",
+  "renderer": "Forward+",
+  "assets": [
+    {
+      "source": "output/dialogue-backgrounds-20261013/01_blue_service_hangar.png",
+      "target": "assets/ui/dialogue_backgrounds/blue_service_hangar.png",
+      "source_sha256": "80C01559B0ECFFBBA575C7DDF704171A82563440B1BF224A0B2C2E4358A9BFCD",
+      "target_sha256": "80C01559B0ECFFBBA575C7DDF704171A82563440B1BF224A0B2C2E4358A9BFCD",
+      "identical": true,
+      "import_settings": {
+        "lossless": true,
+        "mipmaps": true
+      }
+    },
+    {
+      "source": "output/dialogue-backgrounds-20261013/02_dusty_brick_briefing_room.png",
+      "target": "assets/ui/dialogue_backgrounds/dusty_brick_briefing_room.png",
+      "source_sha256": "290AAD3C0221FEF279B2CC91D7CFEAF53DF2FC37AB2FA8A2122343CFEA75D27B",
+      "target_sha256": "290AAD3C0221FEF279B2CC91D7CFEAF53DF2FC37AB2FA8A2122343CFEA75D27B",
+      "identical": true,
+      "import_settings": {
+        "lossless": true,
+        "mipmaps": true
+      }
+    }
+  ],
+  "capture_checks": 57,
+  "capture_fails": 0,
+  "capture_count": 10,
+  "capture_errors": 0,
+  "import_errors": 0,
+  "bots": [
+    {
+      "script": "cleaning_opening",
+      "log": "output/dialogue-backgrounds-applied-20261013/bot_cleaning_opening.log",
+      "finished": true,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "script": "hangar_briefing",
+      "log": "output/dialogue-backgrounds-applied-20261013/bot_hangar_briefing.log",
+      "finished": true,
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "script": "feature_demo",
+      "log": "output/dialogue-backgrounds-applied-20261013/bot_feature_demo.log",
+      "finished": true,
+      "errors": 0,
+      "warnings": 0
+    },
+    {
+      "script": "coworker_introduction",
+      "log": "output/dialogue-backgrounds-applied-20261013/bot_coworker_introduction.log",
+      "finished": true,
+      "errors": 0,
+      "warnings": 1
+    },
+    {
+      "script": "field_partner_introduction",
+      "log": "output/dialogue-backgrounds-applied-20261013/bot_field_partner_introduction.log",
+      "finished": true,
+      "errors": 0,
+      "warnings": 0
+    }
+  ],
+  "regression": {
+    "passed": 60,
+    "total": 60,
+    "failed": 0,
+    "errors": 0,
+    "coverage": "Verified all tests/*.gd, exactly once",
+    "logs": [
+      "all_tests_part1.log",
+      "all_tests_group1.log",
+      "all_tests_group2.log",
+      "all_tests_group3.log"
+    ],
+    "combined_log": "all_tests.log",
+    "groups_exit_codes": [
+      0,
+      0,
+      0
+    ]
+  },
+  "notes": "Captured the real dialogue scene. Bot shutdown ObjectDB warnings are preserved and are not counted as script errors. Initial sandbox user-data errors and interrupted invocations are kept in separate logs."
+}

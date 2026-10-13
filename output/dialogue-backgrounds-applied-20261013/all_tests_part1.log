@@ -1,0 +1,32 @@
+[godot] 4.7.2.stable.official.ed1daf0bf
+=== abyss_check
+  RESULT OK (0 fail)
+=== ammo_check
+  RESULT OK (0 fails)
+=== blade_tech_check
+  RESULT OK (0 fails)
+=== blender_models_check
+  RESULT OK (0 fails)
+=== blue_handpaint_check
+  RESULT OK (0 fails)
+=== brawl_look_check
+  RESULT  OK  (0 fail)
+=== bug_arena_check
+  BUG_ARENA_CHECK OK
+=== bug_chomper_check
+  BUG_CHOMPER_CHECK OK
+=== bug_enemies_check
+  BUG_ENEMIES_CHECK OK
+=== bug_grub_check
+  BUG_GRUB_CHECK OK
+=== claude_background_check
+  RESULT  OK  (0 fail)
+=== claude_service_check
+  RESULT claude_service_check fails=0
+=== cockpit_cutin_check
+  RESULT: OK (0 fails)
+=== codex_background_check
+  CODEX_BACKGROUND_CHECK 67 checks 0 fails
+=== combo_meter_check
+  combo_meter_check: 0 fails
+=== coworker_dialogue_check
