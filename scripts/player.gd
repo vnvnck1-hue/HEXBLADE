@@ -90,6 +90,8 @@ var no_attack := false            # 공격 불가: 연기 속 · 레버 돌리�
 var hidden := false               # 연기 속에 숨어 적이 보지 못한다
 var rooted := false               # 제자리 고정 (레버 돌리는 중)
 var cine_lock := false            # 연출 중 (보스 등장 등): 모든 조작을 받지 않는다
+var dash_lock := false            # 튜토리얼: Space 대시를 아직 배우지 않았다 (대시 · 패링 · 2단 대시 · 청소 질주 입력 무시)
+var attack_lock := false          # 튜토리얼: 대사 중엔 공격 입력을 받지 않는다 (이동은 된다)
 var carry := Vector3.ZERO         # 레일이 실어 나르는 속도 (이동에 더해진다)
 var interact_ok := false          # 레버 범위: F 는 검 대신 레버로 간다
 var gimmick_pose: Callable        # 자세 덮어쓰기 (레버 돌리기), 인자 (player, dt)
@@ -361,7 +363,7 @@ func _physics_process(dt: float) -> void:
 		skill_held = InputMap.has_action("rush_skill") and Input.is_action_pressed("rush_skill")
 		dash_pressed = Input.is_action_just_pressed("dash")
 		boost_held = Input.is_action_pressed("boost")
-		if Input.is_action_just_pressed("ult") and playing and not no_attack and not leap.busy() and not ult_busy() and ult_queue == 0 and mega_t <= 0.0:
+		if Input.is_action_just_pressed("ult") and playing and not no_attack and not attack_lock and not leap.busy() and not ult_busy() and ult_queue == 0 and mega_t <= 0.0:
 			if missiles > 0:
 				_begin_ult_aim()
 			else:
@@ -380,12 +382,22 @@ func _physics_process(dt: float) -> void:
 		skill_held = false
 		if ult_aiming:
 			_end_ult_aim(false)
+	if dash_lock:
+		dash_pressed = false
+	if attack_lock:
+		fire = false
+		slash_pressed = false
+		charge_held = false
+		lmb_held = false
+		rmb_held = false
+		dual = false
+		skill_held = false
 	# 아래 상태 필터에 지워지기 전의 입력: 선입력 버퍼에 담는다
 	var dash_raw := dash_pressed
 	var slash_raw := slash_pressed
 	var slash_hold := false      # 검 버튼을 누르고 있다: 적중하는 동안 콤보가 저절로 이어진다
 	if not bot:
-		slash_hold = Input.is_action_pressed("slash") or (lmb_held and not rmb_held)
+		slash_hold = (Input.is_action_pressed("slash") or (lmb_held and not rmb_held)) and not attack_lock
 	if mega_t > 0.0:
 		# 지속 레이저 중에는 대시만 받는다 (대시로 레이저를 끊는다)
 		fire = false

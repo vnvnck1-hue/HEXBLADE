@@ -428,7 +428,7 @@ func _read_input(dt: float) -> void:
 		skill = Input.is_action_just_pressed("drone_skill")
 		clean_held = Input.is_action_pressed("drone_clean")
 		# 누른 첫 틱은 대시 몫 (드론이 플레이어보다 먼저 돌아 대시 전 한 틱 청소기가 깜빡이지 않게)
-		sweep_held = Input.is_action_pressed("dash") and not Input.is_action_just_pressed("dash")
+		sweep_held = Input.is_action_pressed("dash") and not Input.is_action_just_pressed("dash") and not player.dash_lock
 	# 청소 질주: Space 를 누른 채로 대시가 끝났다 (누르는 순간의 대시 · 패링 · 2단 대시는 Player 가 그대로 처리한다)
 	sweeping = sweep_held and playing and whirl_t < 0.0 and player.dash_t <= 0.0 and player.lunge_t <= 0.0 \
 		and player.stun_t <= 0.0 and not player.tech.busy() and not player.ult_busy()

@@ -17,6 +17,7 @@ var rest_used := false
 var entry := Vector3.ZERO
 var bot_pick := -1
 var marks: Control
+var tutorial: RunTutorial
 
 
 func _ready() -> void:
@@ -58,10 +59,14 @@ func _ready() -> void:
 		run.map_view.want = true
 	match nd.kind:
 		G.Kind.START:
-			hud.banner("SECTOR %d" % (run.sector + 1), Color(0.7, 0.95, 1.0), "%s  ·  포탈을 골라 %s 까지 돌파하라  ·  Tab 섹터 지도" % [run.sector_name(), run.boss_name()])
-			_open_portals(1.0)
-			if run.sector == 0 and not capture_mode:
-				run.map_view.want = true
+			if run.sector == 0 and RunTutorial.wanted(self):
+				# 첫 출발 방: 기본 조작 · 게임 방식 튜토리얼. 끝나면(건너뛰면) 포탈을 연다
+				_start_tutorial()
+			else:
+				_start_banner()
+				_open_portals(1.0)
+				if run.sector == 0 and not capture_mode:
+					run.map_view.want = true
 		G.Kind.REST:
 			hud.banner("정비 구역", G.KIND_COLORS[G.Kind.REST], "수리 발판에 올라서면 장갑 +%d" % REST_HEAL)
 			_build_rest_pad()
@@ -74,6 +79,31 @@ func _ready() -> void:
 
 func _run() -> Node:
 	return get_node("/root/Run")
+
+
+func _start_banner() -> void:
+	var run := _run()
+	var extra := "  ·  F1 튜토리얼" if run.sector == 0 and nd.kind == G.Kind.START else ""
+	hud.banner("SECTOR %d" % (run.sector + 1), Color(0.7, 0.95, 1.0), "%s  ·  포탈을 골라 %s 까지 돌파하라  ·  Tab 섹터 지도%s" % [run.sector_name(), run.boss_name(), extra])
+
+
+## 튜토리얼 시작 (첫 출발 방 자동 · F1 다시 보기). 포탈이 아직 안 열렸으면 끝난 뒤 연다
+func _start_tutorial() -> void:
+	if tutorial and tutorial.active():
+		return
+	tutorial = RunTutorial.attach(self)
+	tutorial.finished.connect(func():
+		_start_banner()
+		_open_portals(0.6))
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	var f1 := event is InputEventKey and event.is_pressed() and not event.is_echo() and (event as InputEventKey).physical_keycode == KEY_F1
+	if f1 and nd.kind == G.Kind.START and _run().sector == 0 and state == State.PLAY and not capture_mode:
+		get_viewport().set_input_as_handled()
+		_start_tutorial()
+		return
+	super._unhandled_input(event)
 
 
 func _build_arena() -> void:

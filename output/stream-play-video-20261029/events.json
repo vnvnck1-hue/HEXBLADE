@@ -1,0 +1,429 @@
+{
+  "audio_start_unix": 1793243504.926,
+  "clip_seconds": 30.0,
+  "clip_unix": 1793243507.294,
+  "events": [
+    {
+      "ct": 0.0,
+      "game_t": 0.0,
+      "kind": "clip_start",
+      "unix": 1793243507.294
+    },
+    {
+      "ct": 2.604,
+      "enemies": 4,
+      "energy": 3,
+      "game_t": 2.472,
+      "kind": "act_start_combo",
+      "missiles": 4,
+      "unix": 1793243509.898
+    },
+    {
+      "ct": 3.619,
+      "game_t": 3.488,
+      "kind": "fired_combo",
+      "unix": 1793243510.913
+    },
+    {
+      "ct": 3.622,
+      "game_t": 3.488,
+      "kind": "combo_step",
+      "step": 1,
+      "unix": 1793243510.916
+    },
+    {
+      "ct": 4.287,
+      "game_t": 4.077,
+      "kind": "combo_step",
+      "step": 2,
+      "unix": 1793243511.581
+    },
+    {
+      "ct": 5.473,
+      "game_t": 5.182,
+      "kind": "combo_step",
+      "step": 3,
+      "unix": 1793243512.767
+    },
+    {
+      "ct": 5.507,
+      "game_t": 5.215,
+      "kind": "act_end_combo",
+      "unix": 1793243512.801
+    },
+    {
+      "ct": 5.524,
+      "enemies": 5,
+      "energy": 3,
+      "game_t": 5.232,
+      "kind": "act_start_backstep",
+      "missiles": 4,
+      "unix": 1793243512.818
+    },
+    {
+      "ct": 5.539,
+      "game_t": 5.248,
+      "kind": "fired_backstep",
+      "unix": 1793243512.833
+    },
+    {
+      "ct": 5.542,
+      "game_t": 5.248,
+      "kind": "act_end_backstep",
+      "unix": 1793243512.835
+    },
+    {
+      "ct": 6.509,
+      "enemies": 4,
+      "energy": 3,
+      "game_t": 6.059,
+      "kind": "act_start_laser",
+      "missiles": 4,
+      "unix": 1793243513.803
+    },
+    {
+      "ct": 6.538,
+      "energy": 3,
+      "game_t": 6.076,
+      "kind": "fired_charge_laser",
+      "unix": 1793243513.832
+    },
+    {
+      "charge": 0.0,
+      "ct": 6.942,
+      "game_t": 6.477,
+      "kind": "end_charge_laser",
+      "unix": 1793243514.236
+    },
+    {
+      "ct": 6.958,
+      "game_t": 6.477,
+      "kind": "act_end_laser",
+      "unix": 1793243514.252
+    },
+    {
+      "ct": 7.41,
+      "enemies": 2,
+      "energy": 2,
+      "game_t": 6.881,
+      "kind": "act_start_sweep",
+      "missiles": 4,
+      "unix": 1793243514.704
+    },
+    {
+      "ct": 7.433,
+      "game_t": 6.898,
+      "kind": "fired_dash",
+      "unix": 1793243514.727
+    },
+    {
+      "ct": 7.744,
+      "game_t": 7.214,
+      "gauge": 0.0,
+      "kind": "fired_sweep_clean",
+      "unix": 1793243515.037
+    },
+    {
+      "ct": 9.015,
+      "game_t": 8.481,
+      "kind": "act_end_sweep",
+      "unix": 1793243516.31
+    },
+    {
+      "ct": 9.309,
+      "enemies": 6,
+      "energy": 3,
+      "game_t": 8.781,
+      "kind": "act_start_perfect",
+      "missiles": 4,
+      "unix": 1793243516.604
+    },
+    {
+      "ct": 9.325,
+      "game_t": 8.798,
+      "kind": "fired_dash",
+      "unix": 1793243516.618
+    },
+    {
+      "ct": 9.541,
+      "game_t": 8.999,
+      "kind": "fired_perfect_dash",
+      "unix": 1793243516.835
+    },
+    {
+      "ct": 9.558,
+      "game_t": 9.0,
+      "kind": "fired_whirl",
+      "unix": 1793243516.852
+    },
+    {
+      "ct": 9.992,
+      "game_t": 9.433,
+      "kind": "end_whirl",
+      "unix": 1793243517.286
+    },
+    {
+      "ct": 9.995,
+      "game_t": 9.433,
+      "kind": "act_end_perfect",
+      "unix": 1793243517.289
+    },
+    {
+      "ct": 11.211,
+      "enemies": 5,
+      "energy": 3,
+      "game_t": 10.493,
+      "kind": "act_start_dashstrike",
+      "missiles": 4,
+      "unix": 1793243518.505
+    },
+    {
+      "ct": 11.494,
+      "game_t": 10.776,
+      "kind": "fired_dash",
+      "unix": 1793243518.787
+    },
+    {
+      "ct": 11.511,
+      "game_t": 10.793,
+      "kind": "fired_phantom",
+      "unix": 1793243518.805
+    },
+    {
+      "ct": 11.578,
+      "game_t": 10.86,
+      "kind": "act_end_dashstrike",
+      "unix": 1793243518.872
+    },
+    {
+      "ct": 12.813,
+      "enemies": 7,
+      "energy": 3,
+      "game_t": 11.968,
+      "kind": "act_start_rush",
+      "missiles": 4,
+      "unix": 1793243520.107
+    },
+    {
+      "ct": 14.295,
+      "game_t": 13.435,
+      "kind": "fired_rush",
+      "unix": 1793243521.588
+    },
+    {
+      "ct": 14.696,
+      "game_t": 13.788,
+      "kind": "act_end_rush",
+      "unix": 1793243521.99
+    },
+    {
+      "ct": 15.4,
+      "enemies": 4,
+      "energy": 3,
+      "game_t": 14.316,
+      "kind": "act_start_leap",
+      "missiles": 4,
+      "unix": 1793243522.694
+    },
+    {
+      "ct": 15.999,
+      "game_t": 14.916,
+      "kind": "fired_leap",
+      "unix": 1793243523.292
+    },
+    {
+      "ct": 16.8,
+      "game_t": 15.606,
+      "kind": "act_end_leap",
+      "unix": 1793243524.094
+    },
+    {
+      "ct": 17.202,
+      "enemies": 7,
+      "energy": 3,
+      "game_t": 15.928,
+      "kind": "act_start_ult",
+      "missiles": 4,
+      "unix": 1793243524.496
+    },
+    {
+      "ct": 17.221,
+      "game_t": 15.929,
+      "kind": "fired_ult_aim",
+      "unix": 1793243524.515
+    },
+    {
+      "ct": 17.584,
+      "game_t": 15.951,
+      "kind": "end_ult_aim",
+      "unix": 1793243524.879
+    },
+    {
+      "ct": 18.018,
+      "game_t": 16.034,
+      "kind": "fired_ult_fire",
+      "locks": 7,
+      "missiles_fired": 4,
+      "unix": 1793243525.313
+    },
+    {
+      "ct": 18.203,
+      "game_t": 16.217,
+      "kind": "act_end_ult",
+      "unix": 1793243525.497
+    },
+    {
+      "ct": 18.603,
+      "enemies": 5,
+      "energy": 3,
+      "game_t": 16.46,
+      "kind": "act_start_qwhirl",
+      "missiles": 0,
+      "unix": 1793243525.898
+    },
+    {
+      "ct": 19.535,
+      "game_t": 16.992,
+      "gauge": 0.3,
+      "kind": "fired_drone_docked",
+      "unix": 1793243526.829
+    },
+    {
+      "ct": 19.537,
+      "game_t": 16.992,
+      "gauge": 0.3,
+      "kind": "fired_drone_whirl",
+      "unix": 1793243526.831
+    },
+    {
+      "ct": 22.006,
+      "game_t": 18.676,
+      "kind": "act_end_qwhirl",
+      "unix": 1793243529.3
+    },
+    {
+      "ct": 22.022,
+      "enemies": 4,
+      "energy": 3,
+      "game_t": 18.693,
+      "kind": "act_start_mega",
+      "missiles": 0,
+      "unix": 1793243529.316
+    },
+    {
+      "ct": 22.421,
+      "energy": 3,
+      "game_t": 19.014,
+      "kind": "fired_charge_laser",
+      "unix": 1793243529.715
+    },
+    {
+      "charge": 0.0,
+      "ct": 23.433,
+      "game_t": 19.999,
+      "kind": "end_charge_laser",
+      "unix": 1793243530.726
+    },
+    {
+      "ct": 23.435,
+      "game_t": 19.999,
+      "kind": "fired_mega",
+      "unix": 1793243530.73
+    },
+    {
+      "ct": 26.142,
+      "game_t": 22.026,
+      "kind": "end_mega",
+      "unix": 1793243533.436
+    },
+    {
+      "ct": 26.145,
+      "game_t": 22.026,
+      "kind": "act_end_mega",
+      "unix": 1793243533.439
+    },
+    {
+      "ct": 26.158,
+      "enemies": 3,
+      "energy": 0,
+      "game_t": 22.043,
+      "kind": "act_start_zclean",
+      "missiles": 0,
+      "unix": 1793243533.453
+    },
+    {
+      "ct": 26.191,
+      "game_t": 22.076,
+      "gauge": 15.4,
+      "kind": "fired_z_clean",
+      "unix": 1793243533.486
+    },
+    {
+      "ct": 27.46,
+      "game_t": 23.249,
+      "kind": "act_end_zclean",
+      "unix": 1793243534.754
+    },
+    {
+      "ct": 27.482,
+      "enemies": 4,
+      "energy": 0,
+      "game_t": 23.265,
+      "kind": "act_start_xshield",
+      "missiles": 0,
+      "unix": 1793243534.777
+    },
+    {
+      "ct": 28.992,
+      "game_t": 24.704,
+      "kind": "act_end_xshield",
+      "unix": 1793243536.287
+    },
+    {
+      "ct": 29.008,
+      "enemies": 8,
+      "energy": 0,
+      "game_t": 24.72,
+      "kind": "act_start_finish",
+      "missiles": 1,
+      "unix": 1793243536.302
+    },
+    {
+      "ct": 30.427,
+      "game_t": 26.137,
+      "kind": "fired_combo",
+      "unix": 1793243537.722
+    },
+    {
+      "ct": 30.453,
+      "game_t": 26.137,
+      "kind": "combo_step",
+      "step": 1,
+      "unix": 1793243537.747
+    },
+    {
+      "ct": 31.095,
+      "game_t": 26.664,
+      "kind": "combo_step",
+      "step": 2,
+      "unix": 1793243538.389
+    },
+    {
+      "ct": 31.514,
+      "distance": 826,
+      "game_t": 27.002,
+      "kills": 33,
+      "kind": "clip_end",
+      "score": 76435,
+      "sector": 4,
+      "unix": 1793243538.808
+    }
+  ],
+  "flash_unix": 1793243504.926,
+  "window": [
+    480,
+    220,
+    1600,
+    1000
+  ]
+}

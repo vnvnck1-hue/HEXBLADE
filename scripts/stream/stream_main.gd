@@ -105,6 +105,8 @@ func _ready() -> void:
 	debris = Debris.new()
 	world.add_child(debris)
 	world.add_child(GunFX.new())
+	world.add_child(Parry.new())       # 패링: 요격기 돌진 베기 · 드론 금빛 탄을 대시로 받아친다
+	add_child(ParryFX.new())
 	ToonGunFX.inst.view_k = VIEW_K
 
 	hud = Hud.new()
@@ -115,6 +117,7 @@ func _ready() -> void:
 	var impact := ImpactFrame.new()
 	impact.enabled = not cmd_args.has("--noimpact")
 	add_child(impact)
+	PartnerDrone.attach(self)      # 파트너 청소 드론 (끄기: --drone=off)
 	speed_fx = SpeedFX.new()
 	add_child(speed_fx)
 	_build_info()
